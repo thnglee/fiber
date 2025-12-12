@@ -1,0 +1,163 @@
+import { logger } from "@/lib/logger"
+import { getSummarizePrompt } from "@/config/prompts"
+import { extractContentFromUrl } from "./content-extraction.service"
+import { generateJsonCompletion } from "./llm.service"
+import {
+  SummarizeRequestSchema,
+  SummarizeResponseSchema,
+  SummaryDataSchema,
+  type SummarizeRequest,
+  type SummarizeResponse,
+  type SummarizeDebugInfo,
+  type SummaryData,
+} from "@/domain/schemas"
+import { safeParseOrThrow } from "@/utils/zod-helpers"
+
+/**
+ * Main service function to summarize content
+ * 
+ * @param request - Summarize request parameters
+ * @returns Summary response with summary text, key points, and reading time
+ */
+export async function performSummarize(request: SummarizeRequest): Promise<SummarizeResponse> {
+  const { content, url, debug } = request
+
+  const debugInfo: SummarizeDebugInfo = {}
+  let extractedContent = ""
+  let contentLength = 0
+  let extractedTitle: string | undefined
+  let extractedExcerpt: string | undefined
+
+  // Extract content from URL or use provided content
+  if (url && typeof url === "string") {
+    const extracted = await extractContentFromUrl(url)
+    extractedContent = extracted.content
+    contentLength = extracted.content.length
+    extractedTitle = extracted.title
+    extractedExcerpt = extracted.excerpt
+
+    logger.addLog('summarize', 'content-extraction', {
+      url,
+      length: extractedContent.length,
+      title: extracted.title || "No title",
+      excerpt: extracted.excerpt?.substring(0, 200) || "No excerpt"
+    })
+
+    // Store debug information about the extraction
+    if (debug) {
+      debugInfo.url = url
+      debugInfo.extractedContent = {
+        length: extractedContent.length,
+        preview: extractedContent.substring(0, 500) + (extractedContent.length > 500 ? "..." : ""),
+        fullContent: extractedContent,
+        title: extracted.title,
+        excerpt: extracted.excerpt
+      }
+    }
+  } else if (content && typeof content === "string") {
+    // Use provided content directly
+    extractedContent = content
+    contentLength = content.length
+    
+    logger.addLog('summarize', 'content-input', {
+      length: content.length,
+      preview: content.substring(0, 200)
+    })
+    
+    // Store debug information
+    if (debug) {
+      debugInfo.extractedContent = {
+        length: content.length,
+        preview: content.substring(0, 500) + (content.length > 500 ? "..." : ""),
+        fullContent: content
+      }
+    }
+  } else {
+    throw new Error("Either 'content' (string) or 'url' (string) is required")
+  }
+
+  if (extractedContent.length === 0) {
+    throw new Error("Content cannot be empty")
+  }
+
+  // Generate prompt using template
+  const prompt = getSummarizePrompt({ content: extractedContent })
+  if (debug) {
+    debugInfo.prompt = prompt
+  }
+
+  // Generate summary using centralized LLM service with Zod structured output
+  const fallbackData: SummaryData = {
+    summary: extractedContent.substring(0, 500),
+    keyPoints: [],
+    readingTime: Math.ceil(contentLength / 1000) // Rough estimate: 1000 chars per minute
+  }
+
+  const llmResult = await generateJsonCompletion<SummaryData>(
+    {
+      prompt,
+      debug,
+      logContext: 'summarize',
+      schema: SummaryDataSchema,
+    },
+    fallbackData
+  )
+
+  // Validate LLM response against schema
+  let summaryData: SummaryData
+  try {
+    summaryData = safeParseOrThrow(
+      SummaryDataSchema,
+      llmResult.data,
+      "Summary LLM response"
+    )
+  } catch (error) {
+    // Fallback: create structure from raw response text if validation fails
+    logger.addLog('summarize', 'schema-validation-fallback', {
+      error: error instanceof Error ? error.message : String(error),
+    })
+    const lines = llmResult.rawResponse.split("\n").filter(l => l.trim())
+    summaryData = {
+      summary: lines[0] || llmResult.rawResponse.substring(0, 500),
+      keyPoints: lines.slice(1, 6).filter(l => l.trim().length > 0),
+      readingTime: Math.ceil(contentLength / 1000)
+    }
+    // Validate fallback data
+    summaryData = safeParseOrThrow(
+      SummaryDataSchema,
+      summaryData,
+      "Summary fallback data"
+    )
+  }
+
+  if (debug && llmResult.debugInfo) {
+    debugInfo.openaiResponse = llmResult.debugInfo
+  }
+
+  // Build response and validate it
+  const responseData: Omit<SummarizeResponse, "debug"> = {
+    summary: summaryData.summary,
+    keyPoints: summaryData.keyPoints,
+    readingTime: summaryData.readingTime,
+  }
+
+  // Validate response before returning
+  const response = safeParseOrThrow(
+    SummarizeResponseSchema.omit({ debug: true }),
+    responseData,
+    "Summarize response"
+  ) as SummarizeResponse
+
+  logger.addLog('summarize', 'output', {
+    summary: response.summary,
+    keyPoints: response.keyPoints || [],
+    keyPointsCount: response.keyPoints?.length || 0,
+    readingTime: response.readingTime
+  })
+
+  if (debug) {
+    response.debug = debugInfo
+  }
+
+  return response
+}

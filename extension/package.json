@@ -1,0 +1,43 @@
+{
+  "name": "fiber-extension",
+  "displayName": "Fiber",
+  "version": "0.0.1",
+  "description": "Auto-summarize and fact-check Vietnamese news articles",
+  "author": "thangngot",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "package": "plasmo package"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "@plasmohq/messaging": "^0.7.2",
+    "clsx": "^2.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.31",
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.16",
+    "plasmo": "^0.90.5",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3"
+  },
+  "manifest": {
+    "host_permissions": [
+      "https://vnexpress.net/*",
+      "https://tuoitre.vn/*",
+      "https://dantri.com.vn/*",
+      "https://thanhnien.vn/*"
+    ],
+    "permissions": [
+      "activeTab",
+      "storage"
+    ]
+  }
+}
