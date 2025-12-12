@@ -9,12 +9,7 @@ import { ScoreBadge } from "~/components/ui/ScoreBadge"
 import { Skeleton } from "~/components/ui/Skeleton"
 
 export const config: PlasmoCSConfig = {
-  matches: [
-    "https://vnexpress.net/*",
-    "https://tuoitre.vn/*",
-    "https://dantri.com.vn/*",
-    "https://thanhnien.vn/*"
-  ],
+  matches: ["<all_urls>"],
   all_frames: false
 }
 
@@ -32,7 +27,8 @@ interface SelectionState {
 const FactCheckTooltip: React.FC<{
   position: { x: number; y: number }
   onCheck: () => void
-}> = ({ position, onCheck }) => {
+  onSummarize: () => void
+}> = ({ position, onCheck, onSummarize }) => {
   const tooltipRef = useRef<HTMLDivElement>(null)
   
   // Calculate position to keep tooltip in viewport
@@ -52,7 +48,7 @@ const FactCheckTooltip: React.FC<{
 
   useEffect(() => {
     if (tooltipRef.current) {
-      console.log("[FactChecker] Tooltip mounted in DOM at:", {
+      console.log("[Modal] Tooltip mounted in DOM at:", {
         left,
         top,
         position: tooltipRef.current.getBoundingClientRect(),
@@ -65,38 +61,65 @@ const FactCheckTooltip: React.FC<{
   return (
     <div
       ref={tooltipRef}
-      className="fixed z-[9999] bg-black text-white rounded-lg px-3 py-1.5 text-sm font-medium shadow-lg cursor-pointer hover:bg-gray-900 transition-colors flex items-center gap-1.5"
+      className="fixed z-[9999] bg-black text-white rounded-lg px-2 py-1 text-sm font-medium shadow-lg transition-colors flex items-center gap-2"
       style={{
         left: `${left}px`,
         top: `${top}px`,
         position: "fixed",
         pointerEvents: "auto"
       }}
-      onClick={(e) => {
-        e.stopPropagation()
-        e.preventDefault()
-        console.log("[FactChecker] Tooltip clicked!")
-        onCheck()
-      }}
-      onMouseDown={(e) => {
-        e.stopPropagation()
-      }}
     >
-      <svg
-        className="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          onCheck()
+        }}
+        onMouseDown={(e) => e.stopPropagation()}
+        className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-black text-white hover:bg-gray-900"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-        />
-      </svg>
-      <span>Kiểm tra</span>
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+        <span>Kiểm tra</span>
+      </button>
+
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          onSummarize()
+        }}
+        onMouseDown={(e) => e.stopPropagation()}
+        className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-white text-black hover:bg-gray-100"
+      >
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"
+          />
+        </svg>
+        <span className="text-black">Tóm tắt</span>
+      </button>
     </div>
   )
 }
@@ -117,13 +140,13 @@ const FactCheckModal: React.FC<{
     setResult(null)
 
     try {
-      console.log("[FactChecker] Starting fact check for text:", text.substring(0, 50))
+      console.log("[Modal] Starting fact check for text:", text.substring(0, 50))
       const data = await factCheck(text)
-      console.log("[FactChecker] Fact check result:", data)
+      console.log("[Modal] Fact check result:", data)
       setResult(data)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Đã xảy ra lỗi"
-      console.error("[FactChecker] Fact check error:", err)
+      console.error("[Modal] Fact check error:", err)
       setError(errorMessage)
     } finally {
       setIsLoading(false)
@@ -397,9 +420,142 @@ const FactCheckModal: React.FC<{
   )
 }
 
-const FactChecker: React.FC = () => {
+const SummarizeModal: React.FC<{
+  text: string
+  position: { x: number; y: number }
+  onClose: () => void
+}> = ({ text, position, onClose }) => {
+  const [result, setResult] = useState<any | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  const doSummarize = useCallback(async () => {
+    setIsLoading(true)
+    setError(null)
+    setResult(null)
+    try {
+      console.log("[Modal] Starting summarize for selection:", text.substring(0, 50))
+      // Use the extension API client
+      const { summarizeArticle } = await import("~/lib/api-client")
+      const data = await summarizeArticle(text)
+      setResult(data)
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Đã xảy ra lỗi"
+      console.error("[Modal] Summarize error:", err)
+      setError(errorMessage)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [text])
+
+  useEffect(() => {
+    doSummarize()
+  }, [doSummarize])
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        const target = event.target as HTMLElement
+        if (!target.closest('[data-plasmo-root]')) {
+          onClose()
+        }
+      }
+    }
+
+    const timeoutId = setTimeout(() => {
+      document.addEventListener("mousedown", handleClickOutside)
+    }, 100)
+
+    return () => {
+      clearTimeout(timeoutId)
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [onClose])
+
+  // Position modal near selection but keep it in viewport
+  const modalWidth = 384
+  const modalHeight = 420
+  const offset = 16
+  const modalPosition = {
+    left: Math.max(
+      offset,
+      Math.min(position.x - modalWidth / 2, window.innerWidth - modalWidth - offset)
+    ),
+    top: Math.max(
+      offset,
+      Math.min(position.y + 20, window.innerHeight - modalHeight - offset)
+    )
+  }
+
+  return (
+    <>
+      <div className="fixed inset-0 z-[9998] bg-black/10" onClick={onClose} style={{ pointerEvents: "auto" }} />
+      <div
+        ref={modalRef}
+        className="fixed z-[9999] w-96 bg-white rounded-xl shadow-xl border border-gray-200 p-6 animate-in fade-in zoom-in-95 max-h-[600px] overflow-y-auto"
+        style={{ left: `${modalPosition.left}px`, top: `${modalPosition.top}px`, pointerEvents: "auto" }}
+        onClick={(e) => { e.stopPropagation(); e.preventDefault() }}
+        onMouseDown={(e) => { e.stopPropagation() }}
+      >
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-base font-semibold text-gray-900">Tóm tắt đoạn văn</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100" aria-label="Đóng">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600 border border-gray-200 leading-relaxed">
+          <span className="font-medium text-gray-500 text-xs uppercase tracking-wide mb-1 block">Đoạn văn đã chọn:</span>
+          <p className="mt-1.5">"{text.substring(0, 300)}{text.length > 300 ? "..." : ""}"</p>
+        </div>
+
+        {isLoading && (
+          <div className="space-y-3">
+            <Skeleton className="h-4 w-full" variant="text" />
+            <Skeleton className="h-4 w-full" variant="text" />
+            <Skeleton className="h-4 w-4/5" variant="text" />
+          </div>
+        )}
+
+        {error && !isLoading && (
+          <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-700">{error}</p>
+          </div>
+        )}
+
+        {result && !isLoading && !error && (
+          <div className="space-y-4">
+            <div>
+              <span className="text-xs text-gray-500">Summary:</span>
+              <p className="text-sm text-gray-900 mt-1">{result.summary}</p>
+            </div>
+            <div>
+              <span className="text-xs text-gray-500">Key Points:</span>
+              <ul className="list-disc list-inside text-sm text-gray-900 mt-1">
+                {result.keyPoints?.map((p: string, i: number) => (
+                  <li key={i}>{p}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <span className="text-xs text-gray-500">Reading Time:</span>
+              <p className="text-sm text-gray-900 mt-1">{result.readingTime} minutes</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  )
+}
+
+const ModalRoot: React.FC = () => {
   const [selection, setSelection] = useState<SelectionState | null>(null)
   const [modalData, setModalData] = useState<SelectionState | null>(null)
+  const [summarizeModalData, setSummarizeModalData] = useState<SelectionState | null>(null)
 
   useEffect(() => {
     const handleMouseUp = (e: MouseEvent) => {
@@ -416,7 +572,7 @@ const FactChecker: React.FC = () => {
               x: rect.left + rect.width / 2,
               y: rect.top
             }
-            console.log("[FactChecker] Text selected:", selectedText.substring(0, 50), "Position:", position)
+            console.log("[Modal] Text selected:", selectedText.substring(0, 50), "Position:", position)
             setSelection({
               text: selectedText,
               position
@@ -435,11 +591,20 @@ const FactChecker: React.FC = () => {
 
   const handleCheck = () => {
     if (selection) {
-      console.log("[FactChecker] Opening modal with selection:", selection.text.substring(0, 50))
+      console.log("[Modal] Opening modal with selection:", selection.text.substring(0, 50))
       // Store the selection data for the modal before clearing it
       setModalData(selection)
       setSelection(null) // Clear selection to hide tooltip
       window.getSelection()?.removeAllRanges() // Clear text selection
+    }
+  }
+
+  const handleSummarize = () => {
+    if (selection) {
+      console.log("[Modal] Opening summarize modal with selection:", selection.text.substring(0, 50))
+      setSummarizeModalData(selection)
+      setSelection(null)
+      window.getSelection()?.removeAllRanges()
     }
   }
 
@@ -448,10 +613,15 @@ const FactChecker: React.FC = () => {
     window.getSelection()?.removeAllRanges()
   }
 
+  const handleCloseSummarize = () => {
+    setSummarizeModalData(null)
+    window.getSelection()?.removeAllRanges()
+  }
+
   // Debug logging
   useEffect(() => {
     if (selection) {
-      console.log("[FactChecker] Selection state:", {
+      console.log("[Modal] Selection state:", {
         hasSelection: !!selection,
         text: selection.text.substring(0, 50),
         position: selection.position,
@@ -459,14 +629,14 @@ const FactChecker: React.FC = () => {
       })
     }
     if (modalData) {
-      console.log("[FactChecker] Modal data set:", modalData.text.substring(0, 50))
+      console.log("[Modal] Modal data set:", modalData.text.substring(0, 50))
     }
   }, [selection, modalData])
 
   // Log when tooltip should render
   useEffect(() => {
     if (selection && !modalData) {
-      console.log("[FactChecker] Should render tooltip:", {
+      console.log("[Modal] Should render tooltip:", {
         text: selection.text.substring(0, 50),
         position: selection.position
       })
@@ -475,10 +645,11 @@ const FactChecker: React.FC = () => {
 
   return (
     <>
-      {selection && !modalData && (
+      {selection && !modalData && !summarizeModalData && (
         <FactCheckTooltip
           position={selection.position}
           onCheck={handleCheck}
+          onSummarize={handleSummarize}
         />
       )}
       
@@ -489,9 +660,15 @@ const FactChecker: React.FC = () => {
           onClose={handleCloseModal}
         />
       )}
+      {summarizeModalData && (
+        <SummarizeModal
+          text={summarizeModalData.text}
+          position={summarizeModalData.position}
+          onClose={handleCloseSummarize}
+        />
+      )}
     </>
   )
 }
 
-export default FactChecker
-
+export default ModalRoot

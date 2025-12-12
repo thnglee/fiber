@@ -1,137 +1,80 @@
 # Fiber
 
-A browser extension that automatically summarizes and fact-checks Vietnamese news articles using AI.
+A lightweight browser extension + backend that automatically summarizes and fact-checks Vietnamese news articles using AI.
+
+## What this repo contains
+
+- `extension/` — Plasmo-based browser extension (React + TypeScript + Tailwind). Contains content scripts, UI components, and the popup.
+- `backend/` — Next.js (App Router) backend that exposes the API endpoints used by the extension.
+- `docs/` — Documentation and notes.
 
 ## Features
 
-- **Auto-Summarize**: Automatically summarizes news articles upon loading using LLMs
-- **Fact-Check**: Allows users to highlight text and verify its accuracy against trusted Vietnamese sources
+- Auto-summarize article content (server-side summarization using an LLM)
+- Fact-check highlighted text by searching Vietnamese news sources and asking the LLM to score/justify the result
+- Centralized backend services for content extraction (Readability), search (Tavily), and LLM orchestration (OpenAI)
 
-## Tech Stack
+## Tech stack
 
-- **Extension**: Plasmo (React + TypeScript + Tailwind CSS)
-- **Backend**: Next.js (App Router) API routes
-- **AI Services**: 
-  - OpenAI GPT-4o-mini (LLM)
-  - Tavily AI (RAG Search)
+- Extension: Plasmo, React, TypeScript, Tailwind CSS
+- Backend: Next.js (App Router), TypeScript, Zod for validation
+- AI / search integrations: OpenAI (LLM) and Tavily (search)
 
-## Project Structure
+## Quick run (development)
 
-```
-/fiber
-├── extension/          # Plasmo browser extension
-│   ├── contents/       # Content scripts (UI logic)
-│   ├── components/     # Reusable React components
-│   └── lib/            # Utilities and API client
-├── backend/            # Next.js API backend
-│   └── app/api/        # API routes
-└── docs/               # Documentation
-```
+Start the backend first (the extension talks to this API):
 
-## Setup
-
-### Extension Setup
-
-1. Navigate to the extension directory:
-```bash
-cd extension
-```
-
-2. Install dependencies:
-```bash
-npm install
-# or
-pnpm install
-```
-
-3. Create a `.env` file (optional, for custom API URL):
-```env
-PLASMO_PUBLIC_API_URL=http://localhost:3000/api
-```
-
-4. Run development server:
-```bash
-npm run dev
-# or
-pnpm dev
-```
-
-### Database (Supabase + Prisma)
-- Ensure `SUPABASE_DB_URL` in `.env` is the full Postgres connection string from Supabase (include `?sslmode=require` if provided).
-- After env is set, run `npx prisma generate` to build the Prisma client.
-- Create the initial tables with `npx prisma migrate dev --name init` (this uses the schema in `prisma/schema.prisma`).
-
-5. Build for production:
-```bash
-npm run build
-# or
-pnpm build
-```
-
-### Backend Setup
-
-1. Navigate to the backend directory:
 ```bash
 cd backend
-```
-
-2. Install dependencies:
-```bash
-npm install
-# or
-pnpm install
-```
-
-3. Create a `.env` file:
-```env
-OPENAI_API_KEY=your_openai_api_key_here
-TAVILY_API_KEY=your_tavily_api_key_here
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_DB_URL=your_supabase_postgres_connection_string
-SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-
-# Optional: AI Model Configuration (defaults shown)
-OPENAI_MODEL=gpt-4o-mini
-OPENAI_TEMPERATURE=0.7
-```
-
-4. Run development server:
-```bash
+npm install    # or `pnpm install`
+# Create a .env with at least OPENAI_API_KEY and TAVILY_API_KEY
 npm run dev
-# or
-pnpm dev
 ```
 
-The API will be available at `http://localhost:3000/api`
+The backend runs on `http://localhost:3000` by default and exposes the API under `/api` (notably `/api/summarize` and `/api/fact-check`).
 
-## Development
+Run the extension in a second terminal:
 
-### Phase 1: Foundation & Sidebar (Day 1)
-- ✅ Setup Plasmo + Tailwind CSS
-- ✅ Create SummarySidebar component
-- ✅ Implement Readability content extraction
-- ✅ Setup Next.js /api/summarize endpoint
-- ✅ Connect Sidebar to Backend
+```bash
+cd extension
+npm install    # or `pnpm install`
+# Optionally set PLASMO_PUBLIC_API_URL in extension/.env to point to your backend (default: http://localhost:3000/api)
+npm run dev
+```
 
-### Phase 2: Fact Check & RAG (Day 2)
-- ✅ Build text selection logic
-- ✅ Setup /api/fact-check endpoint
-- ✅ Build FactCheckModal with Trust Meter
-- ✅ Handle loading states
+Plasmo's dev flow will open a browser with the extension loaded for development and enable hot reload.
 
-### Phase 3: Polish & Style (Day 3)
-- Refine Tailwind classes (Dub.co style)
-- Ensure Shadow DOM styling works correctly
-- Add error handling and retry buttons
-- Build and test extension
+## Key API endpoints
 
-## Supported Sites
+- `POST /api/summarize` — Summarize article content. Request body: `{ content?: string, url?: string, debug?: boolean }`. Response: `{ summary, keyPoints, readingTime, debug? }`.
+- `POST /api/fact-check` — Fact-check a selected text. Request body: `{ text: string, debug?: boolean }`. Response: `{ score, reason, sources, verified, debug? }`.
 
-- vnexpress.net
-- tuoitre.vn
-- dantri.com.vn
-- thanhnien.vn
+Both endpoints validate inputs and outputs with Zod schemas (`backend/domain/schemas.ts`).
+
+## Notable implementation points
+
+- The backend uses `@mozilla/readability` + `jsdom` to extract readable article content when given a URL.
+- LLM calls are centralized in `backend/services/llm.service.ts`. The service attempts structured JSON output using Zod -> json-schema and falls back to parsing code blocks or raw text.
+- Search is handled via a Tavily client wrapper that returns a list of source URLs and aggregated source content used to augment prompts.
+- There is an in-memory logger (`backend/lib/logger.ts`) that captures recent events and supports subscriptions for live debugging.
+
+## Supported news sites (extension host permissions)
+
+- `vnexpress.net`
+- `tuoitre.vn`
+- `dantri.com.vn`
+- `thanhnien.vn`
+
+## Security & running notes
+
+- Keep your OpenAI and Tavily API keys private — they must live in the backend `.env` (the extension calls the backend; it should never contain secret keys).
+- The backend currently uses permissive CORS for development. Lock this down before deploying to production.
+
+## Next steps you might want to take
+
+- Add tests for critical services (LLM parsing, schema validation, content extraction)
+- Add basic rate-limiting to protect the API and control AI usage costs
+- Add monitoring/metrics for LLM usage and errors
 
 ## License
 

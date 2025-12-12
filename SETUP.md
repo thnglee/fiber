@@ -3,128 +3,81 @@
 ## Prerequisites
 
 - Node.js 18+ and npm/pnpm
-- OpenAI API key from [OpenAI Platform](https://platform.openai.com/api-keys)
-- Tavily API key from [Tavily](https://tavily.com)
+- OpenAI API key (from OpenAI Platform)
+- Tavily API key (from Tavily)
 
-## Step 1: Backend Setup
+## Backend (development)
+
+1. Install dependencies and start dev server:
 
 ```bash
 cd backend
-npm install
-# or
-pnpm install
+npm install    # or `pnpm install`
+# Create a .env file with at least OPENAI_API_KEY and TAVILY_API_KEY
+npm run dev
 ```
 
-Create `.env` file:
+The backend runs on `http://localhost:3000` by default. The important API endpoints are under `/api` (notably `/api/summarize` and `/api/fact-check`).
+
+Environment variables used by the backend (minimum required):
+
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
 TAVILY_API_KEY=your_tavily_api_key_here
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_DB_URL=your_supabase_postgres_connection_string
-SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-
-# Optional: AI Model Configuration (defaults shown)
+# Optional: model and temperature overrides
 OPENAI_MODEL=gpt-4o-mini
 OPENAI_TEMPERATURE=0.7
 ```
 
-Start the backend:
-```bash
-npm run dev
-# or
-pnpm dev
-```
+## Extension (development)
 
-Backend will run on `http://localhost:3000`
-
-### Database (Supabase + Prisma)
-- Confirm `.env` has `SUPABASE_DB_URL` with the Postgres connection string from Supabase (include `?sslmode=require` if provided).
-
-- Note: The repository includes Prisma packages in `backend/package.json`, but it does not include a `prisma/schema.prisma` or migration files by default. If you plan to use the DB features follow these steps:
-   1. Add a `prisma/schema.prisma` file under `backend/` describing your schema.
-   2. Ensure `SUPABASE_DB_URL` (or `DATABASE_URL`) is set in your `.env`.
-   3. Run `npx prisma generate` to build the client.
-   4. Create initial migrations: `npx prisma migrate dev --name init`
-
-If you don't need persistence right now you can skip the Prisma steps — the backend will still run and provide the summarize/fact-check APIs that call external AI/search services.
-
-## Step 2: Extension Setup
-
-In a new terminal:
+1. In a separate terminal, install and run the extension dev flow:
 
 ```bash
 cd extension
-npm install
-# or
-pnpm install
-```
-
-(Optional) Create `.env` file if you want to use a different API URL:
-```env
-PLASMO_PUBLIC_API_URL=http://localhost:3000/api
-```
-
-Start the extension development:
-```bash
+npm install    # or `pnpm install`
+# Optionally set PLASMO_PUBLIC_API_URL in extension/.env (default: http://localhost:3000/api)
 npm run dev
-# or
-pnpm dev
 ```
 
-This will:
-- Build the extension
-- Open Chrome/Edge with the extension loaded
-- Enable hot-reload for development
+Plasmo will open a browser with the extension loaded for development and enable hot reload.
 
-## Step 3: Test the Extension
+## Build for production (extension & backend)
 
-1. Navigate to a supported news site:
-   - vnexpress.net
-   - tuoitre.vn
-   - dantri.com.vn
-   - thanhnien.vn
+Extension:
 
-2. The summary sidebar should appear automatically on article pages
-
-3. Select text on the page to see the fact-check tooltip
-
-## Building for Production
-
-### Extension
 ```bash
 cd extension
 npm run build
-# or
-pnpm build
+# built artifacts are under extension/build/
 ```
 
-The built extension will be in `extension/build/chrome-mv3-prod/`
+Backend:
 
-### Backend
 ```bash
 cd backend
 npm run build
 npm start
-# or
-pnpm build
-pnpm start
 ```
+
+## Testing the extension
+
+1. Open a supported Vietnamese news site (the extension includes host permissions for these):
+   - `vnexpress.net`
+   - `tuoitre.vn`
+   - `dantri.com.vn`
+   - `thanhnien.vn`
+
+2. The summary sidebar should appear on article pages. Selecting text will surface the fact-check UI.
 
 ## Troubleshooting
 
-### Extension not loading
-- Make sure the backend is running on port 3000
-- Check browser console for errors
-- Verify API keys are set in backend `.env`
+- If the extension UI doesn't load: ensure the backend is running and that the extension is pointing to the correct API URL.
+- If APIs return errors: check the backend terminal logs and confirm `OPENAI_API_KEY` and `TAVILY_API_KEY` are set.
+- Styling issues: verify Tailwind is compiling and that content styles are loaded into the extension's Shadow DOM.
 
-### API errors
-- Check backend logs in terminal
-- Verify API keys are correct
-- Ensure CORS is enabled (already configured in `next.config.js`)
+## Notes
 
-### Styling issues
-- Make sure Tailwind CSS is properly compiled
-- Check that `style.css` is imported in content scripts
-- Verify Shadow DOM styles are injected via `getStyle()`
+- This project uses server-side content extraction (Readability + JSDOM) and server-side LLM calls; keep API keys only on the backend.
+- The backend validates requests/responses with Zod schemas to keep contracts consistent between the extension and server.
 

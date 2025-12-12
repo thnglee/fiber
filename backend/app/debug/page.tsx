@@ -39,6 +39,8 @@ interface FactCheckDebugInfo {
 
 export default function DebugPage() {
   const [summaryUrl, setSummaryUrl] = useState("")
+  const [summaryInputType, setSummaryInputType] = useState<"url" | "paragraph">("url")
+  const [summaryParagraph, setSummaryParagraph] = useState("")
   const [summaryResult, setSummaryResult] = useState<any>(null)
   const [summaryLoading, setSummaryLoading] = useState(false)
   const [summaryError, setSummaryError] = useState<string | null>(null)
@@ -54,15 +56,19 @@ export default function DebugPage() {
     setSummaryResult(null)
 
     try {
+      const body: any = { debug: true }
+      if (summaryInputType === "url") {
+        body.url = summaryUrl
+      } else {
+        body.content = summaryParagraph
+      }
+
       const response = await fetch("/api/summarize", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          url: summaryUrl,
-          debug: true,
-        }),
+        body: JSON.stringify(body),
       })
 
       if (!response.ok) {
@@ -127,24 +133,61 @@ export default function DebugPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Article URL
-                </label>
-                <input
-                  type="url"
-                  value={summaryUrl}
-                  onChange={(e) => setSummaryUrl(e.target.value)}
-                  placeholder="https://vnexpress.net/..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  The content will be extracted using Mozilla/Readability
-                </p>
+                <div className="flex items-center gap-4 mb-3">
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="summaryInputType"
+                      value="url"
+                      checked={summaryInputType === "url"}
+                      onChange={() => setSummaryInputType("url")}
+                      className="mr-2"
+                    />
+                    <span className="text-sm">Article URL</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="summaryInputType"
+                      value="paragraph"
+                      checked={summaryInputType === "paragraph"}
+                      onChange={() => setSummaryInputType("paragraph")}
+                      className="mr-2"
+                    />
+                    <span className="text-sm">Selected paragraph</span>
+                  </label>
+                </div>
+
+                {summaryInputType === "url" ? (
+                  <>
+                    <input
+                      type="url"
+                      value={summaryUrl}
+                      onChange={(e) => setSummaryUrl(e.target.value)}
+                      placeholder="https://vnexpress.net/..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      The content will be extracted using Mozilla/Readability
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Selected paragraph</label>
+                    <textarea
+                      value={summaryParagraph}
+                      onChange={(e) => setSummaryParagraph(e.target.value)}
+                      placeholder="Paste the selected paragraph here..."
+                      className="w-full h-32 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">The selected paragraph will be summarized directly.</p>
+                  </>
+                )}
               </div>
 
               <button
                 onClick={handleSummarize}
-                disabled={!summaryUrl.trim() || summaryLoading}
+                disabled={(summaryInputType === "url" ? !summaryUrl.trim() : !summaryParagraph.trim()) || summaryLoading}
                 className="w-full px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {summaryLoading ? "Processing..." : "Test Summary"}

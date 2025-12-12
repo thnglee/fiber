@@ -14,7 +14,12 @@ export const config: PlasmoCSConfig = {
     "https://vnexpress.net/*",
     "https://tuoitre.vn/*",
     "https://dantri.com.vn/*",
-    "https://thanhnien.vn/*"
+    "https://thanhnien.vn/*",
+    "https://vietnamnet.vn/*",
+    "https://laodong.vn/*",
+    "https://tienphong.vn/*",
+    "https://vtv.vn/*",
+    "https://nld.com.vn/*"
   ],
   all_frames: false
 }

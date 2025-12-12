@@ -13,7 +13,12 @@ export const SUPPORTED_DOMAINS = [
   "vnexpress.net",
   "tuoitre.vn",
   "dantri.com.vn",
-  "thanhnien.vn"
+  "thanhnien.vn",
+  "vietnamnet.vn", // Added
+  "laodong.vn",    // Added
+  "tienphong.vn",  // Added
+  "vtv.vn",        // Added
+  "nld.com.vn"     // Added
 ] as const
 
 /**
