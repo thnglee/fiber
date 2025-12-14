@@ -213,12 +213,12 @@ export default function DebugPage() {
                         </p>
                       </div>
                       <div>
-                        <span className="text-xs text-gray-500">Key Points:</span>
-                        <ul className="list-disc list-inside text-sm text-gray-900 mt-1">
-                          {summaryResult.keyPoints?.map((point: string, i: number) => (
-                            <li key={i}>{point}</li>
-                          ))}
-                        </ul>
+                        <span className="text-xs text-gray-500">Category:</span>
+                        <div className="mt-1">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            {summaryResult.category}
+                          </span>
+                        </div>
                       </div>
                       <div>
                         <span className="text-xs text-gray-500">Reading Time:</span>

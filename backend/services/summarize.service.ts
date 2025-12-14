@@ -89,7 +89,7 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
   // Generate summary using centralized LLM service with Zod structured output
   const fallbackData: SummaryData = {
     summary: extractedContent.substring(0, 500),
-    keyPoints: [],
+    category: extractedTitle || "Khác",
     readingTime: Math.ceil(contentLength / 1000) // Rough estimate: 1000 chars per minute
   }
 
@@ -119,7 +119,9 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
     const lines = llmResult.rawResponse.split("\n").filter(l => l.trim())
     summaryData = {
       summary: lines[0] || llmResult.rawResponse.substring(0, 500),
-      keyPoints: lines.slice(1, 6).filter(l => l.trim().length > 0),
+      // If we can't parse structured JSON, try to infer category from the next non-empty line,
+      // otherwise default to "Khác"
+      category: lines[1] || "Khác",
       readingTime: Math.ceil(contentLength / 1000)
     }
     // Validate fallback data
@@ -137,7 +139,7 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
   // Build response and validate it
   const responseData: Omit<SummarizeResponse, "debug"> = {
     summary: summaryData.summary,
-    keyPoints: summaryData.keyPoints,
+    category: summaryData.category,
     readingTime: summaryData.readingTime,
   }
 
@@ -150,8 +152,7 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
 
   logger.addLog('summarize', 'output', {
     summary: response.summary,
-    keyPoints: response.keyPoints || [],
-    keyPointsCount: response.keyPoints?.length || 0,
+    category: response.category,
     readingTime: response.readingTime
   })
 

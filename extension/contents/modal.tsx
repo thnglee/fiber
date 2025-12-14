@@ -530,20 +530,16 @@ const SummarizeModal: React.FC<{
         {result && !isLoading && !error && (
           <div className="space-y-4">
             <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                  {result.category}
+                </span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                  {result.readingTime} minutes
+                </span>
+              </div>
               <span className="text-xs text-gray-500">Summary:</span>
               <p className="text-sm text-gray-900 mt-1">{result.summary}</p>
-            </div>
-            <div>
-              <span className="text-xs text-gray-500">Key Points:</span>
-              <ul className="list-disc list-inside text-sm text-gray-900 mt-1">
-                {result.keyPoints?.map((p: string, i: number) => (
-                  <li key={i}>{p}</li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <span className="text-xs text-gray-500">Reading Time:</span>
-              <p className="text-sm text-gray-900 mt-1">{result.readingTime} minutes</p>
             </div>
           </div>
         )}

@@ -71,7 +71,7 @@ export const SummarizeRequestSchema = z.object({
 // Internal schema for LLM structured output
 export const SummaryDataSchema = z.object({
   summary: z.string(),
-  keyPoints: z.array(z.string()),
+  category: z.string(),
   readingTime: z.number().min(0),
 })
 
@@ -94,7 +94,7 @@ export const SummarizeDebugInfoSchema = z.object({
 
 export const SummarizeResponseSchema = z.object({
   summary: z.string(),
-  keyPoints: z.array(z.string()),
+  category: z.string(),
   readingTime: z.number().min(0),
   debug: SummarizeDebugInfoSchema.optional(),
 })
@@ -128,11 +128,11 @@ export const EnvSchema = z.object({
   OPENAI_API_KEY: z.string().min(1, "OPENAI_API_KEY is required"),
   TAVILY_API_KEY: z.string().min(1, "TAVILY_API_KEY is required"),
   
-  // Supabase configuration
-  SUPABASE_URL: z.string().url().min(1, "SUPABASE_URL is required"),
-  SUPABASE_DB_URL: z.string().url().min(1, "SUPABASE_DB_URL is required"),
-  SUPABASE_ANON_KEY: z.string().min(1, "SUPABASE_ANON_KEY is required"),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1, "SUPABASE_SERVICE_ROLE_KEY is required"),
+  // Supabase configuration (optional - Supabase not required)
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_DB_URL: z.string().url().optional(),
+  SUPABASE_ANON_KEY: z.string().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
 
   // Optional AI configuration
   OPENAI_MODEL: z.string().default("gpt-4o-mini"),

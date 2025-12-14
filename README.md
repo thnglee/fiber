@@ -46,7 +46,7 @@ Plasmo's dev flow will open a browser with the extension loaded for development 
 
 ## Key API endpoints
 
-- `POST /api/summarize` — Summarize article content. Request body: `{ content?: string, url?: string, debug?: boolean }`. Response: `{ summary, keyPoints, readingTime, debug? }`.
+ - `POST /api/summarize` — Summarize article content. Request body: `{ content?: string, url?: string, debug?: boolean }`. Response: `{ summary, category, readingTime, debug? }`.
 - `POST /api/fact-check` — Fact-check a selected text. Request body: `{ text: string, debug?: boolean }`. Response: `{ score, reason, sources, verified, debug? }`.
 
 Both endpoints validate inputs and outputs with Zod schemas (`backend/domain/schemas.ts`).

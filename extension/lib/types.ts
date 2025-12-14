@@ -11,7 +11,7 @@ export interface FactCheckResponse {
 
 export interface SummaryResponse {
   summary: string;
-  keyPoints: string[];
+  category: string;
   readingTime: number; // in minutes
 }
 

@@ -187,31 +187,20 @@ const SummarySidebar: React.FC = () => {
           <Card>
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-gray-500 mb-2">
-                  Thời gian đọc: {formatReadingTime(summary.readingTime)}
-                </p>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    {summary.category}
+                  </span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    {formatReadingTime(summary.readingTime)}
+                  </span>
+                </div>
                 <p className="text-gray-900 leading-relaxed whitespace-pre-line">
                   {summary.summary}
                 </p>
               </div>
             </div>
           </Card>
-
-          {summary.keyPoints.length > 0 && (
-            <Card>
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">
-                Điểm chính
-              </h3>
-              <ul className="space-y-2">
-                {summary.keyPoints.map((point, index) => (
-                  <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
-                    <span className="text-gray-400 mt-1">•</span>
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          )}
         </div>
       )}
     </div>

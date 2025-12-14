@@ -51,18 +51,37 @@ export function getSummarizePrompt(params: SummarizePromptParams): string {
   const { content } = params
   const contentPreview = content.substring(0, 10000) // Limit to 10k chars
   
-  return `Bạn là một trợ lý AI chuyên tóm tắt tin tức tiếng Việt. Hãy tóm tắt bài viết sau đây một cách ngắn gọn, chính xác và dễ hiểu.
+  return `Bạn là một trợ lý AI chuyên tóm tắt và phân loại tin tức tiếng Việt.
 
-Yêu cầu:
-1. Tóm tắt trong 2-3 đoạn văn ngắn
-2. Liệt kê 3-5 điểm chính dưới dạng bullet points
-3. Ước tính thời gian đọc (tính bằng phút, dựa trên độ dài bài viết)
+Nhiệm vụ: Tóm tắt bài viết sau một cách ngắn gọn, chính xác và dễ hiểu, sau đó phân loại và ước tính thời gian đọc.
 
-Bài viết:
+Yêu cầu cụ thể:
+1. **Tóm tắt (summary):** Viết tóm tắt nội dung chính trong 2-3 đoạn văn ngắn.
+2. **Thể loại (category):** Xác định thể loại chính của bài viết. Nếu bài viết thuộc một trong các lĩnh vực sau, hãy sử dụng:
+   - Chính trị - Xã hội
+   - Kinh tế - Tài chính
+   - Công nghệ - Khoa học
+   - Sức khỏe - Y tế
+   - Văn hóa - Giải trí
+   - Thể thao
+   - Giáo dục
+   - Du lịch - Ẩm thực
+   - Môi trường - Biến đổi Khí hậu
+   - Pháp luật - Tội phạm
+   - Quân sự - Quốc phòng
+   Nếu không thuộc các lĩnh vực trên, hãy chọn một **thể loại phù hợp nhất** và trả về (ví dụ: Lịch sử, Bất động sản, Nhân sự). Trả về chỉ một giá trị chuỗi.
+3. **Thời gian đọc (readingTime):** Ước tính thời gian đọc bài viết (tính bằng phút, làm tròn lên số nguyên gần nhất).
+
+**Bài viết cần xử lý:**
 ${contentPreview}
 
-Trả về với các trường sau:
-- summary: tóm tắt ngắn gọn (2-3 đoạn văn)
-- keyPoints: mảng các điểm chính (3-5 điểm)
-- readingTime: thời gian đọc ước tính (số phút)`
+**Định dạng đầu ra:**
+Hãy trả về kết quả dưới định dạng JSON, có cấu trúc như sau:
+
+{
+  "summary": "tóm tắt ngắn gọn (2-3 đoạn văn)",
+  "category": "thể loại của bài viết (chuỗi)",
+  "readingTime": "thời gian đọc ước tính (số phút, là một số nguyên)"
+}
+`;
 }
