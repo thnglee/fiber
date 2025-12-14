@@ -56,8 +56,8 @@ export function getSummarizePrompt(params: SummarizePromptParams): string {
 Nhiệm vụ: Tóm tắt bài viết sau một cách ngắn gọn, chính xác và dễ hiểu, sau đó phân loại và ước tính thời gian đọc.
 
 Yêu cầu cụ thể:
-1. **Tóm tắt (summary):** Viết tóm tắt nội dung chính trong 2-3 đoạn văn ngắn.
-2. **Thể loại (category):** Xác định thể loại chính của bài viết. Nếu bài viết thuộc một trong các lĩnh vực sau, hãy sử dụng:
+1. Tóm tắt (summary): Viết tóm tắt nội dung chính trong 2-3 đoạn văn ngắn.
+2. Thể loại (category): Xác định thể loại chính của bài viết. Nếu bài viết thuộc một trong các lĩnh vực sau, hãy sử dụng:
    - Chính trị - Xã hội
    - Kinh tế - Tài chính
    - Công nghệ - Khoa học
@@ -70,12 +70,12 @@ Yêu cầu cụ thể:
    - Pháp luật - Tội phạm
    - Quân sự - Quốc phòng
    Nếu không thuộc các lĩnh vực trên, hãy chọn một **thể loại phù hợp nhất** và trả về (ví dụ: Lịch sử, Bất động sản, Nhân sự). Trả về chỉ một giá trị chuỗi.
-3. **Thời gian đọc (readingTime):** Ước tính thời gian đọc bài viết (tính bằng phút, làm tròn lên số nguyên gần nhất).
+3. Thời gian đọc (readingTime): Ước tính thời gian đọc bài viết (tính bằng phút, làm tròn lên số nguyên gần nhất).
 
-**Bài viết cần xử lý:**
+Bài viết cần xử lý:
 ${contentPreview}
 
-**Định dạng đầu ra:**
+Định dạng đầu ra:
 Hãy trả về kết quả dưới định dạng JSON, có cấu trúc như sau:
 
 {
