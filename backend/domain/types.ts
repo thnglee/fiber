@@ -21,6 +21,12 @@ import type {
   Env,
 } from "./schemas"
 
+// Import shared types used by both extension and backend
+import type {
+  TrustLevel,
+  FactCheckResult as SharedFactCheckResult,
+} from "../../shared/types"
+
 // Re-export schema-inferred types for convenience
 export type {
   FactCheckRequest,
@@ -35,23 +41,18 @@ export type {
   Env,
 }
 
+// Re-export shared types
+export type { TrustLevel }
+
 // ============================================================================
 // Fact Check Domain Types
 // ============================================================================
 
 /**
- * Trust level classification based on fact-check score
- */
-export type TrustLevel = "high" | "medium" | "low"
-
-/**
  * Fact check result with trust level classification
+ * Extended from shared type to include verified field
  */
-export interface FactCheckResult {
-  score: number
-  level: TrustLevel
-  reason: string
-  sources: string[]
+export interface FactCheckResult extends SharedFactCheckResult {
   verified: boolean
 }
 
@@ -190,12 +191,12 @@ export type LogType = "fact-check" | "summarize" | "search" | "llm" | "content-e
 /**
  * Log stage/phase within a process
  */
-export type LogStage = 
-  | "input" 
-  | "output" 
-  | "prompt" 
-  | "response" 
-  | "content-extraction" 
+export type LogStage =
+  | "input"
+  | "output"
+  | "prompt"
+  | "response"
+  | "content-extraction"
   | "content-input"
   | "schema-validation-fallback"
   | "json-parse-error"
