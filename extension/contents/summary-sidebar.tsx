@@ -8,6 +8,7 @@ import { Card } from "~/components/ui/Card"
 import { Button } from "~/components/ui/Button"
 import { Skeleton } from "~/components/ui/Skeleton"
 import { formatReadingTime } from "~/lib/utils"
+import { isArticlePage } from "~/lib/page-detector"
 
 export const config: PlasmoCSConfig = {
   matches: [
@@ -35,6 +36,7 @@ const SummarySidebar: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(true)
+  const [isArticle, setIsArticle] = useState<boolean | null>(null) // null = detecting, true = article, false = not article
 
   // Wait for DOM to be ready and article content to be present
   const waitForContent = async (maxRetries = 10, delay = 500): Promise<boolean> => {
@@ -42,7 +44,7 @@ const SummarySidebar: React.FC = () => {
       // Check if document is ready
       if (document.readyState === "complete") {
         // Check for common article content selectors on Vietnamese news sites
-        const hasContent = 
+        const hasContent =
           document.querySelector("article") ||
           document.querySelector(".fck_detail") || // vnexpress article content
           document.querySelector(".content-detail") || // tuoitre
@@ -56,7 +58,7 @@ const SummarySidebar: React.FC = () => {
           return true
         }
       }
-      
+
       // Wait before retrying
       await new Promise(resolve => setTimeout(resolve, delay))
     }
@@ -95,18 +97,30 @@ const SummarySidebar: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    extractAndSummarize()
+    // Detect page type and conditionally auto-summarize
+    const initializePage = async () => {
+      setIsArticle(null) // Start detecting
+      const isArticle = await isArticlePage()
+      setIsArticle(isArticle)
+
+      // Only auto-summarize on article pages
+      if (isArticle) {
+        extractAndSummarize()
+      }
+    }
+
+    initializePage()
 
     // Listen for URL changes (for SPAs like vnexpress)
     let currentUrl = window.location.href
-    
+
     const checkUrlChange = () => {
       if (window.location.href !== currentUrl) {
         currentUrl = window.location.href
-        // Reset state and re-extract
+        // Reset state and re-detect page type
         setSummary(null)
         setError(null)
-        extractAndSummarize()
+        initializePage()
       }
     }
 
@@ -117,7 +131,7 @@ const SummarySidebar: React.FC = () => {
     const handlePopState = () => {
       setSummary(null)
       setError(null)
-      extractAndSummarize()
+      initializePage()
     }
 
     window.addEventListener("popstate", handlePopState)
@@ -128,16 +142,39 @@ const SummarySidebar: React.FC = () => {
     }
   }, [extractAndSummarize])
 
-  if (!isOpen) {
+  // Show collapsed button if user closed sidebar OR if it's not an article page
+  if (!isOpen || isArticle === false) {
     return (
       <div className="fixed top-4 right-4 z-50">
         <Button
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            setIsOpen(true)
+            // If not an article page, manually trigger summarization
+            if (isArticle === false && !summary && !isLoading) {
+              extractAndSummarize()
+            }
+          }}
           variant="primary"
           size="sm"
         >
-          Tóm tắt
+          {isArticle === false ? "Tóm tắt trang này" : "Tóm tắt"}
         </Button>
+      </div>
+    )
+  }
+
+  // Show loading state while detecting page type
+  if (isArticle === null) {
+    return (
+      <div className="fixed top-0 right-0 h-full w-[400px] bg-white shadow-2xl z-50 border-l border-gray-200 p-6 overflow-y-auto animate-slide-in-right">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-gray-900">Tóm tắt bài viết</h2>
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-3/4" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-full" />
+        </div>
       </div>
     )
   }
