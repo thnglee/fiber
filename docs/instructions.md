@@ -82,8 +82,3 @@ Backend: Setup /api/fact-check (Tavily + OpenAI).
 UI: Build <FactCheckModal /> with Trust Meter (Green/Red colors).
 State: Handle Loading states (Skeletons) inside the React component.
 
-## Phase 3: Polish & Dub.co Style (Day 3)
-Styling: Refine Tailwind classes to match Dub.co (Grayscale, Borders, Shadows).
-Shadow DOM: Ensure Tailwind styles are correctly injected into Plasmo's Shadow DOM.
-Error Handling: "Retry" buttons, nice error messages.
-Ship: Build extension (pnpm build) and record demo.

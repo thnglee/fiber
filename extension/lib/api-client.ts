@@ -40,7 +40,10 @@ async function fetchAPI<T>(
 export async function summarizeArticle(content: string): Promise<SummaryResponse> {
   return fetchAPI<SummaryResponse>("/summarize", {
     method: "POST",
-    body: JSON.stringify({ content }),
+    body: JSON.stringify({
+      content,
+      website: window.location.hostname
+    }),
   })
 }
 
@@ -50,7 +53,9 @@ export async function summarizeArticle(content: string): Promise<SummaryResponse
 export async function factCheck(text: string): Promise<FactCheckResponse> {
   return fetchAPI<FactCheckResponse>("/fact-check", {
     method: "POST",
-    body: JSON.stringify({ text }),
+    body: JSON.stringify({
+      text,
+      website: window.location.hostname
+    }),
   })
 }
-

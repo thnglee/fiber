@@ -46,3 +46,55 @@ export interface FactCheckResult {
     reason: string;
     sources: string[];
 }
+
+/**
+ * Token usage information from LLM API
+ */
+export interface TokenUsage {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+}
+
+/**
+ * Location data from geolocation API
+ */
+export interface LocationData {
+    city: string;
+    region: string;
+    country: string;
+    country_code: string;
+    lat: number;
+    lon: number;
+}
+
+/**
+ * User action record stored in database
+ */
+export interface UserAction {
+    id: string;
+    created_at: string;
+    action_type: 'summarize' | 'fact-check';
+    input_type: 'text' | 'url';
+    input_content: string;
+    output_content: any;
+    category: string | null;
+    token_usage: TokenUsage;
+    user_ip: string;
+    user_location: LocationData | null;
+    website: string;
+    user_agent: string;
+    processing_time_ms: number;
+}
+
+/**
+ * Aggregated statistics for admin dashboard
+ */
+export interface ActionStats {
+    total_actions: number;
+    total_tokens: number;
+    avg_processing_time: number;
+    actions_by_type: Record<string, number>;
+    actions_by_website: Record<string, number>;
+    actions_today: number;
+}

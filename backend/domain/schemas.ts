@@ -12,6 +12,7 @@ import { z } from "zod"
 export const FactCheckRequestSchema = z.object({
   text: z.string().min(1, "Text is required"),
   debug: z.boolean().optional(),
+  website: z.string().optional(), // Website where the action was taken
 })
 
 // Internal schema for LLM structured output (without sources/debug)
@@ -60,6 +61,7 @@ export const SummarizeRequestSchema = z.object({
   content: z.string().optional(),
   url: z.string().url().optional(),
   debug: z.boolean().optional(),
+  website: z.string().optional(), // Website where the action was taken
 }).refine(
   (data) => data.content || data.url,
   {
@@ -127,12 +129,16 @@ export const EnvSchema = z.object({
   // Required API keys
   OPENAI_API_KEY: z.string().min(1, "OPENAI_API_KEY is required"),
   TAVILY_API_KEY: z.string().min(1, "TAVILY_API_KEY is required"),
-  
+
   // Supabase configuration (optional - Supabase not required)
   SUPABASE_URL: z.string().url().optional(),
   SUPABASE_DB_URL: z.string().url().optional(),
   SUPABASE_ANON_KEY: z.string().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
+
+  // Public Supabase keys for client-side access (Realtime)
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
 
   // Optional AI configuration
   OPENAI_MODEL: z.string().default("gpt-4o-mini"),
@@ -141,12 +147,15 @@ export const EnvSchema = z.object({
     if (isNaN(parsed)) return 0.7
     return Math.max(0, Math.min(2, parsed))
   }).pipe(z.number().min(0).max(2)).default("0.7"),
-  
+
   // Node environment
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
-  
+
   // Optional: API URL for extension
   PLASMO_PUBLIC_API_URL: z.string().url().optional(),
+
+  // Optional: Admin dev mode bypass
+  ADMIN_DEV_MODE: z.string().optional(),
 })
 
 // ============================================================================

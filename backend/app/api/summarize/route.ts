@@ -22,6 +22,8 @@ export async function OPTIONS() {
  * Validates input and delegates business logic to summarizeService
  */
 export async function POST(request: NextRequest) {
+  const startTime = Date.now()
+
   try {
     // Check API key first before processing request
     try {
@@ -29,7 +31,7 @@ export async function POST(request: NextRequest) {
     } catch (error) {
       console.error("OPENAI_API_KEY is not set in environment variables")
       return NextResponse.json(
-        { 
+        {
           error: "OpenAI API key not configured",
           hint: "Please set OPENAI_API_KEY in your .env file"
         },
@@ -45,7 +47,7 @@ export async function POST(request: NextRequest) {
       return zodErrorResponse(parseResult.error, 400)
     }
 
-    const { content, url, debug } = parseResult.data
+    const { content, url, debug, website } = parseResult.data
 
     // Delegate to service layer
     // Service will handle validation and extraction
@@ -56,6 +58,25 @@ export async function POST(request: NextRequest) {
     if (!responseParseResult.success) {
       return zodErrorResponse(responseParseResult.error, 500)
     }
+
+    // Track action asynchronously (fire-and-forget)
+    const processingTime = Date.now() - startTime
+    const { trackAction, getClientIP, extractTokenUsage } = await import('@/services/action-tracking.service')
+
+    trackAction({
+      actionType: 'summarize',
+      inputType: url ? 'url' : 'text',
+      inputContent: url || content || '',
+      outputContent: responseParseResult.data,
+      category: responseParseResult.data.category,
+      tokenUsage: extractTokenUsage(response.debug?.openaiResponse),
+      userIp: getClientIP(request.headers),
+      website: website || 'unknown',
+      userAgent: request.headers.get('user-agent') || 'unknown',
+      processingTimeMs: processingTime
+    }).catch(err => {
+      console.error('[Summarize] Failed to track action:', err)
+    })
 
     return NextResponse.json(responseParseResult.data, { headers: getCorsHeaders() })
   } catch (error) {
@@ -82,7 +103,7 @@ export async function POST(request: NextRequest) {
     // Handle URL extraction errors
     if (error instanceof Error && (error.message.includes("fetch") || error.message.includes("extract"))) {
       return NextResponse.json(
-        { 
+        {
           error: error.message,
           details: process.env.NODE_ENV === "development" ? error.stack : undefined
         },

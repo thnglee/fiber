@@ -22,6 +22,8 @@ export async function OPTIONS() {
  * Validates input and delegates business logic to factCheckService
  */
 export async function POST(request: NextRequest) {
+  const startTime = Date.now()
+
   try {
     // Parse and validate request body
     const body = await request.json()
@@ -31,7 +33,7 @@ export async function POST(request: NextRequest) {
       return zodErrorResponse(parseResult.error, 400)
     }
 
-    const { text, debug } = parseResult.data
+    const { text, debug, website } = parseResult.data
 
     // Validate API keys are configured (using env schema)
     try {
@@ -52,6 +54,25 @@ export async function POST(request: NextRequest) {
     if (!responseParseResult.success) {
       return zodErrorResponse(responseParseResult.error, 500)
     }
+
+    // Track action asynchronously (fire-and-forget)
+    const processingTime = Date.now() - startTime
+    const { trackAction, getClientIP, extractTokenUsage } = await import('@/services/action-tracking.service')
+
+    trackAction({
+      actionType: 'fact-check',
+      inputType: 'text',
+      inputContent: text,
+      outputContent: responseParseResult.data,
+      category: null,
+      tokenUsage: extractTokenUsage(response.debug?.openaiResponse),
+      userIp: getClientIP(request.headers),
+      website: website || 'unknown',
+      userAgent: request.headers.get('user-agent') || 'unknown',
+      processingTimeMs: processingTime
+    }).catch(err => {
+      console.error('[Fact-check] Failed to track action:', err)
+    })
 
     return NextResponse.json(responseParseResult.data, { headers: getCorsHeaders() })
   } catch (error) {
