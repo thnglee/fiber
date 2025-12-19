@@ -59,13 +59,18 @@ export async function POST(request: NextRequest) {
     const processingTime = Date.now() - startTime
     const { trackAction, getClientIP, extractTokenUsage } = await import('@/services/action-tracking.service')
 
+    // Extract token usage - try direct access first, then fall back to debug structure
+    const tokenUsage = response.usage
+      ? extractTokenUsage({ usage: response.usage })
+      : extractTokenUsage(response.debug?.openaiResponse)
+
     trackAction({
       actionType: 'fact-check',
       inputType: 'text',
       inputContent: text,
       outputContent: responseParseResult.data,
       category: null,
-      tokenUsage: extractTokenUsage(response.debug?.openaiResponse),
+      tokenUsage,
       userIp: getClientIP(request.headers),
       website: website || 'unknown',
       userAgent: request.headers.get('user-agent') || 'unknown',

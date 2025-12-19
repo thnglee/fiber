@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getCorsHeaders } from '@/middleware/cors'
-import type { ActionStats } from '../../shared/types'
+import type { ActionStats } from '../../../../shared/types'
 
 /**
  * GET /api/actions/stats
@@ -58,9 +58,20 @@ export async function GET(request: NextRequest) {
         let actionsToday = 0
 
         actions.forEach(action => {
+            // Parse token_usage if it's a string
+            let tokenUsage = action.token_usage
+            if (typeof tokenUsage === 'string') {
+                try {
+                    tokenUsage = JSON.parse(tokenUsage)
+                } catch (e) {
+                    console.warn('[Stats API] Failed to parse token_usage:', e)
+                    tokenUsage = null
+                }
+            }
+
             // Sum tokens
-            if (action.token_usage && typeof action.token_usage === 'object') {
-                totalTokens += (action.token_usage as any).total_tokens || 0
+            if (tokenUsage && typeof tokenUsage === 'object') {
+                totalTokens += (tokenUsage as any).total_tokens || 0
             }
 
             // Sum processing time

@@ -58,12 +58,12 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
     // Use provided content directly
     extractedContent = content
     contentLength = content.length
-    
+
     logger.addLog('summarize', 'content-input', {
       length: content.length,
       preview: content.substring(0, 200)
     })
-    
+
     // Store debug information
     if (debug) {
       debugInfo.extractedContent = {
@@ -141,6 +141,7 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
     summary: summaryData.summary,
     category: summaryData.category,
     readingTime: summaryData.readingTime,
+    usage: llmResult.usage, // Include usage for tracking
   }
 
   // Validate response before returning

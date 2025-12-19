@@ -50,6 +50,11 @@ export const FactCheckResponseSchema = z.object({
   reason: z.string(),
   sources: z.array(z.string()),
   verified: z.boolean(),
+  usage: z.object({
+    prompt_tokens: z.number().optional(),
+    completion_tokens: z.number().optional(),
+    total_tokens: z.number().optional(),
+  }).optional(), // Token usage for tracking (always present)
   debug: FactCheckDebugInfoSchema.optional(),
 })
 
@@ -77,6 +82,13 @@ export const SummaryDataSchema = z.object({
   readingTime: z.number().min(0),
 })
 
+// Token usage schema (shared)
+const TokenUsageSchema = z.object({
+  prompt_tokens: z.number().optional(),
+  completion_tokens: z.number().optional(),
+  total_tokens: z.number().optional(),
+})
+
 export const SummarizeDebugInfoSchema = z.object({
   url: z.string().url().optional(),
   extractedContent: z.object({
@@ -98,6 +110,7 @@ export const SummarizeResponseSchema = z.object({
   summary: z.string(),
   category: z.string(),
   readingTime: z.number().min(0),
+  usage: TokenUsageSchema.optional(), // Token usage for tracking (always present)
   debug: SummarizeDebugInfoSchema.optional(),
 })
 

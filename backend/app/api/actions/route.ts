@@ -68,9 +68,31 @@ export async function GET(request: NextRequest) {
             )
         }
 
+        // Parse JSONB fields to ensure they are proper objects, not strings
+        const parsedActions = (data || []).map(action => {
+            const parseJsonField = (field: any) => {
+                if (typeof field === 'string') {
+                    try {
+                        return JSON.parse(field)
+                    } catch (e) {
+                        console.warn('[Actions API] Failed to parse JSON field:', e)
+                        return field
+                    }
+                }
+                return field
+            }
+
+            return {
+                ...action,
+                token_usage: parseJsonField(action.token_usage),
+                output_content: parseJsonField(action.output_content),
+                user_location: parseJsonField(action.user_location)
+            }
+        })
+
         return NextResponse.json(
             {
-                actions: data || [],
+                actions: parsedActions,
                 total: count || 0,
                 limit,
                 offset

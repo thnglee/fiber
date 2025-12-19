@@ -92,7 +92,7 @@ export async function generateCompletion(options: LLMCompletionOptions): Promise
   const completion = await openai.chat.completions.create(requestParams)
 
   const responseText = completion.choices[0]?.message?.content || ""
-  
+
   // Parse structured output if schema was provided
   if (schema && responseText) {
     try {
@@ -176,17 +176,18 @@ export async function generateJsonCompletion<T>(
     }
   }
 
-  const debugInfo = debug && usage ? {
+  // Only include debug info when debug mode is enabled
+  const debugInfo = debug ? {
     raw: rawResponse,
     model,
-    usage
+    usage  // Include usage in debug info for backward compatibility
   } : undefined
 
   return {
     data,
     rawResponse,
     model,
-    usage,
+    usage,  // ✅ Always return usage at top level for tracking, regardless of debug mode
     debugInfo
   }
 }

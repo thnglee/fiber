@@ -86,6 +86,7 @@ export async function performFactCheck(request: FactCheckRequest): Promise<FactC
     reason: factCheckData.reason,
     sources: searchResult.sources,
     verified: factCheckData.verified,
+    usage: llmResult.usage, // Include usage for tracking
   }
 
   // Validate response before returning

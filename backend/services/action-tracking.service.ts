@@ -117,19 +117,30 @@ async function getLocationFromIP(ip: string): Promise<LocationData | null> {
 }
 
 /**
- * Extract token usage from OpenAI API response
+ * Extract token usage from OpenAI API response or debug info
+ * Supports both direct usage object and nested debug structure
  * Returns default values if usage data is not available
  */
-export function extractTokenUsage(response: any): TokenUsage {
-    if (response?.usage) {
-        return {
-            prompt_tokens: response.usage.prompt_tokens || 0,
-            completion_tokens: response.usage.completion_tokens || 0,
-            total_tokens: response.usage.total_tokens || 0
+export function extractTokenUsage(responseOrDebugInfo: any): TokenUsage {
+    // Try to extract usage from the response/debug info
+    const usage = responseOrDebugInfo?.usage
+
+    if (usage && typeof usage === 'object') {
+        // Check if at least one token count is present and non-zero
+        const hasValidUsage = usage.total_tokens > 0 ||
+            usage.prompt_tokens > 0 ||
+            usage.completion_tokens > 0
+
+        if (hasValidUsage) {
+            return {
+                prompt_tokens: usage.prompt_tokens || 0,
+                completion_tokens: usage.completion_tokens || 0,
+                total_tokens: usage.total_tokens || 0
+            }
         }
     }
 
-    // Default fallback
+    // Default fallback when no usage data is available
     return {
         prompt_tokens: 0,
         completion_tokens: 0,
