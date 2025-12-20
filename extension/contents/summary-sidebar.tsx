@@ -1,15 +1,20 @@
-import React, { useEffect, useState, useCallback } from "react"
+import React, { useEffect, useState, useCallback, useRef } from "react"
 import { Readability } from "@mozilla/readability"
 import type { PlasmoCSConfig } from "plasmo"
 import cssText from "data-text:~/contents/style.css"
 import { summarizeArticle } from "~/lib/api-client"
-import type { SummaryResponse } from "~/lib/types"
+import type { SummaryResponse, PageContext } from "~/lib/types"
 import { Card } from "~/components/ui/Card"
 import { Button } from "~/components/ui/Button"
 import { Skeleton } from "~/components/ui/Skeleton"
 import { formatReadingTime } from "~/lib/utils"
 import { isArticlePage } from "~/lib/page-detector"
+import { waitForContent } from "~/lib/dom-utils"
+import { NavigationObserver } from "~/lib/navigation-observer"
+import { SELECTORS } from "~/lib/constants"
+import { getPageContext } from "~/lib/context-provider"
 
+// Note: Plasmo requires a literal array for matches, cannot use dynamic generation
 export const config: PlasmoCSConfig = {
   matches: [
     "https://vnexpress.net/*",
@@ -36,42 +41,30 @@ const SummarySidebar: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(true)
-  const [isArticle, setIsArticle] = useState<boolean | null>(null) // null = detecting, true = article, false = not article
+  const [pageIsArticle, setPageIsArticle] = useState<boolean | null>(null) // null = detecting, true = article, false = not article
+  const contextRef = useRef<PageContext | null>(null)
 
-  // Wait for DOM to be ready and article content to be present
-  const waitForContent = async (maxRetries = 10, delay = 500): Promise<boolean> => {
-    for (let i = 0; i < maxRetries; i++) {
-      // Check if document is ready
-      if (document.readyState === "complete") {
-        // Check for common article content selectors on Vietnamese news sites
-        const hasContent =
-          document.querySelector("article") ||
-          document.querySelector(".fck_detail") || // vnexpress article content
-          document.querySelector(".content-detail") || // tuoitre
-          document.querySelector(".dt-news__content") || // dantri
-          document.querySelector(".detail-content") || // thanhnien
-          document.body.textContent?.trim().length > 500 // Fallback: check if body has substantial content
-
-        if (hasContent) {
-          // Additional small delay to ensure content is fully rendered
-          await new Promise(resolve => setTimeout(resolve, 300))
-          return true
-        }
-      }
-
-      // Wait before retrying
-      await new Promise(resolve => setTimeout(resolve, delay))
+  // Get page context once on mount
+  useEffect(() => {
+    try {
+      contextRef.current = getPageContext()
+    } catch (err) {
+      console.error("[SummarySidebar] Failed to get page context:", err)
     }
-    return false
-  }
+  }, [])
 
   const extractAndSummarize = useCallback(async () => {
     setIsLoading(true)
     setError(null)
 
     try {
-      // Wait for content to be ready
-      const isReady = await waitForContent()
+      // Wait for content to be ready using dom-utils
+      const contentSelectors = [
+        ...SELECTORS.ARTICLE,
+        ...Object.values(SELECTORS.SITE_SPECIFIC),
+      ]
+
+      const isReady = await waitForContent(contentSelectors)
       if (!isReady) {
         throw new Error("Không thể tìm thấy nội dung bài viết. Vui lòng thử lại sau khi trang tải xong.")
       }
@@ -85,12 +78,12 @@ const SummarySidebar: React.FC = () => {
         throw new Error("Không thể trích xuất nội dung bài viết")
       }
 
-      // Call backend API
-      const result = await summarizeArticle(article.textContent)
+      // Call backend API with context
+      const result = await summarizeArticle(article.textContent, contextRef.current || undefined)
       setSummary(result)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Đã xảy ra lỗi")
-      console.error("Summary error:", err)
+      console.error("[SummarySidebar] Summary error:", err)
     } finally {
       setIsLoading(false)
     }
@@ -99,72 +92,61 @@ const SummarySidebar: React.FC = () => {
   useEffect(() => {
     // Detect page type and conditionally auto-summarize
     const initializePage = async () => {
-      setIsArticle(null) // Start detecting
-      const isArticle = await isArticlePage()
-      setIsArticle(isArticle)
+      setPageIsArticle(null) // Start detecting
+      const detectedIsArticle = await isArticlePage()
+      setPageIsArticle(detectedIsArticle)
 
       // Only auto-summarize on article pages
-      if (isArticle) {
+      if (detectedIsArticle) {
         extractAndSummarize()
       }
     }
 
     initializePage()
 
-    // Listen for URL changes (for SPAs like vnexpress)
-    let currentUrl = window.location.href
+    // Use NavigationObserver instead of polling
+    const navObserver = new NavigationObserver()
 
-    const checkUrlChange = () => {
-      if (window.location.href !== currentUrl) {
-        currentUrl = window.location.href
-        // Reset state and re-detect page type
-        setSummary(null)
-        setError(null)
-        initializePage()
-      }
-    }
-
-    // Check for URL changes periodically (SPAs don't trigger navigation events)
-    const intervalId = setInterval(checkUrlChange, 1000)
-
-    // Also listen for popstate (back/forward navigation)
-    const handlePopState = () => {
+    const unsubscribe = navObserver.onNavigate(() => {
+      // Reset state and re-detect page type
       setSummary(null)
       setError(null)
       initializePage()
-    }
-
-    window.addEventListener("popstate", handlePopState)
+    })
 
     return () => {
-      clearInterval(intervalId)
-      window.removeEventListener("popstate", handlePopState)
+      unsubscribe()
+      navObserver.destroy()
     }
   }, [extractAndSummarize])
 
   // Show collapsed button if user closed sidebar OR if it's not an article page
-  if (!isOpen || isArticle === false) {
+  if (!isOpen || pageIsArticle === false) {
     return (
       <div className="fixed top-4 right-4 z-50">
         <Button
           onClick={() => {
             setIsOpen(true)
-            // If not an article page, manually trigger summarization
-            if (isArticle === false && !summary && !isLoading) {
+            // Only trigger summarization if:
+            // 1. Not an article page (manual trigger)
+            // 2. No existing summary
+            // 3. Not currently loading
+            // 4. Page detector hasn't already determined it's not an article
+            if (pageIsArticle === false && !summary && !isLoading) {
               extractAndSummarize()
             }
           }}
           variant="primary"
           size="sm"
         >
-          {isArticle === false ? "Tóm tắt trang này" : "Tóm tắt"}
+          {pageIsArticle === false ? "Tóm tắt trang này" : "Tóm tắt"}
         </Button>
       </div>
     )
   }
 
   // Show loading state while detecting page type
-  if (isArticle === null) {
+  if (pageIsArticle === null) {
     return (
       <div className="fixed top-0 right-0 h-full w-[400px] bg-white shadow-2xl z-50 border-l border-gray-200 p-6 overflow-y-auto animate-slide-in-right">
         <div className="flex items-center justify-between mb-6">

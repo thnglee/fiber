@@ -1,92 +1,159 @@
 import { Readability } from "@mozilla/readability"
+import type { PageDetectionResult } from "./extension-types"
+import { pageDetectionCache } from "./page-detection-cache"
+import { SELECTORS, URL_PATTERNS, THRESHOLDS, TIMEOUTS } from "./constants"
+import { getSiteConfig } from "./site-config"
 
 /**
- * Detect if the current page is an article page or a list/homepage
- * Uses multiple heuristics: URL patterns, DOM selectors, and content analysis
+ * Helper: Check if URL matches article patterns
  */
-export async function isArticlePage(): Promise<boolean> {
-    // Strategy 1: URL Pattern Matching
-    const url = window.location.href
-    const pathname = window.location.pathname
+function hasArticleUrlPattern(pathname: string): boolean {
+    return URL_PATTERNS.ARTICLE.some(pattern => pattern.test(pathname))
+}
 
-    // Common article URL patterns for Vietnamese news sites
-    const articleUrlPatterns = [
-        /\/[\w-]+-\d+\.html?$/i, // vnexpress: /article-title-1234567.html
-        /\/[\w-]+-\d+$/i, // tuoitre: /article-title-1234567
-        /-\d{7,}\.htm/i, // dantri: /article-title-1234567.htm
-        /\/[\w-]+\/[\w-]+-\d+/i, // thanhnien: /category/article-title-1234567
-        /\/post\d+/i, // generic post pattern
-        /\/bai-viet\//i, // Vietnamese "article" path
-        /\/tin-tuc\//i, // Vietnamese "news" path
-        /\/chi-tiet\//i, // Vietnamese "detail" path
-    ]
-
-    const hasArticleUrlPattern = articleUrlPatterns.some(pattern => pattern.test(pathname))
-
-    // Strategy 2: Check for article-specific DOM elements
-    const articleSelectors = [
-        "article",
-        ".fck_detail", // vnexpress
-        ".content-detail", // tuoitre
-        ".dt-news__content", // dantri
-        ".detail-content", // thanhnien
-        ".article-content",
-        ".post-content",
-        '[itemtype="http://schema.org/Article"]',
-        '[itemtype="http://schema.org/NewsArticle"]',
-    ]
-
-    const hasArticleElement = articleSelectors.some(selector =>
+/**
+ * Helper: Check for article-specific DOM elements
+ */
+function hasArticleElement(): boolean {
+    // Check generic article selectors
+    const hasGeneric = SELECTORS.ARTICLE.some(selector =>
         document.querySelector(selector) !== null
     )
 
-    // Strategy 3: Check for article metadata elements
-    const metadataSelectors = [
-        ".date-time", // publish date
-        ".author-name", // author
-        ".share-buttons", // social share
-        'meta[property="article:published_time"]',
-        'meta[property="og:type"][content="article"]',
-        ".article-meta",
-        ".post-meta",
-    ]
+    if (hasGeneric) return true
 
-    const hasMetadata = metadataSelectors.some(selector =>
+    // Check site-specific selectors
+    const hostname = window.location.hostname.replace("www.", "")
+    const siteKey = hostname.split(".")[0] as keyof typeof SELECTORS.SITE_SPECIFIC
+
+    if (siteKey in SELECTORS.SITE_SPECIFIC) {
+        const siteSelector = SELECTORS.SITE_SPECIFIC[siteKey]
+        return document.querySelector(siteSelector) !== null
+    }
+
+    return false
+}
+
+/**
+ * Helper: Check for article metadata elements
+ */
+function hasMetadata(): boolean {
+    return SELECTORS.METADATA.some(selector =>
         document.querySelector(selector) !== null
     )
+}
 
-    // Strategy 4: Content length heuristic using Readability
-    let hasSubstantialContent = false
+/**
+ * Helper: Check if page has substantial readable content
+ */
+async function hasSubstantialContent(): Promise<{ hasContent: boolean; contentHash: string }> {
     try {
         // Wait a bit for content to load
-        await new Promise(resolve => setTimeout(resolve, 300))
+        await new Promise(resolve => setTimeout(resolve, TIMEOUTS.CONTENT_WAIT_DELAY))
 
         const documentClone = document.cloneNode(true) as Document
         const reader = new Readability(documentClone)
         const article = reader.parse()
 
         if (article && article.textContent) {
+            const textContent = article.textContent
+            const contentHash = pageDetectionCache.generateContentHash(textContent)
+
             // Articles typically have >1000 characters of readable content
-            // Homepages/list pages will have fragmented text from multiple article snippets
-            hasSubstantialContent = article.textContent.length > 1000
+            const hasContent = textContent.length > THRESHOLDS.ARTICLE_CONTENT_LENGTH
+
+            return { hasContent, contentHash }
         }
     } catch (error) {
-        console.warn("Readability check failed:", error)
+        console.warn("[PageDetector] Readability check failed:", error)
     }
 
-    // Decision logic: Combine all heuristics
-    // If URL pattern matches AND (has article element OR has metadata), it's likely an article
-    // OR if it has substantial readable content, it's likely an article
-    const isArticle = (hasArticleUrlPattern && (hasArticleElement || hasMetadata)) ||
-        (hasArticleElement && hasSubstantialContent)
+    return { hasContent: false, contentHash: "" }
+}
 
-    console.log("Article detection:", {
+/**
+ * Helper: Check for strong article signals
+ */
+function hasStrongArticleSignals(pathname: string): boolean {
+    const urlMatch = hasArticleUrlPattern(pathname)
+    const elementMatch = hasArticleElement()
+    const metadataMatch = hasMetadata()
+
+    return urlMatch && (elementMatch || metadataMatch)
+}
+
+/**
+ * Helper: Check for weak article signals
+ */
+function hasWeakArticleSignals(): boolean {
+    return hasArticleElement() || hasMetadata()
+}
+
+/**
+ * Detect if the current page is an article page or a list/homepage
+ * 
+ * Uses multiple heuristics: URL patterns, DOM selectors, and content analysis.
+ * Results are cached to avoid expensive re-parsing.
+ * 
+ * @returns Promise resolving to true if page is an article, false otherwise
+ */
+export async function isArticlePage(): Promise<boolean> {
+    const url = window.location.href
+    const pathname = window.location.pathname
+
+    // Try to get from cache first
+    const bodyContent = document.body.textContent || ""
+    const contentHash = pageDetectionCache.generateContentHash(bodyContent)
+    const cached = pageDetectionCache.get(url, contentHash)
+
+    if (cached) {
+        console.log("[PageDetector] Using cached result:", cached.isArticle)
+        return cached.isArticle
+    }
+
+    // Strategy 1: URL Pattern Matching
+    const urlPatternMatch = hasArticleUrlPattern(pathname)
+
+    // Strategy 2: Check for article-specific DOM elements
+    const articleElementMatch = hasArticleElement()
+
+    // Strategy 3: Check for article metadata elements
+    const metadataMatch = hasMetadata()
+
+    // Strategy 4: Content length heuristic using Readability
+    const { hasContent, contentHash: finalContentHash } = await hasSubstantialContent()
+
+    // Decision logic: Combine all heuristics
+    // Strong signals: URL pattern + (element or metadata)
+    // Weak signals: Element + substantial content
+    const isArticle = hasStrongArticleSignals(pathname) ||
+        (hasWeakArticleSignals() && hasContent)
+
+    // Calculate confidence score
+    let confidence = 0
+    if (urlPatternMatch) confidence += 0.3
+    if (articleElementMatch) confidence += 0.3
+    if (metadataMatch) confidence += 0.2
+    if (hasContent) confidence += 0.2
+
+    const result: PageDetectionResult = {
+        isArticle,
+        timestamp: Date.now(),
+        contentHash: finalContentHash || contentHash,
+        confidence,
+    }
+
+    // Cache the result
+    pageDetectionCache.set(url, result)
+
+    console.log("[PageDetector] Detection result:", {
         url: pathname,
-        hasArticleUrlPattern,
-        hasArticleElement,
-        hasMetadata,
-        hasSubstantialContent,
-        isArticle
+        urlPatternMatch,
+        articleElementMatch,
+        metadataMatch,
+        hasContent,
+        isArticle,
+        confidence,
     })
 
     return isArticle

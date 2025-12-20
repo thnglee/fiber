@@ -1,12 +1,15 @@
-import React, { useEffect, useState, useRef, useCallback } from "react"
+import React, { useEffect, useState, useCallback, useRef } from "react"
 import type { PlasmoCSConfig } from "plasmo"
 import cssText from "data-text:~/contents/style.css"
-import { factCheck } from "~/lib/api-client"
-import type { FactCheckResponse } from "~/lib/types"
-import { Card } from "~/components/ui/Card"
-import { Button } from "~/components/ui/Button"
+import { factCheck, summarizeArticle } from "~/lib/api-client"
+import type { FactCheckResponse, SummaryResponse, SelectionState, PageContext } from "~/lib/types"
 import { ScoreBadge } from "~/components/ui/ScoreBadge"
-import { Skeleton } from "~/components/ui/Skeleton"
+import { formatReadingTime } from "~/lib/utils"
+import { BaseModal } from "~/components/modals/BaseModal"
+import { SelectedTextPreview, LoadingState, ErrorState } from "~/components/modals/ModalContent"
+import { calculateTooltipPosition, getSelectionInfo, clearSelection } from "~/lib/dom-utils"
+import { DIMENSIONS, Z_INDEX, TIMEOUTS } from "~/lib/constants"
+import { getPageContext } from "~/lib/context-provider"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
@@ -19,52 +22,22 @@ export const getStyle = () => {
   return style
 }
 
-interface SelectionState {
-  text: string
-  position: { x: number; y: number }
-}
-
 const FactCheckTooltip: React.FC<{
   position: { x: number; y: number }
   onCheck: () => void
   onSummarize: () => void
 }> = ({ position, onCheck, onSummarize }) => {
-  const tooltipRef = useRef<HTMLDivElement>(null)
-  
-  // Calculate position to keep tooltip in viewport
-  // Position is already in viewport coordinates (from getBoundingClientRect)
-  const tooltipWidth = 120
-  const tooltipHeight = 36
-  const offset = 12
-  
-  const left = Math.max(
-    offset,
-    Math.min(position.x - tooltipWidth / 2, window.innerWidth - tooltipWidth - offset)
-  )
-  const top = Math.max(
-    offset,
-    Math.min(position.y - tooltipHeight - offset, window.innerHeight - tooltipHeight - offset)
-  )
-
-  useEffect(() => {
-    if (tooltipRef.current) {
-      console.log("[Modal] Tooltip mounted in DOM at:", {
-        left,
-        top,
-        position: tooltipRef.current.getBoundingClientRect(),
-        computedStyle: window.getComputedStyle(tooltipRef.current).display,
-        zIndex: window.getComputedStyle(tooltipRef.current).zIndex
-      })
-    }
-  }, [left, top])
+  // Calculate position using utility
+  const selectionRect = new DOMRect(position.x, position.y, 0, 0)
+  const tooltipPosition = calculateTooltipPosition(selectionRect, DIMENSIONS.TOOLTIP)
 
   return (
     <div
-      ref={tooltipRef}
-      className="fixed z-[9999] bg-black text-white rounded-lg px-2 py-1 text-sm font-medium shadow-lg transition-colors flex items-center gap-2"
+      className="fixed bg-black text-white rounded-lg px-2 py-1 text-sm font-medium shadow-lg transition-colors flex items-center gap-2"
       style={{
-        left: `${left}px`,
-        top: `${top}px`,
+        left: `${tooltipPosition.left}px`,
+        top: `${tooltipPosition.top}px`,
+        zIndex: Z_INDEX.TOOLTIP,
         position: "fixed",
         pointerEvents: "auto"
       }}
@@ -130,9 +103,18 @@ const FactCheckModal: React.FC<{
   onClose: () => void
 }> = ({ text, position, onClose }) => {
   const [result, setResult] = useState<FactCheckResponse | null>(null)
-  const [isLoading, setIsLoading] = useState(true) // Start with loading state
+  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const modalRef = useRef<HTMLDivElement>(null)
+  const contextRef = useRef<PageContext | null>(null)
+
+  // Get page context once on mount
+  useEffect(() => {
+    try {
+      contextRef.current = getPageContext()
+    } catch (err) {
+      console.error("[FactCheckModal] Failed to get page context:", err)
+    }
+  }, [])
 
   const checkFact = useCallback(async () => {
     setIsLoading(true)
@@ -140,13 +122,10 @@ const FactCheckModal: React.FC<{
     setResult(null)
 
     try {
-      console.log("[Modal] Starting fact check for text:", text.substring(0, 50))
-      const data = await factCheck(text)
-      console.log("[Modal] Fact check result:", data)
+      const data = await factCheck(text, contextRef.current || undefined)
       setResult(data)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Đã xảy ra lỗi"
-      console.error("[Modal] Fact check error:", err)
       setError(errorMessage)
     } finally {
       setIsLoading(false)
@@ -157,144 +136,14 @@ const FactCheckModal: React.FC<{
     checkFact()
   }, [checkFact])
 
-  // Close on outside click
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        // Only close if clicking outside the modal
-        const target = event.target as HTMLElement
-        // Don't close if clicking on the tooltip or other extension elements
-        if (!target.closest('[data-plasmo-root]')) {
-          onClose()
-        }
-      }
-    }
-
-    // Use a small delay to prevent immediate closing when opening
-    const timeoutId = setTimeout(() => {
-      document.addEventListener("mousedown", handleClickOutside)
-    }, 100)
-
-    return () => {
-      clearTimeout(timeoutId)
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [onClose])
-
-  // Position modal near selection but keep it in viewport
-  // Position is already in viewport coordinates (from getBoundingClientRect)
-  const modalWidth = 384 // w-96 = 384px
-  const modalHeight = 500 // estimated max height
-  const offset = 16
-
-  const modalPosition = {
-    left: Math.max(
-      offset,
-      Math.min(position.x - modalWidth / 2, window.innerWidth - modalWidth - offset)
-    ),
-    top: Math.max(
-      offset,
-      Math.min(position.y + 20, window.innerHeight - modalHeight - offset)
-    )
-  }
-
   return (
-    <>
-      {/* Backdrop overlay */}
-      <div
-        className="fixed inset-0 z-[9998] bg-black/10"
-        onClick={onClose}
-        style={{ pointerEvents: "auto" }}
-      />
-      {/* Modal */}
-      <div
-        ref={modalRef}
-        className="fixed z-[9999] w-96 bg-white rounded-xl shadow-xl border border-gray-200 p-6 animate-in fade-in zoom-in-95 max-h-[600px] overflow-y-auto"
-        style={{
-          left: `${modalPosition.left}px`,
-          top: `${modalPosition.top}px`,
-          pointerEvents: "auto"
-        }}
-        onClick={(e) => {
-          e.stopPropagation()
-          e.preventDefault()
-        }}
-        onMouseDown={(e) => {
-          e.stopPropagation()
-        }}
-      >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-base font-semibold text-gray-900">Kiểm tra thông tin</h3>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg hover:bg-gray-100"
-          aria-label="Đóng"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
+    <BaseModal title="Kiểm tra thông tin" position={position} onClose={onClose}>
+      <SelectedTextPreview text={text} maxLength={150} />
 
-      {/* Selected Text Preview */}
-      <div className="mb-5 p-3 bg-gray-50 rounded-lg text-sm text-gray-600 border border-gray-200 leading-relaxed">
-        <span className="font-medium text-gray-500 text-xs uppercase tracking-wide mb-1 block">
-          Đoạn văn đã chọn:
-        </span>
-        <p className="mt-1.5">"{text.substring(0, 150)}{text.length > 150 ? "..." : ""}"</p>
-      </div>
+      {isLoading && <LoadingState />}
 
-      {/* Loading State */}
-      {isLoading && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-10 w-28" variant="rectangular" />
-            <Skeleton className="h-4 w-20" variant="text" />
-          </div>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-full" variant="text" />
-            <Skeleton className="h-4 w-full" variant="text" />
-            <Skeleton className="h-4 w-4/5" variant="text" />
-          </div>
-          <div className="space-y-2 pt-2">
-            <Skeleton className="h-3 w-24" variant="text" />
-            <Skeleton className="h-3 w-32" variant="text" />
-            <Skeleton className="h-3 w-28" variant="text" />
-          </div>
-        </div>
-      )}
+      {error && !isLoading && <ErrorState message={error} onRetry={checkFact} />}
 
-      {/* Error State */}
-      {error && !isLoading && (
-        <div className="space-y-4">
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-700 font-medium mb-1">Đã xảy ra lỗi</p>
-            <p className="text-xs text-red-600">{error}</p>
-          </div>
-          <Button
-            onClick={checkFact}
-            variant="primary"
-            size="sm"
-            className="w-full"
-          >
-            Thử lại
-          </Button>
-        </div>
-      )}
-
-      {/* Result State */}
       {result && !isLoading && !error && (
         <div className="space-y-5">
           {/* Trust Score Badge */}
@@ -415,8 +264,7 @@ const FactCheckModal: React.FC<{
           )}
         </div>
       )}
-      </div>
-    </>
+    </BaseModal>
   )
 }
 
@@ -425,24 +273,30 @@ const SummarizeModal: React.FC<{
   position: { x: number; y: number }
   onClose: () => void
 }> = ({ text, position, onClose }) => {
-  const [result, setResult] = useState<any | null>(null)
+  const [result, setResult] = useState<SummaryResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const modalRef = useRef<HTMLDivElement>(null)
+  const contextRef = useRef<PageContext | null>(null)
+
+  // Get page context once on mount
+  useEffect(() => {
+    try {
+      contextRef.current = getPageContext()
+    } catch (err) {
+      console.error("[SummarizeModal] Failed to get page context:", err)
+    }
+  }, [])
 
   const doSummarize = useCallback(async () => {
     setIsLoading(true)
     setError(null)
     setResult(null)
+
     try {
-      console.log("[Modal] Starting summarize for selection:", text.substring(0, 50))
-      // Use the extension API client
-      const { summarizeArticle } = await import("~/lib/api-client")
-      const data = await summarizeArticle(text)
+      const data = await summarizeArticle(text, contextRef.current || undefined)
       setResult(data)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Đã xảy ra lỗi"
-      console.error("[Modal] Summarize error:", err)
       setError(errorMessage)
     } finally {
       setIsLoading(false)
@@ -453,98 +307,31 @@ const SummarizeModal: React.FC<{
     doSummarize()
   }, [doSummarize])
 
-  // Close on outside click
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        const target = event.target as HTMLElement
-        if (!target.closest('[data-plasmo-root]')) {
-          onClose()
-        }
-      }
-    }
-
-    const timeoutId = setTimeout(() => {
-      document.addEventListener("mousedown", handleClickOutside)
-    }, 100)
-
-    return () => {
-      clearTimeout(timeoutId)
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [onClose])
-
-  // Position modal near selection but keep it in viewport
-  const modalWidth = 384
-  const modalHeight = 420
-  const offset = 16
-  const modalPosition = {
-    left: Math.max(
-      offset,
-      Math.min(position.x - modalWidth / 2, window.innerWidth - modalWidth - offset)
-    ),
-    top: Math.max(
-      offset,
-      Math.min(position.y + 20, window.innerHeight - modalHeight - offset)
-    )
-  }
-
   return (
-    <>
-      <div className="fixed inset-0 z-[9998] bg-black/10" onClick={onClose} style={{ pointerEvents: "auto" }} />
-      <div
-        ref={modalRef}
-        className="fixed z-[9999] w-96 bg-white rounded-xl shadow-xl border border-gray-200 p-6 animate-in fade-in zoom-in-95 max-h-[600px] overflow-y-auto"
-        style={{ left: `${modalPosition.left}px`, top: `${modalPosition.top}px`, pointerEvents: "auto" }}
-        onClick={(e) => { e.stopPropagation(); e.preventDefault() }}
-        onMouseDown={(e) => { e.stopPropagation() }}
-      >
-        <div className="flex items-center justify-between mb-5">
-          <h3 className="text-base font-semibold text-gray-900">Tóm tắt đoạn văn</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100" aria-label="Đóng">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+    <BaseModal title="Tóm tắt đoạn văn" position={position} onClose={onClose}>
+      <SelectedTextPreview text={text} maxLength={300} />
 
-        <div className="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600 border border-gray-200 leading-relaxed">
-          <span className="font-medium text-gray-500 text-xs uppercase tracking-wide mb-1 block">Đoạn văn đã chọn:</span>
-          <p className="mt-1.5">"{text.substring(0, 300)}{text.length > 300 ? "..." : ""}"</p>
-        </div>
+      {isLoading && <LoadingState />}
 
-        {isLoading && (
-          <div className="space-y-3">
-            <Skeleton className="h-4 w-full" variant="text" />
-            <Skeleton className="h-4 w-full" variant="text" />
-            <Skeleton className="h-4 w-4/5" variant="text" />
-          </div>
-        )}
+      {error && !isLoading && <ErrorState message={error} onRetry={doSummarize} />}
 
-        {error && !isLoading && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-700">{error}</p>
-          </div>
-        )}
-
-        {result && !isLoading && !error && (
-          <div className="space-y-4">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                  {result.category}
-                </span>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                  {result.readingTime} minutes
-                </span>
-              </div>
-              <span className="text-xs text-gray-500">Summary:</span>
-              <p className="text-sm text-gray-900 mt-1">{result.summary}</p>
+      {result && !isLoading && !error && (
+        <div className="space-y-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                {result.category}
+              </span>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                {formatReadingTime(result.readingTime)}
+              </span>
             </div>
+            <span className="text-xs text-gray-500">Summary:</span>
+            <p className="text-sm text-gray-900 mt-1">{result.summary}</p>
           </div>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+    </BaseModal>
   )
 }
 
@@ -554,30 +341,12 @@ const ModalRoot: React.FC = () => {
   const [summarizeModalData, setSummarizeModalData] = useState<SelectionState | null>(null)
 
   useEffect(() => {
-    const handleMouseUp = (e: MouseEvent) => {
+    const handleMouseUp = () => {
       // Small delay to ensure selection is captured
       setTimeout(() => {
-        const selectedText = window.getSelection()?.toString().trim()
-        
-        if (selectedText && selectedText.length > 10) {
-          const selection = window.getSelection()
-          if (selection && selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0)
-            const rect = range.getBoundingClientRect()
-            const position = {
-              x: rect.left + rect.width / 2,
-              y: rect.top
-            }
-            console.log("[Modal] Text selected:", selectedText.substring(0, 50), "Position:", position)
-            setSelection({
-              text: selectedText,
-              position
-            })
-          }
-        } else {
-          setSelection(null)
-        }
-      }, 10)
+        const selectionInfo = getSelectionInfo()
+        setSelection(selectionInfo)
+      }, TIMEOUTS.SELECTION_DELAY)
     }
 
     // Use capture phase to catch the event early
@@ -587,57 +356,29 @@ const ModalRoot: React.FC = () => {
 
   const handleCheck = () => {
     if (selection) {
-      console.log("[Modal] Opening modal with selection:", selection.text.substring(0, 50))
-      // Store the selection data for the modal before clearing it
       setModalData(selection)
-      setSelection(null) // Clear selection to hide tooltip
-      window.getSelection()?.removeAllRanges() // Clear text selection
+      setSelection(null)
+      clearSelection()
     }
   }
 
   const handleSummarize = () => {
     if (selection) {
-      console.log("[Modal] Opening summarize modal with selection:", selection.text.substring(0, 50))
       setSummarizeModalData(selection)
       setSelection(null)
-      window.getSelection()?.removeAllRanges()
+      clearSelection()
     }
   }
 
   const handleCloseModal = () => {
     setModalData(null)
-    window.getSelection()?.removeAllRanges()
+    clearSelection()
   }
 
   const handleCloseSummarize = () => {
     setSummarizeModalData(null)
-    window.getSelection()?.removeAllRanges()
+    clearSelection()
   }
-
-  // Debug logging
-  useEffect(() => {
-    if (selection) {
-      console.log("[Modal] Selection state:", {
-        hasSelection: !!selection,
-        text: selection.text.substring(0, 50),
-        position: selection.position,
-        hasModalData: !!modalData
-      })
-    }
-    if (modalData) {
-      console.log("[Modal] Modal data set:", modalData.text.substring(0, 50))
-    }
-  }, [selection, modalData])
-
-  // Log when tooltip should render
-  useEffect(() => {
-    if (selection && !modalData) {
-      console.log("[Modal] Should render tooltip:", {
-        text: selection.text.substring(0, 50),
-        position: selection.position
-      })
-    }
-  }, [selection, modalData])
 
   return (
     <>
@@ -648,7 +389,7 @@ const ModalRoot: React.FC = () => {
           onSummarize={handleSummarize}
         />
       )}
-      
+
       {modalData && (
         <FactCheckModal
           text={modalData.text}
@@ -656,6 +397,7 @@ const ModalRoot: React.FC = () => {
           onClose={handleCloseModal}
         />
       )}
+
       {summarizeModalData && (
         <SummarizeModal
           text={summarizeModalData.text}
