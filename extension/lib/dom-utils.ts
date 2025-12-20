@@ -66,14 +66,17 @@ export function calculateModalPosition(
         )
     )
 
-    // Position below selection, but keep within viewport
-    const top = Math.max(
-        offset,
-        Math.min(
-            selectionRect.top + 20,
-            window.innerHeight - height - offset
-        )
-    )
+    // Position above selection (like the tooltip), but keep within viewport
+    // If there's not enough space above, position below instead
+    let top = selectionRect.top - height - offset
+
+    // If modal would go off-screen at the top, position it below the selection
+    if (top < offset) {
+        top = selectionRect.bottom + offset
+    }
+
+    // Ensure it doesn't go off the bottom either
+    top = Math.min(top, window.innerHeight - height - offset)
 
     return { left, top }
 }

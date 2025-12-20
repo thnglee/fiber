@@ -168,9 +168,9 @@ export function ActionLogsTable({ initialActions, total, loading = false }: Acti
                                     </tr>
                                     {isExpanded && (
                                         <tr key={`${action.id}-expanded`} className="bg-slate-800">
-                                            <td colSpan={8} className="px-8 py-8">
+                                            <td colSpan={8} className="px-6 py-8">
                                                 <div className="space-y-6">
-                                                    <h4 className="font-semibold text-white text-base mb-2">Full Action Details</h4>
+                                                    <h4 className="font-semibold text-gray-50 text-lg mb-4">Full Action Details</h4>
 
                                                     {/* Metadata Row - Location, Input Type, Token Usage, User Agent */}
                                                     <div className="grid grid-cols-4 gap-4">

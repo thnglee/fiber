@@ -28,8 +28,20 @@ const FactCheckTooltip: React.FC<{
   onSummarize: () => void
 }> = ({ position, onCheck, onSummarize }) => {
   // Calculate position using utility
-  const selectionRect = new DOMRect(position.x, position.y, 0, 0)
-  const tooltipPosition = calculateTooltipPosition(selectionRect, DIMENSIONS.TOOLTIP)
+  const selectionRect = {
+    left: position.x,
+    top: position.y,
+    width: 0,
+    height: 0,
+    right: position.x,
+    bottom: position.y,
+    x: position.x,
+    y: position.y,
+  } as DOMRect
+  const tooltipPosition = calculateTooltipPosition(selectionRect, {
+    width: DIMENSIONS.TOOLTIP.WIDTH,
+    height: DIMENSIONS.TOOLTIP.HEIGHT
+  })
 
   return (
     <div

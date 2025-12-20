@@ -45,7 +45,16 @@ export const BaseModal: React.FC<BaseModalProps> = ({
     const modalRef = useRef<HTMLDivElement>(null)
 
     // Calculate modal position
-    const selectionRect = new DOMRect(position.x, position.y, 0, 0)
+    const selectionRect = {
+        left: position.x,
+        top: position.y,
+        width: 0,
+        height: 0,
+        right: position.x,
+        bottom: position.y,
+        x: position.x,
+        y: position.y,
+    } as DOMRect
     const modalDimensions: ElementDimensions = {
         width,
         height: DIMENSIONS.MODAL.ESTIMATED_HEIGHT,
