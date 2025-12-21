@@ -107,11 +107,13 @@ async function fetchAPI<T>(
  * 
  * @param content - Article content to summarize
  * @param context - Optional page context (will be auto-detected if not provided)
+ * @param url - Optional URL of the page being summarized (for tracking purposes)
  * @returns Promise resolving to summary response
  */
 export async function summarizeArticle(
   content: string,
-  context?: PageContext
+  context?: PageContext,
+  url?: string
 ): Promise<SummaryResponse> {
   // Get context if not provided
   const pageContext = context || getPageContext()
@@ -120,6 +122,7 @@ export async function summarizeArticle(
     method: "POST",
     body: JSON.stringify({
       content,
+      url, // Include URL for proper input type tracking
       website: pageContext.hostname,
     }),
   })

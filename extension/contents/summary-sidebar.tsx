@@ -78,8 +78,12 @@ const SummarySidebar: React.FC = () => {
         throw new Error("Không thể trích xuất nội dung bài viết")
       }
 
-      // Call backend API with context
-      const result = await summarizeArticle(article.textContent, contextRef.current || undefined)
+      // Call backend API with context and URL for proper tracking
+      const result = await summarizeArticle(
+        article.textContent,
+        contextRef.current || undefined,
+        window.location.href // Pass URL so backend tracks inputType as 'url'
+      )
       setSummary(result)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Đã xảy ra lỗi")
