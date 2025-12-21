@@ -2,8 +2,8 @@ import React, { useEffect, useState, useCallback, useRef } from "react"
 import { Readability } from "@mozilla/readability"
 import type { PlasmoCSConfig } from "plasmo"
 import cssText from "data-text:~/contents/style.css"
-import { summarizeArticle } from "~/lib/api-client"
-import type { SummaryResponse, PageContext } from "~/lib/types"
+import { summarizeArticleStream } from "~/lib/api-client"
+import type { PageContext } from "~/lib/types"
 import { Card } from "~/components/ui/Card"
 import { Button } from "~/components/ui/Button"
 import { Skeleton } from "~/components/ui/Skeleton"
@@ -37,7 +37,10 @@ export const getStyle = () => {
 }
 
 const SummarySidebar: React.FC = () => {
-  const [summary, setSummary] = useState<SummaryResponse | null>(null)
+  const [streamingText, setStreamingText] = useState<string>("")
+  const [category, setCategory] = useState<string | null>(null)
+  const [readingTime, setReadingTime] = useState<number | null>(null)
+  const [isStreaming, setIsStreaming] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(true)
@@ -55,7 +58,11 @@ const SummarySidebar: React.FC = () => {
 
   const extractAndSummarize = useCallback(async () => {
     setIsLoading(true)
+    setIsStreaming(false)
     setError(null)
+    setStreamingText("")
+    setCategory(null)
+    setReadingTime(null)
 
     try {
       // Wait for content to be ready using dom-utils
@@ -78,16 +85,45 @@ const SummarySidebar: React.FC = () => {
         throw new Error("Không thể trích xuất nội dung bài viết")
       }
 
-      // Call backend API with context and URL for proper tracking
-      const result = await summarizeArticle(
+      setIsLoading(false)
+      setIsStreaming(true)
+
+      // Stream summary from backend API
+      let accumulatedJson = ""
+      for await (const chunk of summarizeArticleStream(
         article.textContent,
         contextRef.current || undefined,
-        window.location.href // Pass URL so backend tracks inputType as 'url'
-      )
-      setSummary(result)
+        window.location.href
+      )) {
+        if (chunk.type === 'summary-delta' && chunk.delta) {
+          // Accumulate JSON deltas
+          accumulatedJson += chunk.delta
+
+          // Try to extract summary field from accumulated JSON
+          try {
+            // Look for "summary":" pattern and extract text until next field or end
+            const summaryMatch = accumulatedJson.match(/"summary"\s*:\s*"([^"]*(?:\\.[^"]*)*)"?/)
+            if (summaryMatch) {
+              // Unescape JSON string
+              const summaryText = summaryMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"')
+              setStreamingText(summaryText)
+            }
+          } catch (e) {
+            // Ignore parsing errors during streaming
+          }
+        } else if (chunk.type === 'metadata') {
+          setCategory(chunk.category || null)
+          setReadingTime(chunk.readingTime || null)
+        } else if (chunk.type === 'error') {
+          throw new Error(chunk.error || 'Streaming failed')
+        } else if (chunk.type === 'done') {
+          setIsStreaming(false)
+        }
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Đã xảy ra lỗi")
       console.error("[SummarySidebar] Summary error:", err)
+      setIsStreaming(false)
     } finally {
       setIsLoading(false)
     }
@@ -113,7 +149,9 @@ const SummarySidebar: React.FC = () => {
 
     const unsubscribe = navObserver.onNavigate(() => {
       // Reset state and re-detect page type
-      setSummary(null)
+      setStreamingText("")
+      setCategory(null)
+      setReadingTime(null)
       setError(null)
       initializePage()
     })
@@ -136,7 +174,7 @@ const SummarySidebar: React.FC = () => {
             // 2. No existing summary
             // 3. Not currently loading
             // 4. Page detector hasn't already determined it's not an article
-            if (pageIsArticle === false && !summary && !isLoading) {
+            if (pageIsArticle === false && !streamingText && !isLoading) {
               extractAndSummarize()
             }
           }}
@@ -205,21 +243,30 @@ const SummarySidebar: React.FC = () => {
         </Card>
       )}
 
-      {summary && !isLoading && (
+      {(streamingText || isStreaming) && (
         <div className="space-y-6">
           <Card>
             <div className="space-y-4">
               <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                    {summary.category}
-                  </span>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                    {formatReadingTime(summary.readingTime)}
-                  </span>
-                </div>
+                {(category || readingTime) && (
+                  <div className="flex items-center gap-2 mb-3">
+                    {category && (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                        {category}
+                      </span>
+                    )}
+                    {readingTime && (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                        {formatReadingTime(readingTime)}
+                      </span>
+                    )}
+                  </div>
+                )}
                 <p className="text-gray-900 leading-relaxed whitespace-pre-line">
-                  {summary.summary}
+                  {streamingText}
+                  {isStreaming && (
+                    <span className="inline-block w-1 h-4 ml-1 bg-gray-900 animate-pulse" />
+                  )}
                 </p>
               </div>
             </div>

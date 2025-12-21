@@ -191,3 +191,145 @@ export async function generateJsonCompletion<T>(
     debugInfo
   }
 }
+
+/**
+ * Stream completion using OpenAI with structured output
+ * Based on OpenAI's official streaming structured output API
+ * 
+ * @param options - Completion options (must include schema)
+ * @yields Progressive updates with deltas, final data, and metadata
+ */
+export async function* generateStreamingCompletion<T>(
+  options: LLMCompletionOptions & { schema: z.ZodSchema<T> }
+): AsyncGenerator<{
+  type: 'delta' | 'done' | 'error'
+  delta?: string
+  data?: T
+  usage?: LLMUsage
+  error?: string
+}> {
+  const { prompt, debug, logContext = 'llm', schema } = options
+
+  logger.addLog(logContext, 'streaming-prompt', {
+    promptLength: prompt.length,
+    hasSchema: true
+  })
+
+  const aiConfig = getAIModelConfig()
+
+  // Prepare request parameters with structured output
+  const jsonSchema = zodToJsonSchema(schema, { target: "openApi3" })
+  const requestParams: OpenAI.Chat.Completions.ChatCompletionCreateParams = {
+    model: aiConfig.model,
+    messages: [
+      {
+        role: "user",
+        content: prompt
+      }
+    ],
+    temperature: aiConfig.temperature,
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        name: "structured_output",
+        strict: true,
+        schema: jsonSchema as any,
+      },
+    },
+    stream: true, // Enable streaming
+    stream_options: {
+      include_usage: true  // ✅ Include token usage in final chunk
+    }
+  } as OpenAI.Chat.Completions.ChatCompletionCreateParamsStreaming
+
+  try {
+    const stream = await openai.chat.completions.create(requestParams)
+
+    let accumulatedContent = ''
+    let finalModel = ''
+    let finalUsage: LLMUsage | undefined
+
+    for await (const chunk of stream) {
+      const delta = chunk.choices[0]?.delta?.content || ''
+
+      // Accumulate content
+      if (delta) {
+        accumulatedContent += delta
+
+        // Yield delta for progressive rendering
+        yield {
+          type: 'delta',
+          delta
+        }
+      }
+
+      // Capture model name
+      if (chunk.model) {
+        finalModel = chunk.model
+      }
+
+      // Capture usage information (usually in the last chunk)
+      if (chunk.usage) {
+        finalUsage = {
+          prompt_tokens: chunk.usage.prompt_tokens,
+          completion_tokens: chunk.usage.completion_tokens,
+          total_tokens: chunk.usage.total_tokens,
+        }
+        console.log('[LLM Streaming] ✅ Usage data captured from chunk:', finalUsage)
+      }
+
+      // Check for finish reason
+      const finishReason = chunk.choices[0]?.finish_reason
+      if (finishReason === 'stop') {
+        // Stream completed successfully
+        logger.addLog(logContext, 'streaming-complete', {
+          model: finalModel,
+          contentLength: accumulatedContent.length,
+          usage: finalUsage
+        })
+
+        // Parse and validate accumulated JSON
+        try {
+          const parsed = JSON.parse(accumulatedContent)
+          const validated: T = safeParseOrThrow(schema, parsed, "Streaming structured output validation")
+
+          // Yield final structured data
+          yield {
+            type: 'done',
+            data: validated,
+            usage: finalUsage
+          }
+        } catch (error) {
+          logger.addLog(logContext, 'streaming-parse-error', {
+            error: error instanceof Error ? error.message : String(error),
+            contentPreview: accumulatedContent.substring(0, 200)
+          })
+
+          yield {
+            type: 'error',
+            error: error instanceof Error ? error.message : 'Failed to parse streaming response'
+          }
+        }
+      } else if (finishReason === 'length') {
+        yield {
+          type: 'error',
+          error: 'Response truncated due to max tokens limit'
+        }
+      } else if (finishReason === 'content_filter') {
+        yield {
+          type: 'error',
+          error: 'Response filtered due to content policy'
+        }
+      }
+    }
+  } catch (error) {
+    logger.addLog(logContext, 'streaming-error', {
+      error: error instanceof Error ? error.message : String(error)
+    })
+
+    yield {
+      type: 'error',
+      error: error instanceof Error ? error.message : 'Streaming request failed'
+    }
+  }
+}
