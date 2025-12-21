@@ -8,7 +8,7 @@ import { getEnvVar } from '@/config/env'
  */
 export async function checkAdminAuth(request: NextRequest): Promise<string | null> {
     // Check for dev mode bypass
-    const devMode = process.env.ADMIN_DEV_MODE === 'true'
+    const devMode = getEnvVar('ADMIN_DEV_MODE') === 'true'
     if (devMode) {
         console.log('[Auth] Dev mode enabled - bypassing authentication')
         return 'dev-mode-user'

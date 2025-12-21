@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getCorsHeaders } from '@/middleware/cors'
-import type { ActionStats } from '../../../../shared/types'
+import type { ActionStats } from '@shared/types'
+
+// Type-safe interface for token usage
+interface TokenUsage {
+    total_tokens?: number
+    prompt_tokens?: number
+    completion_tokens?: number
+}
 
 /**
  * GET /api/actions/stats
@@ -69,9 +76,10 @@ export async function GET(request: NextRequest) {
                 }
             }
 
-            // Sum tokens
+            // Sum tokens with type-safe approach
             if (tokenUsage && typeof tokenUsage === 'object') {
-                totalTokens += (tokenUsage as any).total_tokens || 0
+                const usage = tokenUsage as TokenUsage
+                totalTokens += usage.total_tokens ?? 0
             }
 
             // Sum processing time
@@ -93,7 +101,9 @@ export async function GET(request: NextRequest) {
         const stats: ActionStats = {
             total_actions: actions.length,
             total_tokens: totalTokens,
-            avg_processing_time: Math.round(totalProcessingTime / actions.length),
+            avg_processing_time: actions.length > 0
+                ? Math.round(totalProcessingTime / actions.length)
+                : 0,
             actions_by_type: actionsByType,
             actions_by_website: actionsByWebsite,
             actions_today: actionsToday

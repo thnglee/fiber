@@ -28,6 +28,9 @@ export function getEnv(): Env {
       OPENAI_TEMPERATURE: process.env.OPENAI_TEMPERATURE,
       NODE_ENV: process.env.NODE_ENV,
       PLASMO_PUBLIC_API_URL: process.env.PLASMO_PUBLIC_API_URL,
+      ADMIN_DEV_MODE: process.env.ADMIN_DEV_MODE,
+      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     })
     return validatedEnv
   } catch (error) {

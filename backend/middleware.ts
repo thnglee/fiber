@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { getEnvVar } from '@/config/env'
 
 /**
  * Next.js middleware for route protection
@@ -33,7 +34,7 @@ export async function middleware(request: NextRequest) {
 
     if (needsAuth) {
         // Check dev mode
-        const devMode = process.env.ADMIN_DEV_MODE === 'true'
+        const devMode = getEnvVar('ADMIN_DEV_MODE') === 'true'
         if (devMode) {
             console.log('[Middleware] Dev mode enabled - bypassing auth for:', pathname)
             return NextResponse.next()

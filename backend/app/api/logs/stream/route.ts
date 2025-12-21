@@ -20,7 +20,14 @@ export async function GET(request: NextRequest) {
         encoder.encode(`data: ${JSON.stringify({ type: "connected" })}\n\n`)
       )
 
-      // Subscribe to new logs
+      // Send existing logs FIRST to avoid race condition
+      const existingLogs = logger.getLogs(100)
+      existingLogs.forEach((log) => {
+        const data = `data: ${JSON.stringify(log)}\n\n`
+        controller.enqueue(encoder.encode(data))
+      })
+
+      // THEN subscribe to new logs (prevents duplicates)
       const unsubscribe = logger.subscribe((log) => {
         try {
           const data = `data: ${JSON.stringify(log)}\n\n`
@@ -28,13 +35,6 @@ export async function GET(request: NextRequest) {
         } catch (error) {
           console.error("Error sending log:", error)
         }
-      })
-
-      // Send existing logs
-      const existingLogs = logger.getLogs(100)
-      existingLogs.forEach((log) => {
-        const data = `data: ${JSON.stringify(log)}\n\n`
-        controller.enqueue(encoder.encode(data))
       })
 
       // Handle client disconnect
