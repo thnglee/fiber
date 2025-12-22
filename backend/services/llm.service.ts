@@ -248,6 +248,8 @@ export async function* generateStreamingCompletion<T>(
     let accumulatedContent = ''
     let finalModel = ''
     let finalUsage: LLMUsage | undefined
+    let isComplete = false
+    let parsedData: T | undefined
 
     for await (const chunk of stream) {
       const delta = chunk.choices[0]?.delta?.content || ''
@@ -268,7 +270,7 @@ export async function* generateStreamingCompletion<T>(
         finalModel = chunk.model
       }
 
-      // Capture usage information (usually in the last chunk)
+      // Capture usage information (usually in the last chunk AFTER finish_reason)
       if (chunk.usage) {
         finalUsage = {
           prompt_tokens: chunk.usage.prompt_tokens,
@@ -281,7 +283,9 @@ export async function* generateStreamingCompletion<T>(
       // Check for finish reason
       const finishReason = chunk.choices[0]?.finish_reason
       if (finishReason === 'stop') {
-        // Stream completed successfully
+        // Stream completed successfully - but DON'T yield yet, wait for usage chunk
+        isComplete = true
+
         logger.addLog(logContext, 'streaming-complete', {
           model: finalModel,
           contentLength: accumulatedContent.length,
@@ -291,14 +295,7 @@ export async function* generateStreamingCompletion<T>(
         // Parse and validate accumulated JSON
         try {
           const parsed = JSON.parse(accumulatedContent)
-          const validated: T = safeParseOrThrow(schema, parsed, "Streaming structured output validation")
-
-          // Yield final structured data
-          yield {
-            type: 'done',
-            data: validated,
-            usage: finalUsage
-          }
+          parsedData = safeParseOrThrow(schema, parsed, "Streaming structured output validation")
         } catch (error) {
           logger.addLog(logContext, 'streaming-parse-error', {
             error: error instanceof Error ? error.message : String(error),
@@ -309,17 +306,30 @@ export async function* generateStreamingCompletion<T>(
             type: 'error',
             error: error instanceof Error ? error.message : 'Failed to parse streaming response'
           }
+          return
         }
       } else if (finishReason === 'length') {
         yield {
           type: 'error',
           error: 'Response truncated due to max tokens limit'
         }
+        return
       } else if (finishReason === 'content_filter') {
         yield {
           type: 'error',
           error: 'Response filtered due to content policy'
         }
+        return
+      }
+    }
+
+    // ✅ CRITICAL FIX: Yield 'done' event AFTER loop completes and usage is captured
+    if (isComplete && parsedData) {
+      console.log('[LLM Streaming] ✅ Yielding final data with usage:', finalUsage)
+      yield {
+        type: 'done',
+        data: parsedData,
+        usage: finalUsage
       }
     }
   } catch (error) {
