@@ -169,6 +169,11 @@ export const EnvSchema = z.object({
 
   // Optional: Admin dev mode bypass
   ADMIN_DEV_MODE: z.string().optional(),
+
+  // CORS Configuration (for production security)
+  CHROME_EXTENSION_ID: z.string().optional(),
+  FIREFOX_EXTENSION_ID: z.string().optional(),
+  ALLOW_LOCALHOST: z.string().optional(),
 })
 
 // ============================================================================

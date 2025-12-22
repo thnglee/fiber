@@ -129,6 +129,122 @@ export async function summarizeArticle(
 }
 
 /**
+ * Stream article summarization with progressive text rendering
+ * Uses Server-Sent Events (SSE) for real-time updates
+ * 
+ * @param content - Article content to summarize
+ * @param context - Optional page context (will be auto-detected if not provided)
+ * @param url - Optional URL of the page being summarized (for tracking purposes)
+ * @yields Progressive updates with summary deltas and metadata
+ */
+export async function* summarizeArticleStream(
+  content: string,
+  context?: PageContext,
+  url?: string
+): AsyncGenerator<{
+  type: 'summary-delta' | 'metadata' | 'error' | 'done'
+  delta?: string
+  category?: string
+  readingTime?: number
+  error?: string
+}> {
+  // Get context if not provided
+  const pageContext = context || getPageContext()
+
+  const apiUrl = `${API_BASE_URL}/summarize?stream=true`
+
+  console.log('[API] Starting streaming summarization', { url: apiUrl })
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        content,
+        url,
+        website: pageContext.hostname,
+      }),
+      signal: AbortSignal.timeout(API.TIMEOUT),
+    })
+
+    if (!response.ok) {
+      const error: ApiError = await response.json().catch(() => ({
+        message: `HTTP ${response.status}: ${response.statusText}`,
+      }))
+      throw new Error(error.message || "Streaming request failed")
+    }
+
+    // Check if response is actually SSE
+    const contentType = response.headers.get('content-type')
+    if (!contentType?.includes('text/event-stream')) {
+      throw new Error('Expected SSE response but got: ' + contentType)
+    }
+
+    // Read the SSE stream
+    const reader = response.body?.getReader()
+    if (!reader) {
+      throw new Error('Response body is not readable')
+    }
+
+    const decoder = new TextDecoder()
+    let buffer = ''
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read()
+
+        if (done) {
+          console.log('[API] Stream completed')
+          break
+        }
+
+        // Decode chunk and add to buffer
+        buffer += decoder.decode(value, { stream: true })
+
+        // Process complete SSE messages (ending with \n\n)
+        const messages = buffer.split('\n\n')
+        buffer = messages.pop() || '' // Keep incomplete message in buffer
+
+        for (const message of messages) {
+          if (!message.trim()) continue
+
+          // Parse SSE data line (format: "data: {JSON}")
+          const dataMatch = message.match(/^data: (.+)$/m)
+          if (dataMatch) {
+            try {
+              const chunk = JSON.parse(dataMatch[1])
+
+              console.log('[API] Received chunk:', chunk.type)
+
+              // Yield the parsed chunk
+              yield chunk
+
+              // Stop if we receive done or error
+              if (chunk.type === 'done' || chunk.type === 'error') {
+                return
+              }
+            } catch (parseError) {
+              console.error('[API] Failed to parse SSE data:', parseError)
+            }
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock()
+    }
+  } catch (error) {
+    console.error('[API] Streaming error:', error)
+
+    yield {
+      type: 'error',
+      error: error instanceof Error ? error.message : 'Streaming failed'
+    }
+  }
+}
+
+/**
  * Fact-check selected text
  * 
  * @param text - Text to fact-check

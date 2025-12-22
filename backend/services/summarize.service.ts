@@ -163,3 +163,126 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
 
   return response
 }
+
+/**
+ * Stream summarization with progressive text rendering
+ * Based on OpenAI's streaming structured output API
+ * 
+ * @param request - Summarize request parameters
+ * @yields Progressive updates with summary deltas and final metadata
+ */
+export async function* performSummarizeStream(
+  request: SummarizeRequest
+): AsyncGenerator<{
+  type: 'summary-delta' | 'metadata' | 'error' | 'done'
+  delta?: string
+  category?: string
+  readingTime?: number
+  usage?: any
+  error?: string
+}> {
+  const { content, url, debug } = request
+
+  let extractedContent = ""
+  let contentLength = 0
+
+  try {
+    // Extract content from URL or use provided content
+    if (url && typeof url === "string") {
+      const extracted = await extractContentFromUrl(url)
+      extractedContent = extracted.content
+      contentLength = extracted.content.length
+
+      logger.addLog('summarize-stream', 'content-extraction', {
+        url,
+        length: extractedContent.length,
+        title: extracted.title || "No title",
+      })
+    } else if (content && typeof content === "string") {
+      extractedContent = content
+      contentLength = content.length
+
+      logger.addLog('summarize-stream', 'content-input', {
+        length: content.length,
+      })
+    } else {
+      yield {
+        type: 'error',
+        error: "Either 'content' (string) or 'url' (string) is required"
+      }
+      return
+    }
+
+    if (extractedContent.length === 0) {
+      yield {
+        type: 'error',
+        error: "Content cannot be empty"
+      }
+      return
+    }
+
+    // Generate prompt
+    const prompt = getSummarizePrompt({ content: extractedContent })
+
+    // Import streaming function
+    const { generateStreamingCompletion } = await import("./llm.service")
+
+    // Stream summary using LLM service
+    for await (const chunk of generateStreamingCompletion<SummaryData>({
+      prompt,
+      debug,
+      logContext: 'summarize-stream',
+      schema: SummaryDataSchema,
+    })) {
+      if (chunk.type === 'delta' && chunk.delta) {
+        // Stream summary text progressively
+        // Note: OpenAI returns the full JSON progressively, so we need to extract just the summary field
+        // For now, we'll yield the delta as-is and let the frontend handle it
+        yield {
+          type: 'summary-delta',
+          delta: chunk.delta
+        }
+      } else if (chunk.type === 'done' && chunk.data) {
+        // Validate the structured data
+        const summaryData = safeParseOrThrow(
+          SummaryDataSchema,
+          chunk.data,
+          "Streaming summary data"
+        )
+
+        // Send metadata separately
+        console.log('[Summarize Stream] Sending metadata with usage:', chunk.usage)
+        yield {
+          type: 'metadata',
+          category: summaryData.category,
+          readingTime: summaryData.readingTime,
+          usage: chunk.usage
+        }
+
+        // Signal completion
+        yield {
+          type: 'done'
+        }
+
+        logger.addLog('summarize-stream', 'complete', {
+          category: summaryData.category,
+          readingTime: summaryData.readingTime
+        })
+      } else if (chunk.type === 'error') {
+        yield {
+          type: 'error',
+          error: chunk.error || 'Streaming failed'
+        }
+      }
+    }
+  } catch (error) {
+    logger.addLog('summarize-stream', 'error', {
+      error: error instanceof Error ? error.message : String(error)
+    })
+
+    yield {
+      type: 'error',
+      error: error instanceof Error ? error.message : 'Failed to stream summary'
+    }
+  }
+}
