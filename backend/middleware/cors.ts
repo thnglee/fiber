@@ -18,47 +18,46 @@ export interface CorsHeaders {
 /**
  * Get allowed origins based on environment
  * 
- * Development: Allow all origins (*)
- * Production: Only allow specific extension IDs and localhost for testing
+ * ⚠️ TEMPORARY FOR UNI PROJECT: Allow all origins (*)
+ * TODO: Restrict to specific origins before production deployment
  */
 function getAllowedOrigins(): string[] {
+  // TEMPORARY: Allow all origins for university project demo
+  // This allows the extension to work from any webpage (e.g., vnexpress.net)
+  console.warn('[CORS] ⚠️ WARNING: Allowing all origins (*) - INSECURE for production!')
+  return ['*']
+
+  /* ORIGINAL PRODUCTION CODE - RESTORE BEFORE DEPLOYMENT:
   const isDevelopment = process.env.NODE_ENV !== 'production'
 
   if (isDevelopment) {
-    // In development, allow all origins for easier testing
     return ['*']
   }
 
-  // Production: Whitelist specific origins
   const allowedOrigins: string[] = []
 
-  // Chrome Extension ID (get this from chrome://extensions after building)
-  // Format: chrome-extension://YOUR_EXTENSION_ID_HERE
   const chromeExtensionId = process.env.CHROME_EXTENSION_ID
   if (chromeExtensionId) {
     allowedOrigins.push(`chrome-extension://${chromeExtensionId}`)
   }
 
-  // Firefox Extension ID (if supporting Firefox)
-  // Format: moz-extension://YOUR_EXTENSION_ID_HERE
   const firefoxExtensionId = process.env.FIREFOX_EXTENSION_ID
   if (firefoxExtensionId) {
     allowedOrigins.push(`moz-extension://${firefoxExtensionId}`)
   }
 
-  // Allow localhost for local testing (optional, remove in strict production)
   if (process.env.ALLOW_LOCALHOST === 'true') {
     allowedOrigins.push('http://localhost:3000')
     allowedOrigins.push('http://localhost:3001')
   }
 
-  // Fallback: if no extension IDs are set in production, log warning
   if (allowedOrigins.length === 0) {
     console.warn('[CORS] WARNING: No extension IDs configured in production! Falling back to wildcard (INSECURE)')
     return ['*']
   }
 
   return allowedOrigins
+  */
 }
 
 /**
