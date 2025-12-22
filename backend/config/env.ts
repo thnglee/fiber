@@ -31,6 +31,9 @@ export function getEnv(): Env {
       ADMIN_DEV_MODE: process.env.ADMIN_DEV_MODE,
       NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
       NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      CHROME_EXTENSION_ID: process.env.CHROME_EXTENSION_ID,
+      FIREFOX_EXTENSION_ID: process.env.FIREFOX_EXTENSION_ID,
+      ALLOW_LOCALHOST: process.env.ALLOW_LOCALHOST,
     })
     return validatedEnv
   } catch (error) {
