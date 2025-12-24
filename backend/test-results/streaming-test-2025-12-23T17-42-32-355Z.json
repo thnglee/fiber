@@ -1,0 +1,101 @@
+{
+  "results": [
+    {
+      "index": 1,
+      "url": "https://vnexpress.net/bo-truong-tai-chinh-giam-giay-phep-kinh-doanh-toi-thieu-50-nganh-nghe-4986741.html",
+      "title": "Kinh tế - Tài chính",
+      "streamingFirstChunk": 1035,
+      "streamingTotal": 5048,
+      "nonStreamingTotal": 3298,
+      "waitTimeSavings": 4013
+    },
+    {
+      "index": 2,
+      "url": "https://vnexpress.net/thoi-su/ho-con-rua-va-giai-thoai-tran-yem-long-mach-o-sai-gon-3455791.html",
+      "title": "Lịch sử",
+      "streamingFirstChunk": 2344,
+      "streamingTotal": 6771,
+      "nonStreamingTotal": 5407,
+      "waitTimeSavings": 4427
+    },
+    {
+      "index": 3,
+      "url": "https://vnexpress.net/kinh-doanh/cong-ty-cua-dai-gia-duong-ngoc-minh-lo-dam-4004007.html",
+      "title": "Kinh tế - Tài chính",
+      "streamingFirstChunk": 2244,
+      "streamingTotal": 7357,
+      "nonStreamingTotal": 3778,
+      "waitTimeSavings": 5113
+    },
+    {
+      "index": 4,
+      "url": "https://vnexpress.net/giai-tri-voi-trung-phuc-sinh-trong-phan-mem-1531410.html",
+      "title": "Công nghệ - Khoa học",
+      "streamingFirstChunk": 1359,
+      "streamingTotal": 4843,
+      "nonStreamingTotal": 5061,
+      "waitTimeSavings": 3484
+    },
+    {
+      "index": 5,
+      "url": "https://vnexpress.net/suc-khoe-cam-nang-cac-benh-phong-cui-4681769.html",
+      "title": "Sức khỏe - Y tế",
+      "streamingFirstChunk": 802,
+      "streamingTotal": 5248,
+      "nonStreamingTotal": 4900,
+      "waitTimeSavings": 4446
+    },
+    {
+      "index": 6,
+      "url": "https://vnexpress.net/suc-khoe-cam-nang-5-trieu-chung-gan-ton-thuong-do-benh-tieu-duong-4894622.html",
+      "title": "Sức khỏe - Y tế",
+      "streamingFirstChunk": 1829,
+      "streamingTotal": 4713,
+      "nonStreamingTotal": 4308,
+      "waitTimeSavings": 2884
+    },
+    {
+      "index": 7,
+      "url": "https://vnexpress.net/suc-khoe-sinh-ly-nu-thay-doi-the-nao-theo-tuoi-tac-4996742.html",
+      "title": "Sức khỏe - Y tế",
+      "streamingFirstChunk": 986,
+      "streamingTotal": 3495,
+      "nonStreamingTotal": 4107,
+      "waitTimeSavings": 2509
+    },
+    {
+      "index": 8,
+      "url": "https://vnexpress.net/suc-khoe-cam-nang-7-dau-hieu-canh-bao-than-keu-cuu-4912705.html",
+      "title": "Sức khỏe - Y tế",
+      "streamingFirstChunk": 1737,
+      "streamingTotal": 3481,
+      "nonStreamingTotal": 3755,
+      "waitTimeSavings": 1744
+    },
+    {
+      "index": 9,
+      "url": "https://vnexpress.net/thoi-su/ly-do-nha-nong-su-dung-phan-trun-que-3986629.html",
+      "title": "Nông nghiệp",
+      "streamingFirstChunk": 871,
+      "streamingTotal": 3198,
+      "nonStreamingTotal": 7020,
+      "waitTimeSavings": 2327
+    },
+    {
+      "index": 10,
+      "url": "https://vnexpress.net/thoi-su/tieu-chuan-chung-nhan-huu-co-o-viet-nam-3979983.html",
+      "title": "Kinh tế - Tài chính",
+      "streamingFirstChunk": 1449,
+      "streamingTotal": 5049,
+      "nonStreamingTotal": 5759,
+      "waitTimeSavings": 3600
+    }
+  ],
+  "stats": {
+    "avgFirstChunk": 1466,
+    "avgStreamingTotal": 4920,
+    "avgNonStreamingTotal": 4739,
+    "avgWaitTimeSavings": 3455,
+    "successRate": 100
+  }
+}

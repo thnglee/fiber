@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:streaming": "tsx scripts/streaming-performance-test.ts"
   },
   "dependencies": {
     "@mozilla/readability": "^0.6.0",
@@ -35,6 +36,7 @@
     "eslint-config-next": "^14.0.4",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.18",
+    "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   }
 }
