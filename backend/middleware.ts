@@ -34,7 +34,9 @@ export async function middleware(request: NextRequest) {
 
     if (needsAuth) {
         // Check dev mode
-        const devMode = getEnvVar('ADMIN_DEV_MODE') === 'true'
+        const devModeStr = getEnvVar('ADMIN_DEV_MODE')
+        const devMode = ['true', '1', 'yes'].includes((devModeStr || '').toLowerCase())
+
         if (devMode) {
             console.log('[Middleware] Dev mode enabled - bypassing auth for:', pathname)
             return NextResponse.next()
