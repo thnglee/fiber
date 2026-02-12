@@ -140,6 +140,41 @@ export async function POST(request: NextRequest) {
               console.error('[Summarize Stream] ❌ Failed to track action:', err)
             }
 
+            // ✅ CRITICAL FIX: Save evaluation metrics BEFORE closing stream
+            // This ensures the database insert completes before the request terminates
+            console.log('[Summarize Stream] Saving evaluation metrics...')
+            try {
+              const { calculateLexicalMetrics, saveEvaluationMetrics } = await import('@/services/evaluation.service')
+              
+              // We need the original content to calculate metrics
+              // For streaming, we'll need to extract it from the request
+              if (content || url) {
+                let originalContent = content || ''
+                
+                // If URL was provided, we need to extract the content
+                if (url && !content) {
+                  const { extractContentFromUrl } = await import('@/services/content-extraction.service')
+                  const extracted = await extractContentFromUrl(url)
+                  originalContent = extracted.content
+                }
+
+                if (originalContent && summaryText) {
+                  const metrics = calculateLexicalMetrics(summaryText, originalContent)
+                  await saveEvaluationMetrics({
+                    summary: summaryText,
+                    original: originalContent,
+                    url: url,
+                    metrics
+                  })
+                  console.log('[Summarize Stream] ✅ Evaluation metrics saved successfully!')
+                } else {
+                  console.log('[Summarize Stream] ⚠️ Skipping metrics - missing content or summary')
+                }
+              }
+            } catch (err) {
+              console.error('[Summarize Stream] ❌ Failed to save evaluation metrics:', err)
+            }
+
             // ✅ Close stream AFTER tracking completes
             controller.close()
           } catch (error) {

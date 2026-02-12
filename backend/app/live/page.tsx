@@ -50,8 +50,9 @@ export default function LiveLogsPage() {
   }, [])
 
   return (
-    <main className="mx-auto max-w-5xl p-6 space-y-4">
-      <header className="flex items-center justify-between">
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-7xl mx-auto space-y-4">
+        <header className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Live Logs</h1>
           <p className="text-sm text-gray-500">
@@ -101,6 +102,7 @@ export default function LiveLogsPage() {
           </ul>
         )}
       </section>
-    </main>
+      </div>
+    </div>
   )
 }

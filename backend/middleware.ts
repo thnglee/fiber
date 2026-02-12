@@ -24,7 +24,11 @@ export async function middleware(request: NextRequest) {
     // Protected routes - require auth
     const protectedRoutes = [
         '/',
+        '/dashboard',
         '/api/actions',
+        '/metrics',
+        '/live',
+        '/debug',
     ]
 
     // Check if route needs protection

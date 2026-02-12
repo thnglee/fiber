@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
+// import { usePathname } from 'next/navigation'; // Cannot use usePathname in Server Component directly without 'use client'
 import "./globals.css"
+import { Header } from "@/components/Header"; // We'll create this component
 
 export const metadata: Metadata = {
   title: "Fiber API",
@@ -16,7 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="min-h-screen bg-gray-50">
+        <Header />
+        {children}
+      </body>
     </html>
   )
 }

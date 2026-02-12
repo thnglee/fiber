@@ -12,6 +12,7 @@ import {
   type SummaryData,
 } from "@/domain/schemas"
 import { safeParseOrThrow } from "@/utils/zod-helpers"
+import { calculateLexicalMetrics, saveEvaluationMetrics } from "./evaluation.service"
 
 /**
  * Main service function to summarize content
@@ -157,6 +158,24 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
     readingTime: response.readingTime
   })
 
+  // Calculate and save evaluation metrics asynchronously
+  // Fire and forget to not block the response
+  void (async () => {
+    try {
+      const metrics = calculateLexicalMetrics(response.summary, extractedContent);
+      await saveEvaluationMetrics({
+        summary: response.summary,
+        original: extractedContent,
+        url: typeof url === 'string' ? url : undefined,
+        metrics
+      });
+    } catch (err) {
+      logger.addLog('summarize', 'evaluation-error', { 
+        error: err instanceof Error ? err.message : String(err) 
+      });
+    }
+  })();
+
   if (debug) {
     response.debug = debugInfo
   }
@@ -268,6 +287,9 @@ export async function* performSummarizeStream(
           category: summaryData.category,
           readingTime: summaryData.readingTime
         })
+
+        // NOTE: Evaluation metrics are now saved in the route handler
+        // to ensure they complete before the stream closes
       } else if (chunk.type === 'error') {
         yield {
           type: 'error',
