@@ -6,7 +6,7 @@ class Logger {
   private maxLogs = 1000
   private subscribers: Set<(log: LogEntry) => void> = new Set()
 
-  addLog(type: string, stage: string, data: any) {
+  addLog(type: string, stage: string, data: unknown) {
     const logData = {
       id: `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
       timestamp: Date.now(),

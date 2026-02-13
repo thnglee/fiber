@@ -2,50 +2,21 @@
 
 import { useState } from "react"
 
-interface SummaryDebugInfo {
-  extractedContent: {
-    length: number
-    preview: string
-    fullContent?: string
-  }
-  prompt?: string
-  openaiResponse?: {
-    raw: string
-    model: string
-    usage: any
-  }
-}
 
-interface FactCheckDebugInfo {
-  selectedText: string
-  tavilySearch?: {
-    query: string
-    resultsCount: number
-    results: Array<{
-      title: string
-      url: string
-      content: string
-      contentLength: number
-      score?: number
-    }>
-  }
-  augmentedPrompt?: string
-  openaiResponse?: {
-    raw: string
-    model: string
-    usage: any
-  }
-}
+
+
 
 export default function DebugPage() {
   const [summaryUrl, setSummaryUrl] = useState("")
   const [summaryInputType, setSummaryInputType] = useState<"url" | "paragraph">("url")
   const [summaryParagraph, setSummaryParagraph] = useState("")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [summaryResult, setSummaryResult] = useState<any>(null)
   const [summaryLoading, setSummaryLoading] = useState(false)
   const [summaryError, setSummaryError] = useState<string | null>(null)
 
   const [factCheckText, setFactCheckText] = useState("")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [factCheckResult, setFactCheckResult] = useState<any>(null)
   const [factCheckLoading, setFactCheckLoading] = useState(false)
   const [factCheckError, setFactCheckError] = useState<string | null>(null)
@@ -56,7 +27,7 @@ export default function DebugPage() {
     setSummaryResult(null)
 
     try {
-      const body: any = { debug: true }
+      const body: { debug: boolean; url?: string; content?: string } = { debug: true }
       if (summaryInputType === "url") {
         body.url = summaryUrl
       } else {
@@ -419,13 +390,14 @@ export default function DebugPage() {
                           </h4>
                           <div className="bg-gray-50 rounded-lg p-3 text-xs space-y-3">
                             <div className="text-gray-600">
-                              Query: "{factCheckResult.debug.tavilySearch.query}"
+                              Query: &ldquo;{factCheckResult.debug.tavilySearch.query}&rdquo;
                             </div>
                             <div className="text-gray-600">
                               Results Found: {factCheckResult.debug.tavilySearch.resultsCount}
                             </div>
                             <div className="space-y-2 max-h-60 overflow-y-auto">
                               {factCheckResult.debug.tavilySearch.results.map(
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 (result: any, i: number) => (
                                   <div
                                     key={i}

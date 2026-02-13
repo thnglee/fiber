@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     // Check API key first before processing request
     try {
       getEnvVar("OPENAI_API_KEY")
-    } catch (error) {
+    } catch {
       console.error("OPENAI_API_KEY is not set in environment variables")
       return NextResponse.json(
         {
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       let accumulatedSummary = ''
       let finalCategory = ''
       let finalReadingTime = 0
-      let finalUsage: any = undefined
+      let finalUsage: { total_tokens?: number; prompt_tokens?: number; completion_tokens?: number } | undefined = undefined
 
       // Create a readable stream for SSE
       const encoder = new TextEncoder()
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
             try {
               const parsed = JSON.parse(accumulatedSummary)
               summaryText = parsed.summary || ''
-            } catch (e) {
+            } catch {
               // If parsing fails, try regex extraction
               const summaryMatch = accumulatedSummary.match(/"summary"\s*:\s*"([^"]*(?:\\.[^"]*)*)"/)
               if (summaryMatch) {

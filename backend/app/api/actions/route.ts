@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
 
         // Parse JSONB fields to ensure they are proper objects, not strings
         const parsedActions = (data || []).map(action => {
-            const parseJsonField = (field: any) => {
+            const parseJsonField = (field: unknown) => {
                 if (typeof field === 'string') {
                     try {
                         return JSON.parse(field)

@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react'
 import { RealtimeProvider, useRealtime } from '@/components/RealtimeProvider'
 import { ActionLogsTable } from '@/components/ActionLogsTable'
-import { Activity, Wifi, WifiOff, TrendingUp, Zap, Clock, BarChart3, Search, Filter } from 'lucide-react'
-import type { ActionStats, UserAction } from '../../shared/types'
+import { TrendingUp, Zap, Clock, BarChart3, Search, Filter } from 'lucide-react'
+import type { ActionStats, UserAction } from '@shared/types'
 
 function DashboardContent() {
   const [stats, setStats] = useState<ActionStats | null>(null)
@@ -19,7 +19,7 @@ function DashboardContent() {
     startDate: '',
     endDate: '',
   })
-  const { isConnected } = useRealtime()
+  useRealtime()
 
   // Fetch stats
   useEffect(() => {
@@ -29,6 +29,7 @@ function DashboardContent() {
   // Fetch actions when filters change
   useEffect(() => {
     fetchActions()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
   const fetchStats = async () => {

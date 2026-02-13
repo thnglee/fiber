@@ -5,7 +5,7 @@ import { MetricTooltip } from '@/components/MetricTooltip';
 export const dynamic = 'force-dynamic';
 
 export default async function EvaluationDashboard() {
-  const { data: metrics, count } = await getEvaluationMetrics(50, 0);
+  const { data: metrics } = await getEvaluationMetrics(50, 0);
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">

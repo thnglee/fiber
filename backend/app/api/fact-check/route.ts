@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     try {
       getEnvVar("OPENAI_API_KEY")
       getEnvVar("TAVILY_API_KEY")
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: "API keys not configured" },
         { status: 500, headers: getCorsHeaders() }

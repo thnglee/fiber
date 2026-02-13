@@ -7,13 +7,12 @@ import { useRealtime } from '@/components/RealtimeProvider';
 
 export function Header() {
   const pathname = usePathname();
+  const { isConnected } = useRealtime();
 
   // Hide header on login page
   if (pathname === '/admin/login') {
       return null;
   }
-
-  const { isConnected } = useRealtime();
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard' },

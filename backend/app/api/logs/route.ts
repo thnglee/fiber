@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server"
-import { ZodError } from "zod"
 import { logger } from "@/lib/logger"
 import { getCorsHeaders } from "@/middleware/cors"
 import { LogsResponseSchema, ClearLogsRequestSchema } from "@/domain/schemas"
@@ -59,7 +58,7 @@ export async function POST(request: NextRequest) {
       { error: "Invalid action" },
       { status: 400, headers: getCorsHeaders() }
     )
-  } catch (error) {
+  } catch {
     return Response.json(
       { error: "Invalid request" },
       { status: 400, headers: getCorsHeaders() }

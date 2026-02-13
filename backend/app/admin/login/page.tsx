@@ -39,7 +39,7 @@ function LoginForm() {
             // Redirect to dashboard or original destination
             router.push(redirect)
             router.refresh() // Force a refresh to ensure middleware picks up the cookie
-        } catch (err) {
+        } catch {
             setError('Network error. Please try again.')
             setLoading(false)
         }
