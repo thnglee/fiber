@@ -17,16 +17,16 @@ export function MetricTooltip({ title, description, children }: MetricTooltipPro
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
     >
-      <div className="cursor-help">
+      <div className="cursor-help border-b border-dotted border-gray-400">
         {children}
       </div>
       
       {isVisible && (
-        <div className="absolute z-50 w-72 p-3 bg-gray-900 text-white text-sm rounded-lg shadow-lg -top-2 left-full ml-2 transform -translate-y-full">
+        <div className="absolute z-[9999] w-64 p-3 bg-gray-900 text-white text-sm rounded-lg shadow-xl bottom-full left-1/2 transform -translate-x-1/2 mb-2 pointer-events-none">
           <div className="font-semibold mb-1">{title}</div>
           <div className="text-gray-300 text-xs leading-relaxed">{description}</div>
-          {/* Arrow pointing to the left */}
-          <div className="absolute top-1/2 -left-1 transform -translate-y-1/2">
+          {/* Arrow pointing down */}
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
             <div className="w-2 h-2 bg-gray-900 rotate-45"></div>
           </div>
         </div>
