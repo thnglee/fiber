@@ -61,7 +61,14 @@ export const calculateLexicalMetrics = (summary: string, original: string): Eval
 export const saveEvaluationMetrics = async (data: EvaluationData) => {
     const supabase = getSupabaseAdmin();
     try {
-        const { error } = await supabase
+        console.log('[Evaluation] Attempting to save metrics:', {
+            summaryLength: data.summary.length,
+            originalLength: data.original.length,
+            url: data.url,
+            metrics: data.metrics
+        });
+
+        const { data: insertedData, error } = await supabase
             .from('evaluation_metrics')
             .insert({
                 summary_text: data.summary,
@@ -74,20 +81,36 @@ export const saveEvaluationMetrics = async (data: EvaluationData) => {
                 metadata: {
                     original_preview: data.original.substring(0, 200)
                 }
-            });
+            })
+            .select();
 
         if (error) {
-            logger.addLog('evaluation', 'save-error', { error: error.message });
-            console.error('Error saving evaluation metrics:', error);
+            // Log full error details
+            console.error('[Evaluation] ❌ Database error:', {
+                message: error.message,
+                details: error.details,
+                hint: error.hint,
+                code: error.code
+            });
+            logger.addLog('evaluation', 'save-error', { 
+                error: error.message,
+                code: error.code,
+                details: error.details 
+            });
+            // THROW the error so calling code knows it failed
+            throw new Error(`Failed to save evaluation metrics: ${error.message}`);
         } else {
+            console.log('[Evaluation] ✅ Successfully inserted:', insertedData);
             logger.addLog('evaluation', 'saved', { 
                 rouge1: data.metrics.rouge1,
                 bleu: data.metrics.bleu
             });
         }
     } catch (err) {
+        console.error('[Evaluation] ❌ Exception:', err);
         logger.addLog('evaluation', 'save-exception', { error: err instanceof Error ? err.message : String(err) });
-        console.error('Exception saving evaluation metrics:', err);
+        // Re-throw the error
+        throw err;
     }
 };
 
