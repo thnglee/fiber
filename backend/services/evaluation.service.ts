@@ -123,6 +123,8 @@ export const saveEvaluationMetrics = async (data: EvaluationData) => {
 export const getEvaluationMetrics = async (limit: number = 20, offset: number = 0): Promise<EvaluationResponse> => {
     const supabase = getSupabaseAdmin();
     try {
+        console.log('[Evaluation] Fetching metrics from database...', { limit, offset, timestamp: new Date().toISOString() });
+        
         const { data, error, count } = await supabase
             .from('evaluation_metrics')
             .select('*', { count: 'exact' })
@@ -130,9 +132,12 @@ export const getEvaluationMetrics = async (limit: number = 20, offset: number = 
             .range(offset, offset + limit - 1);
 
         if (error) {
+            console.error('[Evaluation] ❌ Fetch error:', error);
             logger.addLog('evaluation', 'fetch-error', { error: error.message });
             throw error;
         }
+
+        console.log('[Evaluation] ✅ Fetched records:', { count: data?.length || 0, totalCount: count });
 
         const metricsData: EvaluationData[] = (data || []).map(row => ({
             summary: row.summary_text,
@@ -152,6 +157,7 @@ export const getEvaluationMetrics = async (limit: number = 20, offset: number = 
             count: count || 0
         };
     } catch (err) {
+        console.error('[Evaluation] ❌ Fetch exception:', err);
         logger.addLog('evaluation', 'fetch-exception', { error: err instanceof Error ? err.message : String(err) });
         console.error('Exception fetching evaluation metrics:', err);
         return { data: [], count: 0 };

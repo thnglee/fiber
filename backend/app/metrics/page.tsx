@@ -1,16 +1,32 @@
 import React from 'react';
 import { getEvaluationMetrics } from '@/services/evaluation.service';
 import { MetricTooltip } from '@/components/MetricTooltip';
+import Link from 'next/link';
 
+// Force dynamic rendering - no static generation
 export const dynamic = 'force-dynamic';
+// Disable all caching - revalidate on every request
+export const revalidate = 0;
 
 export default async function EvaluationDashboard() {
   const { data: metrics } = await getEvaluationMetrics(50, 0);
+  const lastUpdated = new Date().toLocaleString();
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Evaluation Metrics</h1>
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-3xl font-bold">Evaluation Metrics</h1>
+            <p className="text-sm text-gray-500 mt-1">Last updated: {lastUpdated}</p>
+          </div>
+          <Link 
+            href="/metrics" 
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            🔄 Refresh
+          </Link>
+        </div>
       
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
