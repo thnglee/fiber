@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getCorsHeaders } from '@/middleware/cors'
 import type { ActionStats } from '@shared/types'
@@ -22,7 +22,7 @@ interface TokenUsage {
  * - actions_by_website: breakdown by website
  * - actions_today: count of actions in the last 24 hours
  */
-export async function GET(_request: NextRequest) {
+export async function GET() {
     try {
         const supabase = getSupabaseAdmin()
 
