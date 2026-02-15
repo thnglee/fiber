@@ -15,7 +15,8 @@ export interface EvaluationData {
   original: string;
   url?: string;
   metrics: EvaluationMetrics;
-    created_at?: string;
+  created_at?: string;
+  latency?: number;
 }
 
 export interface EvaluationResponse {
@@ -65,7 +66,8 @@ export const saveEvaluationMetrics = async (data: EvaluationData) => {
             summaryLength: data.summary.length,
             originalLength: data.original.length,
             url: data.url,
-            metrics: data.metrics
+            metrics: data.metrics,
+            latency: data.latency
         });
 
         const { data: insertedData, error } = await supabase
@@ -78,6 +80,7 @@ export const saveEvaluationMetrics = async (data: EvaluationData) => {
                 rouge_2: data.metrics.rouge2,
                 rouge_l: data.metrics.rougeL,
                 bleu: data.metrics.bleu,
+                latency: data.latency,
                 metadata: {
                     original_preview: data.original.substring(0, 200)
                 }
@@ -149,7 +152,8 @@ export const getEvaluationMetrics = async (limit: number = 20, offset: number = 
                 rouge2: row.rouge_2,
                 rougeL: row.rouge_l,
                 bleu: row.bleu
-            }
+            },
+            latency: row.latency
         }));
 
         return {

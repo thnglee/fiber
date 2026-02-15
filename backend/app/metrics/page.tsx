@@ -16,6 +16,7 @@ interface EvaluationData {
   url?: string;
   metrics: EvaluationMetrics;
   created_at?: string;
+  latency?: number;
 }
 
 export default function EvaluationDashboard() {
@@ -91,6 +92,9 @@ export default function EvaluationDashboard() {
                   <div className="text-xs font-normal text-gray-500 normal-case mt-1">N-gram precision - faithfulness</div>
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Latency
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   URL
                 </th>
               </tr>
@@ -122,6 +126,9 @@ export default function EvaluationDashboard() {
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {item.metrics.bleu}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {item.latency ? `${item.latency} ms` : 'N/A'}
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm max-w-xs truncate">
                       {item.url ? (
