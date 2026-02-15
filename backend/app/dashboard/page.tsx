@@ -11,8 +11,11 @@ function DashboardContent() {
   const [actions, setActions] = useState<UserAction[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+  const [limit] = useState(50) // Load 50 actions at a time
+  const [offset, setOffset] = useState(0)
   const [filters, setFilters] = useState({
     actionType: '',
     website: '',
@@ -26,9 +29,10 @@ function DashboardContent() {
     fetchStats()
   }, [])
 
-  // Fetch actions when filters change
+  // Fetch actions when filters change (reset to first page)
   useEffect(() => {
-    fetchActions()
+    setOffset(0)
+    fetchActions(0, false)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
@@ -46,12 +50,17 @@ function DashboardContent() {
     }
   }
 
-  const fetchActions = async () => {
-    setLoading(true)
+  const fetchActions = async (currentOffset: number = offset, append: boolean = false) => {
+    if (append) {
+      setLoadingMore(true)
+    } else {
+      setLoading(true)
+    }
+    
     try {
       const params = new URLSearchParams()
-      params.set('limit', '100')
-      params.set('offset', '0')
+      params.set('limit', limit.toString())
+      params.set('offset', currentOffset.toString())
 
       if (filters.actionType) params.set('action_type', filters.actionType)
       if (filters.website) params.set('website', filters.website)
@@ -64,18 +73,30 @@ function DashboardContent() {
 
       if (response.ok) {
         const data = await response.json()
-        setActions(data.actions || [])
+        if (append) {
+          setActions(prev => [...prev, ...(data.actions || [])])
+        } else {
+          setActions(data.actions || [])
+        }
         setTotal(data.total || 0)
       }
     } catch (error) {
       console.error('Failed to fetch actions:', error)
     } finally {
       setLoading(false)
+      setLoadingMore(false)
     }
   }
 
+  const loadMore = () => {
+    const newOffset = offset + limit
+    setOffset(newOffset)
+    fetchActions(newOffset, true)
+  }
+
   const applyFilters = () => {
-    fetchActions()
+    setOffset(0)
+    fetchActions(0, false)
     setShowFilters(false)
   }
 
@@ -87,6 +108,7 @@ function DashboardContent() {
       endDate: '',
     })
     setSearchQuery('')
+    setOffset(0)
   }
 
   // Filter actions by search query
@@ -268,6 +290,28 @@ function DashboardContent() {
 
         {/* Action Logs Table - Full Width */}
         <ActionLogsTable initialActions={filteredActions} total={total} loading={loading} />
+
+        {/* Show More Button */}
+        {!loading && actions.length < total && (
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={loadMore}
+              disabled={loadingMore}
+              className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {loadingMore ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Loading...
+                </>
+              ) : (
+                <>
+                  Show More ({total - actions.length} remaining)
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
