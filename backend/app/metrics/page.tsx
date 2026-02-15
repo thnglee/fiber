@@ -27,7 +27,7 @@ export default function EvaluationDashboard() {
     const fetchMetrics = async () => {
       setLoading(true);
       try {
-        const response = await fetch('/api/metrics?limit=50&offset=0');
+        const response = await fetch('/api/metrics?limit=20&offset=0');
         const result = await response.json();
         setMetrics(result.data);
         setLastUpdated(new Date().toLocaleString());
