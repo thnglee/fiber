@@ -97,98 +97,117 @@ export default function EvaluationDashboard() {
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[120px]">
                   Date
                 </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[200px]">
                   Summary Preview
                 </th>
-                <th className="px-5 py-4 border-b-2 border-gray-200 bg-gray-100 text-left">
-                  <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">ROUGE-1</div>
-                  <div className="text-xs font-normal text-gray-500 normal-case mt-1">Unigram overlap - content coverage</div>
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[120px]">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">ROUGE-1</div>
+                  <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">Unigram overlap</div>
                 </th>
-                <th className="px-5 py-4 border-b-2 border-gray-200 bg-gray-100 text-left">
-                  <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">ROUGE-2</div>
-                  <div className="text-xs font-normal text-gray-500 normal-case mt-1">Bigram overlap - phrase similarity</div>
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[120px]">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">ROUGE-2</div>
+                  <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">Bigram overlap</div>
                 </th>
-                <th className="px-5 py-4 border-b-2 border-gray-200 bg-gray-100 text-left">
-                  <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">ROUGE-L</div>
-                  <div className="text-xs font-normal text-gray-500 normal-case mt-1">Longest common subsequence - coherence</div>
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[130px]">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">ROUGE-L</div>
+                  <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">Longest common sub.</div>
                 </th>
-                <th className="px-5 py-4 border-b-2 border-gray-200 bg-gray-100 text-left">
-                  <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">BLEU</div>
-                  <div className="text-xs font-normal text-gray-500 normal-case mt-1">N-gram precision - faithfulness</div>
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[110px]">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">BLEU</div>
+                  <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">N-gram precision</div>
                 </th>
-                <th className="px-5 py-4 border-b-2 border-gray-200 bg-gray-100 text-left">
-                  <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">BERTScore</div>
-                  <div className="text-xs font-normal text-gray-500 normal-case mt-1">Semantic similarity &mdash; neural</div>
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[120px]">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">BERTScore</div>
+                  <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">Semantic similarity</div>
                 </th>
-                <th className="px-5 py-4 border-b-2 border-gray-200 bg-gray-100 text-left">
-                  <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Latency</div>
-                  <div className="text-xs font-normal text-gray-500 normal-case mt-1">first-chunk / full</div>
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[100px]">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Latency</div>
+                  <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">first-chunk/full</div>
                 </th>
-                <th className="px-5 py-4 border-b-2 border-gray-200 bg-gray-100 text-left">
-                  <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Mode</div>
-                  <div className="text-xs font-normal text-gray-500 normal-case mt-1">stream / sync</div>
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[90px]">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Mode</div>
+                  <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">stream/sync</div>
                 </th>
-                <th className="px-5 py-4 border-b-2 border-gray-200 bg-gray-100 text-left">
-                  <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Compression Rate</div>
-                  <div className="text-xs font-normal text-gray-500 normal-case mt-1">summary&nbsp;tokens&nbsp;/&nbsp;original&nbsp;tokens&nbsp;×&nbsp;100</div>
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[120px]">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Compression</div>
+                  <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">summary/original</div>
                 </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[110px]">
                   URL
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {metrics.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
+                  <td colSpan={11} className="px-4 py-8 bg-white text-sm text-center text-gray-500">
                     No evaluation metrics found.
                   </td>
                 </tr>
               ) : (
                 metrics.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                  <tr key={index} className="hover:bg-blue-50/50 transition-colors bg-white">
+                    <td className="px-4 py-4 bg-transparent text-sm text-gray-700 whitespace-nowrap">
                       {item.created_at ? new Date(item.created_at).toLocaleString() : 'N/A'}
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm max-w-xs truncate" title={item.summary}>
+                    <td className="px-4 py-4 bg-transparent text-sm max-w-xs truncate text-gray-600" title={item.summary}>
                       {item.summary}
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
                       {item.metrics.rouge1}
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
                       {item.metrics.rouge2}
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
                       {item.metrics.rougeL}
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
                       {item.metrics.bleu}
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      {item.metrics.bert_score != null ? item.metrics.bert_score.toFixed(4) : 'N/A'}
+                    <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
+                      {item.metrics.bert_score != null ? (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-green-50 text-green-700">
+                          {item.metrics.bert_score.toFixed(4)}
+                        </span>
+                      ) : 'N/A'}
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      {item.latency ? `${item.latency} ms` : 'N/A'}
+                    <td className="px-4 py-4 bg-transparent text-sm text-gray-600 whitespace-nowrap">
+                      {item.latency ? (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                          {item.latency} ms
+                        </span>
+                      ) : 'N/A'}
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      {item.mode ?? 'N/A'}
+                    <td className="px-4 py-4 bg-transparent text-sm">
+                      {item.mode ? (
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wider ${item.mode === 'stream' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}`}>
+                          {item.mode}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">N/A</span>
+                      )}
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <td className="px-4 py-4 bg-transparent text-sm text-gray-600">
                       {item.metrics.compression_rate != null
                         ? `${item.metrics.compression_rate.toFixed(2)}%`
                         : 'N/A'}
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm max-w-xs truncate">
+                    <td className="px-4 py-4 bg-transparent text-sm text-center">
                       {item.url ? (
-                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700">
-                          Link
+                        <a 
+                          href={item.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                        >
+                          Source
                         </a>
                       ) : (
-                        'N/A'
+                        <span className="text-gray-400 text-xs italic">N/A</span>
                       )}
                     </td>
                   </tr>
