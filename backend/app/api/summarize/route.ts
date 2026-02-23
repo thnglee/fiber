@@ -62,6 +62,7 @@ export async function POST(request: NextRequest) {
       // Track accumulated data for action logging
       let accumulatedSummary = ''
       let firstChunkTime: number | null = null
+      let finalSummaryText = ''  // Set from the structured metadata chunk (authoritative)
       let finalCategory = ''
       let finalReadingTime = 0
       let finalUsage: { total_tokens?: number; prompt_tokens?: number; completion_tokens?: number } | undefined = undefined
@@ -78,6 +79,8 @@ export async function POST(request: NextRequest) {
                 if (!firstChunkTime) firstChunkTime = Date.now()
                 accumulatedSummary += chunk.delta
               } else if (chunk.type === 'metadata') {
+                // Capture the fully-parsed summary from the service (most reliable source)
+                if (chunk.summary) finalSummaryText = chunk.summary
                 finalCategory = chunk.category || ''
                 finalReadingTime = chunk.readingTime || 0
                 finalUsage = chunk.usage
@@ -111,34 +114,38 @@ export async function POST(request: NextRequest) {
             const processingTime = Date.now() - startTime
             const { trackAction, getClientIP, extractTokenUsage } = await import('@/services/action-tracking.service')
 
-            // Parse accumulated JSON to extract summary text
-            let summaryText = ''
-            try {
-              const parsed = JSON.parse(accumulatedSummary)
-              summaryText = parsed.summary || ''
-            } catch {
-              // If parsing fails, try regex extraction
-              const summaryMatch = accumulatedSummary.match(/"summary"\s*:\s*"([^"]*(?:\\.[^"]*)*)"/)
-              if (summaryMatch) {
-                summaryText = summaryMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"')
-              }
-              
-              if (!summaryText && accumulatedSummary.length > 0) {
-                // Fallback for partial JSON when aborted midway
-                console.log('[Summarize Stream] Extraction regex failed, attempting coarse partial string fallback...')
-                const startIndex = accumulatedSummary.indexOf('"summary"')
-                if (startIndex !== -1) {
-                  const afterSummary = accumulatedSummary.substring(startIndex + 9)
-                  const colonIndex = afterSummary.indexOf(':')
-                  if (colonIndex !== -1) {
-                    const quoteIndex = afterSummary.indexOf('"', colonIndex)
-                    if (quoteIndex !== -1) {
-                      summaryText = afterSummary.substring(quoteIndex + 1).replace(/"}$/, '').replace(/\\n/g, '\n').replace(/\\"/g, '"')
+            // Prefer the fully-parsed summary captured from the metadata chunk.
+            // Fall back to parsing the accumulated raw JSON deltas only if metadata
+            // was never received (e.g. stream was aborted very early).
+            let summaryText = finalSummaryText
+            if (!summaryText && accumulatedSummary) {
+              console.log('[Summarize Stream] No metadata summary captured, falling back to delta parsing...')
+              try {
+                const parsed = JSON.parse(accumulatedSummary)
+                summaryText = parsed.summary || ''
+              } catch {
+                // If full-JSON parse fails, try regex extraction
+                const summaryMatch = accumulatedSummary.match(/"summary"\s*:\s*"([^"]*(?:\\.[^"]*)*)"/)
+                if (summaryMatch) {
+                  summaryText = summaryMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"')
+                }
+                if (!summaryText) {
+                  // Last-resort coarse extraction for mid-stream aborts
+                  const startIndex = accumulatedSummary.indexOf('"summary"')
+                  if (startIndex !== -1) {
+                    const afterSummary = accumulatedSummary.substring(startIndex + 9)
+                    const colonIndex = afterSummary.indexOf(':')
+                    if (colonIndex !== -1) {
+                      const quoteIndex = afterSummary.indexOf('"', colonIndex)
+                      if (quoteIndex !== -1) {
+                        summaryText = afterSummary.substring(quoteIndex + 1).replace(/"}$/, '').replace(/\\n/g, '\n').replace(/\\"/g, '"')
+                      }
                     }
                   }
                 }
               }
             }
+            console.log('[Summarize Stream] summaryText source:', finalSummaryText ? 'metadata-chunk' : 'delta-fallback', 'length:', summaryText.length)
 
             console.log('[Summarize Stream] finalUsage before extraction:', finalUsage)
             // ✅ Always extract token usage - returns default {0,0,0} if undefined

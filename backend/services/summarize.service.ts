@@ -225,6 +225,7 @@ export async function* performSummarizeStream(
 ): AsyncGenerator<{
   type: 'summary-delta' | 'metadata' | 'error' | 'done'
   delta?: string
+  summary?: string
   category?: string
   readingTime?: number
   usage?: any
@@ -307,6 +308,7 @@ export async function* performSummarizeStream(
         console.log('[Summarize Stream] Sending metadata with usage:', chunk.usage)
         yield {
           type: 'metadata',
+          summary: summaryData.summary,  // Include parsed summary for reliable extraction in route handler
           category: summaryData.category,
           readingTime: summaryData.readingTime,
           usage: chunk.usage
