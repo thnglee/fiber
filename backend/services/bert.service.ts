@@ -1,13 +1,48 @@
 import { logger } from '@/lib/logger';
 
 const BERT_SERVICE_URL = process.env.BERT_SERVICE_URL;
-const BERT_TIMEOUT_MS = 30_000; // 30 s — HF Spaces cold-start can be slow
+// HF Spaces free tier can cold-start in 30-60 seconds — use a generous timeout.
+const BERT_TIMEOUT_MS = 90_000; // 90 s to cover full cold-start
+const BERT_WARMUP_TIMEOUT_MS = 70_000; // 70 s for the pre-warm healthcheck ping
 
 // Truncation limits to keep payloads manageable for the HF Spaces BERT endpoint.
 // Vietnamese news articles can be 10 k+ characters — sending the full text caused
 // consistent timeouts and >413 errors on the free-tier HF service.
 const MAX_REFERENCE_CHARS = 2000;
 const MAX_CANDIDATE_CHARS = 1000;
+
+/**
+ * Pings the /healthz endpoint to wake up a sleeping HF Space before the
+ * main score call. This prevents the 30 s cold-start from eating into the
+ * scoring timeout and causing the score to be dropped as null.
+ *
+ * Returns true if the space responded healthy, false otherwise.
+ */
+async function warmUpBertService(): Promise<boolean> {
+  if (!BERT_SERVICE_URL) return false;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), BERT_WARMUP_TIMEOUT_MS);
+  try {
+    const res = await fetch(`${BERT_SERVICE_URL}/healthz`, {
+      method: 'GET',
+      signal: controller.signal,
+    });
+    const healthy = res.ok;
+    if (healthy) {
+      logger.addLog('bert', 'warmup-ok', { status: res.status });
+    } else {
+      logger.addLog('bert', 'warmup-unhealthy', { status: res.status });
+    }
+    return healthy;
+  } catch (err) {
+    logger.addLog('bert', 'warmup-failed', {
+      error: err instanceof Error ? err.message : String(err),
+    });
+    return false;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
 
 export interface BertScoreResult {
   f1_score: number;
@@ -34,6 +69,13 @@ export async function calculateBertScore(
     });
     return null;
   }
+
+  // Wake up the HF Space if it is sleeping (free-tier spaces sleep after ~5 min of
+  // inactivity and can take 30-60 s to cold-start). By pinging /healthz first we
+  // ensure the space is fully loaded before we send the scoring payload. If the
+  // ping itself times out, the score call below will fail fast with an abort error
+  // and return null — which is acceptable since without this the score was always null.
+  await warmUpBertService();
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), BERT_TIMEOUT_MS);
