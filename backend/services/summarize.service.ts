@@ -13,6 +13,7 @@ import {
 } from "@/domain/schemas"
 import { safeParseOrThrow } from "@/utils/zod-helpers"
 import { calculateLexicalMetrics, saveEvaluationMetrics } from "./evaluation.service"
+import { calculateBertScore } from "./bert.service"
 
 /**
  * Main service function to summarize content
@@ -161,15 +162,19 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
   })
 
   // Calculate and save evaluation metrics asynchronously
-  // Fire and forget to not block the response
+  // Fire and forget — never blocks the main response.
+  // BERTScore and lexical metrics run in parallel to minimise wall-clock time.
   void (async () => {
     try {
-      const metrics = calculateLexicalMetrics(response.summary, extractedContent);
+      const [metrics, bertScore] = await Promise.all([
+        Promise.resolve(calculateLexicalMetrics(response.summary, extractedContent)),
+        calculateBertScore(extractedContent, response.summary),
+      ]);
       await saveEvaluationMetrics({
         summary: response.summary,
         original: extractedContent,
         url: typeof url === 'string' ? url : undefined,
-        metrics,
+        metrics: { ...metrics, bert_score: bertScore },
         latency
       });
     } catch (err) {

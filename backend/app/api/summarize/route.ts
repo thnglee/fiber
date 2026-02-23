@@ -147,6 +147,7 @@ export async function POST(request: NextRequest) {
             console.log('[Summarize Stream] Saving evaluation metrics...')
             try {
               const { calculateLexicalMetrics, saveEvaluationMetrics } = await import('@/services/evaluation.service')
+              const { calculateBertScore } = await import('@/services/bert.service')
               
               // We need the original content to calculate metrics
               // For streaming, we'll need to extract it from the request
@@ -161,14 +162,18 @@ export async function POST(request: NextRequest) {
                 }
 
                 if (originalContent && summaryText) {
-                  const metrics = calculateLexicalMetrics(summaryText, originalContent)
+                  // Run lexical metrics + BERTScore in parallel
+                  const [metrics, bertScore] = await Promise.all([
+                    Promise.resolve(calculateLexicalMetrics(summaryText, originalContent)),
+                    calculateBertScore(originalContent, summaryText),
+                  ])
                   
                   const latency = firstChunkTime ? firstChunkTime - startTime : Date.now() - startTime
                   await saveEvaluationMetrics({
                     summary: summaryText,
                     original: originalContent,
                     url: url,
-                    metrics,
+                    metrics: { ...metrics, bert_score: bertScore },
                     latency
                   })
                   console.log('[Summarize Stream] ✅ Evaluation metrics saved successfully!')
@@ -179,6 +184,7 @@ export async function POST(request: NextRequest) {
             } catch (err) {
               console.error('[Summarize Stream] ❌ Failed to save evaluation metrics:', err)
             }
+
 
             // ✅ Close stream AFTER tracking completes
             controller.close()
