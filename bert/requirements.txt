@@ -3,8 +3,10 @@ fastapi>=0.109.0
 uvicorn[standard]>=0.27.0
 pydantic>=2.5.0
 
-# ML
+# ML — pinned to avoid version conflicts:
+#   torch 2.2.x is compiled against NumPy 1.x  →  numpy<2
+#   transformers 5.x requires torch>=2.4        →  transformers<5
 bert-score>=0.3.13
-# CPU-only torch keeps the image lean (~700 MB vs ~2 GB for CUDA)
-torch>=2.1.0
-transformers>=4.36.0
+torch==2.2.2
+transformers>=4.36.0,<5.0
+numpy<2

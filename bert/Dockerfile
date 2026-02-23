@@ -45,6 +45,11 @@ ENV PORT=7860
 
 # ── Permissions ───────────────────────────────────────────────────────────────
 RUN mkdir -p /app/.cache/huggingface && chown -R appuser:appuser /app
+
+# ── Pre-bake model at BUILD time (runs as root so it can write cache) ─────────
+# Downloads distilroberta-base once into the image layer — no network at runtime.
+RUN python -c "from bert_score import BERTScorer; BERTScorer(model_type='distilroberta-base', device='cpu')"
+
 USER appuser
 
 # ── Runtime ──────────────────────────────────────────────────────────────────
