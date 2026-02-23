@@ -14,6 +14,7 @@ import {
 import { safeParseOrThrow } from "@/utils/zod-helpers"
 import { calculateLexicalMetrics, saveEvaluationMetrics } from "./evaluation.service"
 import { calculateBertScore } from "./bert.service"
+import { calculateCompressionRate } from "./compression.service"
 
 /**
  * Main service function to summarize content
@@ -175,11 +176,26 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
         Promise.resolve(calculateLexicalMetrics(response.summary, extractedContent)),
         calculateBertScore(extractedContent, response.summary),
       ]);
+
+      // Calculate compression rate (token-based)
+      let compressionRate: number | null = null;
+      try {
+        const result = calculateCompressionRate({
+          originalText: extractedContent,
+          summaryText: response.summary,
+        });
+        compressionRate = result.compressionRate;
+      } catch (crErr) {
+        logger.addLog('summarize', 'compression-rate-error', {
+          error: crErr instanceof Error ? crErr.message : String(crErr)
+        });
+      }
+
       await saveEvaluationMetrics({
         summary: response.summary,
         original: extractedContent,
         url: typeof url === 'string' ? url : undefined,
-        metrics: { ...metrics, bert_score: bertScore },
+        metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate },
         latency,
         mode: 'sync', // full request duration
       });

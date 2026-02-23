@@ -9,6 +9,7 @@ interface EvaluationMetrics {
   rougeL: number;
   bleu: number;
   bert_score?: number | null;
+  compression_rate?: number | null;
 }
 
 interface EvaluationData {
@@ -105,6 +106,10 @@ export default function EvaluationDashboard() {
                   <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Mode</div>
                   <div className="text-xs font-normal text-gray-500 normal-case mt-1">stream / sync</div>
                 </th>
+                <th className="px-5 py-4 border-b-2 border-gray-200 bg-gray-100 text-left">
+                  <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Compression Rate</div>
+                  <div className="text-xs font-normal text-gray-500 normal-case mt-1">summary&nbsp;tokens&nbsp;/&nbsp;original&nbsp;tokens&nbsp;×&nbsp;100</div>
+                </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   URL
                 </th>
@@ -113,7 +118,7 @@ export default function EvaluationDashboard() {
             <tbody>
               {metrics.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
+                  <td colSpan={10} className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
                     No evaluation metrics found.
                   </td>
                 </tr>
@@ -146,6 +151,11 @@ export default function EvaluationDashboard() {
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {item.mode ?? 'N/A'}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {item.metrics.compression_rate != null
+                        ? `${item.metrics.compression_rate.toFixed(2)}%`
+                        : 'N/A'}
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm max-w-xs truncate">
                       {item.url ? (
