@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
                 error: error instanceof Error ? error.message : 'Streaming failed'
               })}\n\n`
               controller.enqueue(encoder.encode(errorData))
-            } catch (e) {
+            } catch {
               console.log('[Summarize Stream] Could not send error to client (likely disconnected)')
             }
           } finally {
@@ -222,7 +222,7 @@ export async function POST(request: NextRequest) {
             // ✅ Close stream AFTER tracking completes
             try {
               controller.close()
-            } catch (e) {
+            } catch {
               console.log('[Summarize Stream] Notice: controller already closed or errored')
             }
           }
