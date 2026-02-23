@@ -88,6 +88,7 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
   }
 
   // Generate summary using centralized LLM service with Zod structured output
+  const startTime = Date.now()
   const fallbackData: SummaryData = {
     summary: extractedContent.substring(0, 500),
     category: extractedTitle || "Khác",
@@ -103,6 +104,7 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
     },
     fallbackData
   )
+  const latency = Date.now() - startTime
 
   // Validate LLM response against schema
   let summaryData: SummaryData
@@ -167,7 +169,8 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
         summary: response.summary,
         original: extractedContent,
         url: typeof url === 'string' ? url : undefined,
-        metrics
+        metrics,
+        latency
       });
     } catch (err) {
       logger.addLog('summarize', 'evaluation-error', { 

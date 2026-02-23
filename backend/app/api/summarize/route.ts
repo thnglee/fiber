@@ -61,6 +61,7 @@ export async function POST(request: NextRequest) {
 
       // Track accumulated data for action logging
       let accumulatedSummary = ''
+      let firstChunkTime: number | null = null
       let finalCategory = ''
       let finalReadingTime = 0
       let finalUsage: { total_tokens?: number; prompt_tokens?: number; completion_tokens?: number } | undefined = undefined
@@ -74,6 +75,7 @@ export async function POST(request: NextRequest) {
             for await (const chunk of performSummarizeStream({ content, url, debug })) {
               // Accumulate data for tracking
               if (chunk.type === 'summary-delta' && chunk.delta) {
+                if (!firstChunkTime) firstChunkTime = Date.now()
                 accumulatedSummary += chunk.delta
               } else if (chunk.type === 'metadata') {
                 finalCategory = chunk.category || ''
@@ -160,11 +162,14 @@ export async function POST(request: NextRequest) {
 
                 if (originalContent && summaryText) {
                   const metrics = calculateLexicalMetrics(summaryText, originalContent)
+                  
+                  const latency = firstChunkTime ? firstChunkTime - startTime : Date.now() - startTime
                   await saveEvaluationMetrics({
                     summary: summaryText,
                     original: originalContent,
                     url: url,
-                    metrics
+                    metrics,
+                    latency
                   })
                   console.log('[Summarize Stream] ✅ Evaluation metrics saved successfully!')
                 } else {
