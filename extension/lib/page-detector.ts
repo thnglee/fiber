@@ -54,15 +54,29 @@ async function hasSubstantialContent(): Promise<{ hasContent: boolean; contentHa
         const documentClone = document.cloneNode(true) as Document
 
         // Sanitize cloned DOM to remove nodes that can produce null references
-        // inside Readability's traversal (e.g. VnExpress ad widgets, inline scripts)
+        // inside Readability's traversal (e.g. VnExpress AVP-* custom elements,
+        // video players, ad iframes, inline scripts)
         const REMOVE_SELECTORS = [
             "script", "noscript", "style", "iframe",
-            "svg", "[id*='ads']", "[class*='ads']",
+            "svg", "video", "audio", "canvas", "picture",
+            "[id*='ads']", "[class*='ads']",
             "[id*='banner']", "[class*='banner']",
+            "[id*='player']", "[class*='player']",
+            "[id*='widget']", "[class*='widget']",
         ]
-        REMOVE_SELECTORS.forEach(sel => {
-            documentClone.querySelectorAll(sel).forEach(el => el.parentNode?.removeChild(el))
-        })
+        try {
+            REMOVE_SELECTORS.forEach(sel => {
+                documentClone.querySelectorAll(sel).forEach(el => el.parentNode?.removeChild(el))
+            })
+            // Strip custom elements (hyphenated tag names like avp-player-ui)
+            documentClone.querySelectorAll("*").forEach(el => {
+                if (el.tagName && el.tagName.includes("-")) {
+                    el.parentNode?.removeChild(el)
+                }
+            })
+        } catch (sanitizeErr) {
+            console.warn("[PageDetector] DOM sanitization error (non-fatal):", sanitizeErr)
+        }
 
         let article: ReturnType<Readability["parse"]> = null
         try {

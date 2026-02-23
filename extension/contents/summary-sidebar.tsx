@@ -79,16 +79,36 @@ const SummarySidebar: React.FC = () => {
       // Extract article content using Readability.
       // We sanitize the cloned DOM first to remove nodes (script, ad iframes, etc.)
       // that can produce null references inside the clone and crash Readability's
-      // internal tagName traversal (seen on VnExpress's fck_detail layout).
+      // internal tagName traversal (seen on VnExpress's fck_detail layout which
+      // contains AVP-* custom web components, video players, and 10+ iframes).
       const documentClone = document.cloneNode(true) as Document
+
+      // Standard noise selectors
       const REMOVE_SELECTORS = [
         "script", "noscript", "style", "iframe",
-        "svg", "[id*='ads']", "[class*='ads']",
+        "svg", "video", "audio", "canvas", "picture",
+        "[id*='ads']", "[class*='ads']",
         "[id*='banner']", "[class*='banner']",
+        "[id*='player']", "[class*='player']",
+        "[id*='widget']", "[class*='widget']",
       ]
-      REMOVE_SELECTORS.forEach(sel => {
-        documentClone.querySelectorAll(sel).forEach(el => el.parentNode?.removeChild(el))
-      })
+      try {
+        REMOVE_SELECTORS.forEach(sel => {
+          documentClone.querySelectorAll(sel).forEach(el => el.parentNode?.removeChild(el))
+        })
+
+        // Also strip ALL custom elements (tags containing a hyphen, e.g. avp-player-ui)
+        // These are the primary cause of the "Cannot read properties of null (reading 'tagName')"
+        // crash inside Readability on VNExpress pages.
+        documentClone.querySelectorAll("*").forEach(el => {
+          if (el.tagName && el.tagName.includes("-")) {
+            el.parentNode?.removeChild(el)
+          }
+        })
+      } catch (sanitizeErr) {
+        // Sanitization is best-effort; don't let it block the parse attempt
+        console.warn("[SummarySidebar] DOM sanitization error (non-fatal):", sanitizeErr)
+      }
 
       let article: ReturnType<Readability["parse"]> = null
       try {
