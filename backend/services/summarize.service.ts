@@ -175,7 +175,8 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
         original: extractedContent,
         url: typeof url === 'string' ? url : undefined,
         metrics: { ...metrics, bert_score: bertScore },
-        latency
+        latency,
+        mode: 'sync', // full request duration
       });
     } catch (err) {
       logger.addLog('summarize', 'evaluation-error', { 

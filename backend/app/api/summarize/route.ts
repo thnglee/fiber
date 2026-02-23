@@ -174,7 +174,8 @@ export async function POST(request: NextRequest) {
                     original: originalContent,
                     url: url,
                     metrics: { ...metrics, bert_score: bertScore },
-                    latency
+                    latency,
+                    mode: 'stream', // time-to-first-chunk
                   })
                   console.log('[Summarize Stream] ✅ Evaluation metrics saved successfully!')
                 } else {

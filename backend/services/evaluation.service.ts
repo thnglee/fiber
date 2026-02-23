@@ -18,6 +18,7 @@ export interface EvaluationData {
   metrics: EvaluationMetrics;
   created_at?: string;
   latency?: number;
+  mode?: string | null;
 }
 
 export interface EvaluationResponse {
@@ -83,6 +84,7 @@ export const saveEvaluationMetrics = async (data: EvaluationData) => {
                 bleu: data.metrics.bleu,
                 bert_score: data.metrics.bert_score ?? null,
                 latency: data.latency,
+                mode: data.mode ?? null,
                 metadata: {
                     original_preview: data.original.substring(0, 200)
                 }
@@ -156,7 +158,8 @@ export const getEvaluationMetrics = async (limit: number = 20, offset: number = 
                 bleu: row.bleu,
                 bert_score: row.bert_score ?? null,
             },
-            latency: row.latency
+            latency: row.latency,
+            mode: row.mode ?? null,
         }));
 
         return {
