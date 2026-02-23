@@ -1,6 +1,10 @@
+# Core API
 fastapi>=0.109.0
 uvicorn[standard]>=0.27.0
+pydantic>=2.5.0
+
+# ML
 bert-score>=0.3.13
+# CPU-only torch keeps the image lean (~700 MB vs ~2 GB for CUDA)
 torch>=2.1.0
 transformers>=4.36.0
-pydantic>=2.5.0
