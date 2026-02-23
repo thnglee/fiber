@@ -86,11 +86,28 @@ export async function POST(request: NextRequest) {
               // Send SSE formatted data
               const data = `data: ${JSON.stringify(chunk)}\n\n`
               controller.enqueue(encoder.encode(data))
-            }
 
-            // ✅ CRITICAL FIX: Track action BEFORE closing stream
+              if (request.signal.aborted) {
+                console.log('[Summarize Stream] Client disconnected, aborting stream iteration')
+                break
+              }
+            }
+          } catch (error) {
+            console.error('[Summarize Stream] Stream generation error:', error)
+            // Send error event
+            try {
+              const errorData = `data: ${JSON.stringify({
+                type: 'error',
+                error: error instanceof Error ? error.message : 'Streaming failed'
+              })}\n\n`
+              controller.enqueue(encoder.encode(errorData))
+            } catch (e) {
+              console.log('[Summarize Stream] Could not send error to client (likely disconnected)')
+            }
+          } finally {
+            // ✅ CRITICAL FIX: Track action BEFORE closing stream, always executed even on abort
             // This ensures database insert completes before request handler terminates
-            console.log('[Summarize Stream] Streaming complete, tracking action...')
+            console.log('[Summarize Stream] Streaming ended (complete or aborted), tracking action...')
             const processingTime = Date.now() - startTime
             const { trackAction, getClientIP, extractTokenUsage } = await import('@/services/action-tracking.service')
 
@@ -104,6 +121,22 @@ export async function POST(request: NextRequest) {
               const summaryMatch = accumulatedSummary.match(/"summary"\s*:\s*"([^"]*(?:\\.[^"]*)*)"/)
               if (summaryMatch) {
                 summaryText = summaryMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"')
+              }
+              
+              if (!summaryText && accumulatedSummary.length > 0) {
+                // Fallback for partial JSON when aborted midway
+                console.log('[Summarize Stream] Extraction regex failed, attempting coarse partial string fallback...')
+                const startIndex = accumulatedSummary.indexOf('"summary"')
+                if (startIndex !== -1) {
+                  const afterSummary = accumulatedSummary.substring(startIndex + 9)
+                  const colonIndex = afterSummary.indexOf(':')
+                  if (colonIndex !== -1) {
+                    const quoteIndex = afterSummary.indexOf('"', colonIndex)
+                    if (quoteIndex !== -1) {
+                      summaryText = afterSummary.substring(quoteIndex + 1).replace(/"}$/, '').replace(/\\n/g, '\n').replace(/\\"/g, '"')
+                    }
+                  }
+                }
               }
             }
 
@@ -179,24 +212,19 @@ export async function POST(request: NextRequest) {
                   })
                   console.log('[Summarize Stream] ✅ Evaluation metrics saved successfully!')
                 } else {
-                  console.log('[Summarize Stream] ⚠️ Skipping metrics - missing content or summary')
+                  console.log('[Summarize Stream] ⚠️ Skipping metrics - missing content or summary (likely due to early abort without data)')
                 }
               }
             } catch (err) {
               console.error('[Summarize Stream] ❌ Failed to save evaluation metrics:', err)
             }
 
-
             // ✅ Close stream AFTER tracking completes
-            controller.close()
-          } catch (error) {
-            // Send error event
-            const errorData = `data: ${JSON.stringify({
-              type: 'error',
-              error: error instanceof Error ? error.message : 'Streaming failed'
-            })}\n\n`
-            controller.enqueue(encoder.encode(errorData))
-            controller.close()
+            try {
+              controller.close()
+            } catch (e) {
+              console.log('[Summarize Stream] Notice: controller already closed or errored')
+            }
           }
         }
       })
