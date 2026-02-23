@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 
 interface EvaluationMetrics {
   rouge1: number;
@@ -25,24 +24,49 @@ export default function EvaluationDashboard() {
   const [metrics, setMetrics] = useState<EvaluationData[]>([]);
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const LIMIT = 50;
+
+  const fetchMetrics = async (currentOffset: number = 0, isInitial: boolean = false) => {
+    if (isInitial) setLoading(true);
+    else setLoadingMore(true);
+
+    try {
+      const response = await fetch(`/api/metrics?limit=${LIMIT}&offset=${currentOffset}`);
+      const result = await response.json();
+      
+      if (isInitial) {
+        setMetrics(result.data);
+      } else {
+        setMetrics(prev => [...prev, ...result.data]);
+      }
+      
+      setHasMore(result.data.length === LIMIT);
+      setLastUpdated(new Date().toLocaleString());
+    } catch (error) {
+      console.error('Failed to fetch metrics:', error);
+    } finally {
+      if (isInitial) setLoading(false);
+      else setLoadingMore(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchMetrics = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('/api/metrics?limit=20&offset=0');
-        const result = await response.json();
-        setMetrics(result.data);
-        setLastUpdated(new Date().toLocaleString());
-      } catch (error) {
-        console.error('Failed to fetch metrics:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchMetrics();
+    fetchMetrics(0, true);
   }, []);
+
+  const handleShowMore = () => {
+    const nextOffset = offset + LIMIT;
+    setOffset(nextOffset);
+    fetchMetrics(nextOffset, false);
+  };
+  
+  const handleRefresh = () => {
+    setOffset(0);
+    fetchMetrics(0, true);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -52,12 +76,13 @@ export default function EvaluationDashboard() {
             <h1 className="text-3xl font-bold">Evaluation Metrics</h1>
             <p className="text-sm text-gray-500 mt-1">Last updated: {lastUpdated || 'Loading...'}</p>
           </div>
-          <Link 
-            href="/metrics" 
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          <button 
+            onClick={handleRefresh}
+            disabled={loading}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             🔄 Refresh
-          </Link>
+          </button>
         </div>
       
       {loading ? (
@@ -162,6 +187,27 @@ export default function EvaluationDashboard() {
             </tbody>
           </table>
         </div>
+
+        {/* Load More Button */}
+        {!loading && metrics.length > 0 && hasMore && (
+          <div className="p-5 border-t border-gray-200 bg-gray-50 flex justify-center">
+            <button
+              onClick={handleShowMore}
+              disabled={loadingMore}
+              className="px-6 py-2 border border-blue-600 text-blue-600 font-medium rounded-md hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[140px]"
+            >
+              {loadingMore ? (
+                <>
+                  <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                  Loading...
+                </>
+              ) : (
+                'Show More'
+              )}
+            </button>
+          </div>
+        )}
+
       </div>
       )}
       </div>
