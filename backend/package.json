@@ -17,6 +17,7 @@
     "@types/natural": "^5.1.5",
     "bleu-score": "^1.0.4",
     "date-fns": "^4.1.0",
+    "gpt-tokenizer": "^3.4.0",
     "jsdom": "^25.0.0",
     "lucide-react": "^0.561.0",
     "natural": "^8.1.0",

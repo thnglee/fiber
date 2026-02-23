@@ -30,8 +30,31 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
   let extractedTitle: string | undefined
   let extractedExcerpt: string | undefined
 
-  // Extract content from URL or use provided content
-  if (url && typeof url === "string") {
+  // Extract content from URL or use provided content.
+  // IMPORTANT: if the client already extracted `content` (e.g. from the browser extension
+  // using client-side Readability), prefer that over re-fetching the URL server-side.
+  // Server-side fetching fails for bot-protected sites (e.g. Cloudflare-protected laodong.vn).
+  if (content && typeof content === "string") {
+    // Use pre-extracted content directly (preferred path)
+    extractedContent = content
+    contentLength = content.length
+
+    logger.addLog('summarize', 'content-input', {
+      length: content.length,
+      preview: content.substring(0, 200)
+    })
+
+    // Store debug information
+    if (debug) {
+      debugInfo.url = url
+      debugInfo.extractedContent = {
+        length: content.length,
+        preview: content.substring(0, 500) + (content.length > 500 ? "..." : ""),
+        fullContent: content
+      }
+    }
+  } else if (url && typeof url === "string") {
+    // No content provided — fetch and extract from URL server-side
     const extracted = await extractContentFromUrl(url)
     extractedContent = extracted.content
     contentLength = extracted.content.length
@@ -54,24 +77,6 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
         fullContent: extractedContent,
         title: extracted.title,
         excerpt: extracted.excerpt
-      }
-    }
-  } else if (content && typeof content === "string") {
-    // Use provided content directly
-    extractedContent = content
-    contentLength = content.length
-
-    logger.addLog('summarize', 'content-input', {
-      length: content.length,
-      preview: content.substring(0, 200)
-    })
-
-    // Store debug information
-    if (debug) {
-      debugInfo.extractedContent = {
-        length: content.length,
-        preview: content.substring(0, 500) + (content.length > 500 ? "..." : ""),
-        fullContent: content
       }
     }
   } else {
@@ -215,8 +220,19 @@ export async function* performSummarizeStream(
   let contentLength = 0
 
   try {
-    // Extract content from URL or use provided content
-    if (url && typeof url === "string") {
+    // Extract content from URL or use provided content.
+    // IMPORTANT: prefer pre-extracted `content` over re-fetching the URL server-side so that
+    // bot-protected sites (e.g. Cloudflare-protected laodong.vn) don't fail here.
+    if (content && typeof content === "string") {
+      // Use pre-extracted content from the client (preferred path)
+      extractedContent = content
+      contentLength = content.length
+
+      logger.addLog('summarize-stream', 'content-input', {
+        length: content.length,
+      })
+    } else if (url && typeof url === "string") {
+      // No content provided — fetch and extract from URL server-side
       const extracted = await extractContentFromUrl(url)
       extractedContent = extracted.content
       contentLength = extracted.content.length
@@ -225,13 +241,6 @@ export async function* performSummarizeStream(
         url,
         length: extractedContent.length,
         title: extracted.title || "No title",
-      })
-    } else if (content && typeof content === "string") {
-      extractedContent = content
-      contentLength = content.length
-
-      logger.addLog('summarize-stream', 'content-input', {
-        length: content.length,
       })
     } else {
       yield {
