@@ -76,22 +76,49 @@ const SummarySidebar: React.FC = () => {
         throw new Error("Không thể tìm thấy nội dung bài viết. Vui lòng thử lại sau khi trang tải xong.")
       }
 
-      // Extract article content using Readability
+      // Extract article content using Readability.
+      // We sanitize the cloned DOM first to remove nodes (script, ad iframes, etc.)
+      // that can produce null references inside the clone and crash Readability's
+      // internal tagName traversal (seen on VnExpress's fck_detail layout).
       const documentClone = document.cloneNode(true) as Document
-      const reader = new Readability(documentClone)
-      const article = reader.parse()
+      const REMOVE_SELECTORS = [
+        "script", "noscript", "style", "iframe",
+        "svg", "[id*='ads']", "[class*='ads']",
+        "[id*='banner']", "[class*='banner']",
+      ]
+      REMOVE_SELECTORS.forEach(sel => {
+        documentClone.querySelectorAll(sel).forEach(el => el.parentNode?.removeChild(el))
+      })
+
+      let article: ReturnType<Readability["parse"]> = null
+      try {
+        const reader = new Readability(documentClone)
+        article = reader.parse()
+      } catch (readabilityErr) {
+        console.warn("[SummarySidebar] Readability.parse() threw, attempting body text fallback:", readabilityErr)
+      }
 
       if (!article || !article.textContent) {
-        throw new Error("Không thể trích xuất nội dung bài viết")
+        // Last-resort fallback: grab visible body text directly
+        const bodyText = document.body?.innerText?.trim()
+        if (bodyText && bodyText.length > 200) {
+          // Wrap in a minimal article-like object so the rest of the code works
+          ;(article as any) = { textContent: bodyText }
+        } else {
+          throw new Error("Không thể trích xuất nội dung bài viết")
+        }
       }
 
       setIsLoading(false)
       setIsStreaming(true)
 
+      // article is guaranteed non-null here (we threw or assigned fallback above)
+      const articleText: string = article!.textContent!
+
       // Stream summary from backend API
       let accumulatedJson = ""
       for await (const chunk of summarizeArticleStream(
-        article.textContent,
+        articleText,
         contextRef.current || undefined,
         window.location.href
       )) {

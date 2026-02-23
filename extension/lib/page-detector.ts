@@ -52,8 +52,25 @@ async function hasSubstantialContent(): Promise<{ hasContent: boolean; contentHa
         await new Promise(resolve => setTimeout(resolve, TIMEOUTS.CONTENT_WAIT_DELAY))
 
         const documentClone = document.cloneNode(true) as Document
-        const reader = new Readability(documentClone)
-        const article = reader.parse()
+
+        // Sanitize cloned DOM to remove nodes that can produce null references
+        // inside Readability's traversal (e.g. VnExpress ad widgets, inline scripts)
+        const REMOVE_SELECTORS = [
+            "script", "noscript", "style", "iframe",
+            "svg", "[id*='ads']", "[class*='ads']",
+            "[id*='banner']", "[class*='banner']",
+        ]
+        REMOVE_SELECTORS.forEach(sel => {
+            documentClone.querySelectorAll(sel).forEach(el => el.parentNode?.removeChild(el))
+        })
+
+        let article: ReturnType<Readability["parse"]> = null
+        try {
+            const reader = new Readability(documentClone)
+            article = reader.parse()
+        } catch (parseErr) {
+            console.warn("[PageDetector] Readability.parse() threw:", parseErr)
+        }
 
         if (article && article.textContent) {
             const textContent = article.textContent
@@ -70,6 +87,7 @@ async function hasSubstantialContent(): Promise<{ hasContent: boolean; contentHa
 
     return { hasContent: false, contentHash: "" }
 }
+
 
 /**
  * Helper: Check for strong article signals
