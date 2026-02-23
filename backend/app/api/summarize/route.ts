@@ -200,13 +200,26 @@ export async function POST(request: NextRequest) {
                     Promise.resolve(calculateLexicalMetrics(summaryText, originalContent)),
                     calculateBertScore(originalContent, summaryText),
                   ])
-                  
+
+                  // Calculate compression rate (token-based)
+                  const { calculateCompressionRate } = await import('@/services/compression.service')
+                  let compressionRate: number | null = null;
+                  try {
+                    const crResult = calculateCompressionRate({
+                      originalText: originalContent,
+                      summaryText: summaryText,
+                    });
+                    compressionRate = crResult.compressionRate;
+                  } catch (crErr) {
+                    console.error('[Summarize Stream] ⚠️ Compression rate calculation failed:', crErr)
+                  }
+
                   const latency = firstChunkTime ? firstChunkTime - startTime : Date.now() - startTime
                   await saveEvaluationMetrics({
                     summary: summaryText,
                     original: originalContent,
                     url: url,
-                    metrics: { ...metrics, bert_score: bertScore },
+                    metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate },
                     latency,
                     mode: 'stream', // time-to-first-chunk
                   })
