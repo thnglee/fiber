@@ -16,7 +16,6 @@
     "@supabase/supabase-js": "^2.87.1",
     "@types/natural": "^5.1.5",
     "@vercel/functions": "^3.4.2",
-    "bleu-score": "^1.0.4",
     "date-fns": "^4.1.0",
     "gpt-tokenizer": "^3.4.0",
     "jsdom": "^25.0.0",

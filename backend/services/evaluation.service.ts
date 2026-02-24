@@ -1,5 +1,5 @@
 import { rougeN, rougeL as calcRougeL } from '@/utils/rouge-custom';
-import { bleu } from 'bleu-score';
+import { bleu } from '@/utils/bleu-custom';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 
@@ -46,8 +46,7 @@ export const calculateLexicalMetrics = (summary: string, original: string): Eval
   const rougeL = calcRougeL(summary, original);
 
   // 3. BLEU Score
-  // bleu-score expects (reference, candidate, n)
-  // It effectively calculates n-gram precision.
+  // Original is treated as reference, summary as candidate
   const bleuScore = bleu(original, summary, 4);
 
   return {
