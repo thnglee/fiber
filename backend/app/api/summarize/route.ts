@@ -6,7 +6,7 @@ import { performSummarize } from "@/services/summarize.service"
 import { SummarizeRequestSchema, SummarizeResponseSchema } from "@/domain/schemas"
 import { zodErrorResponse } from "@/utils/zod-helpers"
 import { getEnvVar } from "@/config/env"
-
+import { waitUntil } from "@vercel/functions"
 // Handle CORS preflight requests
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -161,25 +161,28 @@ export async function POST(request: NextRequest) {
             })
 
             try {
-              await trackAction({
-                actionType: 'summarize',
-                inputType: url ? 'url' : 'text',
-                inputContent: url || content || '',
-                outputContent: {
-                  summary: summaryText,
+              waitUntil(
+                trackAction({
+                  actionType: 'summarize',
+                  inputType: url ? 'url' : 'text',
+                  inputContent: url || content || '',
+                  outputContent: {
+                    summary: summaryText,
+                    category: finalCategory,
+                    readingTime: finalReadingTime
+                  },
                   category: finalCategory,
-                  readingTime: finalReadingTime
-                },
-                category: finalCategory,
-                tokenUsage,
-                userIp: getClientIP(request.headers),
-                website: website || 'unknown',
-                userAgent: request.headers.get('user-agent') || 'unknown',
-                processingTimeMs: processingTime
-              })
-              console.log('[Summarize Stream] ✅ Action tracked successfully!')
+                  tokenUsage,
+                  userIp: getClientIP(request.headers),
+                  website: website || 'unknown',
+                  userAgent: request.headers.get('user-agent') || 'unknown',
+                  processingTimeMs: processingTime
+                })
+                .then(() => console.log('[Summarize Stream] ✅ Action tracked successfully!'))
+                .catch((err) => console.error('[Summarize Stream] ❌ Failed to track action:', err))
+              )
             } catch (err) {
-              console.error('[Summarize Stream] ❌ Failed to track action:', err)
+              console.error('[Summarize Stream] ❌ Error setting up action tracking:', err)
             }
 
             // ✅ CRITICAL FIX: Save evaluation metrics BEFORE closing stream
@@ -202,41 +205,47 @@ export async function POST(request: NextRequest) {
                 }
 
                 if (originalContent && summaryText) {
-                  // Run lexical metrics + BERTScore in parallel
-                  const [metrics, bertScore] = await Promise.all([
-                    Promise.resolve(calculateLexicalMetrics(summaryText, originalContent)),
-                    calculateBertScore(originalContent, summaryText),
-                  ])
+                  waitUntil(
+                    (async () => {
+                      // Run lexical metrics + BERTScore in parallel
+                      const [metrics, bertScore] = await Promise.all([
+                        Promise.resolve(calculateLexicalMetrics(summaryText, originalContent)),
+                        calculateBertScore(originalContent, summaryText),
+                      ])
 
-                  // Calculate compression rate (token-based)
-                  const { calculateCompressionRate } = await import('@/services/compression.service')
-                  let compressionRate: number | null = null;
-                  try {
-                    const crResult = calculateCompressionRate({
-                      originalText: originalContent,
-                      summaryText: summaryText,
-                    });
-                    compressionRate = crResult.compressionRate;
-                  } catch (crErr) {
-                    console.error('[Summarize Stream] ⚠️ Compression rate calculation failed:', crErr)
-                  }
+                      // Calculate compression rate (token-based)
+                      const { calculateCompressionRate } = await import('@/services/compression.service')
+                      let compressionRate: number | null = null;
+                      try {
+                        const crResult = calculateCompressionRate({
+                          originalText: originalContent,
+                          summaryText: summaryText,
+                        });
+                        compressionRate = crResult.compressionRate;
+                      } catch (crErr) {
+                        console.error('[Summarize Stream] ⚠️ Compression rate calculation failed:', crErr)
+                      }
 
-                  const latency = firstChunkTime ? firstChunkTime - startTime : Date.now() - startTime
-                  await saveEvaluationMetrics({
-                    summary: summaryText,
-                    original: originalContent,
-                    url: url,
-                    metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate },
-                    latency,
-                    mode: 'stream', // time-to-first-chunk
-                  })
-                  console.log('[Summarize Stream] ✅ Evaluation metrics saved successfully!')
+                      const latency = firstChunkTime ? firstChunkTime - startTime : Date.now() - startTime
+                      await saveEvaluationMetrics({
+                        summary: summaryText,
+                        original: originalContent,
+                        url: url,
+                        metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate },
+                        latency,
+                        mode: 'stream', // time-to-first-chunk
+                      })
+                      console.log('[Summarize Stream] ✅ Evaluation metrics saved successfully!')
+                    })().catch((err) => {
+                      console.error('[Summarize Stream] ❌ Failed to save evaluation metrics:', err)
+                    })
+                  );
                 } else {
                   console.log('[Summarize Stream] ⚠️ Skipping metrics - missing content or summary (likely due to early abort without data)')
                 }
               }
             } catch (err) {
-              console.error('[Summarize Stream] ❌ Failed to save evaluation metrics:', err)
+              console.error('[Summarize Stream] ❌ Error setting up evaluation metrics:', err)
             }
 
             // ✅ Close stream AFTER tracking completes
@@ -282,20 +291,22 @@ export async function POST(request: NextRequest) {
         ? extractTokenUsage({ usage: response.usage })
         : extractTokenUsage(response.debug?.openaiResponse)
 
-      trackAction({
-        actionType: 'summarize',
-        inputType: url ? 'url' : 'text',
-        inputContent: url || content || '',
-        outputContent: responseParseResult.data,
-        category: responseParseResult.data.category,
-        tokenUsage,
-        userIp: getClientIP(request.headers),
-        website: website || 'unknown',
-        userAgent: request.headers.get('user-agent') || 'unknown',
-        processingTimeMs: processingTime
-      }).catch(err => {
-        console.error('[Summarize] Failed to track action:', err)
-      })
+      waitUntil(
+        trackAction({
+          actionType: 'summarize',
+          inputType: url ? 'url' : 'text',
+          inputContent: url || content || '',
+          outputContent: responseParseResult.data,
+          category: responseParseResult.data.category,
+          tokenUsage,
+          userIp: getClientIP(request.headers),
+          website: website || 'unknown',
+          userAgent: request.headers.get('user-agent') || 'unknown',
+          processingTimeMs: processingTime
+        }).catch(err => {
+          console.error('[Summarize] Failed to track action:', err)
+        })
+      )
 
       return NextResponse.json(responseParseResult.data, { headers: getCorsHeaders() })
     }

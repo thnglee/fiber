@@ -1,0 +1,111 @@
+{
+  "results": [
+    {
+      "index": 1,
+      "url": "https://vnexpress.net/bo-truong-tai-chinh-giam-giay-phep-kinh-doanh-toi-thieu-50-nganh-nghe-4986741.html",
+      "title": "Error",
+      "streamingFirstChunk": 0,
+      "streamingTotal": 0,
+      "nonStreamingTotal": 0,
+      "waitTimeSavings": 0,
+      "error": "Streaming test failed: fetch failed"
+    },
+    {
+      "index": 2,
+      "url": "https://vnexpress.net/thoi-su/ho-con-rua-va-giai-thoai-tran-yem-long-mach-o-sai-gon-3455791.html",
+      "title": "Error",
+      "streamingFirstChunk": 0,
+      "streamingTotal": 0,
+      "nonStreamingTotal": 0,
+      "waitTimeSavings": 0,
+      "error": "Streaming test failed: fetch failed"
+    },
+    {
+      "index": 3,
+      "url": "https://vnexpress.net/kinh-doanh/cong-ty-cua-dai-gia-duong-ngoc-minh-lo-dam-4004007.html",
+      "title": "Error",
+      "streamingFirstChunk": 0,
+      "streamingTotal": 0,
+      "nonStreamingTotal": 0,
+      "waitTimeSavings": 0,
+      "error": "Streaming test failed: fetch failed"
+    },
+    {
+      "index": 4,
+      "url": "https://vnexpress.net/giai-tri-voi-trung-phuc-sinh-trong-phan-mem-1531410.html",
+      "title": "Error",
+      "streamingFirstChunk": 0,
+      "streamingTotal": 0,
+      "nonStreamingTotal": 0,
+      "waitTimeSavings": 0,
+      "error": "Streaming test failed: fetch failed"
+    },
+    {
+      "index": 5,
+      "url": "https://vnexpress.net/suc-khoe-cam-nang-cac-benh-phong-cui-4681769.html",
+      "title": "Error",
+      "streamingFirstChunk": 0,
+      "streamingTotal": 0,
+      "nonStreamingTotal": 0,
+      "waitTimeSavings": 0,
+      "error": "Streaming test failed: fetch failed"
+    },
+    {
+      "index": 6,
+      "url": "https://vnexpress.net/suc-khoe-cam-nang-5-trieu-chung-gan-ton-thuong-do-benh-tieu-duong-4894622.html",
+      "title": "Error",
+      "streamingFirstChunk": 0,
+      "streamingTotal": 0,
+      "nonStreamingTotal": 0,
+      "waitTimeSavings": 0,
+      "error": "Streaming test failed: fetch failed"
+    },
+    {
+      "index": 7,
+      "url": "https://vnexpress.net/suc-khoe-sinh-ly-nu-thay-doi-the-nao-theo-tuoi-tac-4996742.html",
+      "title": "Error",
+      "streamingFirstChunk": 0,
+      "streamingTotal": 0,
+      "nonStreamingTotal": 0,
+      "waitTimeSavings": 0,
+      "error": "Streaming test failed: fetch failed"
+    },
+    {
+      "index": 8,
+      "url": "https://vnexpress.net/suc-khoe-cam-nang-7-dau-hieu-canh-bao-than-keu-cuu-4912705.html",
+      "title": "Error",
+      "streamingFirstChunk": 0,
+      "streamingTotal": 0,
+      "nonStreamingTotal": 0,
+      "waitTimeSavings": 0,
+      "error": "Streaming test failed: fetch failed"
+    },
+    {
+      "index": 9,
+      "url": "https://vnexpress.net/thoi-su/ly-do-nha-nong-su-dung-phan-trun-que-3986629.html",
+      "title": "Error",
+      "streamingFirstChunk": 0,
+      "streamingTotal": 0,
+      "nonStreamingTotal": 0,
+      "waitTimeSavings": 0,
+      "error": "Streaming test failed: fetch failed"
+    },
+    {
+      "index": 10,
+      "url": "https://vnexpress.net/thoi-su/tieu-chuan-chung-nhan-huu-co-o-viet-nam-3979983.html",
+      "title": "Error",
+      "streamingFirstChunk": 0,
+      "streamingTotal": 0,
+      "nonStreamingTotal": 0,
+      "waitTimeSavings": 0,
+      "error": "Streaming test failed: fetch failed"
+    }
+  ],
+  "stats": {
+    "avgFirstChunk": 0,
+    "avgStreamingTotal": 0,
+    "avgNonStreamingTotal": 0,
+    "avgWaitTimeSavings": 0,
+    "successRate": 0
+  }
+}
