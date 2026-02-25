@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { Search, Filter } from 'lucide-react';
 
 interface EvaluationMetrics {
   rouge1: number;
@@ -25,10 +26,19 @@ interface EvaluationData {
 export default function EvaluationDashboard() {
   const [metrics, setMetrics] = useState<EvaluationData[]>([]);
   const [lastUpdated, setLastUpdated] = useState<string>('');
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [filters, setFilters] = useState({
+    mode: '',
+    url: '',
+    startDate: '',
+    endDate: '',
+  });
   const LIMIT = 50;
 
   const fetchMetrics = async (currentOffset: number = 0, isInitial: boolean = false) => {
@@ -36,7 +46,16 @@ export default function EvaluationDashboard() {
     else setLoadingMore(true);
 
     try {
-      const response = await fetch(`/api/metrics?limit=${LIMIT}&offset=${currentOffset}`);
+      const params = new URLSearchParams();
+      params.set('limit', LIMIT.toString());
+      params.set('offset', currentOffset.toString());
+
+      if (filters.mode) params.set('mode', filters.mode);
+      if (filters.url) params.set('url', filters.url);
+      if (filters.startDate) params.set('start_date', filters.startDate);
+      if (filters.endDate) params.set('end_date', filters.endDate);
+
+      const response = await fetch(`/api/metrics?${params}`);
       const result = await response.json();
       
       if (isInitial) {
@@ -45,6 +64,7 @@ export default function EvaluationDashboard() {
         setMetrics(prev => [...prev, ...result.data]);
       }
       
+      setTotal(result.count || 0);
       setHasMore(result.data.length === LIMIT);
       setLastUpdated(new Date().toLocaleString());
     } catch (error) {
@@ -57,7 +77,8 @@ export default function EvaluationDashboard() {
 
   useEffect(() => {
     fetchMetrics(0, true);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]);
 
   const handleShowMore = () => {
     const nextOffset = offset + LIMIT;
@@ -65,10 +86,33 @@ export default function EvaluationDashboard() {
     fetchMetrics(nextOffset, false);
   };
   
-  const handleRefresh = () => {
+  const applyFilters = () => {
     setOffset(0);
     fetchMetrics(0, true);
+    setShowFilters(false);
   };
+
+  const resetFilters = () => {
+    setFilters({
+      mode: '',
+      url: '',
+      startDate: '',
+      endDate: '',
+    });
+    setSearchQuery('');
+    setOffset(0);
+  };
+
+  // Filter actions by search query
+  const filteredMetrics = metrics.filter(item => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      item.summary.toLowerCase().includes(query) ||
+      (item.url && item.url.toLowerCase().includes(query)) ||
+      (item.mode && item.mode.toLowerCase().includes(query))
+    );
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -78,13 +122,114 @@ export default function EvaluationDashboard() {
             <h1 className="text-3xl font-bold">Evaluation Metrics</h1>
             <p className="text-sm text-gray-500 mt-1">Last updated: {lastUpdated || 'Loading...'}</p>
           </div>
-          <button 
-            onClick={handleRefresh}
-            disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            🔄 Refresh
-          </button>
+        </div>
+
+        {/* Search Bar and Filters */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+          <div className="flex items-center gap-3">
+            {/* Search Input */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search metrics by summary, url, or mode..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm"
+              />
+            </div>
+
+            {/* Filter Button */}
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-colors ${showFilters
+                ? 'bg-black text-white border-black'
+                : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                }`}
+            >
+              <Filter className="w-4 h-4" />
+              Filters
+            </button>
+          </div>
+
+          {/* Filter Panel */}
+          {showFilters && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="grid grid-cols-4 gap-4">
+                {/* Mode */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-2">
+                    Mode
+                  </label>
+                  <select
+                    value={filters.mode}
+                    onChange={(e) => setFilters({ ...filters, mode: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  >
+                    <option value="">All Modes</option>
+                    <option value="stream">Stream</option>
+                    <option value="sync">Sync</option>
+                  </select>
+                </div>
+
+                {/* URL */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-2">
+                    URL
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g., example.com"
+                    value={filters.url}
+                    onChange={(e) => setFilters({ ...filters, url: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  />
+                </div>
+
+                {/* Start Date */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-2">
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    value={filters.startDate}
+                    onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  />
+                </div>
+
+                {/* End Date */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-2">
+                    End Date
+                  </label>
+                  <input
+                    type="date"
+                    value={filters.endDate}
+                    onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  />
+                </div>
+              </div>
+
+              {/* Filter Actions */}
+              <div className="flex items-center gap-3 mt-4">
+                <button
+                  onClick={applyFilters}
+                  className="px-4 py-2 bg-black text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
+                >
+                  Apply Filters
+                </button>
+                <button
+                  onClick={resetFilters}
+                  className="px-4 py-2 bg-white text-gray-700 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       
       {loading ? (
@@ -146,14 +291,14 @@ export default function EvaluationDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {metrics.length === 0 ? (
+              {filteredMetrics.length === 0 ? (
                 <tr>
                   <td colSpan={12} className="px-4 py-8 bg-white text-sm text-center text-gray-500">
                     No evaluation metrics found.
                   </td>
                 </tr>
               ) : (
-                metrics.map((item, index) => (
+                filteredMetrics.map((item, index) => (
                   <tr key={index} className="hover:bg-blue-50/50 transition-colors bg-white">
                     <td className="px-4 py-4 bg-transparent text-sm text-gray-700 whitespace-nowrap">
                       {item.created_at ? new Date(item.created_at).toLocaleString() : 'N/A'}
@@ -229,13 +374,13 @@ export default function EvaluationDashboard() {
           </table>
         </div>
 
-        {/* Load More Button */}
-        {!loading && metrics.length > 0 && hasMore && (
-          <div className="p-5 border-t border-gray-200 bg-gray-50 flex justify-center">
+        {/* Show More Button */}
+        {!loading && metrics.length < total && (
+          <div className="p-5 border-t border-gray-200 bg-gray-50 flex justify-center mt-6 rounded-lg">
             <button
               onClick={handleShowMore}
               disabled={loadingMore}
-              className="px-6 py-2 border border-blue-600 text-blue-600 font-medium rounded-md hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[140px]"
+              className="px-6 py-2 border border-blue-600 text-blue-600 font-medium rounded-md hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[160px]"
             >
               {loadingMore ? (
                 <>
@@ -243,7 +388,7 @@ export default function EvaluationDashboard() {
                   Loading...
                 </>
               ) : (
-                'Show More'
+                `Show More (${total - metrics.length} remaining)`
               )}
             </button>
           </div>
