@@ -231,7 +231,7 @@ export async function POST(request: NextRequest) {
                         summary: summaryText,
                         original: originalContent,
                         url: url,
-                        metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate },
+                        metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate, total_tokens: finalUsage?.total_tokens ?? null },
                         latency,
                         mode: 'stream', // time-to-first-chunk
                       })

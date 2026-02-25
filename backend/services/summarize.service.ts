@@ -195,7 +195,7 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
         summary: response.summary,
         original: extractedContent,
         url: typeof url === 'string' ? url : undefined,
-        metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate },
+        metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate, total_tokens: llmResult.usage?.total_tokens ?? null },
         latency,
         mode: 'sync', // full request duration
       });
