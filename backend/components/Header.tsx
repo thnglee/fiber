@@ -7,7 +7,7 @@ import { useRealtime } from '@/components/RealtimeProvider';
 
 export function Header() {
   const pathname = usePathname();
-  const { isConnected } = useRealtime();
+  useRealtime();
 
   // Hide header on login page
   if (pathname === '/admin/login') {
@@ -58,23 +58,7 @@ export function Header() {
               })}
             </nav>
 
-            {/* Divider */}
-            <div className="h-6 w-px bg-gray-200" />
 
-            {/* Connection Status */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50">
-              {isConnected ? (
-                <>
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  <span className="text-xs text-gray-700 font-medium">Live</span>
-                </>
-              ) : (
-                <>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full" />
-                  <span className="text-xs text-gray-500">Offline</span>
-                </>
-              )}
-            </div>
 
             {/* Sign Out Button */}
             <button
