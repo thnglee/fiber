@@ -5,7 +5,7 @@ WORKDIR /install
 
 # Install CPU-only PyTorch first (avoids pulling in massive CUDA wheels)
 RUN pip install --no-cache-dir \
-    torch==2.2.2 \
+    "torch>=2.6.0" \
     --index-url https://download.pytorch.org/whl/cpu
 
 COPY requirements.txt .
@@ -35,7 +35,7 @@ ENV HF_HOME=/app/.cache/huggingface
 ENV TRANSFORMERS_CACHE=/app/.cache/huggingface/transformers
 
 # Pin the model so it is consistent across deployments
-ENV BERT_MODEL=distilroberta-base
+ENV BERT_MODEL=vinai/phobert-base
 
 # Disable tokenizer parallelism warnings in a single-process service
 ENV TOKENIZERS_PARALLELISM=false
@@ -47,8 +47,8 @@ ENV PORT=7860
 RUN mkdir -p /app/.cache/huggingface && chown -R appuser:appuser /app
 
 # ── Pre-bake model at BUILD time (runs as root so it can write cache) ─────────
-# Downloads distilroberta-base once into the image layer — no network at runtime.
-RUN python -c "from bert_score import BERTScorer; BERTScorer(model_type='distilroberta-base', device='cpu')"
+# Downloads vinai/phobert-base once into the image layer — no network at runtime.
+RUN python -c "from bert_score import BERTScorer; BERTScorer(model_type='vinai/phobert-base', lang='vi', num_layers=9, device='cpu', rescale_with_baseline=False)"
 
 USER appuser
 

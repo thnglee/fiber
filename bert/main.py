@@ -17,7 +17,7 @@ logger = logging.getLogger("bert_service")
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-MODEL_NAME: str = os.environ.get("BERT_MODEL", "distilroberta-base")
+MODEL_NAME: str = os.environ.get("BERT_MODEL", "vinai/phobert-base")
 
 # ---------------------------------------------------------------------------
 # Global scorer — loaded once at startup
@@ -37,6 +37,8 @@ async def lifespan(app: FastAPI):
     try:
         bert_scorer = BERTScorer(
             model_type=MODEL_NAME,
+            lang="vi",
+            num_layers=9,
             device="cpu",
             rescale_with_baseline=False,
         )

@@ -21,6 +21,13 @@ export default function DebugPage() {
   const [factCheckLoading, setFactCheckLoading] = useState(false)
   const [factCheckError, setFactCheckError] = useState<string | null>(null)
 
+  const [evalOriginalText, setEvalOriginalText] = useState("")
+  const [evalSummaryText, setEvalSummaryText] = useState("")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [evalResult, setEvalResult] = useState<any>(null)
+  const [evalLoading, setEvalLoading] = useState(false)
+  const [evalError, setEvalError] = useState<string | null>(null)
+
   const handleSummarize = async () => {
     setSummaryLoading(true)
     setSummaryError(null)
@@ -84,6 +91,37 @@ export default function DebugPage() {
       setFactCheckError(err instanceof Error ? err.message : "Unknown error")
     } finally {
       setFactCheckLoading(false)
+    }
+  }
+
+  const handleEvaluate = async () => {
+    setEvalLoading(true)
+    setEvalError(null)
+    setEvalResult(null)
+
+    try {
+      const response = await fetch("/api/evaluate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          original: evalOriginalText,
+          summary: evalSummaryText,
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || "Failed to evaluate metrics")
+      }
+
+      const data = await response.json()
+      setEvalResult(data)
+    } catch (err) {
+      setEvalError(err instanceof Error ? err.message : "Unknown error")
+    } finally {
+      setEvalLoading(false)
     }
   }
 
@@ -471,7 +509,92 @@ export default function DebugPage() {
               )}
             </div>
           </div>
+
+          {/* Evaluation Metrics Feature */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 lg:col-span-2">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Evaluation Metrics Feature
+            </h2>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Original Paragraph
+                  </label>
+                  <textarea
+                    value={evalOriginalText}
+                    onChange={(e) => setEvalOriginalText(e.target.value)}
+                    placeholder="Enter original text..."
+                    className="w-full h-48 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Summarized Paragraph
+                  </label>
+                  <textarea
+                    value={evalSummaryText}
+                    onChange={(e) => setEvalSummaryText(e.target.value)}
+                    placeholder="Enter summarized text..."
+                    className="w-full h-48 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <button
+                onClick={handleEvaluate}
+                disabled={!evalOriginalText.trim() || !evalSummaryText.trim() || evalLoading}
+                className="w-full px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {evalLoading ? "Processing..." : "Calculate Evaluation Metrics"}
+              </button>
+
+              {evalError && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-700">{evalError}</p>
+                </div>
+              )}
+
+              {evalResult && (
+                <div className="space-y-4 mt-4">
+                  <div className="border-t border-gray-200 pt-4">
+                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                      Calculated Metrics
+                    </h3>
+                    <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 flex flex-col items-center justify-center text-center">
+                        <span className="text-xs text-gray-500 uppercase font-medium mb-1">ROUGE-1</span>
+                        <span className="text-lg font-bold text-gray-900">{evalResult.rouge1}</span>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 flex flex-col items-center justify-center text-center">
+                        <span className="text-xs text-gray-500 uppercase font-medium mb-1">ROUGE-2</span>
+                        <span className="text-lg font-bold text-gray-900">{evalResult.rouge2}</span>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 flex flex-col items-center justify-center text-center">
+                        <span className="text-xs text-gray-500 uppercase font-medium mb-1">ROUGE-L</span>
+                        <span className="text-lg font-bold text-gray-900">{evalResult.rougeL}</span>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 flex flex-col items-center justify-center text-center">
+                        <span className="text-xs text-gray-500 uppercase font-medium mb-1">BLEU</span>
+                        <span className="text-lg font-bold text-gray-900">{evalResult.bleu}</span>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 flex flex-col items-center justify-center text-center">
+                        <span className="text-xs text-gray-500 uppercase font-medium mb-1">BERTScore</span>
+                        <span className="text-lg font-bold text-gray-900">{evalResult.bert_score !== null ? evalResult.bert_score.toFixed(4) : "N/A"}</span>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 flex flex-col items-center justify-center text-center">
+                        <span className="text-xs text-gray-500 uppercase font-medium mb-1">Compression</span>
+                        <span className="text-lg font-bold text-gray-900">{evalResult.compression_rate !== null ? `${evalResult.compression_rate}%` : "N/A"}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   )
