@@ -32,7 +32,6 @@ export default function EvaluationDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
   const [filters, setFilters] = useState({
     mode: '',
     url: '',
@@ -65,7 +64,6 @@ export default function EvaluationDashboard() {
       }
       
       setTotal(result.count || 0);
-      setHasMore(result.data.length === LIMIT);
       setLastUpdated(new Date().toLocaleString());
     } catch (error) {
       console.error('Failed to fetch metrics:', error);
