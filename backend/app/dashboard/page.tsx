@@ -128,7 +128,7 @@ function DashboardContent() {
         {/* Stats Cards - 4 in a row */}
         <div className="grid grid-cols-4 gap-4 mb-6">
           {/* Total Actions */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
                 <BarChart3 className="w-5 h-5 text-blue-600" />
@@ -141,7 +141,7 @@ function DashboardContent() {
           </div>
 
           {/* Total Tokens */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 bg-yellow-50 rounded-lg flex items-center justify-center">
                 <Zap className="w-5 h-5 text-yellow-600" />
@@ -154,7 +154,7 @@ function DashboardContent() {
           </div>
 
           {/* Avg Processing Time */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
                 <Clock className="w-5 h-5 text-purple-600" />
@@ -167,7 +167,7 @@ function DashboardContent() {
           </div>
 
           {/* Actions Today */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-5 h-5 text-green-600" />
@@ -181,7 +181,7 @@ function DashboardContent() {
         </div>
 
         {/* Search Bar and Filters */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
           <div className="flex items-center gap-3">
             {/* Search Input */}
             <div className="flex-1 relative">
@@ -293,21 +293,19 @@ function DashboardContent() {
 
         {/* Show More Button */}
         {!loading && actions.length < total && (
-          <div className="flex justify-center mt-6">
+          <div className="p-5 border-t border-gray-200 bg-gray-50 flex justify-center mt-6 rounded-lg">
             <button
               onClick={loadMore}
               disabled={loadingMore}
-              className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 py-2 border border-blue-600 text-blue-600 font-medium rounded-md hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[160px]"
             >
               {loadingMore ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
                   Loading...
                 </>
               ) : (
-                <>
-                  Show More ({total - actions.length} remaining)
-                </>
+                `Show More (${total - actions.length} remaining)`
               )}
             </button>
           </div>
@@ -325,8 +323,8 @@ export default function AdminDashboard() {
   if (!supabaseUrl || !supabaseAnonKey) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-xl border border-gray-200 p-8 max-w-md">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Configuration Required</h2>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 max-w-md">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Configuration Required</h2>
           <p className="text-gray-600 mb-4">
             Please set the following environment variables in your <code className="bg-gray-100 px-2 py-1 rounded">.env</code> file:
           </p>

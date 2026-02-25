@@ -53,8 +53,8 @@ export function ActionLogsTable({ initialActions, total, loading = false }: Acti
 
     return (
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Action Logs</h2>
+            <div className="px-4 py-4 border-b border-gray-200">
+                <h2 className="text-xl font-semibold text-gray-900">Action Logs</h2>
                 <p className="text-sm text-gray-500 mt-1">{total} total actions</p>
             </div>
 
@@ -62,31 +62,31 @@ export function ActionLogsTable({ initialActions, total, loading = false }: Acti
                 <table className="min-w-full leading-normal">
                     <thead>
                         <tr>
-                            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Time
                             </th>
-                            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Type
                             </th>
-                            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Website
                             </th>
-                            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Category
                             </th>
-                            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Output
                             </th>
-                            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Tokens
                             </th>
-                            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Processing
                             </th>
-                            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100"></th>
+                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-gray-100">
                         {actions.map((action) => {
                             const isExpanded = expandedId === action.id
                             const isNew = newAction?.id === action.id
@@ -95,16 +95,15 @@ export function ActionLogsTable({ initialActions, total, loading = false }: Acti
                                 <>
                                     <tr
                                         key={action.id}
-                                        className={`hover:bg-gray-50 transition-colors ${isNew ? 'bg-blue-50 animate-pulse' : ''
-                                            }`}
+                                        className={`transition-colors ${isNew ? 'bg-blue-50 animate-pulse' : 'hover:bg-blue-50/50 bg-white'}`}
                                     >
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <div className="flex items-center gap-2 text-gray-900">
+                                        <td className="px-4 py-4 bg-transparent text-sm text-gray-700 whitespace-nowrap">
+                                            <div className="flex items-center gap-2">
                                                 <Clock className="w-4 h-4 text-gray-400" />
                                                 {format(new Date(action.created_at), 'MMM d, HH:mm')}
                                             </div>
                                         </td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <td className="px-4 py-4 bg-transparent text-sm">
                                             <span
                                                 className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getActionTypeBadge(
                                                     action.action_type
@@ -113,13 +112,13 @@ export function ActionLogsTable({ initialActions, total, loading = false }: Acti
                                                 {action.action_type}
                                             </span>
                                         </td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <div className="flex items-center gap-2 text-gray-900">
+                                        <td className="px-4 py-4 bg-transparent text-sm text-gray-700">
+                                            <div className="flex items-center gap-2">
                                                 <Globe className="w-4 h-4 text-gray-400" />
                                                 {action.website}
                                             </div>
                                         </td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                        <td className="px-4 py-4 bg-transparent text-sm">
                                             {action.category ? (
                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
                                                     {action.category}
@@ -128,8 +127,12 @@ export function ActionLogsTable({ initialActions, total, loading = false }: Acti
                                                 <span className="text-gray-400">N/A</span>
                                             )}
                                         </td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm max-w-xs">
-                                            <div className="font-mono text-xs text-gray-900">
+                                        <td className="px-4 py-4 bg-transparent text-sm max-w-xs">
+                                            <div className="font-mono text-xs text-gray-600 truncate" title={
+                                                typeof action.output_content === 'string'
+                                                    ? action.output_content
+                                                    : action.output_content?.summary || action.output_content?.reason || JSON.stringify(action.output_content)
+                                            }>
                                                 {(() => {
                                                     if (typeof action.output_content === 'string') {
                                                         return truncate(action.output_content, 50)
@@ -144,19 +147,21 @@ export function ActionLogsTable({ initialActions, total, loading = false }: Acti
                                                 })()}
                                             </div>
                                         </td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <div className="flex items-center gap-2 text-gray-900">
-                                                <Zap className="w-4 h-4 text-yellow-500" />
+                                        <td className="px-4 py-4 bg-transparent text-sm">
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                                                <Zap className="w-3 h-3 text-yellow-500 mr-1" />
                                                 {action.token_usage.total_tokens.toLocaleString()}
-                                            </div>
+                                            </span>
                                         </td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-gray-500">
-                                            {action.processing_time_ms}ms
+                                        <td className="px-4 py-4 bg-transparent text-sm text-gray-600 whitespace-nowrap">
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+                                                {action.processing_time_ms}ms
+                                            </span>
                                         </td>
-                                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right">
+                                        <td className="px-4 py-4 bg-transparent text-sm text-right">
                                             <button
                                                 onClick={() => setExpandedId(isExpanded ? null : action.id)}
-                                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                                                className="text-gray-400 hover:text-gray-700 transition-colors"
                                             >
                                                 {isExpanded ? (
                                                     <ChevronUp className="w-5 h-5" />
@@ -168,7 +173,7 @@ export function ActionLogsTable({ initialActions, total, loading = false }: Acti
                                     </tr>
                                     {isExpanded && (
                                         <tr key={`${action.id}-expanded`} className="bg-gray-50">
-                                            <td colSpan={8} className="px-5 py-5 border-b border-gray-200">
+                                            <td colSpan={8} className="px-4 py-4 border-t border-gray-100">
                                                 <div className="space-y-4">
                                                     <h4 className="font-semibold text-gray-900 text-base">Full Action Details</h4>
 
@@ -325,19 +330,15 @@ export function ActionLogsTable({ initialActions, total, loading = false }: Acti
             </div>
 
             {loading && actions.length === 0 && (
-                <div className="px-6 py-12 text-center">
-                    <div className="animate-pulse space-y-3">
-                        <div className="h-4 bg-gray-200 rounded w-1/4 mx-auto"></div>
-                        <div className="h-4 bg-gray-200 rounded w-1/3 mx-auto"></div>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-4">Loading actions...</p>
+                <div className="bg-white p-8 text-center">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <p className="mt-4 text-gray-600">Loading actions...</p>
                 </div>
             )}
 
             {!loading && actions.length === 0 && (
-                <div className="px-6 py-12 text-center text-gray-500">
-                    <p className="text-base font-medium text-gray-900 mb-2">No actions found</p>
-                    <p className="text-sm">Start using the extension to see data here, or try adjusting your filters.</p>
+                <div className="px-4 py-8 bg-white text-sm text-center text-gray-500">
+                    No actions found. Start using the extension to see data here.
                 </div>
             )}
         </div>
