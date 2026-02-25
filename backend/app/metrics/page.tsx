@@ -9,6 +9,7 @@ interface EvaluationMetrics {
   bleu: number;
   bert_score?: number | null;
   compression_rate?: number | null;
+  total_tokens?: number | null;
 }
 
 interface EvaluationData {
@@ -135,6 +136,10 @@ export default function EvaluationDashboard() {
                   <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Compression</div>
                   <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">summary/original</div>
                 </th>
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[110px]">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Total Tokens</div>
+                  <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">prompt + completion</div>
+                </th>
                 <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[110px]">
                   URL
                 </th>
@@ -143,7 +148,7 @@ export default function EvaluationDashboard() {
             <tbody className="divide-y divide-gray-100">
               {metrics.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="px-4 py-8 bg-white text-sm text-center text-gray-500">
+                  <td colSpan={12} className="px-4 py-8 bg-white text-sm text-center text-gray-500">
                     No evaluation metrics found.
                   </td>
                 </tr>
@@ -195,6 +200,13 @@ export default function EvaluationDashboard() {
                       {item.metrics.compression_rate != null
                         ? `${item.metrics.compression_rate.toFixed(2)}%`
                         : 'N/A'}
+                    </td>
+                    <td className="px-4 py-4 bg-transparent text-sm text-gray-600">
+                      {item.metrics.total_tokens != null ? (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-amber-50 text-amber-700">
+                          {item.metrics.total_tokens.toLocaleString()}
+                        </span>
+                      ) : 'N/A'}
                     </td>
                     <td className="px-4 py-4 bg-transparent text-sm text-center">
                       {item.url ? (

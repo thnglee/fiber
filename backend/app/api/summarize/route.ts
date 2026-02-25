@@ -160,27 +160,25 @@ export async function POST(request: NextRequest) {
               inputType: url ? 'url' : 'text'
             })
 
+            let userActionId: string | undefined
             try {
-              waitUntil(
-                trackAction({
-                  actionType: 'summarize',
-                  inputType: url ? 'url' : 'text',
-                  inputContent: url || content || '',
-                  outputContent: {
-                    summary: summaryText,
-                    category: finalCategory,
-                    readingTime: finalReadingTime
-                  },
+              userActionId = await trackAction({
+                actionType: 'summarize',
+                inputType: url ? 'url' : 'text',
+                inputContent: url || content || '',
+                outputContent: {
+                  summary: summaryText,
                   category: finalCategory,
-                  tokenUsage,
-                  userIp: getClientIP(request.headers),
-                  website: website || 'unknown',
-                  userAgent: request.headers.get('user-agent') || 'unknown',
-                  processingTimeMs: processingTime
-                })
-                .then(() => console.log('[Summarize Stream] ✅ Action tracked successfully!'))
-                .catch((err) => console.error('[Summarize Stream] ❌ Failed to track action:', err))
-              )
+                  readingTime: finalReadingTime
+                },
+                category: finalCategory,
+                tokenUsage,
+                userIp: getClientIP(request.headers),
+                website: website || 'unknown',
+                userAgent: request.headers.get('user-agent') || 'unknown',
+                processingTimeMs: processingTime
+              })
+              console.log('[Summarize Stream] ✅ Action tracked successfully! user_action_id:', userActionId)
             } catch (err) {
               console.error('[Summarize Stream] ❌ Error setting up action tracking:', err)
             }
@@ -231,9 +229,10 @@ export async function POST(request: NextRequest) {
                         summary: summaryText,
                         original: originalContent,
                         url: url,
-                        metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate },
+                        metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate, total_tokens: finalUsage?.total_tokens ?? null },
                         latency,
-                        mode: 'stream', // time-to-first-chunk
+                        mode: 'stream',
+                        user_action_id: userActionId ?? null,
                       })
                       console.log('[Summarize Stream] ✅ Evaluation metrics saved successfully!')
                     })().catch((err) => {
@@ -292,20 +291,25 @@ export async function POST(request: NextRequest) {
         : extractTokenUsage(response.debug?.openaiResponse)
 
       waitUntil(
-        trackAction({
-          actionType: 'summarize',
-          inputType: url ? 'url' : 'text',
-          inputContent: url || content || '',
-          outputContent: responseParseResult.data,
-          category: responseParseResult.data.category,
-          tokenUsage,
-          userIp: getClientIP(request.headers),
-          website: website || 'unknown',
-          userAgent: request.headers.get('user-agent') || 'unknown',
-          processingTimeMs: processingTime
-        }).catch(err => {
-          console.error('[Summarize] Failed to track action:', err)
-        })
+        (async () => {
+          try {
+            const userActionId = await trackAction({
+              actionType: 'summarize',
+              inputType: url ? 'url' : 'text',
+              inputContent: url || content || '',
+              outputContent: responseParseResult.data,
+              category: responseParseResult.data.category,
+              tokenUsage,
+              userIp: getClientIP(request.headers),
+              website: website || 'unknown',
+              userAgent: request.headers.get('user-agent') || 'unknown',
+              processingTimeMs: processingTime
+            })
+            console.log('[Summarize] ✅ Action tracked, user_action_id:', userActionId)
+          } catch (err) {
+            console.error('[Summarize] Failed to track action:', err)
+          }
+        })()
       )
 
       return NextResponse.json(responseParseResult.data, { headers: getCorsHeaders() })
