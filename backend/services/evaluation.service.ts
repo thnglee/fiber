@@ -21,6 +21,7 @@ export interface EvaluationData {
   created_at?: string;
   latency?: number;
   mode?: string | null;
+  user_action_id?: string | null;
 }
 
 export interface EvaluationResponse {
@@ -89,6 +90,7 @@ export const saveEvaluationMetrics = async (data: EvaluationData) => {
                 total_tokens: data.metrics.total_tokens ?? null,
                 latency: data.latency,
                 mode: data.mode ?? null,
+                user_action_id: data.user_action_id ?? null,
                 metadata: {
                     original_preview: data.original.substring(0, 200)
                 }

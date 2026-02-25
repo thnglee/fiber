@@ -34,14 +34,14 @@ interface GeolocationResponse {
  * Track a user action to Supabase
  * This function is fire-and-forget - errors are logged but don't throw
  */
-export async function trackAction(params: TrackActionParams): Promise<void> {
+export async function trackAction(params: TrackActionParams): Promise<string | undefined> {
     try {
         // Get location data from IP
         const location = await getLocationFromIP(params.userIp)
 
         // Insert into Supabase
         const supabase = getSupabaseAdmin()
-        const { error } = await supabase
+        const { data: inserted, error } = await supabase
             .from('user_actions')
             .insert({
                 action_type: params.actionType,
@@ -56,13 +56,19 @@ export async function trackAction(params: TrackActionParams): Promise<void> {
                 user_agent: params.userAgent,
                 processing_time_ms: params.processingTimeMs
             })
+            .select('id')
+            .single()
 
         if (error) {
             console.error('[Action Tracking] Failed to insert action:', error)
+            return undefined
         }
+
+        return inserted?.id as string | undefined
     } catch (error) {
         // Log error but don't throw - tracking should never break the main flow
         console.error('[Action Tracking] Error tracking action:', error)
+        return undefined
     }
 }
 
