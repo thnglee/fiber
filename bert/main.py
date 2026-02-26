@@ -101,9 +101,23 @@ async def calculate_score(payload: ScoreRequest):
 
     try:
         logger.info("Computing BERTScore …")
+
+        # Safely truncate input texts using the underlying tokenizer to avoid index out-of-bounds.
+        # PhoBERT has a maximum sequence length of 256 tokens.
+        cand_text = payload.candidate_text
+        ref_text = payload.reference_text
+        tokenizer = getattr(bert_scorer, "_tokenizer", None)
+        
+        if tokenizer is not None:
+            cand_tokens = tokenizer(cand_text, truncation=True, max_length=256)
+            cand_text = tokenizer.decode(cand_tokens["input_ids"], skip_special_tokens=True)
+            
+            ref_tokens = tokenizer(ref_text, truncation=True, max_length=256)
+            ref_text = tokenizer.decode(ref_tokens["input_ids"], skip_special_tokens=True)
+
         _, _, F1 = bert_scorer.score(
-            cands=[payload.candidate_text],
-            refs=[payload.reference_text],
+            cands=[cand_text],
+            refs=[ref_text],
         )
         f1_value = round(float(F1[0].item()), 6)
         logger.info(f"BERTScore F1 = {f1_value}")
