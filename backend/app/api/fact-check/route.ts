@@ -33,7 +33,16 @@ export async function POST(request: NextRequest) {
       return zodErrorResponse(parseResult.error, 400)
     }
 
-    const { text, debug, website } = parseResult.data
+    const { text, debug, website, model: modelOverride } = parseResult.data
+
+    // Load active model config from Supabase
+    const { getActiveModelConfig, getAllModelConfigs } = await import('@/services/model-config.service')
+    let modelConfig = await getActiveModelConfig()
+    if (modelOverride) {
+      const allConfigs = await getAllModelConfigs()
+      const overrideConfig = allConfigs.find(c => c.model_name === modelOverride)
+      if (overrideConfig) modelConfig = overrideConfig
+    }
 
     // Validate API keys are configured (using env schema)
     try {
@@ -47,7 +56,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Delegate to service layer
-    const response = await performFactCheck({ text, debug })
+    const response = await performFactCheck({ text, debug }, modelConfig)
 
     // Validate response before sending
     const responseParseResult = FactCheckResponseSchema.safeParse(response)
@@ -71,6 +80,7 @@ export async function POST(request: NextRequest) {
       outputContent: responseParseResult.data,
       category: null,
       tokenUsage,
+      model: modelConfig.model_name,
       userIp: getClientIP(request.headers),
       website: website || 'unknown',
       userAgent: request.headers.get('user-agent') || 'unknown',

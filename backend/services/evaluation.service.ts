@@ -22,6 +22,10 @@ export interface EvaluationData {
   latency?: number;
   mode?: string | null;
   user_action_id?: string | null;
+  model?: string;
+  promptTokens?: number;
+  completionTokens?: number;
+  estimatedCostUsd?: number;
 }
 
 export interface EvaluationResponse {
@@ -94,6 +98,10 @@ export const saveEvaluationMetrics = async (data: EvaluationData) => {
         latency: data.latency,
         mode: data.mode ?? null,
         user_action_id: data.user_action_id ?? null,
+        model: data.model ?? null,
+        prompt_tokens: data.promptTokens ?? null,
+        completion_tokens: data.completionTokens ?? null,
+        estimated_cost_usd: data.estimatedCostUsd ?? null,
         metadata: {
           original_preview: data.original.substring(0, 200),
         },
@@ -134,6 +142,7 @@ export const saveEvaluationMetrics = async (data: EvaluationData) => {
 
 export interface MetricFilters {
   mode?: string;
+  model?: string;
   url?: string;
   startDate?: string;
   endDate?: string;
@@ -168,6 +177,10 @@ export const getEvaluationMetrics = async (
 
     if (filters?.mode) {
       query = query.eq("mode", filters.mode);
+    }
+
+    if (filters?.model) {
+      query = query.eq("model", filters.model);
     }
 
     if (filters?.url) {
@@ -211,6 +224,10 @@ export const getEvaluationMetrics = async (
       },
       latency: row.latency,
       mode: row.mode ?? null,
+      model: row.model ?? undefined,
+      promptTokens: row.prompt_tokens ?? undefined,
+      completionTokens: row.completion_tokens ?? undefined,
+      estimatedCostUsd: row.estimated_cost_usd ?? undefined,
     }));
 
     return {

@@ -24,6 +24,9 @@ out/
 .DS_Store
 Thumbs.db
 
+# MCP config (contains secrets)
+.mcp.json
+
 # Logs
 *.log
 npm-debug.log*

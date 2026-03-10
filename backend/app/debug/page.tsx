@@ -1,6 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+
+interface ModelOption {
+  model_name: string
+  display_name: string
+  provider: string
+  model_type: string
+  is_active: boolean
+}
 
 
 
@@ -28,17 +36,34 @@ export default function DebugPage() {
   const [evalLoading, setEvalLoading] = useState(false)
   const [evalError, setEvalError] = useState<string | null>(null)
 
+  const [availableModels, setAvailableModels] = useState<ModelOption[]>([])
+  const [selectedModel, setSelectedModel] = useState("")  // "" means use active model
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.available) {
+          setAvailableModels(data.available)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
   const handleSummarize = async () => {
     setSummaryLoading(true)
     setSummaryError(null)
     setSummaryResult(null)
 
     try {
-      const body: { debug: boolean; url?: string; content?: string } = { debug: true }
+      const body: { debug: boolean; url?: string; content?: string; model?: string } = { debug: true }
       if (summaryInputType === "url") {
         body.url = summaryUrl
       } else {
         body.content = summaryParagraph
+      }
+      if (selectedModel) {
+        body.model = selectedModel
       }
 
       const response = await fetch("/api/summarize", {
@@ -77,6 +102,7 @@ export default function DebugPage() {
         body: JSON.stringify({
           text: factCheckText,
           debug: true,
+          ...(selectedModel ? { model: selectedModel } : {}),
         }),
       })
 
@@ -132,6 +158,34 @@ export default function DebugPage() {
         <p className="text-gray-600 mb-8">
           Test and inspect intermediate results for Summary and Fact-Check features
         </p>
+
+        {/* Model Override Selector */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+          <h2 className="text-sm font-semibold text-gray-700 mb-2">Model Override (optional)</h2>
+          <select
+            value={selectedModel}
+            onChange={(e) => setSelectedModel(e.target.value)}
+            className="w-full max-w-md border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Use active model (from Settings)</option>
+            {["openai", "gemini", "anthropic"].map((provider) => {
+              const models = availableModels.filter((m) => m.provider === provider)
+              if (models.length === 0) return null
+              return (
+                <optgroup key={provider} label={provider === "openai" ? "OpenAI" : provider === "gemini" ? "Google Gemini" : "Anthropic"}>
+                  {models.map((m) => (
+                    <option key={m.model_name} value={m.model_name}>
+                      {m.display_name}{m.model_type === "reasoning" ? " [reasoning]" : ""}{m.is_active ? " (active)" : ""}
+                    </option>
+                  ))}
+                </optgroup>
+              )
+            })}
+          </select>
+          <p className="text-xs text-gray-500 mt-1">
+            Select a model to override the active model for test requests below.
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Summary Feature */}
@@ -211,9 +265,16 @@ export default function DebugPage() {
               {summaryResult && (
                 <div className="space-y-4 mt-4">
                   <div className="border-t border-gray-200 pt-4">
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                      Final Result
-                    </h3>
+                    <div className="flex items-center gap-2 mb-3">
+                      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                        Final Result
+                      </h3>
+                      {summaryResult.model && (
+                        <span className="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-xs font-medium">
+                          Model: {summaryResult.model}
+                        </span>
+                      )}
+                    </div>
                     <div className="space-y-2">
                       <div>
                         <span className="text-xs text-gray-500">Summary:</span>
@@ -295,7 +356,7 @@ export default function DebugPage() {
                       {summaryResult.debug.prompt && (
                         <div>
                           <h4 className="text-xs font-semibold text-gray-700 mb-2">
-                            {summaryResult.debug.url ? "3. " : "2. "}OpenAI Prompt
+                            {summaryResult.debug.url ? "3. " : "2. "}LLM Prompt
                           </h4>
                           <div className="bg-gray-50 rounded-lg p-3 text-xs font-mono whitespace-pre-wrap max-h-60 overflow-y-auto">
                             {summaryResult.debug.prompt}
@@ -307,7 +368,7 @@ export default function DebugPage() {
                       {summaryResult.debug.openaiResponse && (
                         <div>
                           <h4 className="text-xs font-semibold text-gray-700 mb-2">
-                            {summaryResult.debug.url ? "4. " : "3. "}OpenAI Response
+                            {summaryResult.debug.url ? "4. " : "3. "}LLM Response
                           </h4>
                           <div className="bg-gray-50 rounded-lg p-3 text-xs font-mono space-y-2">
                             <div className="text-gray-600">
@@ -371,9 +432,16 @@ export default function DebugPage() {
               {factCheckResult && (
                 <div className="space-y-4 mt-4">
                   <div className="border-t border-gray-200 pt-4">
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                      Final Result
-                    </h3>
+                    <div className="flex items-center gap-2 mb-3">
+                      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                        Final Result
+                      </h3>
+                      {factCheckResult.model && (
+                        <span className="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-xs font-medium">
+                          Model: {factCheckResult.model}
+                        </span>
+                      )}
+                    </div>
                     <div className="space-y-2">
                       <div>
                         <span className="text-xs text-gray-500">Score:</span>
@@ -482,7 +550,7 @@ export default function DebugPage() {
                       {factCheckResult.debug.openaiResponse && (
                         <div>
                           <h4 className="text-xs font-semibold text-gray-700 mb-2">
-                            4. OpenAI Response
+                            4. LLM Response
                           </h4>
                           <div className="bg-gray-50 rounded-lg p-3 text-xs font-mono space-y-2">
                             <div className="text-gray-600">

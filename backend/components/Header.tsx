@@ -19,6 +19,7 @@ export function Header() {
     { name: 'Metrics', href: '/metrics' },
     { name: 'Live', href: '/live' },
     { name: 'Debug', href: '/debug' },
+    { name: 'Settings', href: '/settings' },
   ];
 
   return (

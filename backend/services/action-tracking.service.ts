@@ -11,6 +11,7 @@ interface TrackActionParams {
     outputContent: any
     category?: string | null
     tokenUsage?: TokenUsage
+    model?: string
     userIp: string
     website: string
     userAgent: string
@@ -50,6 +51,7 @@ export async function trackAction(params: TrackActionParams): Promise<string | u
                 output_content: params.outputContent,
                 category: params.category || null,
                 token_usage: params.tokenUsage || null,
+                model: params.model || null,
                 user_ip: params.userIp,
                 user_location: location,
                 website: params.website,

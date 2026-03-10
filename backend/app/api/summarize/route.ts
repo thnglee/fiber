@@ -47,7 +47,17 @@ export async function POST(request: NextRequest) {
       return zodErrorResponse(parseResult.error, 400)
     }
 
-    const { content, url, debug, website } = parseResult.data
+    const { content, url, debug, website, model: modelOverride } = parseResult.data
+
+    // Load active model config from Supabase
+    const { getActiveModelConfig, getAllModelConfigs } = await import('@/services/model-config.service')
+    let modelConfig = await getActiveModelConfig()
+    // If request specifies a model override, find that model's config
+    if (modelOverride) {
+      const allConfigs = await getAllModelConfigs()
+      const overrideConfig = allConfigs.find(c => c.model_name === modelOverride)
+      if (overrideConfig) modelConfig = overrideConfig
+    }
 
     // Check if streaming is requested
     const { searchParams } = new URL(request.url)
@@ -73,7 +83,7 @@ export async function POST(request: NextRequest) {
         async start(controller) {
           try {
             // Stream summary chunks
-            for await (const chunk of performSummarizeStream({ content, url, debug })) {
+            for await (const chunk of performSummarizeStream({ content, url, debug }, modelConfig)) {
               // Accumulate data for tracking
               if (chunk.type === 'summary-delta' && chunk.delta) {
                 if (!firstChunkTime) firstChunkTime = Date.now()
@@ -173,6 +183,7 @@ export async function POST(request: NextRequest) {
                 },
                 category: finalCategory,
                 tokenUsage,
+                model: modelConfig.model_name,
                 userIp: getClientIP(request.headers),
                 website: website || 'unknown',
                 userAgent: request.headers.get('user-agent') || 'unknown',
@@ -233,6 +244,13 @@ export async function POST(request: NextRequest) {
                         latency,
                         mode: 'stream',
                         user_action_id: userActionId ?? null,
+                        model: modelConfig.model_name,
+                        promptTokens: finalUsage?.prompt_tokens,
+                        completionTokens: finalUsage?.completion_tokens,
+                        estimatedCostUsd: modelConfig
+                          ? ((finalUsage?.prompt_tokens ?? 0) / 1_000_000 * (modelConfig.input_cost_per_1m ?? 0))
+                            + ((finalUsage?.completion_tokens ?? 0) / 1_000_000 * (modelConfig.output_cost_per_1m ?? 0))
+                          : undefined,
                       })
                       console.log('[Summarize Stream] ✅ Evaluation metrics saved successfully!')
                     })().catch((err) => {
@@ -273,7 +291,7 @@ export async function POST(request: NextRequest) {
 
       // Delegate to service layer
       // Service will handle validation and extraction
-      const response = await performSummarize({ content, url, debug })
+      const response = await performSummarize({ content, url, debug }, modelConfig)
 
       // Validate response before sending
       const responseParseResult = SummarizeResponseSchema.safeParse(response)
@@ -300,6 +318,7 @@ export async function POST(request: NextRequest) {
               outputContent: responseParseResult.data,
               category: responseParseResult.data.category,
               tokenUsage,
+              model: modelConfig.model_name,
               userIp: getClientIP(request.headers),
               website: website || 'unknown',
               userAgent: request.headers.get('user-agent') || 'unknown',

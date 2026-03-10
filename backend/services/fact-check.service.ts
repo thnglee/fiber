@@ -11,6 +11,7 @@ import {
   type FactCheckDebugInfo,
   type FactCheckData,
 } from "@/domain/schemas"
+import type { ModelConfig } from "@/domain/types"
 import { safeParseOrThrow } from "@/utils/zod-helpers"
 
 /**
@@ -19,7 +20,7 @@ import { safeParseOrThrow } from "@/utils/zod-helpers"
  * @param request - Fact-check request parameters
  * @returns Fact-check response with score, reason, sources, and verification status
  */
-export async function performFactCheck(request: FactCheckRequest): Promise<FactCheckResponse> {
+export async function performFactCheck(request: FactCheckRequest, modelConfig?: ModelConfig): Promise<FactCheckResponse> {
   const { text, debug } = request
 
   // Store debug information
@@ -65,6 +66,16 @@ export async function performFactCheck(request: FactCheckRequest): Promise<FactC
       debug,
       logContext: 'fact-check',
       schema: FactCheckDataSchema,
+      provider: modelConfig?.provider,
+      model: modelConfig?.model_name,
+      modelType: modelConfig?.model_type,
+      temperature: modelConfig?.temperature,
+      topP: modelConfig?.top_p ?? undefined,
+      topK: modelConfig?.top_k ?? undefined,
+      maxTokens: modelConfig?.max_tokens ?? undefined,
+      frequencyPenalty: modelConfig?.frequency_penalty ?? undefined,
+      presencePenalty: modelConfig?.presence_penalty ?? undefined,
+      seed: modelConfig?.seed ?? undefined,
     },
     fallbackData
   )
@@ -86,6 +97,7 @@ export async function performFactCheck(request: FactCheckRequest): Promise<FactC
     reason: factCheckData.reason,
     sources: searchResult.sources,
     verified: factCheckData.verified,
+    model: llmResult.model,
     usage: llmResult.usage, // Include usage for tracking
   }
 

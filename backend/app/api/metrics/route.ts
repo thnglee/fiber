@@ -8,6 +8,7 @@ export async function GET(request: Request) {
   
   const filters: MetricFilters = {
     mode: searchParams.get('mode') || undefined,
+    model: searchParams.get('model') || undefined,
     url: searchParams.get('url') || undefined,
     startDate: searchParams.get('start_date') || undefined,
     endDate: searchParams.get('end_date') || undefined,

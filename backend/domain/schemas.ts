@@ -13,6 +13,7 @@ export const FactCheckRequestSchema = z.object({
   text: z.string().min(1, "Text is required"),
   debug: z.boolean().optional(),
   website: z.string().optional(), // Website where the action was taken
+  model: z.string().optional(),   // Optional model override
 })
 
 // Internal schema for LLM structured output (without sources/debug)
@@ -50,6 +51,7 @@ export const FactCheckResponseSchema = z.object({
   reason: z.string(),
   sources: z.array(z.string()),
   verified: z.boolean(),
+  model: z.string().optional(),       // Model used for this request
   usage: z.object({
     prompt_tokens: z.number().optional(),
     completion_tokens: z.number().optional(),
@@ -67,6 +69,7 @@ export const SummarizeRequestSchema = z.object({
   url: z.string().url().optional(),
   debug: z.boolean().optional(),
   website: z.string().optional(), // Website where the action was taken
+  model: z.string().optional(),   // Optional model override
 }).refine(
   (data) => data.content || data.url,
   {
@@ -110,6 +113,7 @@ export const SummarizeResponseSchema = z.object({
   summary: z.string(),
   category: z.string(),
   readingTime: z.number().min(0),
+  model: z.string().optional(),       // Model used for this request
   usage: TokenUsageSchema.optional(), // Token usage for tracking (always present)
   debug: SummarizeDebugInfoSchema.optional(),
 })
@@ -142,6 +146,10 @@ export const EnvSchema = z.object({
   // Required API keys
   OPENAI_API_KEY: z.string().min(1, "OPENAI_API_KEY is required"),
   TAVILY_API_KEY: z.string().min(1, "TAVILY_API_KEY is required"),
+
+  // Optional provider API keys (leave blank if not available)
+  GEMINI_API_KEY: z.string().optional(),
+  ANTHROPIC_API_KEY: z.string().optional(),
 
   // Supabase configuration (optional - Supabase not required)
   SUPABASE_URL: z.string().url().optional(),
