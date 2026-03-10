@@ -288,7 +288,7 @@ export default function EvaluationDashboard() {
                 <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[200px]">
                   Summary Preview
                 </th>
-                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[100px]">
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[140px] max-w-[180px]">
                   <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Model</div>
                   <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">LLM used</div>
                 </th>
@@ -353,10 +353,10 @@ export default function EvaluationDashboard() {
                     <td className="px-4 py-4 bg-transparent text-sm max-w-xs truncate text-gray-600" title={item.summary}>
                       {item.summary}
                     </td>
-                    <td className="px-4 py-4 bg-transparent text-sm">
+                    <td className="px-4 py-4 bg-transparent text-sm max-w-[180px]">
                       {item.model ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-700 text-xs font-medium">
-                          {item.model}
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-700 text-xs font-medium whitespace-nowrap truncate max-w-full" title={item.model}>
+                          {item.model.replace(/-\d{4}-\d{2}-\d{2}$/, '')}
                         </span>
                       ) : (
                         <span className="text-gray-400">&mdash;</span>
