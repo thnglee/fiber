@@ -21,6 +21,9 @@ out/
 *.swp
 *.swo
 
+# Claude Code
+.claude/worktrees/
+
 # OS
 .DS_Store
 Thumbs.db
