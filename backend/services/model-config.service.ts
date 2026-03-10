@@ -78,6 +78,17 @@ export async function getAllModelConfigs(): Promise<ModelConfig[]> {
 export async function setActiveModel(modelName: string): Promise<void> {
   const supabase = getSupabaseAdmin()
 
+  // Verify the model exists before making any changes
+  const { data: existing, error: lookupError } = await supabase
+    .from('model_configurations')
+    .select('model_name')
+    .eq('model_name', modelName)
+    .single()
+
+  if (lookupError || !existing) {
+    throw new Error(`Model "${modelName}" not found`)
+  }
+
   // Deactivate all models
   const { error: deactivateError } = await supabase
     .from('model_configurations')
@@ -89,18 +100,13 @@ export async function setActiveModel(modelName: string): Promise<void> {
   }
 
   // Activate the target model
-  const { error: activateError, count } = await supabase
+  const { error: activateError } = await supabase
     .from('model_configurations')
     .update({ is_active: true, updated_at: new Date().toISOString() })
     .eq('model_name', modelName)
 
   if (activateError) {
     throw new Error(`Failed to activate model "${modelName}": ${activateError.message}`)
-  }
-
-  // If no rows were updated, the model doesn't exist
-  if (count === 0) {
-    throw new Error(`Model "${modelName}" not found`)
   }
 }
 
