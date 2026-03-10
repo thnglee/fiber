@@ -8,6 +8,7 @@ dist/
 .plasmo/
 .next/
 out/
+.mcp.json
 
 # Environment files
 .env
