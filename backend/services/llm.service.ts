@@ -157,6 +157,22 @@ async function callOpenAI(
   return { rawResponse: responseText, model: completion.model, usage, structuredData }
 }
 
+// ── Gemini helpers ───────────────────────────────────────────────────────────
+
+/** Recursively strip properties that Gemini's responseSchema doesn't support */
+function sanitizeSchemaForGemini(obj: any): any {
+  if (Array.isArray(obj)) return obj.map(sanitizeSchemaForGemini)
+  if (obj && typeof obj === 'object') {
+    const cleaned: Record<string, any> = {}
+    for (const [key, value] of Object.entries(obj)) {
+      if (key === 'additionalProperties' || key === '$schema') continue
+      cleaned[key] = sanitizeSchemaForGemini(value)
+    }
+    return cleaned
+  }
+  return obj
+}
+
 // ── Gemini ──────────────────────────────────────────────────────────────────
 
 async function callGemini(
@@ -178,7 +194,7 @@ async function callGemini(
   if (schema) {
     const jsonSchema = zodToJsonSchema(schema, { target: "openApi3" })
     generationConfig.responseMimeType = 'application/json'
-    generationConfig.responseSchema = jsonSchema
+    generationConfig.responseSchema = sanitizeSchemaForGemini(jsonSchema)
   }
 
   const model = genAI.getGenerativeModel({
@@ -447,7 +463,7 @@ async function* streamGemini<T>(
 
   const jsonSchema = zodToJsonSchema(schema, { target: "openApi3" })
   generationConfig.responseMimeType = 'application/json'
-  generationConfig.responseSchema = jsonSchema
+  generationConfig.responseSchema = sanitizeSchemaForGemini(jsonSchema)
 
   const model = genAI.getGenerativeModel({ model: config.model, generationConfig })
   const result = await model.generateContentStream(prompt)
