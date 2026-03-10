@@ -153,6 +153,17 @@ export interface LLMCompletionOptions {
   debug?: boolean
   logContext?: string
   schema?: any // Zod schema for structured output (z.ZodSchema<any>)
+  // Multi-provider fields
+  model?: string
+  provider?: 'openai' | 'gemini' | 'anthropic'
+  modelType?: 'standard' | 'reasoning'
+  temperature?: number
+  topP?: number
+  topK?: number           // forwarded to Gemini/Anthropic only
+  maxTokens?: number
+  frequencyPenalty?: number  // OpenAI standard only
+  presencePenalty?: number   // OpenAI standard only
+  seed?: number              // OpenAI + Gemini only
 }
 
 /**
@@ -177,6 +188,32 @@ export interface LLMCompletionResult<T = any> {
     model: string
     usage?: LLMUsage
   }
+}
+
+/**
+ * Model configuration from Supabase model_configurations table
+ */
+export interface ModelConfig {
+  id: string
+  provider: 'openai' | 'gemini' | 'anthropic'
+  model_name: string
+  display_name: string
+  model_type: 'standard' | 'reasoning'
+  is_active: boolean
+  temperature: number
+  top_p: number | null
+  top_k: number | null
+  max_tokens: number | null
+  min_tokens: number | null
+  frequency_penalty: number | null
+  presence_penalty: number | null
+  seed: number | null
+  context_window: number
+  supports_streaming: boolean
+  supports_structured_output: boolean
+  supports_temperature: boolean
+  input_cost_per_1m: number | null
+  output_cost_per_1m: number | null
 }
 
 // ============================================================================

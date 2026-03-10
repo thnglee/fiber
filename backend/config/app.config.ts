@@ -4,6 +4,7 @@
  */
 
 import { getEnvVar } from "./env"
+import type { ModelConfig } from "@/domain/types"
 
 /**
  * Supported domains for fact-checking
@@ -31,20 +32,35 @@ export function getSupportedDomains(): string[] {
 
 /**
  * AI Model Configuration
- * Reads from validated environment variables
  */
 export interface AIModelConfig {
+  provider: 'openai' | 'gemini' | 'anthropic'
   model: string
+  modelType: 'standard' | 'reasoning'
   temperature: number
+  topP?: number
+  topK?: number
+  maxTokens?: number
+  frequencyPenalty?: number
+  presencePenalty?: number
+  seed?: number
 }
 
 /**
- * Get OpenAI model configuration from validated environment variables
- * @returns Configuration object with model name and temperature
+ * Get AI model configuration, optionally overridden by a ModelConfig from Supabase.
+ * Without an override, falls back to env-based OpenAI defaults.
  */
-export function getAIModelConfig(): AIModelConfig {
+export function getAIModelConfig(override?: Partial<ModelConfig>): AIModelConfig {
   return {
-    model: getEnvVar("OPENAI_MODEL"),
-    temperature: getEnvVar("OPENAI_TEMPERATURE"),
+    provider:         override?.provider         ?? 'openai',
+    model:            override?.model_name       ?? getEnvVar("OPENAI_MODEL"),
+    modelType:        override?.model_type       ?? 'standard',
+    temperature:      override?.temperature      ?? getEnvVar("OPENAI_TEMPERATURE"),
+    topP:             override?.top_p            ?? undefined,
+    topK:             override?.top_k            ?? undefined,
+    maxTokens:        override?.max_tokens       ?? undefined,
+    frequencyPenalty: override?.frequency_penalty ?? undefined,
+    presencePenalty:  override?.presence_penalty  ?? undefined,
+    seed:             override?.seed             ?? undefined,
   }
 }

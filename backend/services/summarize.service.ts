@@ -11,6 +11,7 @@ import {
   type SummarizeDebugInfo,
   type SummaryData,
 } from "@/domain/schemas"
+import type { ModelConfig } from "@/domain/types"
 import { safeParseOrThrow } from "@/utils/zod-helpers"
 import { calculateLexicalMetrics, saveEvaluationMetrics } from "./evaluation.service"
 import { calculateBertScore } from "./bert.service"
@@ -22,7 +23,7 @@ import { calculateCompressionRate } from "./compression.service"
  * @param request - Summarize request parameters
  * @returns Summary response with summary text, key points, and reading time
  */
-export async function performSummarize(request: SummarizeRequest): Promise<SummarizeResponse> {
+export async function performSummarize(request: SummarizeRequest, modelConfig?: ModelConfig): Promise<SummarizeResponse> {
   const { content, url, debug } = request
 
   const debugInfo: SummarizeDebugInfo = {}
@@ -108,6 +109,16 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
       debug,
       logContext: 'summarize',
       schema: SummaryDataSchema,
+      provider: modelConfig?.provider,
+      model: modelConfig?.model_name,
+      modelType: modelConfig?.model_type,
+      temperature: modelConfig?.temperature,
+      topP: modelConfig?.top_p ?? undefined,
+      topK: modelConfig?.top_k ?? undefined,
+      maxTokens: modelConfig?.max_tokens ?? undefined,
+      frequencyPenalty: modelConfig?.frequency_penalty ?? undefined,
+      presencePenalty: modelConfig?.presence_penalty ?? undefined,
+      seed: modelConfig?.seed ?? undefined,
     },
     fallbackData
   )
@@ -151,6 +162,7 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
     summary: summaryData.summary,
     category: summaryData.category,
     readingTime: summaryData.readingTime,
+    model: llmResult.model,
     usage: llmResult.usage, // Include usage for tracking
   }
 
@@ -198,6 +210,13 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
         metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate, total_tokens: llmResult.usage?.total_tokens ?? null },
         latency,
         mode: 'sync', // full request duration
+        model: llmResult.model,
+        promptTokens: llmResult.usage?.prompt_tokens,
+        completionTokens: llmResult.usage?.completion_tokens,
+        estimatedCostUsd: modelConfig
+          ? ((llmResult.usage?.prompt_tokens ?? 0) / 1_000_000 * (modelConfig.input_cost_per_1m ?? 0))
+            + ((llmResult.usage?.completion_tokens ?? 0) / 1_000_000 * (modelConfig.output_cost_per_1m ?? 0))
+          : undefined,
       });
     } catch (err) {
       logger.addLog('summarize', 'evaluation-error', { 
@@ -221,7 +240,8 @@ export async function performSummarize(request: SummarizeRequest): Promise<Summa
  * @yields Progressive updates with summary deltas and final metadata
  */
 export async function* performSummarizeStream(
-  request: SummarizeRequest
+  request: SummarizeRequest,
+  modelConfig?: ModelConfig
 ): AsyncGenerator<{
   type: 'summary-delta' | 'metadata' | 'error' | 'done'
   delta?: string
@@ -287,6 +307,16 @@ export async function* performSummarizeStream(
       debug,
       logContext: 'summarize-stream',
       schema: SummaryDataSchema,
+      provider: modelConfig?.provider,
+      model: modelConfig?.model_name,
+      modelType: modelConfig?.model_type,
+      temperature: modelConfig?.temperature,
+      topP: modelConfig?.top_p ?? undefined,
+      topK: modelConfig?.top_k ?? undefined,
+      maxTokens: modelConfig?.max_tokens ?? undefined,
+      frequencyPenalty: modelConfig?.frequency_penalty ?? undefined,
+      presencePenalty: modelConfig?.presence_penalty ?? undefined,
+      seed: modelConfig?.seed ?? undefined,
     })) {
       if (chunk.type === 'delta' && chunk.delta) {
         // Stream summary text progressively
