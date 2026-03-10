@@ -21,6 +21,8 @@ interface EvaluationData {
   created_at?: string;
   latency?: number;
   mode?: string | null;
+  model?: string;
+  estimatedCostUsd?: number;
 }
 
 export default function EvaluationDashboard() {
@@ -32,8 +34,10 @@ export default function EvaluationDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [offset, setOffset] = useState(0);
+  const [availableModels, setAvailableModels] = useState<string[]>([]);
   const [filters, setFilters] = useState({
     mode: '',
+    model: '',
     url: '',
     startDate: '',
     endDate: '',
@@ -50,19 +54,20 @@ export default function EvaluationDashboard() {
       params.set('offset', currentOffset.toString());
 
       if (filters.mode) params.set('mode', filters.mode);
+      if (filters.model) params.set('model', filters.model);
       if (filters.url) params.set('url', filters.url);
       if (filters.startDate) params.set('start_date', filters.startDate);
       if (filters.endDate) params.set('end_date', filters.endDate);
 
       const response = await fetch(`/api/metrics?${params}`);
       const result = await response.json();
-      
+
       if (isInitial) {
         setMetrics(result.data);
       } else {
         setMetrics(prev => [...prev, ...result.data]);
       }
-      
+
       setTotal(result.count || 0);
       setLastUpdated(new Date().toLocaleString());
     } catch (error) {
@@ -72,6 +77,23 @@ export default function EvaluationDashboard() {
       else setLoadingMore(false);
     }
   };
+
+  // Fetch available models from settings API
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const response = await fetch('/api/settings');
+        const result = await response.json();
+        if (result.available) {
+          const models = result.available.map((m: { model_name: string }) => m.model_name);
+          setAvailableModels(models);
+        }
+      } catch (error) {
+        console.error('Failed to fetch available models:', error);
+      }
+    };
+    fetchModels();
+  }, []);
 
   useEffect(() => {
     fetchMetrics(0, true);
@@ -83,7 +105,7 @@ export default function EvaluationDashboard() {
     setOffset(nextOffset);
     fetchMetrics(nextOffset, false);
   };
-  
+
   const applyFilters = () => {
     setOffset(0);
     fetchMetrics(0, true);
@@ -93,6 +115,7 @@ export default function EvaluationDashboard() {
   const resetFilters = () => {
     setFilters({
       mode: '',
+      model: '',
       url: '',
       startDate: '',
       endDate: '',
@@ -108,7 +131,8 @@ export default function EvaluationDashboard() {
     return (
       item.summary.toLowerCase().includes(query) ||
       (item.url && item.url.toLowerCase().includes(query)) ||
-      (item.mode && item.mode.toLowerCase().includes(query))
+      (item.mode && item.mode.toLowerCase().includes(query)) ||
+      (item.model && item.model.toLowerCase().includes(query))
     );
   });
 
@@ -130,7 +154,7 @@ export default function EvaluationDashboard() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search metrics by summary, url, or mode..."
+                placeholder="Search metrics by summary, url, mode, or model..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm"
@@ -153,7 +177,7 @@ export default function EvaluationDashboard() {
           {/* Filter Panel */}
           {showFilters && (
             <div className="mt-4 pt-4 border-t border-gray-200">
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-5 gap-4">
                 {/* Mode */}
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-2">
@@ -167,6 +191,23 @@ export default function EvaluationDashboard() {
                     <option value="">All Modes</option>
                     <option value="stream">Stream</option>
                     <option value="sync">Sync</option>
+                  </select>
+                </div>
+
+                {/* Model */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-2">
+                    Model
+                  </label>
+                  <select
+                    value={filters.model}
+                    onChange={(e) => setFilters({ ...filters, model: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                  >
+                    <option value="">All Models</option>
+                    {availableModels.map(m => (
+                      <option key={m} value={m}>{m}</option>
+                    ))}
                   </select>
                 </div>
 
@@ -229,7 +270,7 @@ export default function EvaluationDashboard() {
             </div>
           )}
         </div>
-      
+
       {loading ? (
         <div className="bg-white shadow-md rounded-lg p-8 text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -246,6 +287,10 @@ export default function EvaluationDashboard() {
                 </th>
                 <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[200px]">
                   Summary Preview
+                </th>
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[100px]">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Model</div>
+                  <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">LLM used</div>
                 </th>
                 <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[120px]">
                   <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">ROUGE-1</div>
@@ -283,6 +328,10 @@ export default function EvaluationDashboard() {
                   <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Total Tokens</div>
                   <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">prompt + completion</div>
                 </th>
+                <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[100px]">
+                  <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Est. Cost</div>
+                  <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">USD per request</div>
+                </th>
                 <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[110px]">
                   URL
                 </th>
@@ -291,7 +340,7 @@ export default function EvaluationDashboard() {
             <tbody className="divide-y divide-gray-100">
               {filteredMetrics.length === 0 ? (
                 <tr>
-                  <td colSpan={12} className="px-4 py-8 bg-white text-sm text-center text-gray-500">
+                  <td colSpan={14} className="px-4 py-8 bg-white text-sm text-center text-gray-500">
                     No evaluation metrics found.
                   </td>
                 </tr>
@@ -303,6 +352,15 @@ export default function EvaluationDashboard() {
                     </td>
                     <td className="px-4 py-4 bg-transparent text-sm max-w-xs truncate text-gray-600" title={item.summary}>
                       {item.summary}
+                    </td>
+                    <td className="px-4 py-4 bg-transparent text-sm">
+                      {item.model ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-700 text-xs font-medium">
+                          {item.model}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">&mdash;</span>
+                      )}
                     </td>
                     <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
                       {item.metrics.rouge1}
@@ -351,12 +409,21 @@ export default function EvaluationDashboard() {
                         </span>
                       ) : 'N/A'}
                     </td>
+                    <td className="px-4 py-4 bg-transparent text-sm text-gray-600">
+                      {item.estimatedCostUsd != null ? (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700">
+                          ${item.estimatedCostUsd.toFixed(5)}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">&mdash;</span>
+                      )}
+                    </td>
                     <td className="px-4 py-4 bg-transparent text-sm text-center">
                       {item.url ? (
-                        <a 
-                          href={item.url} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                         >
                           Source
