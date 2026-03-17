@@ -1,759 +1,509 @@
-# Model Selector & Configuration Feature — Development Plan
+# Development Plan: Routing Mechanism & Output Fusion
 
-## Overview
+## Feature Overview
 
-Add a model switching module that lets admins select different LLM providers (OpenAI, Google Gemini, Anthropic Claude) and specific models within each provider, then tune per-model parameters (temperature, top-p, top-k, max tokens, seed, frequency/presence penalty, etc.) via a Settings UI. The selected model and its parameters persist in Supabase. Both streaming and full-request modes remain fully functional regardless of which model is active.
+Implement an intelligent routing mechanism that classifies article complexity and routes
+summarization requests to the most appropriate model among three candidates:
 
-If a provider's API key is not set in `.env`, any request routed to that provider returns a clear error: `"API key for <provider> has not been set up"` — no crash, no silent failure.
+- **PhoGPT-4B-Chat** (`vinai/PhoGPT-4B-Chat`) — Vietnamese instruction-following, 8K context
+- **ViT5-large** (`VietAI/vit5-large-vietnews-summarization`) — Vietnamese news-specialized seq2seq, 1K context
+- **GPT-4o** (existing OpenAI integration) — Multilingual baseline, 128K context
 
-## Architecture Summary
+The system routes to one primary model based on task complexity, with fallback to GPT-4o.
+An **evaluation mode** runs all three models in parallel, fuses outputs via BERTScore-based
+quality scoring, and returns the optimal summary — used for thesis comparison experiments.
 
 ```
-Supabase (model_configurations table)
-  ↓
-GET /api/settings  →  active model + params loaded at request time
-  ↓
-llm.service.ts (generateCompletion / generateStreamingCompletion)
-  ↓  routes to the correct provider SDK based on model.provider
-  ├── OpenAI provider    → openai SDK
-  ├── Gemini provider    → @google/generative-ai SDK   (requires GEMINI_API_KEY)
-  └── Anthropic provider → @anthropic-ai/sdk            (requires ANTHROPIC_API_KEY)
-
-Model name + provider stored in:
-  - evaluation_metrics.model, .prompt_tokens, .completion_tokens, .estimated_cost_usd
-  - user_actions.model
+Article Input
+    │
+    ▼
+┌─────────────────────────────────────────┐
+│           Routing Mechanism             │
+│  • Classify complexity (length, topic)  │
+│  • Select primary model                 │
+│  • Define fallback chain                │
+└──────────┬──────────┬──────────┬────────┘
+           │          │          │
+           ▼          ▼          ▼
+     PhoGPT-4B    ViT5-large   GPT-4o
+   (instruct)   (seq2seq)    (baseline)
+           │          │          │
+           └──────────┴──────────┘
+                      │
+                      ▼
+          ┌───────────────────────┐
+          │     Output Fusion     │   (evaluation mode only)
+          │  BERTScore quality    │
+          │  Voting / selection   │
+          └───────────┬───────────┘
+                      │
+                      ▼
+              Optimal Summary
 ```
 
 ---
 
-## Provider & Model Support
+## Phase 1 — DB Migrations
 
-| Provider  | Model Name | Display Name | Type | Context Window |
-|-----------|------------|--------------|------|----------------|
-| OpenAI | gpt-4o-mini | GPT-4o Mini | standard | 128K |
-| OpenAI | gpt-4o | GPT-4o | standard | 128K |
-| OpenAI | gpt-4.1-mini | GPT-4.1 Mini | standard | 1M |
-| OpenAI | gpt-4.1 | GPT-4.1 | standard | 1M |
-| OpenAI | o4-mini | o4 Mini | reasoning | 200K |
-| OpenAI | o3-mini | o3 Mini | reasoning | 200K |
-| Gemini | gemini-2.0-flash-lite | Gemini 2.0 Flash Lite | standard | 1M |
-| Gemini | gemini-2.0-flash | Gemini 2.0 Flash | standard | 1M |
-| Gemini | gemini-2.5-flash | Gemini 2.5 Flash | standard | 1M |
-| Gemini | gemini-2.5-pro | Gemini 2.5 Pro | standard | 1M |
-| Anthropic | claude-haiku-4-5 | Claude Haiku 4.5 | standard | 200K |
-| Anthropic | claude-sonnet-4-5 | Claude Sonnet 4.5 | standard | 200K |
-| Anthropic | claude-sonnet-4-6 | Claude Sonnet 4.6 | standard | 200K |
-| Anthropic | claude-opus-4-6 | Claude Opus 4.6 | standard | 200K |
+**Goal:** Add database support for routing decisions and per-model comparison data.
 
-**Reasoning models** (`model_type = 'reasoning'`): o4-mini, o3-mini. These do not support `temperature`, `top_p`, `frequency_penalty`, `presence_penalty`, or streaming in the same way. The backend skips those params; the UI hides them.
+### Step 1 — `013_create_routing_decisions.sql`
 
----
-
-## Parameter Compatibility by Provider
-
-| Parameter | OpenAI (std) | OpenAI (reasoning) | Gemini | Anthropic | Notes |
-|---|---|---|---|---|---|
-| temperature | ✅ (0–2) | ❌ skip | ✅ (0–2) | ✅ (0–1) | Hidden in UI for reasoning models |
-| top_p | ✅ (0–1) | ❌ skip | ✅ (0–1) | ✅ (0–1) | Nucleus sampling |
-| top_k | ❌ skip | ❌ skip | ✅ | ✅ | Forward to Gemini/Anthropic only |
-| max_tokens | `max_completion_tokens` | `max_completion_tokens` | `maxOutputTokens` | `max_tokens` | Field name differs per SDK |
-| min_tokens | ❌ stored only | ❌ stored only | ❌ stored only | ❌ stored only | Never forwarded |
-| frequency_penalty | ✅ (-2–2) | ❌ skip | ❌ skip | ❌ skip | OpenAI standard only |
-| presence_penalty | ✅ (-2–2) | ❌ skip | ❌ skip | ❌ skip | OpenAI standard only |
-| seed | ✅ | ✅ | ✅ | ❌ skip | Reproducible outputs for evaluation |
-
----
-
-## Step-by-Step Implementation Plan
-
----
-
-### PHASE 1 — Database Migrations
-
-#### Step 1 — Create `model_configurations` table
-
-**File:** `backend/supabase/migrations/009_create_model_configurations.sql`
+New table to log every routing decision for analytics and thesis evaluation.
 
 ```sql
-CREATE TABLE model_configurations (
-  id                          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  created_at                  TIMESTAMPTZ DEFAULT NOW(),
-  updated_at                  TIMESTAMPTZ DEFAULT NOW(),
-
-  -- Identity
-  provider                    TEXT NOT NULL,        -- 'openai' | 'gemini' | 'anthropic'
-  model_name                  TEXT NOT NULL UNIQUE, -- e.g. "gpt-4o-mini"
-  display_name                TEXT NOT NULL,        -- e.g. "GPT-4o Mini"
-  model_type                  TEXT NOT NULL DEFAULT 'standard', -- 'standard' | 'reasoning'
-  is_active                   BOOLEAN NOT NULL DEFAULT FALSE,
-
-  -- Tunable parameters (user-editable in Settings UI)
-  temperature                 FLOAT NOT NULL DEFAULT 0.7,
-  top_p                       FLOAT,                -- 0.0–1.0, nullable
-  top_k                       INTEGER,              -- nullable; Gemini/Anthropic only
-  max_tokens                  INTEGER,              -- nullable
-  min_tokens                  INTEGER,              -- nullable, stored only, never forwarded
-  frequency_penalty           FLOAT,                -- -2.0–2.0; OpenAI standard only
-  presence_penalty            FLOAT,                -- -2.0–2.0; OpenAI standard only
-  seed                        INTEGER,              -- nullable; for reproducible evaluation outputs
-
-  -- Model capability metadata (read-only, set at seed time)
-  context_window              INTEGER NOT NULL,
-  supports_streaming          BOOLEAN NOT NULL DEFAULT TRUE,
-  supports_structured_output  BOOLEAN NOT NULL DEFAULT TRUE,
-  supports_temperature        BOOLEAN NOT NULL DEFAULT TRUE,
-  input_cost_per_1m           FLOAT,                -- USD per 1M input tokens
-  output_cost_per_1m          FLOAT                 -- USD per 1M output tokens
+CREATE TABLE routing_decisions (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  -- NOTE: evaluation_metrics points back here via routing_id FK (added in migration 015).
+  -- No FK stored here to avoid circular dependency at insert time.
+  article_length  INTEGER,                   -- char count of input
+  article_tokens  INTEGER,                   -- estimated token count
+  category        TEXT,                      -- from LLM output (thoi_su, kinh_te, etc.)
+  complexity      TEXT NOT NULL,             -- 'short' | 'medium' | 'long'
+  routing_mode    TEXT NOT NULL,             -- 'auto' | 'evaluation' | 'forced'
+  selected_model  TEXT NOT NULL,             -- model that was actually used
+  fallback_used   BOOLEAN DEFAULT FALSE,
+  fallback_reason TEXT,
+  created_at      TIMESTAMPTZ DEFAULT now()
 );
-
--- Only one model can be active at a time
-CREATE UNIQUE INDEX one_active_model ON model_configurations (is_active)
-  WHERE is_active = TRUE;
-
--- Seed all models
-INSERT INTO model_configurations (
-  provider, model_name, display_name, model_type, is_active, temperature,
-  context_window, supports_streaming, supports_structured_output, supports_temperature,
-  input_cost_per_1m, output_cost_per_1m
-) VALUES
-  -- OpenAI standard
-  ('openai','gpt-4o-mini',          'GPT-4o Mini',         'standard', TRUE,  0.7, 128000,  TRUE, TRUE, TRUE,   0.15,   0.60),
-  ('openai','gpt-4o',               'GPT-4o',              'standard', FALSE, 0.7, 128000,  TRUE, TRUE, TRUE,   2.50,  10.00),
-  ('openai','gpt-4.1-mini',         'GPT-4.1 Mini',        'standard', FALSE, 0.7, 1047576, TRUE, TRUE, TRUE,   0.40,   1.60),
-  ('openai','gpt-4.1',              'GPT-4.1',             'standard', FALSE, 0.7, 1047576, TRUE, TRUE, TRUE,   2.00,   8.00),
-  -- OpenAI reasoning
-  ('openai','o4-mini',              'o4 Mini',             'reasoning',FALSE, 1.0, 200000,  TRUE, TRUE, FALSE,  1.10,   4.40),
-  ('openai','o3-mini',              'o3 Mini',             'reasoning',FALSE, 1.0, 200000,  TRUE, TRUE, FALSE,  1.10,   4.40),
-  -- Gemini
-  ('gemini','gemini-2.0-flash-lite','Gemini 2.0 Flash Lite','standard',FALSE, 0.7, 1048576, TRUE, TRUE, TRUE,   0.075,  0.30),
-  ('gemini','gemini-2.0-flash',     'Gemini 2.0 Flash',    'standard', FALSE, 0.7, 1048576, TRUE, TRUE, TRUE,   0.10,   0.40),
-  ('gemini','gemini-2.5-flash',     'Gemini 2.5 Flash',    'standard', FALSE, 0.7, 1048576, TRUE, TRUE, TRUE,   0.15,   0.60),
-  ('gemini','gemini-2.5-pro',       'Gemini 2.5 Pro',      'standard', FALSE, 0.7, 1048576, TRUE, TRUE, TRUE,   1.25,  10.00),
-  -- Anthropic
-  ('anthropic','claude-haiku-4-5',  'Claude Haiku 4.5',    'standard', FALSE, 0.7, 200000,  TRUE, TRUE, TRUE,   0.80,   4.00),
-  ('anthropic','claude-sonnet-4-5', 'Claude Sonnet 4.5',   'standard', FALSE, 0.7, 200000,  TRUE, TRUE, TRUE,   3.00,  15.00),
-  ('anthropic','claude-sonnet-4-6', 'Claude Sonnet 4.6',   'standard', FALSE, 0.7, 200000,  TRUE, TRUE, TRUE,   3.00,  15.00),
-  ('anthropic','claude-opus-4-6',   'Claude Opus 4.6',     'standard', FALSE, 0.7, 200000,  TRUE, TRUE, TRUE,  15.00,  75.00);
-
--- RLS: service role full access, authenticated users read
-ALTER TABLE model_configurations ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "service_role_all"    ON model_configurations FOR ALL    USING (auth.uid() IS NULL);
-CREATE POLICY "authenticated_read"  ON model_configurations FOR SELECT USING (auth.role() = 'authenticated');
 ```
 
-**Checklist:**
-- [ ] File created
-- [ ] Applied to Supabase (via dashboard SQL editor or CLI)
-- [ ] Seed data verified in Supabase table view (14 rows)
+### Step 2 — `014_create_model_comparison_results.sql`
 
----
-
-#### Step 2 — Add `model` column to `evaluation_metrics`
-
-**File:** `backend/supabase/migrations/010_add_model_to_evaluation_metrics.sql`
+Stores per-model outputs when evaluation mode runs all three in parallel.
 
 ```sql
-ALTER TABLE evaluation_metrics ADD COLUMN model TEXT;
+CREATE TABLE model_comparison_results (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  routing_id      UUID REFERENCES routing_decisions(id) ON DELETE CASCADE,
+  model_name      TEXT NOT NULL,
+  summary         TEXT NOT NULL,
+  bert_score      NUMERIC(6,4),
+  rouge1          NUMERIC(6,4),
+  prompt_tokens   INTEGER,
+  completion_tokens INTEGER,
+  estimated_cost_usd NUMERIC(10,6),
+  latency_ms      INTEGER,
+  selected        BOOLEAN DEFAULT FALSE,     -- TRUE for the winner
+  created_at      TIMESTAMPTZ DEFAULT now()
+);
 ```
 
-**Checklist:**
-- [ ] File created
-- [ ] Applied to Supabase
+### Step 3 — `015_add_routing_id_to_evaluation_metrics.sql`
 
----
-
-#### Step 3 — Add `model` column to `user_actions`
-
-**File:** `backend/supabase/migrations/011_add_model_to_user_actions.sql`
-
-```sql
-ALTER TABLE user_actions ADD COLUMN model TEXT;
-```
-
-**Checklist:**
-- [ ] File created
-- [ ] Applied to Supabase
-
----
-
-#### Step 3b — Add cost & token columns to `evaluation_metrics`
-
-**File:** `backend/supabase/migrations/012_add_cost_to_evaluation_metrics.sql`
+Link existing evaluation metrics rows back to routing decisions.
 
 ```sql
 ALTER TABLE evaluation_metrics
-  ADD COLUMN prompt_tokens     INTEGER,
-  ADD COLUMN completion_tokens INTEGER,
-  ADD COLUMN estimated_cost_usd FLOAT;
+  ADD COLUMN routing_id UUID REFERENCES routing_decisions(id);
 ```
-
-Cost computed as:
-```
-(prompt_tokens / 1,000,000 * input_cost_per_1m) + (completion_tokens / 1,000,000 * output_cost_per_1m)
-```
-This provides per-run API cost data across model comparisons — valuable for the thesis evaluation chapter.
-
-**Checklist:**
-- [ ] File created
-- [ ] Applied to Supabase
 
 ---
 
-### PHASE 2 — Backend: Types, Config & LLM Service
+## Phase 2 — HuggingFace Provider Integration
 
-#### Step 4 — Extend domain types
+**Goal:** Add HuggingFace Inference API as a 4th LLM provider in the existing dispatch chain.
 
-**File:** `backend/domain/types.ts`
+### Step 4 — Environment Variables (`backend/config/env.ts`, `backend/domain/schemas.ts`)
 
-Add `provider`, `modelType`, `seed`, `frequencyPenalty`, `presencePenalty` to `LLMCompletionOptions`; add full `ModelConfig` type:
+Add to `EnvSchema`:
+```
+HF_API_KEY=          # HuggingFace API token (required for PhoGPT + ViT5)
+HF_TIMEOUT_MS=30000  # optional, default 30s
+```
+
+Update `backend/config/env.ts` Zod schema accordingly.
+
+### Step 5 — Types (`backend/domain/types.ts`)
+
+Add `'huggingface'` to the provider union:
+```ts
+provider: 'openai' | 'gemini' | 'anthropic' | 'huggingface'
+```
+
+Add `HFModelType` enum and extend `LLMCompletionOptions`:
+```ts
+hfModelId?: string    // full HF model ID e.g. 'VietAI/vit5-large-vietnews-summarization'
+hfTaskType?: 'text-generation' | 'text2text-generation'
+```
+
+Add `RoutingDecision` and `ModelComparisonResult` interfaces mirroring the new DB tables.
+
+### Step 6 — `016_add_hf_models_to_model_configurations.sql` (new migration)
+
+Add two new rows to `model_configurations` for HuggingFace models:
+
+| field | PhoGPT | ViT5 |
+|---|---|---|
+| provider | `huggingface` | `huggingface` |
+| model_name | `vinai/PhoGPT-4B-Chat` | `VietAI/vit5-large-vietnews-summarization` |
+| display_name | `PhoGPT-4B-Chat` | `ViT5-large (VN News)` |
+| model_type | `chat` | `base` |
+| context_window | 8192 | 1024 |
+| supports_streaming | false | false |
+| supports_structured_output | false | false |
+| supports_temperature | true | true |
+| input_cost_per_1m | 0 | 0 |
+| output_cost_per_1m | 0 | 0 |
+
+### Step 7 — `backend/services/llm.service.ts`
+
+Add `callHuggingFace()` function:
+
+- For `text2text-generation` (ViT5): POST to
+  `https://api-inference.huggingface.co/models/{modelId}`
+  with `{ inputs: prompt }`, parse `[{ generated_text }]` response.
+  **Input truncation**: ViT5 has a 1024-token context window — truncate prompt to
+  ~800 tokens (≈3200 chars) before sending to avoid exceeding the limit.
+- For `text-generation` (PhoGPT): same endpoint, chat-style prompt formatting,
+  parse `[{ generated_text }]` stripping the input prefix.
+- No streaming (HF Inference API does not guarantee streaming for these models).
+- Returns `LLMCompletionResult<string>` with `usage: null` (HF API does not return token counts).
+- Throws clear error if `HF_API_KEY` missing.
+
+Wire into `generateCompletion()` dispatch switch **before the `default` case**
+(current code is `case 'openai': default:` — the HF case must be explicit, not fall through):
+```ts
+case 'huggingface': return callHuggingFace(options, config)
+case 'openai':
+default:
+  return callOpenAI(options, config, schema)
+```
+
+Note: `generateJsonCompletion` for HF models will use prompt-engineering to instruct
+JSON output (append schema as plain text instructions), then `JSON.parse()` the response —
+no native structured output support. Use `extractJsonFromResponse()` (already exported) for cleanup.
+
+---
+
+## Phase 3 — Routing Logic Service
+
+**Goal:** Build the classifier that decides which model to use for a given article.
+
+### Step 8 — `backend/services/routing.service.ts` (new file)
+
+#### Complexity Classification
 
 ```ts
-// Extend LLMCompletionOptions:
-model?: string
-provider?: 'openai' | 'gemini' | 'anthropic'
-modelType?: 'standard' | 'reasoning'
-temperature?: number
-topP?: number
-topK?: number           // forwarded to Gemini/Anthropic only
-maxTokens?: number
-frequencyPenalty?: number  // OpenAI standard only
-presencePenalty?: number   // OpenAI standard only
-seed?: number              // OpenAI + Gemini only
+type ArticleComplexity = 'short' | 'medium' | 'long'
 
-// New type:
-export interface ModelConfig {
-  id: string
-  provider: 'openai' | 'gemini' | 'anthropic'
-  model_name: string
-  display_name: string
-  model_type: 'standard' | 'reasoning'
-  is_active: boolean
-  temperature: number
-  top_p: number | null
-  top_k: number | null
-  max_tokens: number | null
-  min_tokens: number | null
-  frequency_penalty: number | null
-  presence_penalty: number | null
-  seed: number | null
-  context_window: number
-  supports_streaming: boolean
-  supports_structured_output: boolean
-  supports_temperature: boolean
-  input_cost_per_1m: number | null
-  output_cost_per_1m: number | null
+function classifyComplexity(text: string): ArticleComplexity {
+  const tokens = estimateTokenCount(text)   // chars / 4 approximation
+  if (tokens <= 400)  return 'short'
+  if (tokens <= 1500) return 'medium'
+  return 'long'
 }
 ```
 
-**Checklist:**
-- [ ] `LLMCompletionOptions` updated with all new fields
-- [ ] `ModelConfig` type added with all columns including capability metadata
+#### Model Selection Rules
 
----
-
-#### Step 5 — Extend request/response schemas
-
-**File:** `backend/domain/schemas.ts`
-
-Add optional `model` field to both `SummarizeRequestSchema` and `FactCheckRequestSchema`:
-
-```ts
-model: z.string().optional()
+```
+short  (≤400 tokens)  → ViT5-large      (seq2seq specialized, fits context)
+medium (≤1500 tokens) → PhoGPT-4B-Chat  (instruction-following, good range)
+long   (>1500 tokens) → GPT-4o          (128K context, handles full articles)
 ```
 
-**Checklist:**
-- [ ] `SummarizeRequestSchema` updated
-- [ ] `FactCheckRequestSchema` updated
+#### Fallback Chain
 
----
+```
+ViT5     → fallback: PhoGPT → fallback: GPT-4o
+PhoGPT   → fallback: GPT-4o
+GPT-4o   → no fallback (always available if API key set)
+```
 
-#### Step 6 — Create model configuration service
-
-**File:** `backend/services/model-config.service.ts` (new file)
-
-Responsibilities:
-- `getActiveModelConfig(): Promise<ModelConfig>` — fetches the row where `is_active = TRUE`; falls back to `{ provider: 'openai', model_name: env.OPENAI_MODEL, temperature: env.OPENAI_TEMPERATURE }` if table is empty
-- `getAllModelConfigs(): Promise<ModelConfig[]>` — fetches all rows ordered by `provider`, `display_name`
-- `setActiveModel(modelName: string): Promise<void>` — sets `is_active = FALSE` for all, then `TRUE` for the target model
-- `updateModelConfig(modelName: string, params: Partial<ModelConfig>): Promise<ModelConfig>` — updates tunable parameters only (capability metadata is read-only); sets `updated_at = NOW()`
-
-**Checklist:**
-- [ ] File created with all 4 functions
-- [ ] Uses `getSupabaseAdmin()` (server-side only)
-- [ ] Graceful fallback if table is empty (defaults to OpenAI)
-- [ ] `updateModelConfig` rejects writes to read-only capability columns
-
----
-
-#### Step 7 — Update `app.config.ts`
-
-**File:** `backend/config/app.config.ts`
-
-Change `getAIModelConfig()` to accept an optional `ModelConfig` override:
+#### Exports
 
 ```ts
-export function getAIModelConfig(override?: Partial<ModelConfig>): AIModelConfig {
-  return {
-    provider:         override?.provider        ?? 'openai',
-    model:            override?.model_name      ?? env.OPENAI_MODEL,
-    modelType:        override?.model_type      ?? 'standard',
-    temperature:      override?.temperature     ?? env.OPENAI_TEMPERATURE,
-    topP:             override?.top_p           ?? undefined,
-    topK:             override?.top_k           ?? undefined,
-    maxTokens:        override?.max_tokens      ?? undefined,
-    frequencyPenalty: override?.frequency_penalty ?? undefined,
-    presencePenalty:  override?.presence_penalty  ?? undefined,
-    seed:             override?.seed            ?? undefined,
-  }
+export function selectModel(text: string, availableProviders: Set<string>): RoutingDecision
+export function getFallbackModel(failed: string): string | null
+export function estimateTokenCount(text: string): number
+```
+
+`availableProviders` is built at runtime from which API keys are configured — prevents
+routing to a model whose key is missing.
+
+### Step 9 — `backend/services/routing.service.ts` — Mode Detection
+
+```ts
+type RoutingMode = 'auto' | 'evaluation' | 'forced'
+```
+
+- `auto` — use `selectModel()` to pick the best model
+- `evaluation` — run all 3 in parallel, return the highest BERTScore winner
+- `forced` — caller specifies `model` explicitly (existing behavior, unchanged)
+
+Expose `resolveRoutingMode(request: SummarizeRequest): RoutingMode`.
+
+---
+
+## Phase 4 — Output Fusion Service
+
+**Goal:** In evaluation mode, run all three models in parallel and select the best summary.
+
+### Step 10 — `backend/services/fusion.service.ts` (new file)
+
+#### Main export
+
+```ts
+export async function runFusedSummarization(
+  text: string,
+  website: string | undefined,
+  models: ModelConfig[]
+): Promise<FusionResult>
+```
+
+#### Logic
+
+1. `Promise.allSettled()` — call `performSummarize()` for each model concurrently.
+   Record latency per model with `performance.now()`.
+   Note: `performSummarize` already accepts an optional `ModelConfig` param (verified in codebase) —
+   pass each model's config directly without touching the active model setting.
+2. Collect fulfilled results only (rejected = model failure, log and skip).
+3. For each fulfilled summary, call `calculateBertScore(originalArticleText, summary)`
+   (existing `bert.service.ts`). The **original article text** is the reference — there is no
+   ground-truth human summary in real-time mode. Requires `BERT_SERVICE_URL` to be configured;
+   if missing/null BERTScore, fall back to ROUGE-1 for winner selection.
+4. **Select winner**: highest BERTScore (or ROUGE-1 if BERTScore unavailable).
+   Tie-break: prefer ViT5 → PhoGPT → GPT-4o (prefer cheaper/specialized over general).
+5. Return `FusionResult`:
+   ```ts
+   {
+     winner: SummarizeResponse & { model: string }
+     candidates: ModelComparisonResult[]   // all models with scores
+     routingId: string
+   }
+   ```
+
+#### Persistence
+
+After selection, write one row to `routing_decisions` and N rows to
+`model_comparison_results` (marking `selected = true` on the winner).
+
+---
+
+## Phase 5 — API Integration
+
+**Goal:** Wire routing and fusion into the `/api/summarize` endpoint.
+
+### Step 11 — `backend/domain/schemas.ts`
+
+Extend `SummarizeRequestSchema`:
+```ts
+routing_mode: z.enum(['auto', 'evaluation', 'forced']).optional()
+```
+
+Extend `SummarizeResponseSchema`:
+```ts
+routing?: {
+  selected_model: string
+  complexity: string
+  fallback_used: boolean
+  candidates?: ModelComparisonResult[]   // only in evaluation mode
 }
 ```
 
-**Checklist:**
-- [ ] Function signature updated
-- [ ] All existing call sites still work (no override = same behavior)
+### Step 12 — `backend/app/api/summarize/route.ts`
+
+Update POST handler:
+
+```
+if routing_mode === 'evaluation':
+    → call fusion.service.ts runFusedSummarization()
+    → return winner + candidates in response
+
+else if routing_mode === 'auto' (or unset):
+    → call routing.service.ts selectModel()
+    → load ModelConfig for selected model
+    → call performSummarize() with that config
+    → on failure: getFallbackModel() → retry once
+    → log routing_decision to DB
+
+else (forced / existing behavior):
+    → existing model override logic unchanged
+```
+
+Streaming (`?stream=true`) is **not supported in evaluation mode** — return 400 if both are requested.
+
+**Auto mode + streaming**: if routing selects a HF model (`supports_streaming: false`) but
+`?stream=true` was requested, **silently fall back to sync mode** for that request — do NOT
+return 400. Log a warning. This prevents UX breakage when the user has streaming enabled globally.
+
+### Step 13 — `backend/app/api/routing/route.ts` (new file)
+
+```
+GET /api/routing/stats
+```
+
+Returns routing analytics:
+- Distribution of models selected (last 7/30 days)
+- Average BERTScore per model
+- Fallback rate per model
+- Complexity breakdown (short/medium/long %)
 
 ---
 
-#### Step 8 — Install provider SDKs
+## Phase 6 — Settings Page Update
 
-```bash
-cd backend
-npm install @google/generative-ai @anthropic-ai/sdk
-```
+**Goal:** Let users configure routing behavior from the settings UI.
 
-Add API keys to `.env`:
-```
-GEMINI_API_KEY=       # leave blank if not available — requests will return a clear error
-ANTHROPIC_API_KEY=
-```
+### Step 14 — `backend/app/settings/page.tsx`
 
-Add to `backend/config/env.ts` (both optional — no startup crash if absent):
-```ts
-GEMINI_API_KEY:    z.string().optional(),
-ANTHROPIC_API_KEY: z.string().optional(),
-```
+Add **Routing Configuration** section below model selector:
 
-**Missing key behavior:** In `llm.service.ts`, before calling a provider, check that the required key is present. If not, throw a descriptive error:
-```ts
-if (!getEnvVar('GEMINI_API_KEY')) {
-  throw new Error('API key for Gemini has not been set up')
-}
-```
-This error propagates to the route handler and is returned as a 400/500 JSON response to the client.
+- **Routing Mode** toggle: `Auto` / `Evaluation` / `Forced` (radio group)
+  - Auto: system picks model based on complexity
+  - Evaluation: run all models, pick best (slower, for research)
+  - Forced: use the currently active model (existing behavior)
+- **Complexity Thresholds** (optional, collapsible): editable short/medium/long
+  token cutoffs with current defaults shown
+- **Available Models for Routing**: checklist showing which HF models are accessible
+  (green checkmark if `HF_API_KEY` is set, grey lock if not)
 
-**Checklist:**
-- [ ] `@google/generative-ai` installed
-- [ ] `@anthropic-ai/sdk` installed
-- [ ] Both API keys added to `.env` (can be left blank)
-- [ ] Both added as optional fields in `env.ts`
-- [ ] Missing key check added at the top of each provider dispatch branch
+Persist routing mode via a new `/api/settings/routing` endpoint (GET/POST).
 
----
-
-#### Step 9 — Update `llm.service.ts` to support all providers
-
-**File:** `backend/services/llm.service.ts`
-
-Refactor `generateCompletion()` and `generateStreamingCompletion()` to route to the correct SDK based on `options.provider`:
-
-```ts
-switch (options.provider ?? 'openai') {
-  case 'openai':    return callOpenAI(options, ...)
-  case 'gemini':    return callGemini(options, ...)
-  case 'anthropic': return callAnthropic(options, ...)
-}
-```
-
-**Parameter forwarding per provider:**
-
-| Param | OpenAI (std) | OpenAI (reasoning) | Gemini | Anthropic |
-|---|---|---|---|---|
-| temperature | ✅ | ❌ skip | ✅ | ✅ clamp to 0–1 |
-| top_p | ✅ | ❌ skip | ✅ | ✅ |
-| top_k | ❌ skip | ❌ skip | ✅ | ✅ |
-| max_tokens | `max_completion_tokens` | `max_completion_tokens` | `maxOutputTokens` | `max_tokens` |
-| frequency_penalty | ✅ | ❌ skip | ❌ skip | ❌ skip |
-| presence_penalty | ✅ | ❌ skip | ❌ skip | ❌ skip |
-| seed | ✅ | ✅ | ✅ | ❌ skip |
-| min_tokens | ❌ skip | ❌ skip | ❌ skip | ❌ skip |
-
-All three paths must:
-1. Check for the required API key at the top; throw `'API key for <Provider> has not been set up'` if missing
-2. Accept the same `LLMCompletionOptions`
-3. Return the same `LLMCompletionResult` shape (including `model` used, `usage`)
-4. Support both full-request and streaming modes
-
-**Gemini notes:**
-- Structured output: use `responseMimeType: 'application/json'` + `responseSchema`
-- Streaming: `generateContentStream()` method
-- `top_k` passed as `generationConfig.topK`
-
-**Anthropic notes:**
-- Structured output: prompt-based JSON instruction (no native JSON schema mode); validate with Zod after parsing
-- Streaming: `messages.stream()` method
-- `top_k` passed as `top_k`; temperature clamped to max 1.0
-
-**Checklist:**
-- [ ] OpenAI path unchanged in behavior, refactored into `callOpenAI()` helper
-- [ ] Gemini path implemented (full-request + streaming)
-- [ ] Anthropic path implemented (full-request + streaming)
-- [ ] Missing API key check in each branch
-- [ ] `frequency_penalty` / `presence_penalty` forwarded to OpenAI standard only
-- [ ] `seed` forwarded to OpenAI + Gemini, skipped for Anthropic
-- [ ] Temperature clamped to 0–1 for Anthropic
-- [ ] All paths return actual `model` name + `usage` tokens
-
----
-
-#### Step 10 — Update summarize and fact-check services
-
-**Files:** `backend/services/summarize.service.ts`, `backend/services/fact-check.service.ts`
-
-Both `performSummarize()`, `performSummarizeStream()`, and `performFactCheck()` gain a `modelConfig?: ModelConfig` parameter:
-
-```ts
-async function performSummarize(content, url, modelConfig?: ModelConfig) {
-  const result = await generateJsonCompletion({
-    // existing options...
-    provider:         modelConfig?.provider,
-    model:            modelConfig?.model_name,
-    modelType:        modelConfig?.model_type,
-    temperature:      modelConfig?.temperature,
-    topP:             modelConfig?.top_p        ?? undefined,
-    topK:             modelConfig?.top_k        ?? undefined,
-    maxTokens:        modelConfig?.max_tokens   ?? undefined,
-    frequencyPenalty: modelConfig?.frequency_penalty ?? undefined,
-    presencePenalty:  modelConfig?.presence_penalty  ?? undefined,
-    seed:             modelConfig?.seed         ?? undefined,
-  }, ...)
-}
-```
-
-**Checklist:**
-- [ ] `performSummarize()` updated
-- [ ] `performSummarizeStream()` updated
-- [ ] `performFactCheck()` updated
-
----
-
-#### Step 11 — Update API routes
-
-**Files:** `backend/app/api/summarize/route.ts`, `backend/app/api/fact-check/route.ts`
-
-Each route handler must:
-1. Parse `model` from request body
-2. Call `getActiveModelConfig()` from model-config.service
-3. If request body contains `model`, find that model's config and use it instead
-4. Pass full config to the service layer
-
-```ts
-const activeConfig = await getActiveModelConfig()
-const modelConfig = requestBody.model
-  ? { ...activeConfig, model_name: requestBody.model }
-  : activeConfig
-```
-
-**Checklist:**
-- [ ] `summarize/route.ts` loads active model config, passes to service
-- [ ] `fact-check/route.ts` same
-- [ ] Both streaming and non-streaming branches pass `modelConfig`
-
----
-
-#### Step 12 — Store `model` in evaluation metrics and action tracking
-
-**File:** `backend/services/evaluation.service.ts`
-
-Add `model?`, `promptTokens?`, `completionTokens?`, `estimatedCostUsd?` to `EvaluationData` and include in Supabase insert.
-
-Cost calculation at insert time:
-```ts
-const estimatedCostUsd = modelConfig
-  ? (data.promptTokens ?? 0) / 1_000_000 * (modelConfig.input_cost_per_1m ?? 0)
-  + (data.completionTokens ?? 0) / 1_000_000 * (modelConfig.output_cost_per_1m ?? 0)
-  : undefined
-```
-
-**File:** `backend/services/action-tracking.service.ts`
-
-Add `model?: string` to `TrackActionParams` and include in `user_actions` insert.
-
-**Checklist:**
-- [ ] `EvaluationData` interface has `model?`, `promptTokens?`, `completionTokens?`, `estimatedCostUsd?`
-- [ ] `saveEvaluationMetrics()` inserts all four fields
-- [ ] `TrackActionParams` has `model?`
-- [ ] `trackAction()` inserts `model`
-- [ ] `model` + token counts passed from route handlers down to both services
-
----
-
-### PHASE 3 — Backend: Settings API
-
-#### Step 13 — Create `/api/settings` route
-
-**File:** `backend/app/api/settings/route.ts` (new file)
-
-Endpoints:
+### Step 15 — `backend/app/api/settings/routing/route.ts` (new file)
 
 ```
-GET  /api/settings
-  Response: {
-    active: ModelConfig,
-    available: ModelConfig[]   // all models
-  }
-
-PATCH /api/settings/active
-  Body: { model: string }
-  Action: setActiveModel(model)
-  Response: { success: true, active: ModelConfig }
-
-PATCH /api/settings/config
-  Body: {
-    model: string,
-    temperature?: number,
-    top_p?: number,
-    top_k?: number,
-    max_tokens?: number,
-    min_tokens?: number,
-    frequency_penalty?: number,
-    presence_penalty?: number,
-    seed?: number
-  }
-  Action: updateModelConfig(model, params)
-  Response: { success: true, config: ModelConfig }
+GET  /api/settings/routing  → { routing_mode, complexity_thresholds }
+POST /api/settings/routing  → update routing_mode
 ```
 
-All PATCH routes: validate params with Zod before calling service.
+Store in `app_settings` table (simple key-value). Add migration **`017_create_app_settings.sql`**:
 
-**Checklist:**
-- [ ] GET returns active + all configs (including capability metadata)
-- [ ] PATCH /active switches active model
-- [ ] PATCH /config updates tunable parameters only (rejects writes to capability columns)
-- [ ] Zod validation on all inputs
-- [ ] Appropriate error responses (404 if model not found, 400 on validation failure)
-
----
-
-### PHASE 4 — Frontend: Settings Page
-
-#### Step 14 — Create Settings page
-
-**File:** `backend/app/settings/page.tsx` (new file)
-
-Layout (matches existing pages — `min-h-screen bg-gray-50 p-8`, `max-w-7xl mx-auto`):
-
-```
-Page Header
-  h1: "Model Settings"
-  p:  "Configure the active LLM provider and model"
-
-Section 1 — Provider & Model Selection Card
-  Models grouped by provider:
-
-  ┌── OpenAI ──────────────────────────────────────────────────────────┐
-  │  ◉ GPT-4o Mini   ○ GPT-4o   ○ GPT-4.1 Mini   ○ GPT-4.1          │
-  │  ○ o4 Mini [reasoning]   ○ o3 Mini [reasoning]                     │
-  └────────────────────────────────────────────────────────────────────┘
-  ┌── Google Gemini ────────────────────────────────────────────────────┐
-  │  ○ Gemini 2.0 Flash Lite  ○ Gemini 2.0 Flash                      │
-  │  ○ Gemini 2.5 Flash       ○ Gemini 2.5 Pro                         │
-  └────────────────────────────────────────────────────────────────────┘
-  ┌── Anthropic Claude ─────────────────────────────────────────────────┐
-  │  ○ Claude Haiku 4.5  ○ Claude Sonnet 4.5                           │
-  │  ○ Claude Sonnet 4.6  ○ Claude Opus 4.6                            │
-  └────────────────────────────────────────────────────────────────────┘
-
-  Each model card shows: display name, context window badge, cost/1M tokens
-  Reasoning models show a [reasoning] badge
-  Selected: border-black bg-gray-50
-  "Set Active" button appears when selection differs from current active
-
-Section 2 — Model Parameters Card
-  Shows tunable params for the currently selected model (pre-filled from DB)
-  Capability-gated: params hidden/disabled based on model metadata
-
-  Temperature    [slider 0–2, or 0–1 for Anthropic] — hidden for reasoning models
-  Top-P          [number input 0–1, optional] — hidden for reasoning models
-  Top-K          [integer input, optional — shown with note "Forwarded to Gemini/Anthropic only"]
-  Max Tokens     [integer input, optional]
-  Min Tokens     [integer input, optional — labeled "Stored only, not forwarded"]
-  Frequency Penalty  [number -2–2, optional — shown with note "OpenAI standard only"]
-  Presence Penalty   [number -2–2, optional — shown with note "OpenAI standard only"]
-  Seed           [integer input, optional — labeled "For reproducible outputs; not supported by Anthropic"]
-
-  Save button: bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800
-  Success toast: green inline text after save
-  Error state: red inline text
-
-Section 3 — Model Info Card (read-only)
-  Context Window:    128K / 1M / 200K
-  Streaming:         ✅ Supported / ❌ Not supported
-  Structured Output: ✅ / ❌
-  Input cost:        $X.XX / 1M tokens
-  Output cost:       $X.XX / 1M tokens
-
-Loading skeleton: animate-pulse gray boxes while fetching
-```
-
-**State management:**
-- Fetch `GET /api/settings` on mount
-- Models displayed grouped by `provider`
-- Switching model selection → updates local state + shows params for that model
-- "Set Active" triggers `PATCH /api/settings/active`
-- Editing params + "Save Parameters" triggers `PATCH /api/settings/config`
-
-**Checklist:**
-- [ ] Page file created
-- [ ] Models grouped by provider (OpenAI / Gemini / Anthropic)
-- [ ] Reasoning models show badge; temperature/top_p/penalties hidden for them
-- [ ] Active model pre-selected on load
-- [ ] Switching active model calls API
-- [ ] Parameter form pre-filled per model
-- [ ] Frequency/presence penalty fields shown for OpenAI standard only
-- [ ] Seed field shown with note about Anthropic limitation
-- [ ] Top-K field labeled to indicate it's skipped for OpenAI
-- [ ] Read-only Model Info card shows context window + cost + capability flags
-- [ ] Save parameters calls API
-- [ ] Loading state (skeleton)
-- [ ] Error state
-- [ ] Success feedback
-
----
-
-#### Step 15 — Add Settings to Header navigation
-
-**File:** `backend/components/Header.tsx`
-
-Add to `navItems` array:
-```ts
-{ name: 'Settings', href: '/settings' }
-```
-
-**Checklist:**
-- [ ] `Settings` nav item added
-- [ ] Active state highlights correctly when on `/settings`
-
----
-
-### PHASE 5 — Frontend: Debug Page Update
-
-#### Step 16 — Add model selector to Debug page
-
-**File:** `backend/app/debug/page.tsx`
-
-Add a model selector at the top of the debug form:
-
-```
-Model Override (optional)
-  <select> grouped by provider, from GET /api/settings
-  Default: "Use active model (from Settings)"
-```
-
-This value is passed as `model` in the request body for Summarize and Fact-Check test calls.
-
-**Checklist:**
-- [ ] Fetch available models from `/api/settings` on mount
-- [ ] Dropdown added before test sections, grouped by provider
-- [ ] Model value included in summarize test request body
-- [ ] Model value included in fact-check test request body
-
----
-
-#### Step 17 — Show model used in Debug output
-
-**File:** `backend/app/debug/page.tsx`
-
-In the result display for both Summarize and Fact-Check:
-- Add a badge: `Model: gpt-4o-mini` or `Model: gemini-2.0-flash` etc.
-- Styled as `px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-xs font-medium`
-- Model name comes from API response (`result.model`)
-
-**Checklist:**
-- [ ] Model badge shown in summarize result
-- [ ] Model badge shown in fact-check result
-
----
-
-### PHASE 6 — Frontend: Metrics Page Update
-
-#### Step 18 — Add `model` column to Metrics table
-
-**File:** `backend/app/metrics/page.tsx`
-
-Add `Model` column to the evaluation metrics table:
-- Header: `Model`
-- Cell: badge styled as `px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-700 text-xs font-medium`
-- Show `—` if null (for historical records before this feature)
-
-Also add a `Cost` column:
-- Header: `Est. Cost`
-- Cell: `$0.00042` formatted to 5 significant figures, or `—` if null
-
-**Checklist:**
-- [ ] Model column header + badge cell added
-- [ ] Cost column header + formatted cell added
-- [ ] Both show `—` for historical null rows
-
----
-
-#### Step 19 — Add `model` filter to Metrics page
-
-**File:** `backend/app/metrics/page.tsx`
-
-Add `model` to the filters state and filter panel (alongside existing `mode` filter):
-
-```tsx
-<select value={filters.model} onChange={...} className="border border-gray-200 rounded-lg px-3 py-2 ...">
-  <option value="">All Models</option>
-  {availableModels.map(m => <option key={m} value={m}>{m}</option>)}
-</select>
-```
-
-Also update `getEvaluationMetrics()` in `evaluation.service.ts` to accept `model?` in `MetricFilters` and apply `.eq('model', filters.model)` if provided.
-
-**Checklist:**
-- [ ] `MetricFilters` type has `model?`
-- [ ] `getEvaluationMetrics()` filters by model when provided
-- [ ] GET `/api/metrics` passes model filter through
-- [ ] Metrics page has model dropdown in filter panel
-- [ ] Model list in filter populated from available models
-
----
-
-## Implementation Order
-
-```
-Phase 1 (DB migrations)  →  Phase 2 (Services + SDKs)  →  Phase 3 (Settings API)
-     ↓
-Phase 4 (Settings UI)
-     ↓
-Phase 5 (Debug page)  +  Phase 6 (Metrics page)  ← can run in parallel
+```sql
+CREATE TABLE app_settings (
+  key    TEXT PRIMARY KEY,
+  value  JSONB NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+-- Seed default routing config
+INSERT INTO app_settings (key, value)
+VALUES ('routing_config', '{"routing_mode":"forced","complexity_thresholds":{"short":400,"medium":1500}}');
 ```
 
 ---
 
-## Files Changed Summary
+## Phase 7 — Debug Page Update
 
-| File | Action |
+**Goal:** Show routing decisions and per-model comparison in the debug UI.
+
+### Step 16 — `backend/app/debug/page.tsx`
+
+**Routing mode selector** (above existing model dropdown):
+- Radio: Auto / Evaluation / Forced
+- When `Evaluation` is selected, hide the model override dropdown (irrelevant)
+
+**Routing result panel** (shown after summarization):
+- Badge: `Complexity: medium` with colour coding (green/yellow/red)
+- Badge: `Routed to: PhoGPT-4B-Chat` + `Fallback: No`
+- If evaluation mode: expandable **Model Comparison Table**:
+
+  | Model | BERTScore | ROUGE-1 | Latency | Cost | Winner |
+  |---|---|---|---|---|---|
+  | GPT-4o | 0.872 | 0.541 | 1.2s | $0.00031 | — |
+  | PhoGPT-4B-Chat | 0.891 | 0.563 | 3.4s | $0.00 | ✓ |
+  | ViT5-large | 0.843 | 0.512 | 2.1s | $0.00 | — |
+
+### Step 17 — Routing stats mini-dashboard card
+
+Add a collapsible **Routing Stats** card at the bottom of the debug page:
+- Pie/bar chart: % of requests routed to each model (last 50 requests)
+- Data from `GET /api/routing/stats`
+
+---
+
+## Phase 8 — Metrics Page Update
+
+**Goal:** Surface routing analytics and model comparison data in the metrics UI.
+
+### Step 18 — `backend/app/metrics/page.tsx`
+
+**New "Routing" tab** (alongside existing metrics table):
+- Summary cards: total routed requests, fallback rate, avg BERTScore per model
+- Bar chart: model selection distribution over time
+- Table: recent routing decisions with complexity, selected model, fallback flag, BERTScore winner
+
+**Evaluation mode results** sub-section:
+- Filterable table of `model_comparison_results` rows
+- Columns: Date, Article excerpt, Model, BERTScore, ROUGE-1, Latency, Cost, Selected
+- Export to CSV button (for thesis data collection)
+
+### Step 19 — `backend/app/api/metrics/route.ts`
+
+Add optional query params:
+```
+?view=routing          → return routing_decisions + model_comparison_results
+?routing_mode=evaluation  → filter to evaluation mode runs only
+```
+
+---
+
+## File Change Summary
+
+### New Files
+| File | Purpose |
+|------|---------|
+| `backend/services/routing.service.ts` | Complexity classifier + model selector + fallback |
+| `backend/services/fusion.service.ts` | Parallel model execution + BERTScore-based selection |
+| `backend/app/api/routing/route.ts` | GET /api/routing/stats |
+| `backend/app/api/settings/routing/route.ts` | GET/POST routing configuration |
+| `backend/supabase/migrations/013_create_routing_decisions.sql` | Routing decisions table |
+| `backend/supabase/migrations/014_create_model_comparison_results.sql` | Per-model results table |
+| `backend/supabase/migrations/015_add_routing_id_to_evaluation_metrics.sql` | FK to routing_decisions |
+| `backend/supabase/migrations/016_add_hf_models_to_model_configurations.sql` | Seed PhoGPT + ViT5 rows |
+| `backend/supabase/migrations/017_create_app_settings.sql` | Key-value settings table + routing defaults |
+
+### Modified Files
+| File | Change |
 |------|--------|
-| `backend/supabase/migrations/009_create_model_configurations.sql` | New — 14 models, full capability metadata |
-| `backend/supabase/migrations/010_add_model_to_evaluation_metrics.sql` | New |
-| `backend/supabase/migrations/011_add_model_to_user_actions.sql` | New |
-| `backend/supabase/migrations/012_add_cost_to_evaluation_metrics.sql` | New — prompt_tokens, completion_tokens, estimated_cost_usd |
-| `backend/domain/types.ts` | Edit — add `ModelConfig` with full fields; extend `LLMCompletionOptions` with seed/penalties/modelType |
-| `backend/domain/schemas.ts` | Edit — add `model?` to summarize + fact-check schemas |
-| `backend/services/model-config.service.ts` | New |
-| `backend/config/app.config.ts` | Edit — `getAIModelConfig()` accepts override including all new params |
-| `backend/config/env.ts` | Edit — add `GEMINI_API_KEY`, `ANTHROPIC_API_KEY` (both optional) |
-| `backend/services/llm.service.ts` | Edit — provider dispatch; missing key error; param forwarding per provider |
-| `backend/services/summarize.service.ts` | Edit — accept + forward full `modelConfig?` |
-| `backend/services/fact-check.service.ts` | Edit — accept + forward full `modelConfig?` |
-| `backend/app/api/summarize/route.ts` | Edit — load active config, pass to service |
-| `backend/app/api/fact-check/route.ts` | Edit — same |
-| `backend/services/evaluation.service.ts` | Edit — store model, token counts, estimated cost |
-| `backend/services/action-tracking.service.ts` | Edit — store `model` in action row |
-| `backend/app/api/settings/route.ts` | New |
-| `backend/app/settings/page.tsx` | New — full settings UI with capability-gated params + model info card |
-| `backend/components/Header.tsx` | Edit — add Settings nav item |
-| `backend/app/debug/page.tsx` | Edit — model selector + model badge in results |
-| `backend/app/metrics/page.tsx` | Edit — model + cost columns + model filter |
+| `backend/config/env.ts` | Add `HF_API_KEY`, `HF_TIMEOUT_MS` |
+| `backend/domain/schemas.ts` | Add `routing_mode` to request/response schemas |
+| `backend/domain/types.ts` | Add `huggingface` provider, `RoutingDecision`, `ModelComparisonResult`, `FusionResult` |
+| `backend/services/llm.service.ts` | Add `callHuggingFace()`, wire into dispatch |
+| `backend/app/api/summarize/route.ts` | Add routing/evaluation mode branching |
+| `backend/app/settings/page.tsx` | Add routing configuration section |
+| `backend/app/debug/page.tsx` | Add routing panel + model comparison table |
+| `backend/app/metrics/page.tsx` | Add Routing tab + evaluation results table |
+| `backend/app/api/metrics/route.ts` | Add `?view=routing` query support |
+
+---
+
+## Environment Variables to Add
+
+```
+# backend/.env
+HF_API_KEY=hf_xxxxxxxxxxxxxxxxxxxx   # required for PhoGPT + ViT5
+HF_TIMEOUT_MS=30000                  # optional, default 30000
+BERT_SERVICE_URL=https://...         # already exists — required for fusion BERTScore selection
+```
+
+> **Note:** `BERT_SERVICE_URL` is an existing optional variable (already in the codebase).
+> In evaluation/fusion mode it becomes effectively required — without it, winner selection
+> falls back to ROUGE-1. Ensure it is set for thesis experiments.
+
+---
+
+## Implementation Order (recommended)
+
+```
+Phase 1  →  Phase 2  →  Phase 3  →  Phase 4  →  Phase 5
+(DB)        (HF Provider) (Routing)   (Fusion)    (API)
+                                                    ↓
+                                    Phase 8  ←  Phase 6 → Phase 7
+                                   (Metrics)  (Settings)  (Debug)
+```
+
+Phases 6, 7, 8 can be done in parallel after Phase 5 is stable.
+
+---
+
+## Thesis Contribution Points
+
+1. **Novel routing algorithm for Vietnamese text** — complexity-based model selection
+   with open-source Vietnamese models as primary, GPT-4o as fallback
+2. **First comprehensive comparison** of PhoGPT-4B-Chat vs ViT5-large vs GPT-4o
+   on Vietnamese news summarization (via evaluation mode + `model_comparison_results` table)
+3. **Hybrid cost/quality tradeoff** — free HF models for short/medium articles,
+   paid GPT-4o only when necessary → tracked in `estimated_cost_usd`
+4. **BERTScore-based output fusion** — existing PhoBERT microservice repurposed
+   as the quality judge in multi-model selection
