@@ -18,8 +18,11 @@ export async function OPTIONS() {
 /**
  * POST /api/summarize
  * Summarize endpoint handler
- * 
- * Validates input and delegates business logic to summarizeService
+ *
+ * Supports three routing modes:
+ * - forced (default/existing): use active model or explicit override
+ * - auto: complexity-based model selection with fallback chain
+ * - evaluation: run all 3 models in parallel, pick best via BERTScore
  */
 export async function POST(request: NextRequest) {
   const startTime = Date.now()
@@ -47,7 +50,204 @@ export async function POST(request: NextRequest) {
       return zodErrorResponse(parseResult.error, 400)
     }
 
-    const { content, url, debug, website, model: modelOverride } = parseResult.data
+    const { content, url, debug, website, model: modelOverride, routing_mode: requestRoutingMode } = parseResult.data
+
+    // Resolve routing mode
+    const { resolveRoutingMode } = await import('@/services/routing.service')
+    const routingMode = resolveRoutingMode({ routing_mode: requestRoutingMode, model: modelOverride })
+
+    // Check if streaming is requested
+    const { searchParams } = new URL(request.url)
+    const isStreaming = searchParams.get('stream') === 'true'
+
+    // ============================================================================
+    // EVALUATION MODE — run all models in parallel, pick best
+    // ============================================================================
+    if (routingMode === 'evaluation') {
+      if (isStreaming) {
+        return NextResponse.json(
+          { error: 'Streaming is not supported in evaluation mode' },
+          { status: 400, headers: getCorsHeaders() }
+        )
+      }
+
+      // Get the article text (extract from URL if needed)
+      let articleText = content || ''
+      if (url && !content) {
+        const { extractContentFromUrl } = await import('@/services/content-extraction.service')
+        const extracted = await extractContentFromUrl(url)
+        articleText = extracted.content
+      }
+
+      const { runFusedSummarization } = await import('@/services/fusion.service')
+      const { getRoutingCandidateConfigs, classifyComplexity } = await import('@/services/routing.service')
+      const candidateConfigs = await getRoutingCandidateConfigs()
+
+      if (candidateConfigs.length === 0) {
+        return NextResponse.json(
+          { error: 'No routing candidate models configured' },
+          { status: 500, headers: getCorsHeaders() }
+        )
+      }
+
+      const fusionResult = await runFusedSummarization(articleText, website, candidateConfigs)
+      const complexity = classifyComplexity(articleText)
+
+      // Find the winner's full response to get category/readingTime
+      const winnerCandidate = fusionResult.candidates.find(c => c.selected)
+
+      const response = {
+        summary: fusionResult.winner.summary,
+        category: fusionResult.winner.category,
+        readingTime: fusionResult.winner.readingTime,
+        model: fusionResult.winner.model,
+        routing: {
+          selected_model: fusionResult.winner.model,
+          complexity,
+          fallback_used: false,
+          candidates: fusionResult.candidates,
+        },
+      }
+
+      // Track action
+      const processingTime = Date.now() - startTime
+      const { trackAction, getClientIP, extractTokenUsage } = await import('@/services/action-tracking.service')
+      const tokenUsage = extractTokenUsage({ usage: winnerCandidate ? {
+        prompt_tokens: winnerCandidate.prompt_tokens ?? undefined,
+        completion_tokens: winnerCandidate.completion_tokens ?? undefined,
+      } : undefined })
+
+      waitUntil(
+        trackAction({
+          actionType: 'summarize',
+          inputType: url ? 'url' : 'text',
+          inputContent: url || content || '',
+          outputContent: { summary: response.summary, category: response.category, readingTime: response.readingTime },
+          category: response.category,
+          tokenUsage,
+          model: fusionResult.winner.model,
+          userIp: getClientIP(request.headers),
+          website: website || 'unknown',
+          userAgent: request.headers.get('user-agent') || 'unknown',
+          processingTimeMs: processingTime
+        }).catch(err => console.error('[Summarize Evaluation] Failed to track action:', err))
+      )
+
+      return NextResponse.json(response, { headers: getCorsHeaders() })
+    }
+
+    // ============================================================================
+    // AUTO MODE — complexity-based model selection with fallback
+    // ============================================================================
+    if (routingMode === 'auto') {
+      // Get the article text for complexity classification
+      let articleText = content || ''
+      if (url && !content) {
+        const { extractContentFromUrl } = await import('@/services/content-extraction.service')
+        const extracted = await extractContentFromUrl(url)
+        articleText = extracted.content
+      }
+
+      const { selectModel, getModelConfigByName, getFallbackModel, saveRoutingDecision, estimateTokenCount, classifyComplexity } = await import('@/services/routing.service')
+      const selection = selectModel(articleText)
+      let modelConfig = await getModelConfigByName(selection.model)
+
+      if (!modelConfig) {
+        // Model not in DB — fall back to active model
+        const { getActiveModelConfig } = await import('@/services/model-config.service')
+        modelConfig = await getActiveModelConfig()
+      }
+
+      // If streaming requested but selected model doesn't support it, silently use sync mode
+      if (isStreaming && !modelConfig.supports_streaming) {
+        console.log(`[Summarize Auto] Streaming requested but ${modelConfig.model_name} doesn't support it — using sync mode`)
+      }
+
+      // Try the selected model
+      let response
+      let fallbackUsed = selection.fallbackUsed
+      let fallbackReason = selection.fallbackReason
+      let usedModel = modelConfig
+
+      try {
+        response = await performSummarize({ content, url, debug }, modelConfig)
+      } catch (err) {
+        // Primary model failed — try fallback
+        console.error(`[Summarize Auto] ${modelConfig.model_name} failed:`, err)
+        const fallbackModelName = getFallbackModel(modelConfig.model_name)
+        if (fallbackModelName) {
+          const fallbackConfig = await getModelConfigByName(fallbackModelName)
+          if (fallbackConfig) {
+            console.log(`[Summarize Auto] Falling back to ${fallbackModelName}`)
+            response = await performSummarize({ content, url, debug }, fallbackConfig)
+            usedModel = fallbackConfig
+            fallbackUsed = true
+            fallbackReason = `${modelConfig.model_name} failed: ${err instanceof Error ? err.message : String(err)}`
+          }
+        }
+        if (!response) throw err // Re-throw if no fallback succeeded
+      }
+
+      // Save routing decision to DB (fire-and-forget)
+      const complexity = classifyComplexity(articleText)
+      waitUntil(
+        saveRoutingDecision({
+          article_length: articleText.length,
+          article_tokens: estimateTokenCount(articleText),
+          category: response.category,
+          complexity,
+          routing_mode: 'auto',
+          selected_model: usedModel.model_name,
+          fallback_used: fallbackUsed,
+          fallback_reason: fallbackReason,
+        }).catch(err => console.error('[Summarize Auto] Failed to save routing decision:', err))
+      )
+
+      // Attach routing info to response
+      const enrichedResponse = {
+        ...response,
+        routing: {
+          selected_model: usedModel.model_name,
+          complexity,
+          fallback_used: fallbackUsed,
+        },
+      }
+
+      // Validate response
+      const responseParseResult = SummarizeResponseSchema.safeParse(enrichedResponse)
+      if (!responseParseResult.success) {
+        return zodErrorResponse(responseParseResult.error, 500)
+      }
+
+      // Track action (fire-and-forget)
+      const processingTime = Date.now() - startTime
+      const { trackAction, getClientIP, extractTokenUsage } = await import('@/services/action-tracking.service')
+      const tokenUsage = response.usage
+        ? extractTokenUsage({ usage: response.usage })
+        : extractTokenUsage(response.debug?.openaiResponse)
+
+      waitUntil(
+        trackAction({
+          actionType: 'summarize',
+          inputType: url ? 'url' : 'text',
+          inputContent: url || content || '',
+          outputContent: responseParseResult.data,
+          category: responseParseResult.data.category,
+          tokenUsage,
+          model: usedModel.model_name,
+          userIp: getClientIP(request.headers),
+          website: website || 'unknown',
+          userAgent: request.headers.get('user-agent') || 'unknown',
+          processingTimeMs: processingTime
+        }).catch(err => console.error('[Summarize Auto] Failed to track action:', err))
+      )
+
+      return NextResponse.json(responseParseResult.data, { headers: getCorsHeaders() })
+    }
+
+    // ============================================================================
+    // FORCED MODE (default) — use active model or explicit override
+    // ============================================================================
 
     // Load active model config from Supabase
     const { getActiveModelConfig, getAllModelConfigs } = await import('@/services/model-config.service')
@@ -58,10 +258,6 @@ export async function POST(request: NextRequest) {
       const overrideConfig = allConfigs.find(c => c.model_name === modelOverride)
       if (overrideConfig) modelConfig = overrideConfig
     }
-
-    // Check if streaming is requested
-    const { searchParams } = new URL(request.url)
-    const isStreaming = searchParams.get('stream') === 'true'
 
     if (isStreaming) {
       // ============================================================================

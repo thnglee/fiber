@@ -261,7 +261,7 @@ export interface ModelComparisonResult {
  * Result from fusion service (evaluation mode)
  */
 export interface FusionResult {
-  winner: { summary: string; model: string }
+  winner: { summary: string; model: string; category: string; readingTime: number }
   candidates: ModelComparisonResult[]
   routingId: string
 }

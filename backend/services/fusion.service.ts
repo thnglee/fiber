@@ -158,8 +158,16 @@ export async function runFusedSummarization(
     await saveModelComparisonResults(routingId, candidates)
   }
 
+  // Find the winner's full response for category/readingTime
+  const winnerFulfilled = fulfilled.find(f => f.modelConfig.model_name === winner.model_name)
+
   return {
-    winner: { summary: winner.summary, model: winner.model_name },
+    winner: {
+      summary: winner.summary,
+      model: winner.model_name,
+      category: winnerFulfilled?.response.category ?? 'unknown',
+      readingTime: winnerFulfilled?.response.readingTime ?? Math.max(1, Math.ceil(winner.summary.split(/\s+/).length / 200)),
+    },
     candidates,
     routingId: routingId ?? '',
   }
