@@ -146,6 +146,11 @@ export interface ExtractedContent {
 // ============================================================================
 
 /**
+ * HuggingFace Inference API task types
+ */
+export type HFModelType = 'text-generation' | 'text2text-generation'
+
+/**
  * Options for LLM completion requests
  */
 export interface LLMCompletionOptions {
@@ -155,8 +160,10 @@ export interface LLMCompletionOptions {
   schema?: any // Zod schema for structured output (z.ZodSchema<any>)
   // Multi-provider fields
   model?: string
-  provider?: 'openai' | 'gemini' | 'anthropic'
-  modelType?: 'standard' | 'reasoning'
+  provider?: 'openai' | 'gemini' | 'anthropic' | 'huggingface'
+  modelType?: 'standard' | 'reasoning' | 'chat' | 'base'
+  hfModelId?: string    // full HF model ID e.g. 'VietAI/vit5-large-vietnews-summarization'
+  hfTaskType?: HFModelType
   temperature?: number
   topP?: number
   topK?: number           // forwarded to Gemini/Anthropic only
@@ -195,10 +202,10 @@ export interface LLMCompletionResult<T = any> {
  */
 export interface ModelConfig {
   id: string
-  provider: 'openai' | 'gemini' | 'anthropic'
+  provider: 'openai' | 'gemini' | 'anthropic' | 'huggingface'
   model_name: string
   display_name: string
-  model_type: 'standard' | 'reasoning'
+  model_type: 'standard' | 'reasoning' | 'chat' | 'base'
   is_active: boolean
   temperature: number
   top_p: number | null
@@ -214,6 +221,49 @@ export interface ModelConfig {
   supports_temperature: boolean
   input_cost_per_1m: number | null
   output_cost_per_1m: number | null
+}
+
+/**
+ * Routing decision logged for every summarization request
+ */
+export interface RoutingDecision {
+  id?: string
+  article_length: number
+  article_tokens: number
+  category?: string
+  complexity: 'short' | 'medium' | 'long'
+  routing_mode: 'auto' | 'evaluation' | 'forced'
+  selected_model: string
+  fallback_used: boolean
+  fallback_reason?: string
+  created_at?: string
+}
+
+/**
+ * Per-model result in evaluation mode (parallel run)
+ */
+export interface ModelComparisonResult {
+  id?: string
+  routing_id?: string
+  model_name: string
+  summary: string
+  bert_score?: number | null
+  rouge1?: number | null
+  prompt_tokens?: number | null
+  completion_tokens?: number | null
+  estimated_cost_usd?: number | null
+  latency_ms?: number | null
+  selected: boolean
+  created_at?: string
+}
+
+/**
+ * Result from fusion service (evaluation mode)
+ */
+export interface FusionResult {
+  winner: { summary: string; model: string; category: string; readingTime: number }
+  candidates: ModelComparisonResult[]
+  routingId: string
 }
 
 // ============================================================================

@@ -4,10 +4,10 @@ import { useState, useEffect, useCallback } from "react"
 
 interface ModelConfig {
   id: string
-  provider: "openai" | "gemini" | "anthropic"
+  provider: "openai" | "gemini" | "anthropic" | "huggingface"
   model_name: string
   display_name: string
-  model_type: "standard" | "reasoning"
+  model_type: "standard" | "reasoning" | "chat" | "base"
   is_active: boolean
   temperature: number
   top_p: number | null
@@ -25,13 +25,43 @@ interface ModelConfig {
   output_cost_per_1m: number | null
 }
 
-type ProviderKey = "openai" | "gemini" | "anthropic"
+type ProviderKey = "openai" | "gemini" | "anthropic" | "huggingface"
 
 const PROVIDER_LABELS: Record<ProviderKey, string> = {
   openai: "OpenAI",
   gemini: "Google Gemini",
   anthropic: "Anthropic Claude",
+  huggingface: "HuggingFace",
 }
+
+type RoutingMode = "auto" | "evaluation" | "forced"
+
+interface RoutingConfig {
+  routing_mode: RoutingMode
+  complexity_thresholds: { short: number; medium: number }
+  hf_available: boolean
+}
+
+const ROUTING_MODE_INFO: Record<RoutingMode, { label: string; description: string }> = {
+  auto: {
+    label: "Auto",
+    description: "System picks model based on article complexity",
+  },
+  evaluation: {
+    label: "Evaluation",
+    description: "Run all models, pick best (slower, for research)",
+  },
+  forced: {
+    label: "Forced",
+    description: "Use the currently active model (existing behavior)",
+  },
+}
+
+const ROUTING_MODELS = [
+  { name: "ViT5-large", key: "hf" },
+  { name: "PhoGPT-4B-Chat", key: "hf" },
+  { name: "GPT-4o", key: "openai" },
+] as const
 
 function formatContextWindow(tokens: number): string {
   if (tokens >= 1_000_000) return `${(tokens / 1_000_000).toFixed(tokens % 1_000_000 === 0 ? 0 : 1)}M`
@@ -65,6 +95,18 @@ export default function SettingsPage() {
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
 
+  // Routing config state
+  const [routingConfig, setRoutingConfig] = useState<RoutingConfig>({
+    routing_mode: "forced",
+    complexity_thresholds: { short: 400, medium: 1500 },
+    hf_available: false,
+  })
+  const [routingLoading, setRoutingLoading] = useState(true)
+  const [routingSaving, setRoutingSaving] = useState(false)
+  const [thresholdsOpen, setThresholdsOpen] = useState(false)
+  const [shortThreshold, setShortThreshold] = useState("400")
+  const [mediumThreshold, setMediumThreshold] = useState("1500")
+
   const loadParamsFromModel = useCallback((model: ModelConfig) => {
     setTemperature(model.temperature)
     setTopP(model.top_p !== null ? String(model.top_p) : "")
@@ -95,9 +137,52 @@ export default function SettingsPage() {
     }
   }, [loadParamsFromModel])
 
+  const fetchRoutingConfig = useCallback(async () => {
+    try {
+      const res = await fetch("/api/settings/routing")
+      if (!res.ok) throw new Error("Failed to fetch routing config")
+      const data: RoutingConfig = await res.json()
+      setRoutingConfig(data)
+      setShortThreshold(String(data.complexity_thresholds.short))
+      setMediumThreshold(String(data.complexity_thresholds.medium))
+    } catch {
+      // Use defaults on error
+    } finally {
+      setRoutingLoading(false)
+    }
+  }, [])
+
+  const handleSaveRoutingConfig = async (updates: Partial<Pick<RoutingConfig, "routing_mode" | "complexity_thresholds">>) => {
+    setRoutingSaving(true)
+    setSaveSuccess(null)
+    setSaveError(null)
+
+    try {
+      const res = await fetch("/api/settings/routing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || "Failed to save routing config")
+      }
+
+      const data: RoutingConfig = await res.json()
+      setRoutingConfig(data)
+      setSaveSuccess("Routing configuration saved")
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Failed to save routing config")
+    } finally {
+      setRoutingSaving(false)
+    }
+  }
+
   useEffect(() => {
     fetchSettings()
-  }, [fetchSettings])
+    fetchRoutingConfig()
+  }, [fetchSettings, fetchRoutingConfig])
 
   const handleSelectModel = (model: ModelConfig) => {
     setSelectedModel(model)
@@ -202,7 +287,7 @@ export default function SettingsPage() {
       acc[m.provider].push(m)
       return acc
     },
-    { openai: [], gemini: [], anthropic: [] }
+    { openai: [], gemini: [], anthropic: [], huggingface: [] }
   )
 
   const isReasoning = selectedModel?.model_type === "reasoning"
@@ -262,7 +347,7 @@ export default function SettingsPage() {
           </h2>
 
           <div className="space-y-4">
-            {(["openai", "gemini", "anthropic"] as ProviderKey[]).map(provider => {
+            {(["openai", "gemini", "anthropic", "huggingface"] as ProviderKey[]).map(provider => {
               const providerModels = grouped[provider]
               if (!providerModels || providerModels.length === 0) return null
 
@@ -327,6 +412,168 @@ export default function SettingsPage() {
                   ? "Switching..."
                   : `Set ${selectedModel.display_name} as Active`}
               </button>
+            </div>
+          )}
+        </div>
+
+        {/* Section — Routing Configuration */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Routing Configuration
+          </h2>
+
+          {routingLoading ? (
+            <div className="animate-pulse space-y-3">
+              <div className="h-4 bg-gray-200 rounded w-48" />
+              <div className="h-10 bg-gray-200 rounded" />
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Routing Mode */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Routing Mode
+                </label>
+                <div className="space-y-2">
+                  {(["auto", "evaluation", "forced"] as RoutingMode[]).map(mode => (
+                    <label
+                      key={mode}
+                      className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                        routingConfig.routing_mode === mode
+                          ? "border-black bg-gray-50 ring-1 ring-black"
+                          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="routing_mode"
+                        value={mode}
+                        checked={routingConfig.routing_mode === mode}
+                        onChange={() => handleSaveRoutingConfig({ routing_mode: mode })}
+                        disabled={routingSaving}
+                        className="mt-0.5"
+                      />
+                      <div>
+                        <span className="text-sm font-medium text-gray-900">
+                          {ROUTING_MODE_INFO[mode].label}
+                        </span>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          {ROUTING_MODE_INFO[mode].description}
+                        </p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Complexity Thresholds — collapsible */}
+              <div className="border border-gray-200 rounded-lg">
+                <button
+                  type="button"
+                  onClick={() => setThresholdsOpen(!thresholdsOpen)}
+                  className="w-full flex items-center justify-between p-4 text-left"
+                >
+                  <span className="text-sm font-medium text-gray-700">
+                    Complexity Thresholds
+                  </span>
+                  <svg
+                    className={`w-4 h-4 text-gray-500 transition-transform ${thresholdsOpen ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {thresholdsOpen && (
+                  <div className="px-4 pb-4 space-y-4 border-t border-gray-200 pt-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Short article max tokens
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        value={shortThreshold}
+                        onChange={e => setShortThreshold(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <p className="text-xs text-gray-400 mt-1">
+                        Articles with token count at or below this use ViT5 (default: 400)
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Medium article max tokens
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        value={mediumThreshold}
+                        onChange={e => setMediumThreshold(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <p className="text-xs text-gray-400 mt-1">
+                        Articles with token count at or below this use PhoGPT; above uses GPT-4o (default: 1500)
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        const s = parseInt(shortThreshold, 10)
+                        const m = parseInt(mediumThreshold, 10)
+                        if (isNaN(s) || isNaN(m) || s <= 0 || m <= 0) return
+                        if (s >= m) {
+                          setSaveError("Short threshold must be less than medium threshold")
+                          return
+                        }
+                        handleSaveRoutingConfig({ complexity_thresholds: { short: s, medium: m } })
+                      }}
+                      disabled={routingSaving}
+                      className="px-4 py-2 bg-black text-white rounded-lg text-sm font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      {routingSaving ? "Saving..." : "Save Thresholds"}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Available Models for Routing */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Available Models for Routing
+                </label>
+                <div className="space-y-2">
+                  {ROUTING_MODELS.map(model => {
+                    const isAvailable = model.key === "openai" ? true : routingConfig.hf_available
+
+                    return (
+                      <div
+                        key={model.name}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100"
+                      >
+                        <span className="text-sm font-medium text-gray-900">{model.name}</span>
+                        {isAvailable ? (
+                          <span className="flex items-center gap-1.5 text-sm text-green-600">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            Available
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1.5 text-sm text-gray-400">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            Unavailable (HF_API_KEY not set)
+                          </span>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
             </div>
           )}
         </div>

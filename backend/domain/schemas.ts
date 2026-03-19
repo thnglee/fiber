@@ -70,6 +70,7 @@ export const SummarizeRequestSchema = z.object({
   debug: z.boolean().optional(),
   website: z.string().optional(), // Website where the action was taken
   model: z.string().optional(),   // Optional model override
+  routing_mode: z.enum(['auto', 'evaluation', 'forced']).optional(), // Routing mode for model selection
 }).refine(
   (data) => data.content || data.url,
   {
@@ -109,12 +110,30 @@ export const SummarizeDebugInfoSchema = z.object({
   }).optional(),
 })
 
+const RoutingInfoSchema = z.object({
+  selected_model: z.string(),
+  complexity: z.string(),
+  fallback_used: z.boolean(),
+  candidates: z.array(z.object({
+    model_name: z.string(),
+    summary: z.string(),
+    bert_score: z.number().nullable().optional(),
+    rouge1: z.number().nullable().optional(),
+    prompt_tokens: z.number().nullable().optional(),
+    completion_tokens: z.number().nullable().optional(),
+    estimated_cost_usd: z.number().nullable().optional(),
+    latency_ms: z.number().nullable().optional(),
+    selected: z.boolean(),
+  })).optional(), // Only present in evaluation mode
+})
+
 export const SummarizeResponseSchema = z.object({
   summary: z.string(),
   category: z.string(),
   readingTime: z.number().min(0),
   model: z.string().optional(),       // Model used for this request
   usage: TokenUsageSchema.optional(), // Token usage for tracking (always present)
+  routing: RoutingInfoSchema.optional(), // Routing info (auto/evaluation modes)
   debug: SummarizeDebugInfoSchema.optional(),
 })
 
@@ -150,6 +169,8 @@ export const EnvSchema = z.object({
   // Optional provider API keys (leave blank if not available)
   GEMINI_API_KEY: z.string().optional(),
   ANTHROPIC_API_KEY: z.string().optional(),
+  HF_API_KEY: z.string().optional(),
+  HF_TIMEOUT_MS: z.string().transform((val) => parseInt(val, 10)).pipe(z.number().positive()).default("30000"),
 
   // Supabase configuration (optional - Supabase not required)
   SUPABASE_URL: z.string().url().optional(),

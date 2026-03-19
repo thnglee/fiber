@@ -12,6 +12,7 @@ import type {
   LLMCompletionResult,
   LLMUsage,
   ModelConfig,
+  HFModelType,
 } from "@/domain/types"
 
 // Re-export types for backward compatibility
@@ -271,6 +272,72 @@ async function callAnthropic(
   return { rawResponse: responseText, model: message.model, usage, structuredData }
 }
 
+// ── HuggingFace ─────────────────────────────────────────────────────────────
+
+const HF_API_BASE = 'https://api-inference.huggingface.co/models'
+const HF_INPUT_CHAR_LIMIT = 3200  // ~800 tokens — safe limit for ViT5's 1024 context
+
+async function callHuggingFace(
+  options: LLMCompletionOptions,
+  config: ReturnType<typeof getAIModelConfig>
+): Promise<CompletionResult> {
+  const apiKey = getEnvVar("HF_API_KEY")
+  if (!apiKey) throw new Error("HF_API_KEY is not set — required for HuggingFace models")
+
+  const timeoutMs = getEnvVar("HF_TIMEOUT_MS")
+  const modelId = config.model  // e.g. 'vinai/PhoGPT-4B-Chat'
+
+  // Determine task type: ViT5 is text2text-generation, PhoGPT is text-generation
+  const hfTaskType: HFModelType =
+    options.hfTaskType ??
+    (modelId.toLowerCase().includes('vit5') || modelId.toLowerCase().includes('summarization')
+      ? 'text2text-generation'
+      : 'text-generation')
+
+  // Truncate input to avoid exceeding model context window
+  const truncatedPrompt = options.prompt.length > HF_INPUT_CHAR_LIMIT
+    ? options.prompt.substring(0, HF_INPUT_CHAR_LIMIT)
+    : options.prompt
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
+  let rawResponse: string
+  try {
+    const res = await fetch(`${HF_API_BASE}/${modelId}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ inputs: truncatedPrompt }),
+      signal: controller.signal,
+    })
+
+    if (!res.ok) {
+      const errText = await res.text()
+      throw new Error(`HuggingFace API error ${res.status}: ${errText}`)
+    }
+
+    const json = await res.json() as Array<{ generated_text: string }>
+    if (!Array.isArray(json) || !json[0]?.generated_text) {
+      throw new Error(`Unexpected HuggingFace response shape: ${JSON.stringify(json).substring(0, 200)}`)
+    }
+
+    rawResponse = json[0].generated_text
+
+    // text-generation models echo the input — strip the prompt prefix
+    if (hfTaskType === 'text-generation' && rawResponse.startsWith(truncatedPrompt)) {
+      rawResponse = rawResponse.slice(truncatedPrompt.length).trimStart()
+    }
+  } finally {
+    clearTimeout(timeoutId)
+  }
+
+  // HF Inference API does not return token counts
+  return { rawResponse, model: modelId, usage: undefined }
+}
+
 // ============================================================================
 // Public API — generateCompletion
 // ============================================================================
@@ -293,6 +360,9 @@ export async function generateCompletion(options: LLMCompletionOptions): Promise
       break
     case 'anthropic':
       result = await callAnthropic(options, config, schema)
+      break
+    case 'huggingface':
+      result = await callHuggingFace(options, config)
       break
     case 'openai':
     default:

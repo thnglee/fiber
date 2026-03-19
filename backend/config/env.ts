@@ -22,6 +22,8 @@ export function getEnv(): Env {
       TAVILY_API_KEY: process.env.TAVILY_API_KEY,
       GEMINI_API_KEY: process.env.GEMINI_API_KEY,
       ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+      HF_API_KEY: process.env.HF_API_KEY,
+      HF_TIMEOUT_MS: process.env.HF_TIMEOUT_MS,
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_DB_URL: process.env.SUPABASE_DB_URL,
       SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
