@@ -172,18 +172,25 @@ export async function POST(request: NextRequest) {
       try {
         response = await performSummarize({ content, url, debug }, modelConfig)
       } catch (err) {
-        // Primary model failed — try fallback
+        // Primary model failed — walk the full fallback chain
         console.error(`[Summarize Auto] ${modelConfig.model_name} failed:`, err)
-        const fallbackModelName = getFallbackModel(modelConfig.model_name)
-        if (fallbackModelName) {
-          const fallbackConfig = await getModelConfigByName(fallbackModelName)
-          if (fallbackConfig) {
-            console.log(`[Summarize Auto] Falling back to ${fallbackModelName}`)
-            response = await performSummarize({ content, url, debug }, fallbackConfig)
-            usedModel = fallbackConfig
-            fallbackUsed = true
-            fallbackReason = `${modelConfig.model_name} failed: ${err instanceof Error ? err.message : String(err)}`
+        let currentModelName: string | null = modelConfig.model_name
+        while (!response && currentModelName) {
+          const nextModelName = getFallbackModel(currentModelName)
+          if (!nextModelName) break
+          const nextConfig = await getModelConfigByName(nextModelName)
+          if (nextConfig) {
+            try {
+              console.log(`[Summarize Auto] Falling back to ${nextModelName}`)
+              response = await performSummarize({ content, url, debug }, nextConfig)
+              usedModel = nextConfig
+              fallbackUsed = true
+              fallbackReason = `${modelConfig.model_name} failed, fell back to ${nextModelName}`
+            } catch (fallbackErr) {
+              console.error(`[Summarize Auto] ${nextModelName} also failed:`, fallbackErr)
+            }
           }
+          currentModelName = nextModelName
         }
         if (!response) throw err // Re-throw if no fallback succeeded
       }

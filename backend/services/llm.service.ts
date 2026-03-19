@@ -274,7 +274,7 @@ async function callAnthropic(
 
 // ── HuggingFace ─────────────────────────────────────────────────────────────
 
-const HF_API_BASE = 'https://api-inference.huggingface.co/models'
+const HF_API_BASE = 'https://router.huggingface.co/hf-inference/models'
 const HF_INPUT_CHAR_LIMIT = 3200  // ~800 tokens — safe limit for ViT5's 1024 context
 
 async function callHuggingFace(
@@ -319,12 +319,14 @@ async function callHuggingFace(
       throw new Error(`HuggingFace API error ${res.status}: ${errText}`)
     }
 
-    const json = await res.json() as Array<{ generated_text: string }>
-    if (!Array.isArray(json) || !json[0]?.generated_text) {
+    const json = await res.json() as Array<{ generated_text?: string; summary_text?: string }>
+    const firstResult = json?.[0]
+    const outputText = firstResult?.generated_text ?? firstResult?.summary_text
+    if (!Array.isArray(json) || !outputText) {
       throw new Error(`Unexpected HuggingFace response shape: ${JSON.stringify(json).substring(0, 200)}`)
     }
 
-    rawResponse = json[0].generated_text
+    rawResponse = outputText
 
     // text-generation models echo the input — strip the prompt prefix
     if (hfTaskType === 'text-generation' && rawResponse.startsWith(truncatedPrompt)) {
