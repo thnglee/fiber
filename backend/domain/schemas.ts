@@ -150,6 +150,8 @@ export const EnvSchema = z.object({
   // Optional provider API keys (leave blank if not available)
   GEMINI_API_KEY: z.string().optional(),
   ANTHROPIC_API_KEY: z.string().optional(),
+  HF_API_KEY: z.string().optional(),
+  HF_TIMEOUT_MS: z.string().transform((val) => parseInt(val, 10)).pipe(z.number().positive()).default("30000"),
 
   // Supabase configuration (optional - Supabase not required)
   SUPABASE_URL: z.string().url().optional(),

@@ -34,9 +34,9 @@ export function getSupportedDomains(): string[] {
  * AI Model Configuration
  */
 export interface AIModelConfig {
-  provider: 'openai' | 'gemini' | 'anthropic'
+  provider: 'openai' | 'gemini' | 'anthropic' | 'huggingface'
   model: string
-  modelType: 'standard' | 'reasoning'
+  modelType: 'standard' | 'reasoning' | 'chat' | 'base'
   temperature: number
   topP?: number
   topK?: number
