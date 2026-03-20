@@ -24,6 +24,7 @@ export function getEnv(): Env {
       ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
       HF_API_KEY: process.env.HF_API_KEY,
       HF_TIMEOUT_MS: process.env.HF_TIMEOUT_MS,
+      PHOGPT_SERVICE_URL: process.env.PHOGPT_SERVICE_URL,
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_DB_URL: process.env.SUPABASE_DB_URL,
       SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,

@@ -171,6 +171,7 @@ export const EnvSchema = z.object({
   ANTHROPIC_API_KEY: z.string().optional(),
   HF_API_KEY: z.string().optional(),
   HF_TIMEOUT_MS: z.string().transform((val) => parseInt(val, 10)).pipe(z.number().positive()).default("30000"),
+  PHOGPT_SERVICE_URL: z.string().url().optional(),
 
   // Supabase configuration (optional - Supabase not required)
   SUPABASE_URL: z.string().url().optional(),
