@@ -91,8 +91,10 @@ function getAvailableProviders(): Set<string> {
 function isModelAvailable(modelName: string, availableProviders: Set<string>): boolean {
   // GPT-4o variants → openai
   if (modelName.startsWith('gpt-')) return availableProviders.has('openai')
-  // HuggingFace models
-  if (modelName === MODEL_VIT5 || modelName === MODEL_PHOGPT) return availableProviders.has('huggingface')
+  // ViT5 uses HF Inference API
+  if (modelName === MODEL_VIT5) return availableProviders.has('huggingface')
+  // PhoGPT uses a dedicated Gradio microservice
+  if (modelName === MODEL_PHOGPT) return !!getEnvVar('PHOGPT_SERVICE_URL')
   // Gemini
   if (modelName.startsWith('gemini')) return availableProviders.has('gemini')
   // Anthropic
