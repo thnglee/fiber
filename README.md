@@ -66,7 +66,7 @@ Fiber injects a sidebar into supported Vietnamese news sites, generates LLM-powe
 | Anthropic | Claude Haiku 4.5, Sonnet 4.5, Sonnet 4.6, Opus 4.6 | Standard |
 | HuggingFace | ViT5-large (Vietnamese news summarization) | Base |
 
-> **Note:** PhoGPT-4B-Chat (`vinai/PhoGPT-4B-Chat`) is registered as a routing candidate but is not yet deployed — it is not available on HuggingFace's free Inference API. See [#28](https://github.com/thnglee/fiber/issues/28) for deployment plans. The fallback chain routes medium-complexity articles to GPT-4o in the meantime.
+> **Note:** PhoGPT-4B-Chat (`vinai/PhoGPT-4B-Chat`) runs as a dedicated Gradio microservice on HuggingFace Spaces (ZeroGPU). Set `PHOGPT_SERVICE_URL` in the backend `.env` to enable it in the routing pipeline.
 
 Reasoning models (o4-mini, o3-mini) automatically skip unsupported parameters like temperature and penalties. Missing API keys return clear error messages instead of crashing.
 
@@ -172,6 +172,7 @@ HF_API_KEY=              # HuggingFace token for ViT5/PhoGPT routing
 OPENAI_MODEL=gpt-4o-mini
 OPENAI_TEMPERATURE=0.7
 BERT_SERVICE_URL=          # URL of BERTScore microservice
+PHOGPT_SERVICE_URL=        # URL of PhoGPT Gradio service on HF Spaces
 ```
 
 ```bash

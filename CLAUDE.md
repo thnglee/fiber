@@ -94,6 +94,7 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 BERT_SERVICE_URL=         # URL of BERTScore microservice (optional)
+PHOGPT_SERVICE_URL=       # URL of PhoGPT Gradio service on HF Spaces (optional)
 OPENAI_MODEL=gpt-4o-mini  # optional override
 OPENAI_TEMPERATURE=0.7    # optional override
 ```
