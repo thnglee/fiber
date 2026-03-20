@@ -1,5 +1,6 @@
 import { logger } from "@/lib/logger"
 import { getSummarizePrompt } from "@/config/prompts"
+import { getEnvVar } from "@/config/env"
 import { extractContentFromUrl } from "./content-extraction.service"
 import { generateJsonCompletion } from "./llm.service"
 import {
@@ -16,6 +17,77 @@ import { safeParseOrThrow } from "@/utils/zod-helpers"
 import { calculateLexicalMetrics, saveEvaluationMetrics } from "./evaluation.service"
 import { calculateBertScore } from "./bert.service"
 import { calculateCompressionRate } from "./compression.service"
+
+const PHOGPT_MODEL_NAME = 'vinai/PhoGPT-4B-Chat'
+const PHOGPT_INPUT_CHAR_LIMIT = 6000
+
+/**
+ * Call the dedicated PhoGPT Gradio microservice.
+ * The microservice builds its own prompt and returns JSON { summary, category, readingTime }.
+ */
+async function callPhoGPTService(articleText: string): Promise<SummaryData> {
+  const serviceUrl = getEnvVar("PHOGPT_SERVICE_URL")
+  if (!serviceUrl) throw new Error("PHOGPT_SERVICE_URL is not set")
+
+  const timeoutMs = Number(getEnvVar("HF_TIMEOUT_MS")) || 120000
+
+  const truncated = articleText.length > PHOGPT_INPUT_CHAR_LIMIT
+    ? articleText.substring(0, PHOGPT_INPUT_CHAR_LIMIT)
+    : articleText
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
+  try {
+    // Gradio /call API: POST to initiate, then GET to stream result
+    const initRes = await fetch(`${serviceUrl}/call/summarize`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data: [truncated] }),
+      signal: controller.signal,
+    })
+
+    if (!initRes.ok) {
+      const errText = await initRes.text()
+      throw new Error(`PhoGPT service error ${initRes.status}: ${errText}`)
+    }
+
+    const { event_id } = await initRes.json()
+    if (!event_id) {
+      throw new Error('PhoGPT service returned no event_id')
+    }
+
+    // Stream result
+    const resultRes = await fetch(`${serviceUrl}/call/summarize/${event_id}`, {
+      signal: controller.signal,
+    })
+
+    if (!resultRes.ok) {
+      const errText = await resultRes.text()
+      throw new Error(`PhoGPT result error ${resultRes.status}: ${errText}`)
+    }
+
+    const resultText = await resultRes.text()
+
+    // Gradio SSE format: "event: complete\ndata: [\"json_string\"]\n\n"
+    const dataMatch = resultText.match(/^data:\s*(.+)$/m)
+    if (!dataMatch) {
+      throw new Error(`PhoGPT returned no data: ${resultText.substring(0, 200)}`)
+    }
+
+    const dataArray = JSON.parse(dataMatch[1])
+    const rawJson = typeof dataArray[0] === 'string' ? dataArray[0] : JSON.stringify(dataArray[0])
+    const parsed = JSON.parse(rawJson)
+
+    return {
+      summary: parsed.summary || '',
+      category: parsed.category || 'Khác',
+      readingTime: typeof parsed.readingTime === 'number' ? parsed.readingTime : 1,
+    }
+  } finally {
+    clearTimeout(timeoutId)
+  }
+}
 
 /**
  * Main service function to summarize content
@@ -87,6 +159,64 @@ export async function performSummarize(request: SummarizeRequest, modelConfig?: 
 
   if (extractedContent.length === 0) {
     throw new Error("Content cannot be empty")
+  }
+
+  // PhoGPT uses a dedicated microservice — bypass the LLM pipeline
+  if (modelConfig?.model_name === PHOGPT_MODEL_NAME) {
+    const startTime = Date.now()
+    const summaryData = await callPhoGPTService(extractedContent)
+    const latency = Date.now() - startTime
+
+    const response: SummarizeResponse = {
+      summary: summaryData.summary,
+      category: summaryData.category,
+      readingTime: summaryData.readingTime,
+      model: PHOGPT_MODEL_NAME,
+      usage: undefined, // PhoGPT microservice doesn't return token counts
+    }
+
+    // Fire-and-forget evaluation metrics
+    void (async () => {
+      try {
+        const [metrics, bertScore] = await Promise.all([
+          Promise.resolve(calculateLexicalMetrics(response.summary, extractedContent)),
+          calculateBertScore(extractedContent, response.summary),
+        ])
+
+        let compressionRate: number | null = null
+        try {
+          const result = calculateCompressionRate({
+            originalText: extractedContent,
+            summaryText: response.summary,
+          })
+          compressionRate = result.compressionRate
+        } catch (crErr) {
+          logger.addLog('summarize', 'compression-rate-error', {
+            error: crErr instanceof Error ? crErr.message : String(crErr),
+          })
+        }
+
+        await saveEvaluationMetrics({
+          summary: response.summary,
+          original: extractedContent,
+          url: typeof url === 'string' ? url : undefined,
+          metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate, total_tokens: null },
+          latency,
+          mode: 'sync',
+          model: PHOGPT_MODEL_NAME,
+        })
+      } catch (err) {
+        logger.addLog('summarize', 'evaluation-error', {
+          error: err instanceof Error ? err.message : String(err),
+        })
+      }
+    })()
+
+    if (debug) {
+      response.debug = debugInfo
+    }
+
+    return response
   }
 
   // Generate prompt using template
