@@ -137,8 +137,11 @@ export async function POST(request: NextRequest) {
     }
 
     // ============================================================================
-    // AUTO MODE — complexity-based model selection with fallback
+    // MODEL RESOLUTION — auto selects by complexity, forced uses active/override
     // ============================================================================
+    const { getActiveModelConfig, getAllModelConfigs } = await import('@/services/model-config.service')
+    let modelConfig = await getActiveModelConfig()
+
     if (routingMode === 'auto') {
       // Get the article text for complexity classification
       let articleText = content || ''
@@ -150,121 +153,122 @@ export async function POST(request: NextRequest) {
 
       const { selectModel, getModelConfigByName, getFallbackModel, saveRoutingDecision, estimateTokenCount, classifyComplexity } = await import('@/services/routing.service')
       const selection = selectModel(articleText)
-      let modelConfig = await getModelConfigByName(selection.model)
+      const autoModelConfig = await getModelConfigByName(selection.model)
 
-      if (!modelConfig) {
-        // Model not in DB — fall back to active model
-        const { getActiveModelConfig } = await import('@/services/model-config.service')
-        modelConfig = await getActiveModelConfig()
+      if (autoModelConfig) {
+        modelConfig = autoModelConfig
       }
+      // else: keep the active model as fallback
 
-      // If streaming requested but selected model doesn't support it, silently use sync mode
-      if (isStreaming && !modelConfig.supports_streaming) {
-        console.log(`[Summarize Auto] Streaming requested but ${modelConfig.model_name} doesn't support it — using sync mode`)
-      }
-
-      // Try the selected model
-      let response
-      let fallbackUsed = selection.fallbackUsed
-      let fallbackReason = selection.fallbackReason
-      let usedModel = modelConfig
-
-      try {
-        response = await performSummarize({ content, url, debug }, modelConfig)
-      } catch (err) {
-        // Primary model failed — walk the full fallback chain
-        console.error(`[Summarize Auto] ${modelConfig.model_name} failed:`, err)
-        let currentModelName: string | null = modelConfig.model_name
-        while (!response && currentModelName) {
-          const nextModelName = getFallbackModel(currentModelName)
-          if (!nextModelName) break
-          const nextConfig = await getModelConfigByName(nextModelName)
-          if (nextConfig) {
-            try {
-              console.log(`[Summarize Auto] Falling back to ${nextModelName}`)
-              response = await performSummarize({ content, url, debug }, nextConfig)
-              usedModel = nextConfig
-              fallbackUsed = true
-              fallbackReason = `${modelConfig.model_name} failed, fell back to ${nextModelName}`
-            } catch (fallbackErr) {
-              console.error(`[Summarize Auto] ${nextModelName} also failed:`, fallbackErr)
-            }
-          }
-          currentModelName = nextModelName
+      if (isStreaming && modelConfig.supports_streaming) {
+        // Auto mode resolved the model — fall through to the shared streaming block below
+        console.log(`[Summarize Auto] Streaming with auto-selected model: ${modelConfig.model_name}`)
+      } else {
+        // If streaming requested but selected model doesn't support it, silently use sync mode
+        if (isStreaming && !modelConfig.supports_streaming) {
+          console.log(`[Summarize Auto] Streaming requested but ${modelConfig.model_name} doesn't support it — using sync mode`)
         }
-        if (!response) throw err // Re-throw if no fallback succeeded
+
+        // Try the selected model (sync)
+        let response
+        let fallbackUsed = selection.fallbackUsed
+        let fallbackReason = selection.fallbackReason
+        let usedModel = modelConfig
+
+        try {
+          response = await performSummarize({ content, url, debug }, modelConfig)
+        } catch (err) {
+          // Primary model failed — walk the full fallback chain
+          console.error(`[Summarize Auto] ${modelConfig.model_name} failed:`, err)
+          let currentModelName: string | null = modelConfig.model_name
+          while (!response && currentModelName) {
+            const nextModelName = getFallbackModel(currentModelName)
+            if (!nextModelName) break
+            const nextConfig = await getModelConfigByName(nextModelName)
+            if (nextConfig) {
+              try {
+                console.log(`[Summarize Auto] Falling back to ${nextModelName}`)
+                response = await performSummarize({ content, url, debug }, nextConfig)
+                usedModel = nextConfig
+                fallbackUsed = true
+                fallbackReason = `${modelConfig.model_name} failed, fell back to ${nextModelName}`
+              } catch (fallbackErr) {
+                console.error(`[Summarize Auto] ${nextModelName} also failed:`, fallbackErr)
+              }
+            }
+            currentModelName = nextModelName
+          }
+          if (!response) throw err // Re-throw if no fallback succeeded
+        }
+
+        // Save routing decision to DB (fire-and-forget)
+        const complexity = classifyComplexity(articleText)
+        waitUntil(
+          saveRoutingDecision({
+            article_length: articleText.length,
+            article_tokens: estimateTokenCount(articleText),
+            category: response.category,
+            complexity,
+            routing_mode: 'auto',
+            selected_model: usedModel.model_name,
+            fallback_used: fallbackUsed,
+            fallback_reason: fallbackReason,
+          }).catch(err => console.error('[Summarize Auto] Failed to save routing decision:', err))
+        )
+
+        // Attach routing info to response
+        const enrichedResponse = {
+          ...response,
+          routing: {
+            selected_model: usedModel.model_name,
+            complexity,
+            fallback_used: fallbackUsed,
+          },
+        }
+
+        // Validate response
+        const responseParseResult = SummarizeResponseSchema.safeParse(enrichedResponse)
+        if (!responseParseResult.success) {
+          return zodErrorResponse(responseParseResult.error, 500)
+        }
+
+        // Track action (fire-and-forget)
+        const processingTime = Date.now() - startTime
+        const { trackAction, getClientIP, extractTokenUsage } = await import('@/services/action-tracking.service')
+        const tokenUsage = response.usage
+          ? extractTokenUsage({ usage: response.usage })
+          : extractTokenUsage(response.debug?.openaiResponse)
+
+        waitUntil(
+          trackAction({
+            actionType: 'summarize',
+            inputType: url ? 'url' : 'text',
+            inputContent: url || content || '',
+            outputContent: responseParseResult.data,
+            category: responseParseResult.data.category,
+            tokenUsage,
+            model: usedModel.model_name,
+            userIp: getClientIP(request.headers),
+            website: website || 'unknown',
+            userAgent: request.headers.get('user-agent') || 'unknown',
+            processingTimeMs: processingTime
+          }).catch(err => console.error('[Summarize Auto] Failed to track action:', err))
+        )
+
+        return NextResponse.json(responseParseResult.data, { headers: getCorsHeaders() })
       }
-
-      // Save routing decision to DB (fire-and-forget)
-      const complexity = classifyComplexity(articleText)
-      waitUntil(
-        saveRoutingDecision({
-          article_length: articleText.length,
-          article_tokens: estimateTokenCount(articleText),
-          category: response.category,
-          complexity,
-          routing_mode: 'auto',
-          selected_model: usedModel.model_name,
-          fallback_used: fallbackUsed,
-          fallback_reason: fallbackReason,
-        }).catch(err => console.error('[Summarize Auto] Failed to save routing decision:', err))
-      )
-
-      // Attach routing info to response
-      const enrichedResponse = {
-        ...response,
-        routing: {
-          selected_model: usedModel.model_name,
-          complexity,
-          fallback_used: fallbackUsed,
-        },
+    } else if (routingMode === 'forced') {
+      // If request specifies a model override, find that model's config
+      if (modelOverride) {
+        const allConfigs = await getAllModelConfigs()
+        const overrideConfig = allConfigs.find(c => c.model_name === modelOverride)
+        if (overrideConfig) modelConfig = overrideConfig
       }
-
-      // Validate response
-      const responseParseResult = SummarizeResponseSchema.safeParse(enrichedResponse)
-      if (!responseParseResult.success) {
-        return zodErrorResponse(responseParseResult.error, 500)
-      }
-
-      // Track action (fire-and-forget)
-      const processingTime = Date.now() - startTime
-      const { trackAction, getClientIP, extractTokenUsage } = await import('@/services/action-tracking.service')
-      const tokenUsage = response.usage
-        ? extractTokenUsage({ usage: response.usage })
-        : extractTokenUsage(response.debug?.openaiResponse)
-
-      waitUntil(
-        trackAction({
-          actionType: 'summarize',
-          inputType: url ? 'url' : 'text',
-          inputContent: url || content || '',
-          outputContent: responseParseResult.data,
-          category: responseParseResult.data.category,
-          tokenUsage,
-          model: usedModel.model_name,
-          userIp: getClientIP(request.headers),
-          website: website || 'unknown',
-          userAgent: request.headers.get('user-agent') || 'unknown',
-          processingTimeMs: processingTime
-        }).catch(err => console.error('[Summarize Auto] Failed to track action:', err))
-      )
-
-      return NextResponse.json(responseParseResult.data, { headers: getCorsHeaders() })
     }
 
     // ============================================================================
-    // FORCED MODE (default) — use active model or explicit override
+    // STREAMING / SYNC — shared by both auto (streaming) and forced modes
     // ============================================================================
-
-    // Load active model config from Supabase
-    const { getActiveModelConfig, getAllModelConfigs } = await import('@/services/model-config.service')
-    let modelConfig = await getActiveModelConfig()
-    // If request specifies a model override, find that model's config
-    if (modelOverride) {
-      const allConfigs = await getAllModelConfigs()
-      const overrideConfig = allConfigs.find(c => c.model_name === modelOverride)
-      if (overrideConfig) modelConfig = overrideConfig
-    }
 
     if (isStreaming) {
       // ============================================================================
