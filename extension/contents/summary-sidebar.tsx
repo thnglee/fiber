@@ -76,54 +76,91 @@ const SummarySidebar: React.FC = () => {
         throw new Error("Không thể tìm thấy nội dung bài viết. Vui lòng thử lại sau khi trang tải xong.")
       }
 
-      // Extract article content using Readability.
-      // We sanitize the cloned DOM first to remove nodes (script, ad iframes, etc.)
-      // that can produce null references inside the clone and crash Readability's
-      // internal tagName traversal (seen on VnExpress's fck_detail layout which
-      // contains AVP-* custom web components, video players, and 10+ iframes).
-      const documentClone = document.cloneNode(true) as Document
-
-      // Standard noise selectors
-      const REMOVE_SELECTORS = [
-        "script", "noscript", "style", "iframe",
-        "svg", "video", "audio", "canvas", "picture",
-        "[id*='ads']", "[class*='ads']",
-        "[id*='banner']", "[class*='banner']",
-        "[id*='player']", "[class*='player']",
-        "[id*='widget']", "[class*='widget']",
-      ]
-      try {
-        REMOVE_SELECTORS.forEach(sel => {
-          documentClone.querySelectorAll(sel).forEach(el => el.parentNode?.removeChild(el))
-        })
-
-        // Also strip ALL custom elements (tags containing a hyphen, e.g. avp-player-ui)
-        // These are the primary cause of the "Cannot read properties of null (reading 'tagName')"
-        // crash inside Readability on VNExpress pages.
-        documentClone.querySelectorAll("*").forEach(el => {
-          if (el.tagName && el.tagName.includes("-")) {
-            el.parentNode?.removeChild(el)
-          }
-        })
-      } catch (sanitizeErr) {
-        // Sanitization is best-effort; don't let it block the parse attempt
-        console.warn("[SummarySidebar] DOM sanitization error (non-fatal):", sanitizeErr)
-      }
-
+      // Extract article content.
+      // Strategy 1: Try site-specific selector first (avoids cloning the entire
+      //   DOM which crashes on VnExpress due to AVP-* custom web components).
+      // Strategy 2: Clone full document + Readability.
+      // Strategy 3: Grab visible body text directly.
       let article: ReturnType<Readability["parse"]> = null
-      try {
-        const reader = new Readability(documentClone)
-        article = reader.parse()
-      } catch (readabilityErr) {
-        console.warn("[SummarySidebar] Readability.parse() threw, attempting body text fallback:", readabilityErr)
+
+      // --- Strategy 1: direct extraction from known article container ---
+      const SITE_CONTENT_SELECTORS = [
+        ...Object.values(SELECTORS.SITE_SPECIFIC),
+        ...SELECTORS.ARTICLE,
+      ]
+      for (const sel of SITE_CONTENT_SELECTORS) {
+        try {
+          const container = document.querySelector(sel)
+          if (container && container.textContent && container.textContent.trim().length > 200) {
+            // Clone only the container into a minimal document for Readability
+            const minimalDoc = document.implementation.createHTMLDocument("article")
+            minimalDoc.body.appendChild(container.cloneNode(true))
+            // Strip noise from the small clone
+            minimalDoc.querySelectorAll("script,noscript,style,iframe,svg,video,audio,canvas").forEach(
+              el => el.parentNode?.removeChild(el)
+            )
+            const reader = new Readability(minimalDoc)
+            article = reader.parse()
+            if (article?.textContent && article.textContent.trim().length > 200) {
+              break
+            }
+            article = null // not good enough, try next selector
+          }
+        } catch (siteErr) {
+          console.warn("[SummarySidebar] Site-specific extraction failed for", sel, siteErr)
+        }
       }
 
+      // --- Strategy 2: full-document Readability (skip if Strategy 1 worked) ---
       if (!article || !article.textContent) {
-        // Last-resort fallback: grab visible body text directly
-        const bodyText = document.body?.innerText?.trim()
-        if (bodyText && bodyText.length > 200) {
-          // Wrap in a minimal article-like object so the rest of the code works
-          ;(article as any) = { textContent: bodyText }
+        try {
+          const documentClone = document.cloneNode(true) as Document
+
+          const REMOVE_SELECTORS = [
+            "script", "noscript", "style", "iframe",
+            "svg", "video", "audio", "canvas", "picture",
+            "[id*='ads']", "[class*='ads']",
+            "[id*='banner']", "[class*='banner']",
+            "[id*='player']", "[class*='player']",
+            "[id*='widget']", "[class*='widget']",
+          ]
+          try {
+            REMOVE_SELECTORS.forEach(sel => {
+              documentClone.querySelectorAll(sel).forEach(el => el.parentNode?.removeChild(el))
+            })
+            documentClone.querySelectorAll("*").forEach(el => {
+              if (el.tagName && el.tagName.includes("-")) {
+                el.parentNode?.removeChild(el)
+              }
+            })
+          } catch (sanitizeErr) {
+            console.warn("[SummarySidebar] DOM sanitization error (non-fatal):", sanitizeErr)
+          }
+
+          const reader = new Readability(documentClone)
+          article = reader.parse()
+        } catch (fullDocErr) {
+          console.warn("[SummarySidebar] Full-document Readability failed:", fullDocErr)
+        }
+      }
+
+      // --- Strategy 3: raw body text fallback ---
+      if (!article || !article.textContent) {
+        // Try site-specific container innerText first, then full body
+        let fallbackText: string | undefined
+        for (const sel of SITE_CONTENT_SELECTORS) {
+          const container = document.querySelector(sel)
+          if (container) {
+            fallbackText = (container as HTMLElement).innerText?.trim()
+            if (fallbackText && fallbackText.length > 200) break
+            fallbackText = undefined
+          }
+        }
+        if (!fallbackText) {
+          fallbackText = document.body?.innerText?.trim()
+        }
+        if (fallbackText && fallbackText.length > 200) {
+          ;(article as any) = { textContent: fallbackText }
         } else {
           throw new Error("Không thể trích xuất nội dung bài viết")
         }

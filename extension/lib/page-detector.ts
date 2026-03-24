@@ -51,39 +51,62 @@ async function hasSubstantialContent(): Promise<{ hasContent: boolean; contentHa
         // Wait a bit for content to load
         await new Promise(resolve => setTimeout(resolve, TIMEOUTS.CONTENT_WAIT_DELAY))
 
-        const documentClone = document.cloneNode(true) as Document
+        let article: ReturnType<Readability["parse"]> = null
 
-        // Sanitize cloned DOM to remove nodes that can produce null references
-        // inside Readability's traversal (e.g. VnExpress AVP-* custom elements,
-        // video players, ad iframes, inline scripts)
-        const REMOVE_SELECTORS = [
-            "script", "noscript", "style", "iframe",
-            "svg", "video", "audio", "canvas", "picture",
-            "[id*='ads']", "[class*='ads']",
-            "[id*='banner']", "[class*='banner']",
-            "[id*='player']", "[class*='player']",
-            "[id*='widget']", "[class*='widget']",
+        // Strategy 1: Try site-specific container first (avoids full DOM clone
+        // which crashes on VnExpress due to AVP-* custom web components)
+        const siteSelectors = [
+            ...Object.values(SELECTORS.SITE_SPECIFIC),
+            ...SELECTORS.ARTICLE,
         ]
-        try {
-            REMOVE_SELECTORS.forEach(sel => {
-                documentClone.querySelectorAll(sel).forEach(el => el.parentNode?.removeChild(el))
-            })
-            // Strip custom elements (hyphenated tag names like avp-player-ui)
-            documentClone.querySelectorAll("*").forEach(el => {
-                if (el.tagName && el.tagName.includes("-")) {
-                    el.parentNode?.removeChild(el)
+        for (const sel of siteSelectors) {
+            try {
+                const container = document.querySelector(sel)
+                if (container && container.textContent && container.textContent.trim().length > 200) {
+                    const minimalDoc = document.implementation.createHTMLDocument("article")
+                    minimalDoc.body.appendChild(container.cloneNode(true))
+                    minimalDoc.querySelectorAll("script,noscript,style,iframe,svg,video,audio,canvas").forEach(
+                        el => el.parentNode?.removeChild(el)
+                    )
+                    const reader = new Readability(minimalDoc)
+                    article = reader.parse()
+                    if (article?.textContent && article.textContent.trim().length > 200) break
+                    article = null
                 }
-            })
-        } catch (sanitizeErr) {
-            console.warn("[PageDetector] DOM sanitization error (non-fatal):", sanitizeErr)
+            } catch (siteErr) {
+                console.warn("[PageDetector] Site-specific extraction failed for", sel, siteErr)
+            }
         }
 
-        let article: ReturnType<Readability["parse"]> = null
-        try {
-            const reader = new Readability(documentClone)
-            article = reader.parse()
-        } catch (parseErr) {
-            console.warn("[PageDetector] Readability.parse() threw:", parseErr)
+        // Strategy 2: Full-document Readability
+        if (!article) {
+            try {
+                const documentClone = document.cloneNode(true) as Document
+                const REMOVE_SELECTORS = [
+                    "script", "noscript", "style", "iframe",
+                    "svg", "video", "audio", "canvas", "picture",
+                    "[id*='ads']", "[class*='ads']",
+                    "[id*='banner']", "[class*='banner']",
+                    "[id*='player']", "[class*='player']",
+                    "[id*='widget']", "[class*='widget']",
+                ]
+                try {
+                    REMOVE_SELECTORS.forEach(s => {
+                        documentClone.querySelectorAll(s).forEach(el => el.parentNode?.removeChild(el))
+                    })
+                    documentClone.querySelectorAll("*").forEach(el => {
+                        if (el.tagName && el.tagName.includes("-")) {
+                            el.parentNode?.removeChild(el)
+                        }
+                    })
+                } catch (sanitizeErr) {
+                    console.warn("[PageDetector] DOM sanitization error (non-fatal):", sanitizeErr)
+                }
+                const reader = new Readability(documentClone)
+                article = reader.parse()
+            } catch (fullDocErr) {
+                console.warn("[PageDetector] Full-document Readability failed:", fullDocErr)
+            }
         }
 
         if (article && article.textContent) {
