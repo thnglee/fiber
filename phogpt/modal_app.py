@@ -30,9 +30,8 @@ image = (
     modal.Image.from_registry("nvidia/cuda:12.1.0-devel-ubuntu22.04", add_python="3.11")
     .apt_install("git")
     .run_commands("pip install --upgrade pip setuptools wheel packaging ninja")
-    .pip_install(
-        "torch",
-        extra_index_url="https://download.pytorch.org/whl/cu121",
+    .run_commands(
+        "pip install torch --index-url https://download.pytorch.org/whl/cu121"
     )
     .pip_install(
         "transformers",
@@ -42,7 +41,10 @@ image = (
         "fastapi[standard]",
         "triton",
     )
-    .pip_install("flash-attn", extra_options="--no-build-isolation")
+    .run_commands(
+        "pip install flash-attn --no-build-isolation",
+        gpu="T4",
+    )
     .run_function(download_model)
 )
 
