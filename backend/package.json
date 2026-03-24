@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:streaming": "tsx scripts/streaming-performance-test.ts"
+    "test:streaming": "tsx scripts/streaming-performance-test.ts",
+    "test:evaluation": "tsx scripts/evaluation-batch-test.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
