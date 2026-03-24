@@ -1,0 +1,1591 @@
+{
+  "results": [
+    {
+      "index": 1,
+      "url": "https://tienphong.vn/dong-bao-dan-toc-giao-dan-dak-lak-gui-tron-niem-tin-vao-la-phieu-bau-post1823827.tpo",
+      "category_file": "1_thoi_su",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.840744,
+          "rouge1": 0.1779,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 15177,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.659474,
+          "rouge1": 0.3847,
+          "prompt_tokens": 1336,
+          "completion_tokens": 327,
+          "estimated_cost_usd": 0.0066099999999999996,
+          "latency_ms": 5089,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 21380
+    },
+    {
+      "index": 2,
+      "url": "https://tienphong.vn/sap-cau-o-can-tho-xe-cho-gao-roi-xuong-song-post1823710.tpo",
+      "category_file": "1_thoi_su",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "short",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.854713,
+          "rouge1": 0.386,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 10067,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.679897,
+          "rouge1": 0.5982,
+          "prompt_tokens": 863,
+          "completion_tokens": 265,
+          "estimated_cost_usd": 0.0048075,
+          "latency_ms": 4631,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 18066
+    },
+    {
+      "index": 3,
+      "url": "https://tienphong.vn/ha-noi-3-nguoi-di-xe-may-suyt-chet-khi-bi-o-to-ban-tai-tat-dau-post1823753.tpo",
+      "category_file": "1_thoi_su",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "short",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.871216,
+          "rouge1": 0.4763,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4272,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.671882,
+          "rouge1": 0.5487,
+          "prompt_tokens": 778,
+          "completion_tokens": 194,
+          "estimated_cost_usd": 0.003885,
+          "latency_ms": 2976,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 6608
+    },
+    {
+      "index": 4,
+      "url": "https://tienphong.vn/xay-ra-vu-no-tai-benh-vien-tra-vinh-post1823943.tpo",
+      "category_file": "1_thoi_su",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "short",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.826343,
+          "rouge1": 0.3739,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4221,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.662867,
+          "rouge1": 0.6652,
+          "prompt_tokens": 863,
+          "completion_tokens": 301,
+          "estimated_cost_usd": 0.0051675,
+          "latency_ms": 4825,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7290
+    },
+    {
+      "index": 5,
+      "url": "https://tienphong.vn/an-giang-truc-xuat-2-nguoi-trung-quoc-nhap-canh-trai-phep-post1823788.tpo",
+      "category_file": "1_thoi_su",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "short",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.839467,
+          "rouge1": 0.344,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4124,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.755683,
+          "rouge1": 0.576,
+          "prompt_tokens": 853,
+          "completion_tokens": 260,
+          "estimated_cost_usd": 0.0047325,
+          "latency_ms": 3302,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 6438
+    },
+    {
+      "index": 6,
+      "url": "https://tienphong.vn/tim-thay-thi-the-nguoi-me-tre-dang-mang-thai-va-con-gai-duoi-ho-nuoc-o-dak-lak-post1823800.tpo",
+      "category_file": "1_thoi_su",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "short",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.879304,
+          "rouge1": 0.4184,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 3541,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.675446,
+          "rouge1": 0.6097,
+          "prompt_tokens": 831,
+          "completion_tokens": 229,
+          "estimated_cost_usd": 0.0043675,
+          "latency_ms": 3427,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7860
+    },
+    {
+      "index": 7,
+      "url": "https://tienphong.vn/bo-noi-vu-de-nghi-ra-soat-phu-cap-dac-biet-cua-cong-chuc-post1823750.tpo",
+      "category_file": "1_thoi_su",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.851496,
+          "rouge1": 0.213,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 5511,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.652125,
+          "rouge1": 0.4235,
+          "prompt_tokens": 1127,
+          "completion_tokens": 293,
+          "estimated_cost_usd": 0.0057475,
+          "latency_ms": 3820,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7186
+    },
+    {
+      "index": 8,
+      "url": "https://tienphong.vn/khoi-dong-thang-thanh-nien-tuoi-tre-tphcm-chung-suc-khoi-thong-dong-chay-kenh-rach-post1823631.tpo",
+      "category_file": "1_thoi_su",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.825834,
+          "rouge1": 0.1061,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 6054,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.609412,
+          "rouge1": 0.2375,
+          "prompt_tokens": 1919,
+          "completion_tokens": 340,
+          "estimated_cost_usd": 0.0081975,
+          "latency_ms": 4596,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 8984
+    },
+    {
+      "index": 9,
+      "url": "https://tienphong.vn/tuoi-tre-quang-ngai-can-tho-ra-quan-thang-thanh-nien-2026-voi-nhieu-cong-trinh-thiet-thuc-post1823812.tpo",
+      "category_file": "1_thoi_su",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "long",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.844923,
+          "rouge1": 0.0619,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 9400,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.639234,
+          "rouge1": 0.1418,
+          "prompt_tokens": 2942,
+          "completion_tokens": 357,
+          "estimated_cost_usd": 0.010925,
+          "latency_ms": 5561,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 11101
+    },
+    {
+      "index": 10,
+      "url": "https://tienphong.vn/hon-4-ty-dong-thuc-hien-cac-cong-trinh-trong-thang-thanh-nien-o-da-nang-post1823741.tpo",
+      "category_file": "1_thoi_su",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.837675,
+          "rouge1": 0.1414,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 6691,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.673745,
+          "rouge1": 0.4023,
+          "prompt_tokens": 1413,
+          "completion_tokens": 392,
+          "estimated_cost_usd": 0.0074525,
+          "latency_ms": 4637,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 9496
+    },
+    {
+      "index": 11,
+      "url": "https://tienphong.vn/giam-doc-cong-an-ha-noi-som-su-dung-thiet-bi-bay-khong-nguoi-lai-giam-sat-an-ninh-post1823927.tpo",
+      "category_file": "2_phap_luat",
+      "category_detected": "Công nghệ - Khoa học",
+      "winner_model": "gpt-4o",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": null,
+          "rouge1": 0.1238,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 6263,
+          "selected": false
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": null,
+          "rouge1": 0.2976,
+          "prompt_tokens": 1540,
+          "completion_tokens": 325,
+          "estimated_cost_usd": 0.0070999999999999995,
+          "latency_ms": 5219,
+          "selected": true
+        }
+      ],
+      "total_latency_ms": 8309
+    },
+    {
+      "index": 12,
+      "url": "https://tienphong.vn/bat-nhom-doi-tuong-gay-roi-dam-chet-nguoi-sau-tiec-lien-hoan-post1823754.tpo",
+      "category_file": "2_phap_luat",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "short",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.894246,
+          "rouge1": 0.3779,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4481,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.629668,
+          "rouge1": 0.629,
+          "prompt_tokens": 922,
+          "completion_tokens": 299,
+          "estimated_cost_usd": 0.005294999999999999,
+          "latency_ms": 4880,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7731
+    },
+    {
+      "index": 13,
+      "url": "https://tienphong.vn/truy-duoi-ngan-tau-ca-nghi-vi-pham-iuu-tren-bien-tay-nam-post1823798.tpo",
+      "category_file": "2_phap_luat",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.85888,
+          "rouge1": 0.2132,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 6450,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.698497,
+          "rouge1": 0.4275,
+          "prompt_tokens": 1209,
+          "completion_tokens": 333,
+          "estimated_cost_usd": 0.0063525000000000005,
+          "latency_ms": 4223,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 9011
+    },
+    {
+      "index": 14,
+      "url": "https://tienphong.vn/giam-doc-cong-ty-lam-nghiep-ea-kar-bi-bat-voi-cao-buoc-nhan-hoi-lo-post1823713.tpo",
+      "category_file": "2_phap_luat",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "short",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.847728,
+          "rouge1": 0.365,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4002,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.705205,
+          "rouge1": 0.7257,
+          "prompt_tokens": 907,
+          "completion_tokens": 357,
+          "estimated_cost_usd": 0.005837500000000001,
+          "latency_ms": 4093,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 6392
+    },
+    {
+      "index": 15,
+      "url": "https://tienphong.vn/viet-nam-mo-rong-hop-tac-quoc-te-trong-chuyen-giao-nguoi-chap-hanh-an-phat-tu-post1823756.tpo",
+      "category_file": "2_phap_luat",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.838977,
+          "rouge1": 0.0827,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4765,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.641012,
+          "rouge1": 0.182,
+          "prompt_tokens": 2095,
+          "completion_tokens": 318,
+          "estimated_cost_usd": 0.0084175,
+          "latency_ms": 4367,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7513
+    },
+    {
+      "index": 16,
+      "url": "https://tienphong.vn/khoi-to-lai-tau-cho-da-trong-vu-tai-nan-ho-thac-ba-lam-6-nguoi-tu-vong-post1823386.tpo",
+      "category_file": "2_phap_luat",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.854594,
+          "rouge1": 0.2673,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 6494,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.601833,
+          "rouge1": 0.3543,
+          "prompt_tokens": 1052,
+          "completion_tokens": 231,
+          "estimated_cost_usd": 0.00494,
+          "latency_ms": 3945,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 8566
+    },
+    {
+      "index": 17,
+      "url": "https://tienphong.vn/vu-bv-bach-mai-viet-duc-co-so-2-de-nghi-bo-quoc-phong-dieu-tra-4-doanh-nghiep-post1823923.tpo",
+      "category_file": "2_phap_luat",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.827987,
+          "rouge1": 0.133,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 5697,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.705946,
+          "rouge1": 0.3083,
+          "prompt_tokens": 1599,
+          "completion_tokens": 340,
+          "estimated_cost_usd": 0.0073975,
+          "latency_ms": 3605,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 8275
+    },
+    {
+      "index": 18,
+      "url": "https://tienphong.vn/nhan-vien-bao-tri-atm-chiem-doat-tien-cua-ngan-hang-roi-nuong-vao-co-bac-post1823406.tpo",
+      "category_file": "2_phap_luat",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.858528,
+          "rouge1": 0.1657,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 6659,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.557181,
+          "rouge1": 0.2407,
+          "prompt_tokens": 1396,
+          "completion_tokens": 220,
+          "estimated_cost_usd": 0.005690000000000001,
+          "latency_ms": 3106,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 9135
+    },
+    {
+      "index": 19,
+      "url": "https://tienphong.vn/truy-lung-nghi-can-nguoi-nuoc-ngoai-trom-xe-o-to-tai-da-nang-post1823169.tpo",
+      "category_file": "2_phap_luat",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "short",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.857952,
+          "rouge1": 0.5065,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4908,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.683777,
+          "rouge1": 0.6299,
+          "prompt_tokens": 731,
+          "completion_tokens": 206,
+          "estimated_cost_usd": 0.0038874999999999995,
+          "latency_ms": 4709,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 6825
+    },
+    {
+      "index": 20,
+      "url": "https://tienphong.vn/cuu-bo-truong-nguyen-thi-kim-tien-duoc-cap-duoi-chia-75-ty-dong-tu-100-ty-nhan-hoi-lo-post1823567.tpo",
+      "category_file": "2_phap_luat",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.831746,
+          "rouge1": 0.0951,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 5165,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.630475,
+          "rouge1": 0.1901,
+          "prompt_tokens": 2124,
+          "completion_tokens": 297,
+          "estimated_cost_usd": 0.008280000000000001,
+          "latency_ms": 3366,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 8541
+    },
+    {
+      "index": 21,
+      "url": "https://tienphong.vn/chu-xe-noi-thang-ve-vinfast-vf-8-dang-gia-toi-tung-xu-van-hanh-yen-tam-tuyet-doi-post1823770.tpo",
+      "category_file": "3_kinh_te",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.842752,
+          "rouge1": 0.1291,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 7936,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.541401,
+          "rouge1": 0.2247,
+          "prompt_tokens": 1524,
+          "completion_tokens": 246,
+          "estimated_cost_usd": 0.00627,
+          "latency_ms": 2702,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 9791
+    },
+    {
+      "index": 22,
+      "url": "https://tienphong.vn/pho-thu-tuong-thuong-truc-nguyen-hoa-binh-dinh-huong-tang-truong-ben-vung-cua-nganh-cao-su-post1823553.tpo",
+      "category_file": "3_kinh_te",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.828087,
+          "rouge1": 0.1496,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 15842,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.636524,
+          "rouge1": 0.3737,
+          "prompt_tokens": 1505,
+          "completion_tokens": 392,
+          "estimated_cost_usd": 0.0076825,
+          "latency_ms": 3867,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 20953
+    },
+    {
+      "index": 23,
+      "url": "https://tienphong.vn/sau-tet-gia-thuc-pham-tai-tphcm-bien-dong-ra-sao-post1823516.tpo",
+      "category_file": "3_kinh_te",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.877545,
+          "rouge1": 0.1498,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 16861,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.599887,
+          "rouge1": 0.3024,
+          "prompt_tokens": 1497,
+          "completion_tokens": 310,
+          "estimated_cost_usd": 0.0068425,
+          "latency_ms": 4183,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 18730
+    },
+    {
+      "index": 24,
+      "url": "https://tienphong.vn/lanh-dao-nhieu-doanh-nghiep-ung-cu-dai-bieu-quoc-hoi-post1823909.tpo",
+      "category_file": "3_kinh_te",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.838039,
+          "rouge1": 0.1429,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 3888,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.641246,
+          "rouge1": 0.195,
+          "prompt_tokens": 1614,
+          "completion_tokens": 213,
+          "estimated_cost_usd": 0.006165,
+          "latency_ms": 2725,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 6428
+    },
+    {
+      "index": 25,
+      "url": "https://tienphong.vn/ly-do-thanh-toan-giao-dich-chung-khoan-cham-tre-post1823488.tpo",
+      "category_file": "3_kinh_te",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.862497,
+          "rouge1": 0.1401,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 6871,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.632118,
+          "rouge1": 0.23,
+          "prompt_tokens": 1525,
+          "completion_tokens": 265,
+          "estimated_cost_usd": 0.0064625,
+          "latency_ms": 3437,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 9573
+    },
+    {
+      "index": 26,
+      "url": "https://tienphong.vn/gia-dau-vang-tang-dung-dung-vi-my-khong-kich-iran-post1823885.tpo",
+      "category_file": "3_kinh_te",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.794136,
+          "rouge1": 0.1145,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 5227,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.579641,
+          "rouge1": 0.2425,
+          "prompt_tokens": 1756,
+          "completion_tokens": 327,
+          "estimated_cost_usd": 0.00766,
+          "latency_ms": 4835,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7538
+    },
+    {
+      "index": 27,
+      "url": "https://tienphong.vn/doanh-nghiep-bo-dao-nha-muon-tham-gia-cac-du-an-nang-luong-tai-tao-o-viet-nam-post1823596.tpo",
+      "category_file": "3_kinh_te",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.81486,
+          "rouge1": 0.1163,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 3995,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.664303,
+          "rouge1": 0.2191,
+          "prompt_tokens": 1643,
+          "completion_tokens": 276,
+          "estimated_cost_usd": 0.0068675,
+          "latency_ms": 3483,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 6305
+    },
+    {
+      "index": 28,
+      "url": "https://tienphong.vn/thu-tuong-thi-sat-du-an-cao-toc-quang-ngai-hoai-nhon-hon-20000-ty-post1823941.tpo",
+      "category_file": "3_kinh_te",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.846821,
+          "rouge1": 0.1587,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 5683,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.635099,
+          "rouge1": 0.369,
+          "prompt_tokens": 1407,
+          "completion_tokens": 366,
+          "estimated_cost_usd": 0.0071775,
+          "latency_ms": 3932,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 8539
+    },
+    {
+      "index": 29,
+      "url": "https://tienphong.vn/ly-do-nhieu-doanh-nghiep-thoai-von-bat-thanh-post1823680.tpo",
+      "category_file": "3_kinh_te",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.826023,
+          "rouge1": 0.1087,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 6405,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.609025,
+          "rouge1": 0.2436,
+          "prompt_tokens": 1847,
+          "completion_tokens": 318,
+          "estimated_cost_usd": 0.0077975,
+          "latency_ms": 3971,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 8942
+    },
+    {
+      "index": 30,
+      "url": "https://tienphong.vn/gia-vang-quoc-te-co-the-con-tang-manh-post1823905.tpo",
+      "category_file": "3_kinh_te",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "long",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.842789,
+          "rouge1": 0.0461,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 5222,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.590273,
+          "rouge1": 0.1189,
+          "prompt_tokens": 3307,
+          "completion_tokens": 372,
+          "estimated_cost_usd": 0.0119875,
+          "latency_ms": 5049,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 8027
+    },
+    {
+      "index": 31,
+      "url": "https://tienphong.vn/lac-loi-giua-ma-tran-ki-thi-rieng-post1822787.tpo",
+      "category_file": "4_giao_duc",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.841111,
+          "rouge1": 0.0914,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4466,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.605318,
+          "rouge1": 0.2058,
+          "prompt_tokens": 2046,
+          "completion_tokens": 321,
+          "estimated_cost_usd": 0.008324999999999999,
+          "latency_ms": 4412,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 6977
+    },
+    {
+      "index": 32,
+      "url": "https://tienphong.vn/thi-tot-nghiep-thpt-tren-may-tinh-nhieu-thach-thuc-post1822533.tpo",
+      "category_file": "4_giao_duc",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.834668,
+          "rouge1": 0.0803,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 2917,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.610944,
+          "rouge1": 0.1922,
+          "prompt_tokens": 2120,
+          "completion_tokens": 322,
+          "estimated_cost_usd": 0.00852,
+          "latency_ms": 4981,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7850
+    },
+    {
+      "index": 33,
+      "url": "https://tienphong.vn/them-truong-dai-hoc-noi-khong-voi-tuyen-thang-giai-khoa-hoc-ki-thuat-quoc-gia-quoc-te-post1821620.tpo",
+      "category_file": "4_giao_duc",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.821832,
+          "rouge1": 0.1168,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4257,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.671901,
+          "rouge1": 0.2628,
+          "prompt_tokens": 1648,
+          "completion_tokens": 303,
+          "estimated_cost_usd": 0.007149999999999999,
+          "latency_ms": 9853,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 12793
+    },
+    {
+      "index": 34,
+      "url": "https://tienphong.vn/hoc-sinh-se-duoc-day-khoi-nghiep-tu-tieu-hoc-post1823526.tpo",
+      "category_file": "4_giao_duc",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.839779,
+          "rouge1": 0.1493,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 5423,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.652593,
+          "rouge1": 0.3155,
+          "prompt_tokens": 1401,
+          "completion_tokens": 303,
+          "estimated_cost_usd": 0.006532499999999999,
+          "latency_ms": 4395,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 9083
+    },
+    {
+      "index": 35,
+      "url": "https://tienphong.vn/thong-tin-moi-vu-2-nu-sinh-lop-8-bi-bat-ve-lam-vo-o-nghe-an-post1823985.tpo",
+      "category_file": "4_giao_duc",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.871499,
+          "rouge1": 0.2058,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 5380,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.59438,
+          "rouge1": 0.4235,
+          "prompt_tokens": 1168,
+          "completion_tokens": 305,
+          "estimated_cost_usd": 0.00597,
+          "latency_ms": 4522,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 9308
+    },
+    {
+      "index": 36,
+      "url": "https://tienphong.vn/dai-hoc-bach-khoa-ha-noi-cong-bo-phuong-thuc-tuyen-sinh-nam-2026-post1822849.tpo",
+      "category_file": "4_giao_duc",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.848454,
+          "rouge1": 0.1141,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 9293,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.668223,
+          "rouge1": 0.2419,
+          "prompt_tokens": 1816,
+          "completion_tokens": 315,
+          "estimated_cost_usd": 0.00769,
+          "latency_ms": 4221,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 11915
+    },
+    {
+      "index": 37,
+      "url": "https://tienphong.vn/hanh-trinh-vuot-qua-noi-so-cua-sinh-vien-y-khoa-post1823411.tpo",
+      "category_file": "4_giao_duc",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.809913,
+          "rouge1": 0.0916,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 5135,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.609888,
+          "rouge1": 0.1973,
+          "prompt_tokens": 2081,
+          "completion_tokens": 317,
+          "estimated_cost_usd": 0.0083725,
+          "latency_ms": 3736,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 6951
+    },
+    {
+      "index": 38,
+      "url": "https://tienphong.vn/2-nu-sinh-lop-8-bi-bat-ve-lam-vo-sau-tet-post1823797.tpo",
+      "category_file": "4_giao_duc",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.876458,
+          "rouge1": 0.2813,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4924,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.701942,
+          "rouge1": 0.47,
+          "prompt_tokens": 1021,
+          "completion_tokens": 265,
+          "estimated_cost_usd": 0.0052025000000000005,
+          "latency_ms": 3377,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 8041
+    },
+    {
+      "index": 39,
+      "url": "https://tienphong.vn/giai-vo-dich-tekmonk-coding-olympiad-huy-bai-thi-neu-thi-sinh-su-dung-ai-post1821828.tpo",
+      "category_file": "4_giao_duc",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.836186,
+          "rouge1": 0.1027,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 7538,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.703892,
+          "rouge1": 0.2772,
+          "prompt_tokens": 1741,
+          "completion_tokens": 366,
+          "estimated_cost_usd": 0.008012499999999999,
+          "latency_ms": 5316,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 11130
+    },
+    {
+      "index": 40,
+      "url": "https://tienphong.vn/hang-tram-hoc-sinh-da-nang-tranh-tai-robotics-va-drone-post1823977.tpo",
+      "category_file": "4_giao_duc",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.846814,
+          "rouge1": 0.2305,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 6689,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.714149,
+          "rouge1": 0.4524,
+          "prompt_tokens": 1076,
+          "completion_tokens": 300,
+          "estimated_cost_usd": 0.005689999999999999,
+          "latency_ms": 3716,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 9222
+    },
+    {
+      "index": 41,
+      "url": "https://tienphong.vn/nhan-sac-chi-hai-quan-ho-don-tim-du-khach-tai-hoi-lim-post1823900.tpo",
+      "category_file": "5_van_hoa",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "short",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 1,
+          "rouge1": 1,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 5967,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.636688,
+          "rouge1": 0.8855,
+          "prompt_tokens": 584,
+          "completion_tokens": 196,
+          "estimated_cost_usd": 0.00342,
+          "latency_ms": 3246,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 8447
+    },
+    {
+      "index": 42,
+      "url": "https://tienphong.vn/chiec-cap-long-dung-com-co-thu-tuong-pham-van-dong-thuong-mang-theo-khi-di-cong-tac-post1823300.tpo",
+      "category_file": "5_van_hoa",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.830701,
+          "rouge1": 0.1277,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 7017,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.564617,
+          "rouge1": 0.2771,
+          "prompt_tokens": 1734,
+          "completion_tokens": 333,
+          "estimated_cost_usd": 0.007665,
+          "latency_ms": 4955,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 9707
+    },
+    {
+      "index": 43,
+      "url": "https://tienphong.vn/nghe-nhac-trinh-ben-dong-song-huong-post1823845.tpo",
+      "category_file": "5_van_hoa",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.82081,
+          "rouge1": 0.1878,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4857,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.632317,
+          "rouge1": 0.4033,
+          "prompt_tokens": 1225,
+          "completion_tokens": 339,
+          "estimated_cost_usd": 0.0064525,
+          "latency_ms": 3218,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7222
+    },
+    {
+      "index": 44,
+      "url": "https://tienphong.vn/cac-nguoi-dep-hoa-hau-viet-nam-check-in-tai-ngoi-chua-2000-nam-tuoi-o-bac-ninh-post1824000.tpo",
+      "category_file": "5_van_hoa",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.800467,
+          "rouge1": 0.2433,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 3988,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.630267,
+          "rouge1": 0.5261,
+          "prompt_tokens": 1043,
+          "completion_tokens": 309,
+          "estimated_cost_usd": 0.0056975,
+          "latency_ms": 4288,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7184
+    },
+    {
+      "index": 45,
+      "url": "https://tienphong.vn/da-nang-tung-bung-hoi-dua-thuyen-tren-song-cu-de-post1822807.tpo",
+      "category_file": "5_van_hoa",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "short",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.839349,
+          "rouge1": 0.3078,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4390,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.592233,
+          "rouge1": 0.4804,
+          "prompt_tokens": 955,
+          "completion_tokens": 238,
+          "estimated_cost_usd": 0.0047675,
+          "latency_ms": 3092,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7215
+    },
+    {
+      "index": 46,
+      "url": "https://tienphong.vn/le-hoi-hoa-ban-2026-bung-no-sac-mau-voi-carnaval-duong-pho-post1823443.tpo",
+      "category_file": "5_van_hoa",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.855973,
+          "rouge1": 0.299,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 3395,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.670197,
+          "rouge1": 0.5472,
+          "prompt_tokens": 937,
+          "completion_tokens": 283,
+          "estimated_cost_usd": 0.0051725,
+          "latency_ms": 3084,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 6612
+    },
+    {
+      "index": 47,
+      "url": "https://tienphong.vn/ngua-giay-khung-xep-kin-san-cho-dot-o-den-cho-cui-post1822930.tpo",
+      "category_file": "5_van_hoa",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.827807,
+          "rouge1": 0.1961,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4234,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.591185,
+          "rouge1": 0.4153,
+          "prompt_tokens": 1225,
+          "completion_tokens": 327,
+          "estimated_cost_usd": 0.0063325,
+          "latency_ms": 4389,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7472
+    },
+    {
+      "index": 48,
+      "url": "https://tienphong.vn/ha-nguon-song-huong-day-song-dau-xuan-post1823536.tpo",
+      "category_file": "5_van_hoa",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.837145,
+          "rouge1": 0.1773,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 3962,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.583987,
+          "rouge1": 0.3276,
+          "prompt_tokens": 1327,
+          "completion_tokens": 281,
+          "estimated_cost_usd": 0.0061275,
+          "latency_ms": 3607,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 6862
+    },
+    {
+      "index": 49,
+      "url": "https://tienphong.vn/giai-bai-toan-bien-nguoi-di-le-hoi-post1823626.tpo",
+      "category_file": "5_van_hoa",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "long",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.816022,
+          "rouge1": 0.0648,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 4215,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.499384,
+          "rouge1": 0.1095,
+          "prompt_tokens": 2869,
+          "completion_tokens": 255,
+          "estimated_cost_usd": 0.0097225,
+          "latency_ms": 4296,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7284
+    },
+    {
+      "index": 50,
+      "url": "https://tienphong.vn/tphcm-sap-co-them-2-bao-vat-quoc-gia-post1823249.tpo",
+      "category_file": "5_van_hoa",
+      "category_detected": "Khác",
+      "winner_model": "VietAI/vit5-large-vietnews-summarization",
+      "complexity": "medium",
+      "candidates": [
+        {
+          "model_name": "VietAI/vit5-large-vietnews-summarization",
+          "bert_score": 0.839236,
+          "rouge1": 0.1618,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "estimated_cost_usd": null,
+          "latency_ms": 5012,
+          "selected": true
+        },
+        {
+          "model_name": "gpt-4o",
+          "bert_score": 0.60647,
+          "rouge1": 0.3235,
+          "prompt_tokens": 1352,
+          "completion_tokens": 307,
+          "estimated_cost_usd": 0.006449999999999999,
+          "latency_ms": 4015,
+          "selected": false
+        }
+      ],
+      "total_latency_ms": 7118
+    }
+  ],
+  "stats": {
+    "totalArticles": 50,
+    "successCount": 50,
+    "failCount": 0,
+    "successRate": "100.0%",
+    "avgTotalLatency": "9.2s",
+    "modelWins": {
+      "VietAI/vit5-large-vietnews-summarization": 49,
+      "gpt-4o": 1
+    },
+    "avgBertScoreByModel": {
+      "VietAI/vit5-large-vietnews-summarization": "0.8451",
+      "gpt-4o": "0.6368"
+    },
+    "avgRouge1ByModel": {
+      "VietAI/vit5-large-vietnews-summarization": "0.2103",
+      "gpt-4o": "0.3685"
+    },
+    "avgLatencyByModel": {
+      "VietAI/vit5-large-vietnews-summarization": "6099ms",
+      "gpt-4o": "4186ms"
+    },
+    "avgCostByModel": {
+      "VietAI/vit5-large-vietnews-summarization": "$0.000000",
+      "gpt-4o": "$0.006666"
+    },
+    "complexityDistribution": {
+      "medium": 37,
+      "short": 10,
+      "long": 3
+    }
+  },
+  "config": {
+    "PER_CATEGORY": 10,
+    "CONCURRENCY": 2,
+    "TIMEOUT_MS": 300000
+  }
+}
