@@ -24,7 +24,7 @@ def download_model():
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
-    .pip_install("torch", "transformers", "accelerate")
+    .pip_install("torch", "transformers", "accelerate", "einops")
     .run_function(download_model)
 )
 
