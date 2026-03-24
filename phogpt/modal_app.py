@@ -29,6 +29,7 @@ def download_model():
 image = (
     modal.Image.from_registry("nvidia/cuda:12.1.0-devel-ubuntu22.04", add_python="3.11")
     .apt_install("git")
+    .run_commands("pip install --upgrade pip setuptools wheel packaging ninja")
     .pip_install(
         "torch",
         "transformers",
@@ -36,8 +37,6 @@ image = (
         "einops",
         "huggingface_hub",
         "fastapi[standard]",
-        "packaging",
-        "ninja",
         "triton",
     )
     .pip_install("flash-attn", extra_options="--no-build-isolation")
