@@ -51,12 +51,27 @@ export async function GET(request: Request) {
         comparisons = compData || [];
       }
 
-      // Fetch ALL routing decisions for summary stats (unfiltered)
-      const { data: allDecisions } = await supabase
-        .from('routing_decisions')
-        .select('selected_model, fallback_used, routing_mode');
+      // Fetch ALL routing decisions for summary stats (paginate to avoid 1000-row cap)
+      const PAGE_SIZE = 1000;
+      let allRows: any[] = [];
+      let from = 0;
+      let hasMore = true;
 
-      const allRows = allDecisions || [];
+      while (hasMore) {
+        const { data: page } = await supabase
+          .from('routing_decisions')
+          .select('selected_model, fallback_used, routing_mode')
+          .range(from, from + PAGE_SIZE - 1);
+
+        if (page && page.length > 0) {
+          allRows = allRows.concat(page);
+          from += PAGE_SIZE;
+          hasMore = page.length === PAGE_SIZE;
+        } else {
+          hasMore = false;
+        }
+      }
+
       const totalDecisions = allRows.length;
 
       // Calculate fallback rate
@@ -97,12 +112,28 @@ export async function GET(request: Request) {
         count: number;
       }> = [];
 
-      const { data: allComparisons } = await supabase
-        .from('model_comparison_results')
-        .select('model_name, bert_score')
-        .not('bert_score', 'is', null);
+      // Paginate to avoid 1000-row cap
+      let allComparisons: any[] = [];
+      let compFrom = 0;
+      let compHasMore = true;
 
-      if (allComparisons && allComparisons.length > 0) {
+      while (compHasMore) {
+        const { data: compPage } = await supabase
+          .from('model_comparison_results')
+          .select('model_name, bert_score')
+          .not('bert_score', 'is', null)
+          .range(compFrom, compFrom + PAGE_SIZE - 1);
+
+        if (compPage && compPage.length > 0) {
+          allComparisons = allComparisons.concat(compPage);
+          compFrom += PAGE_SIZE;
+          compHasMore = compPage.length === PAGE_SIZE;
+        } else {
+          compHasMore = false;
+        }
+      }
+
+      if (allComparisons.length > 0) {
         const bertByModel: Record<string, { sum: number; count: number }> = {};
         for (const c of allComparisons) {
           if (!bertByModel[c.model_name]) {

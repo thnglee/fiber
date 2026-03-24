@@ -28,21 +28,35 @@ export async function GET(request: NextRequest) {
     const days = parseInt(searchParams.get('days') || '7', 10)
     const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
 
-    // Fetch routing decisions within the time window
-    const { data: decisions, error: decisionsError } = await supabase
-      .from('routing_decisions')
-      .select('*')
-      .gte('created_at', since)
-      .order('created_at', { ascending: false })
+    // Fetch routing decisions within the time window (paginate to avoid 1000-row cap)
+    const PAGE_SIZE = 1000
+    let rows: any[] = []
+    let from = 0
+    let hasMore = true
 
-    if (decisionsError) {
-      return NextResponse.json(
-        { error: `Failed to fetch routing decisions: ${decisionsError.message}` },
-        { status: 500, headers: getCorsHeaders() }
-      )
+    while (hasMore) {
+      const { data: page, error: pageError } = await supabase
+        .from('routing_decisions')
+        .select('*')
+        .gte('created_at', since)
+        .order('created_at', { ascending: false })
+        .range(from, from + PAGE_SIZE - 1)
+
+      if (pageError) {
+        return NextResponse.json(
+          { error: `Failed to fetch routing decisions: ${pageError.message}` },
+          { status: 500, headers: getCorsHeaders() }
+        )
+      }
+
+      if (page && page.length > 0) {
+        rows = rows.concat(page)
+        from += PAGE_SIZE
+        hasMore = page.length === PAGE_SIZE
+      } else {
+        hasMore = false
+      }
     }
-
-    const rows = decisions || []
     const total = rows.length
 
     // Model distribution
@@ -96,13 +110,29 @@ export async function GET(request: NextRequest) {
     let avgBertScores: Array<{ model: string; avg_bert_score: number; count: number }> = []
 
     if (routingIds.length > 0) {
-      const { data: comparisons } = await supabase
-        .from('model_comparison_results')
-        .select('model_name, bert_score')
-        .in('routing_id', routingIds)
-        .not('bert_score', 'is', null)
+      // Paginate to avoid 1000-row cap
+      let comparisons: any[] = []
+      let compFrom = 0
+      let compHasMore = true
 
-      if (comparisons && comparisons.length > 0) {
+      while (compHasMore) {
+        const { data: compPage } = await supabase
+          .from('model_comparison_results')
+          .select('model_name, bert_score')
+          .in('routing_id', routingIds)
+          .not('bert_score', 'is', null)
+          .range(compFrom, compFrom + PAGE_SIZE - 1)
+
+        if (compPage && compPage.length > 0) {
+          comparisons = comparisons.concat(compPage)
+          compFrom += PAGE_SIZE
+          compHasMore = compPage.length === PAGE_SIZE
+        } else {
+          compHasMore = false
+        }
+      }
+
+      if (comparisons.length > 0) {
         const bertByModel: Record<string, { sum: number; count: number }> = {}
         for (const c of comparisons) {
           if (!bertByModel[c.model_name]) {

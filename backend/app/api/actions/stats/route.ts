@@ -26,21 +26,38 @@ export async function GET() {
     try {
         const supabase = getSupabaseAdmin()
 
-        // Fetch all actions (we'll aggregate in memory for simplicity)
-        // For production with large datasets, consider using Supabase functions or views
-        const { data: actions, error } = await supabase
-            .from('user_actions')
-            .select('action_type, website, token_usage, processing_time_ms, created_at')
+        // Fetch all actions by paginating (Supabase defaults to 1000 row limit)
+        const PAGE_SIZE = 1000
+        let allActions: any[] = []
+        let from = 0
+        let hasMore = true
 
-        if (error) {
-            console.error('[Stats API] Error fetching actions:', error)
-            return NextResponse.json(
-                { error: 'Failed to fetch statistics' },
-                { status: 500, headers: getCorsHeaders() }
-            )
+        while (hasMore) {
+            const { data, error: fetchError } = await supabase
+                .from('user_actions')
+                .select('action_type, website, token_usage, processing_time_ms, created_at')
+                .range(from, from + PAGE_SIZE - 1)
+
+            if (fetchError) {
+                console.error('[Stats API] Error fetching actions:', fetchError)
+                return NextResponse.json(
+                    { error: 'Failed to fetch statistics' },
+                    { status: 500, headers: getCorsHeaders() }
+                )
+            }
+
+            if (data && data.length > 0) {
+                allActions = allActions.concat(data)
+                from += PAGE_SIZE
+                hasMore = data.length === PAGE_SIZE
+            } else {
+                hasMore = false
+            }
         }
 
-        if (!actions || actions.length === 0) {
+        const actions = allActions
+
+        if (actions.length === 0) {
             // Return empty stats
             const emptyStats: ActionStats = {
                 total_actions: 0,
