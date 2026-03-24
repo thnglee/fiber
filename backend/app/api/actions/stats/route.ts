@@ -28,7 +28,7 @@ export async function GET() {
 
         // Fetch all actions by paginating (Supabase defaults to 1000 row limit)
         const PAGE_SIZE = 1000
-        let allActions: any[] = []
+        let allActions: Array<{ action_type: string; website: string; token_usage: unknown; processing_time_ms: number; created_at: string }> = []
         let from = 0
         let hasMore = true
 

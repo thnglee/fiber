@@ -53,7 +53,7 @@ export async function GET(request: Request) {
 
       // Fetch ALL routing decisions for summary stats (paginate to avoid 1000-row cap)
       const PAGE_SIZE = 1000;
-      let allRows: any[] = [];
+      let allRows: Array<{ selected_model: string; fallback_used: boolean; routing_mode: string }> = [];
       let from = 0;
       let hasMore = true;
 
@@ -113,7 +113,7 @@ export async function GET(request: Request) {
       }> = [];
 
       // Paginate to avoid 1000-row cap
-      let allComparisons: any[] = [];
+      let allComparisons: Array<{ model_name: string; bert_score: number }> = [];
       let compFrom = 0;
       let compHasMore = true;
 

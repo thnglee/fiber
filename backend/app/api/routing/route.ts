@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch routing decisions within the time window (paginate to avoid 1000-row cap)
     const PAGE_SIZE = 1000
-    let rows: any[] = []
+    let rows: Array<{ id: string; selected_model: string; fallback_used: boolean; complexity: string; created_at: string; [key: string]: unknown }> = []
     let from = 0
     let hasMore = true
 
@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
 
     if (routingIds.length > 0) {
       // Paginate to avoid 1000-row cap
-      let comparisons: any[] = []
+      let comparisons: Array<{ model_name: string; bert_score: number }> = []
       let compFrom = 0
       let compHasMore = true
 
