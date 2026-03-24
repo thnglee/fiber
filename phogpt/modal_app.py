@@ -28,6 +28,7 @@ def download_model():
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
+    .apt_install("git")
     .pip_install(
         "torch",
         "transformers",
@@ -35,9 +36,11 @@ image = (
         "einops",
         "huggingface_hub",
         "fastapi[standard]",
-        "flash-attn",
+        "packaging",
+        "ninja",
         "triton",
     )
+    .pip_install("flash-attn", extra_options="--no-build-isolation")
     .run_function(download_model)
 )
 
