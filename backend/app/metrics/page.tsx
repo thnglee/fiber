@@ -1096,6 +1096,25 @@ export default function EvaluationDashboard() {
                   </div>
                 )}
 
+                {/* Evaluation Mode Results — Grouped by routing decision */}
+                {!evalLoading && evalComparisons.length > 0 && (
+                  <EvalModeGroupedResults
+                    evalDecisions={evalDecisions}
+                    evalComparisons={evalComparisons}
+                    evalTotal={evalTotal}
+                    evalLoadingMore={evalLoadingMore}
+                    onShowMore={handleEvalShowMore}
+                    onExportCsv={exportEvalComparisonsCsv}
+                  />
+                )}
+
+                {/* Empty state for evaluation mode */}
+                {!evalLoading && evalComparisons.length === 0 && routingDecisions.length > 0 && (
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center text-gray-500 text-sm">
+                    No evaluation mode results found. Run summarization with routing_mode &quot;evaluation&quot; to see model comparisons here.
+                  </div>
+                )}
+
                 {/* Recent Routing Decisions Table */}
                 <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
                   <div className="px-6 py-4 border-b border-gray-200">
@@ -1204,25 +1223,6 @@ export default function EvaluationDashboard() {
                     </div>
                   )}
                 </div>
-
-                {/* Evaluation Mode Results — Grouped by routing decision */}
-                {!evalLoading && evalComparisons.length > 0 && (
-                  <EvalModeGroupedResults
-                    evalDecisions={evalDecisions}
-                    evalComparisons={evalComparisons}
-                    evalTotal={evalTotal}
-                    evalLoadingMore={evalLoadingMore}
-                    onShowMore={handleEvalShowMore}
-                    onExportCsv={exportEvalComparisonsCsv}
-                  />
-                )}
-
-                {/* Empty state for evaluation mode */}
-                {!evalLoading && evalComparisons.length === 0 && routingDecisions.length > 0 && (
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center text-gray-500 text-sm">
-                    No evaluation mode results found. Run summarization with routing_mode &quot;evaluation&quot; to see model comparisons here.
-                  </div>
-                )}
 
                 {/* Empty state for entire routing tab */}
                 {routingDecisions.length === 0 && (
