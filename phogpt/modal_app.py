@@ -17,41 +17,13 @@ INPUT_CHAR_LIMIT = 6000  # ~1500 tokens — safe for 8192 context with prompt+ou
 # ---------------------------------------------------------------------------
 
 def download_model():
-    """Download model weights AND custom code into the image at build time.
-
-    1. snapshot_download: caches weights in hub/ cache
-    2. AutoConfig/AutoTokenizer: populates transformers modules/ cache
-       with all custom Python files so they're available at runtime.
-    3. Fallback: if modules cache fails, manually copy custom .py files
-       from the hub snapshot into the modules cache path.
-    """
-    import glob
-    import os
-    import shutil
+    """Download model weights AND custom code into the image at build time."""
     from huggingface_hub import snapshot_download
     from transformers import AutoConfig, AutoTokenizer
 
-    snap_path = snapshot_download(MODEL_NAME)
-
-    try:
-        AutoConfig.from_pretrained(MODEL_NAME, trust_remote_code=True)
-        AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
-    except (FileNotFoundError, OSError) as e:
-        print(f"AutoConfig pre-cache failed ({e}), manually copying custom code...")
-        # Find the transformers modules cache dir and copy .py files there
-        modules_base = os.path.expanduser(
-            "~/.cache/huggingface/modules/transformers_modules"
-        )
-        # Find existing partial cache dir (transformers encodes hyphens)
-        for root, dirs, files in os.walk(modules_base):
-            if "config.json" in files or "configuration_mpt.py" in files:
-                # Copy all .py files from snapshot into this dir
-                for py_file in glob.glob(os.path.join(snap_path, "*.py")):
-                    dst = os.path.join(root, os.path.basename(py_file))
-                    if not os.path.exists(dst):
-                        shutil.copy2(py_file, dst)
-                        print(f"  Copied {os.path.basename(py_file)} -> {root}")
-                break
+    snapshot_download(MODEL_NAME)
+    AutoConfig.from_pretrained(MODEL_NAME, trust_remote_code=True)
+    AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
 
 image = (
     modal.Image.from_registry("nvidia/cuda:12.1.0-devel-ubuntu22.04", add_python="3.11")
@@ -71,6 +43,10 @@ image = (
     .run_commands(
         "pip install flash-attn --no-build-isolation",
         gpu="T4",
+    )
+    .run_commands(
+        "mkdir -p /usr/local/lib/python3.11/site-packages/triton_pre_mlir"
+        " && touch /usr/local/lib/python3.11/site-packages/triton_pre_mlir/__init__.py"
     )
     .run_function(download_model)
 )
