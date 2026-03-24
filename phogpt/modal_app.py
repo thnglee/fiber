@@ -32,6 +32,9 @@ image = (
     .run_commands("pip install --upgrade pip setuptools wheel packaging ninja")
     .pip_install(
         "torch",
+        extra_index_url="https://download.pytorch.org/whl/cu121",
+    )
+    .pip_install(
         "transformers",
         "accelerate",
         "einops",
