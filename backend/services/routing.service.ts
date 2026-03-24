@@ -92,7 +92,8 @@ function isModelAvailable(modelName: string, availableProviders: Set<string>): b
   // GPT-4o variants → openai
   if (modelName.startsWith('gpt-')) return availableProviders.has('openai')
   // HuggingFace models
-  if (modelName === MODEL_VIT5 || modelName === MODEL_PHOGPT) return availableProviders.has('huggingface')
+  if (modelName === MODEL_VIT5) return availableProviders.has('huggingface')
+  if (modelName === MODEL_PHOGPT) return !!getEnvVar('PHOGPT_SERVICE_URL')
   // Gemini
   if (modelName.startsWith('gemini')) return availableProviders.has('gemini')
   // Anthropic
