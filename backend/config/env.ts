@@ -38,6 +38,7 @@ export function getEnv(): Env {
       CHROME_EXTENSION_ID: process.env.CHROME_EXTENSION_ID,
       FIREFOX_EXTENSION_ID: process.env.FIREFOX_EXTENSION_ID,
       ALLOW_LOCALHOST: process.env.ALLOW_LOCALHOST,
+      PHOGPT_SERVICE_URL: process.env.PHOGPT_SERVICE_URL,
     })
     return validatedEnv
   } catch (error) {

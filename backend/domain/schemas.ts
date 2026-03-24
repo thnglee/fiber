@@ -172,6 +172,9 @@ export const EnvSchema = z.object({
   HF_API_KEY: z.string().optional(),
   HF_TIMEOUT_MS: z.string().transform((val) => parseInt(val, 10)).pipe(z.number().positive()).default("30000"),
 
+  // PhoGPT Modal microservice URL (optional — only needed for evaluation mode)
+  PHOGPT_SERVICE_URL: z.string().url().optional(),
+
   // Supabase configuration (optional - Supabase not required)
   SUPABASE_URL: z.string().url().optional(),
   SUPABASE_DB_URL: z.string().url().optional(),
