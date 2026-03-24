@@ -17,14 +17,18 @@ INPUT_CHAR_LIMIT = 6000  # ~1500 tokens — safe for 8192 context with prompt+ou
 # ---------------------------------------------------------------------------
 
 def download_model():
-    """Download model weights into the image at build time."""
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-    AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
-    AutoModelForCausalLM.from_pretrained(MODEL_NAME, trust_remote_code=True)
+    """Download model weights into the image at build time.
+
+    Uses snapshot_download instead of from_pretrained to avoid loading
+    PhoGPT's custom modeling code (which requires flash_attn_triton at
+    import time). The actual model loading happens at runtime with GPU.
+    """
+    from huggingface_hub import snapshot_download
+    snapshot_download(MODEL_NAME)
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
-    .pip_install("torch", "transformers", "accelerate", "einops")
+    .pip_install("torch", "transformers", "accelerate", "einops", "huggingface_hub")
     .run_function(download_model)
 )
 
