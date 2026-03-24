@@ -1,5 +1,6 @@
 import { logger } from "@/lib/logger"
 import { getSummarizePrompt } from "@/config/prompts"
+import { getEnvVar } from "@/config/env"
 import { extractContentFromUrl } from "./content-extraction.service"
 import { generateJsonCompletion } from "./llm.service"
 import {
@@ -16,6 +17,48 @@ import { safeParseOrThrow } from "@/utils/zod-helpers"
 import { calculateLexicalMetrics, saveEvaluationMetrics } from "./evaluation.service"
 import { calculateBertScore } from "./bert.service"
 import { calculateCompressionRate } from "./compression.service"
+
+const PHOGPT_MODEL_NAME = 'vinai/PhoGPT-4B-Chat'
+const PHOGPT_INPUT_CHAR_LIMIT = 6000
+
+/**
+ * Call the dedicated PhoGPT Modal microservice.
+ * Single POST → JSON response (no Gradio SSE polling).
+ */
+async function callPhoGPTService(articleText: string): Promise<SummaryData> {
+  const serviceUrl = getEnvVar("PHOGPT_SERVICE_URL")
+  if (!serviceUrl) throw new Error("PHOGPT_SERVICE_URL is not set")
+
+  const timeoutMs = Number(getEnvVar("HF_TIMEOUT_MS")) || 120000
+
+  const truncated = articleText.length > PHOGPT_INPUT_CHAR_LIMIT
+    ? articleText.substring(0, PHOGPT_INPUT_CHAR_LIMIT)
+    : articleText
+
+  const res = await fetch(serviceUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ article_text: truncated }),
+    signal: AbortSignal.timeout(timeoutMs),
+  })
+
+  if (!res.ok) {
+    const errText = await res.text()
+    throw new Error(`PhoGPT service error ${res.status}: ${errText}`)
+  }
+
+  const data = await res.json()
+
+  if (data.error) {
+    throw new Error(`PhoGPT service returned error: ${data.error}`)
+  }
+
+  return {
+    summary: data.summary || '',
+    category: data.category || 'Khác',
+    readingTime: typeof data.readingTime === 'number' ? data.readingTime : 1,
+  }
+}
 
 /**
  * Main service function to summarize content
@@ -93,6 +136,69 @@ export async function performSummarize(request: SummarizeRequest, modelConfig?: 
   const prompt = getSummarizePrompt({ content: extractedContent })
   if (debug) {
     debugInfo.prompt = prompt
+  }
+
+  // PhoGPT: bypass the standard LLM pipeline — call dedicated Modal microservice
+  if (modelConfig?.model_name === PHOGPT_MODEL_NAME) {
+    const startTime = Date.now()
+    const summaryData = await callPhoGPTService(extractedContent)
+    const latency = Date.now() - startTime
+
+    const response: SummarizeResponse = {
+      summary: summaryData.summary,
+      category: summaryData.category,
+      readingTime: summaryData.readingTime,
+      model: PHOGPT_MODEL_NAME,
+      usage: undefined,
+    }
+
+    logger.addLog('summarize', 'phogpt-complete', {
+      latency,
+      summaryLength: summaryData.summary.length,
+    })
+
+    // Fire-and-forget evaluation metrics
+    void (async () => {
+      try {
+        const [metrics, bertScore] = await Promise.all([
+          Promise.resolve(calculateLexicalMetrics(response.summary, extractedContent)),
+          calculateBertScore(extractedContent, response.summary),
+        ])
+
+        let compressionRate: number | null = null
+        try {
+          const result = calculateCompressionRate({
+            originalText: extractedContent,
+            summaryText: response.summary,
+          })
+          compressionRate = result.compressionRate
+        } catch (crErr) {
+          logger.addLog('summarize', 'compression-rate-error', {
+            error: crErr instanceof Error ? crErr.message : String(crErr)
+          })
+        }
+
+        await saveEvaluationMetrics({
+          summary: response.summary,
+          original: extractedContent,
+          url: typeof url === 'string' ? url : undefined,
+          metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate, total_tokens: null },
+          latency,
+          mode: 'sync',
+          model: PHOGPT_MODEL_NAME,
+        })
+      } catch (err) {
+        logger.addLog('summarize', 'evaluation-error', {
+          error: err instanceof Error ? err.message : String(err)
+        })
+      }
+    })()
+
+    if (debug) {
+      response.debug = debugInfo
+    }
+
+    return response
   }
 
   // Generate summary using centralized LLM service with Zod structured output
