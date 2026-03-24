@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
-import { Search, Filter, Download, Check } from 'lucide-react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { Search, Filter, Download, Trophy, Clock, DollarSign, ChevronDown, ChevronUp } from 'lucide-react';
 
 // ── Types ───────────────────────────────────────────────────────────
 
@@ -88,6 +88,291 @@ const BAR_COLORS = [
   'bg-indigo-500',
   'bg-teal-500',
 ];
+
+// ── Model color mapping ─────────────────────────────────────────────
+const MODEL_COLORS: Record<string, { bg: string; border: string; text: string; ring: string }> = {
+  'VietAI/vit5-large-vietnews-summarization': { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', ring: 'ring-blue-500' },
+  'vinai/PhoGPT-4B-Chat': { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', ring: 'ring-purple-500' },
+  'gpt-4o': { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-700', ring: 'ring-emerald-500' },
+  'gpt-4o-mini': { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-700', ring: 'ring-teal-500' },
+};
+
+const DEFAULT_MODEL_COLOR = { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-700', ring: 'ring-gray-500' };
+
+function getModelColor(model: string) {
+  return MODEL_COLORS[model] || DEFAULT_MODEL_COLOR;
+}
+
+// ── Score bar helper ────────────────────────────────────────────────
+function ScoreBar({ value, max, label, color }: { value: number | null; max: number; label: string; color: string }) {
+  if (value == null) return <span className="text-gray-400 text-xs">--</span>;
+  const pct = Math.min((value / max) * 100, 100);
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-gray-500">{label}</span>
+        <span className="text-xs font-semibold text-gray-800">{value.toFixed(4)}</span>
+      </div>
+      <div className="w-full bg-gray-100 rounded-full h-2">
+        <div className={`h-2 rounded-full ${color}`} style={{ width: `${Math.max(pct, 2)}%` }} />
+      </div>
+    </div>
+  );
+}
+
+// ── Grouped evaluation results component ────────────────────────────
+function EvalModeGroupedResults({
+  evalDecisions,
+  evalComparisons,
+  evalTotal,
+  evalLoadingMore,
+  onShowMore,
+  onExportCsv,
+}: {
+  evalDecisions: RoutingDecision[];
+  evalComparisons: ModelComparison[];
+  evalTotal: number;
+  evalLoadingMore: boolean;
+  onShowMore: () => void;
+  onExportCsv: () => void;
+}) {
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
+
+  // Group comparisons by routing_id
+  const grouped = useMemo(() => {
+    const map = new Map<string, ModelComparison[]>();
+    for (const comp of evalComparisons) {
+      const list = map.get(comp.routing_id) || [];
+      list.push(comp);
+      map.set(comp.routing_id, list);
+    }
+
+    // Sort comparisons within each group: winner first, then by bert_score desc
+    for (const [, comps] of map) {
+      comps.sort((a, b) => {
+        if (a.selected && !b.selected) return -1;
+        if (!a.selected && b.selected) return 1;
+        return (Number(b.bert_score) || 0) - (Number(a.bert_score) || 0);
+      });
+    }
+
+    // Return in the order of evalDecisions
+    return evalDecisions
+      .filter(d => map.has(d.id))
+      .map(d => ({ decision: d, comparisons: map.get(d.id)! }));
+  }, [evalDecisions, evalComparisons]);
+
+  const toggleExpanded = (id: string) => {
+    setExpandedCards(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-900">
+          Evaluation Mode Results
+          <span className="ml-2 text-sm font-normal text-gray-500">
+            ({grouped.length} evaluation{grouped.length !== 1 ? 's' : ''})
+          </span>
+        </h2>
+        <button
+          onClick={onExportCsv}
+          className="flex items-center gap-2 px-4 py-2 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+        >
+          <Download className="w-4 h-4" />
+          Export CSV
+        </button>
+      </div>
+
+      {grouped.map(({ decision, comparisons }) => {
+        const winner = comparisons.find(c => c.selected);
+        const isExpanded = expandedCards.has(decision.id);
+
+        // Find the best scores to highlight
+        const bestBert = Math.max(...comparisons.map(c => Number(c.bert_score) || 0));
+        const bestRouge = Math.max(...comparisons.map(c => Number(c.rouge1) || 0));
+        const bestLatency = Math.min(...comparisons.filter(c => c.latency_ms != null).map(c => c.latency_ms!));
+        const bestCost = Math.min(...comparisons.filter(c => c.estimated_cost_usd != null).map(c => Number(c.estimated_cost_usd)!));
+
+        return (
+          <div key={decision.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            {/* Card Header */}
+            <button
+              onClick={() => toggleExpanded(decision.id)}
+              className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+            >
+              <div className="flex items-center gap-4">
+                <div className="text-left">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-900">
+                      {new Date(decision.created_at).toLocaleString()}
+                    </span>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wider ${
+                      decision.complexity === 'short'
+                        ? 'bg-green-100 text-green-800'
+                        : decision.complexity === 'medium'
+                        ? 'bg-amber-100 text-amber-800'
+                        : 'bg-red-100 text-red-800'
+                    }`}>
+                      {decision.complexity}
+                    </span>
+                    {decision.article_tokens != null && (
+                      <span className="text-xs text-gray-400">{decision.article_tokens.toLocaleString()} tokens</span>
+                    )}
+                  </div>
+                  {winner && (
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <Trophy className="w-3.5 h-3.5 text-amber-500" />
+                      <span className="text-xs text-gray-600">
+                        Winner: <span className="font-medium">{winner.model_name}</span>
+                        {winner.bert_score != null && (
+                          <span className="ml-1 text-green-700">(BERTScore: {Number(winner.bert_score).toFixed(4)})</span>
+                        )}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                {/* Mini score badges for quick overview */}
+                <div className="hidden sm:flex items-center gap-2">
+                  {comparisons.map(comp => {
+                    const color = getModelColor(comp.model_name);
+                    return (
+                      <span
+                        key={comp.id}
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${color.bg} ${color.text} ${comp.selected ? 'ring-2 ' + color.ring : ''}`}
+                        title={`${comp.model_name}: BERTScore ${comp.bert_score != null ? Number(comp.bert_score).toFixed(4) : 'N/A'}`}
+                      >
+                        {comp.model_name.split('/').pop()?.replace(/-large.*/, '')}
+                        {comp.bert_score != null && (
+                          <span className="font-semibold">{Number(comp.bert_score).toFixed(3)}</span>
+                        )}
+                      </span>
+                    );
+                  })}
+                </div>
+                {isExpanded ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+              </div>
+            </button>
+
+            {/* Expanded: Side-by-side model comparison */}
+            {isExpanded && (
+              <div className="px-6 pb-6 pt-2 border-t border-gray-100">
+                <div className={`grid gap-4 ${comparisons.length === 2 ? 'grid-cols-2' : comparisons.length >= 3 ? 'grid-cols-3' : 'grid-cols-1'}`}>
+                  {comparisons.map(comp => {
+                    const color = getModelColor(comp.model_name);
+                    const isBestBert = Number(comp.bert_score) === bestBert && bestBert > 0;
+                    const isBestRouge = Number(comp.rouge1) === bestRouge && bestRouge > 0;
+                    const isBestLatency = comp.latency_ms === bestLatency;
+                    const isBestCost = Number(comp.estimated_cost_usd) === bestCost;
+
+                    return (
+                      <div
+                        key={comp.id}
+                        className={`rounded-lg border-2 p-4 transition-all ${
+                          comp.selected
+                            ? `${color.border} ${color.bg} ring-2 ${color.ring}`
+                            : 'border-gray-150 bg-white'
+                        }`}
+                      >
+                        {/* Model header */}
+                        <div className="flex items-center justify-between mb-4">
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${color.bg} ${color.text}`}>
+                            {comp.model_name}
+                          </span>
+                          {comp.selected && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                              <Trophy className="w-3 h-3" />
+                              Winner
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Scores */}
+                        <div className="space-y-3">
+                          <div>
+                            <ScoreBar
+                              value={comp.bert_score != null ? Number(comp.bert_score) : null}
+                              max={1}
+                              label={`BERTScore${isBestBert ? ' (best)' : ''}`}
+                              color={isBestBert ? 'bg-green-500' : 'bg-gray-300'}
+                            />
+                          </div>
+                          <div>
+                            <ScoreBar
+                              value={comp.rouge1 != null ? Number(comp.rouge1) : null}
+                              max={1}
+                              label={`ROUGE-1${isBestRouge ? ' (best)' : ''}`}
+                              color={isBestRouge ? 'bg-blue-500' : 'bg-gray-300'}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Metrics row */}
+                        <div className="flex items-center gap-3 mt-4 pt-3 border-t border-gray-100">
+                          <div className="flex items-center gap-1 text-xs text-gray-600">
+                            <Clock className="w-3.5 h-3.5" />
+                            {comp.latency_ms != null ? (
+                              <span className={isBestLatency ? 'font-semibold text-green-700' : ''}>
+                                {comp.latency_ms.toLocaleString()}ms
+                              </span>
+                            ) : '--'}
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-gray-600">
+                            <DollarSign className="w-3.5 h-3.5" />
+                            {comp.estimated_cost_usd != null ? (
+                              <span className={isBestCost ? 'font-semibold text-green-700' : ''}>
+                                ${Number(comp.estimated_cost_usd).toFixed(5)}
+                              </span>
+                            ) : '--'}
+                          </div>
+                        </div>
+
+                        {/* Summary preview */}
+                        <div className="mt-3 pt-3 border-t border-gray-100">
+                          <p className="text-xs text-gray-500 line-clamp-3" title={comp.summary}>
+                            {comp.summary}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      {/* Show More */}
+      {evalDecisions.length < evalTotal && (
+        <div className="flex justify-center">
+          <button
+            onClick={onShowMore}
+            disabled={evalLoadingMore}
+            className="px-6 py-2 border border-blue-600 text-blue-600 font-medium rounded-md hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[160px]"
+          >
+            {evalLoadingMore ? (
+              <>
+                <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                Loading...
+              </>
+            ) : (
+              `Show More (${evalTotal - evalDecisions.length} remaining)`
+            )}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ── Main component ──────────────────────────────────────────────────
 
@@ -920,133 +1205,16 @@ export default function EvaluationDashboard() {
                   )}
                 </div>
 
-                {/* Evaluation Mode Results */}
+                {/* Evaluation Mode Results — Grouped by routing decision */}
                 {!evalLoading && evalComparisons.length > 0 && (
-                  <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                    <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                      <h2 className="text-lg font-semibold text-gray-900">Evaluation Mode Results</h2>
-                      <button
-                        onClick={exportEvalComparisonsCsv}
-                        className="flex items-center gap-2 px-4 py-2 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
-                      >
-                        <Download className="w-4 h-4" />
-                        Export CSV
-                      </button>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full leading-normal">
-                        <thead>
-                          <tr>
-                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                              Date
-                            </th>
-                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[200px]">
-                              Article (excerpt)
-                            </th>
-                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                              Model
-                            </th>
-                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                              BERTScore
-                            </th>
-                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                              ROUGE-1
-                            </th>
-                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                              Latency (ms)
-                            </th>
-                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                              Cost
-                            </th>
-                            <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                              Selected
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100">
-                          {evalComparisons.map((comp) => (
-                            <tr
-                              key={comp.id}
-                              className={`hover:bg-blue-50/50 transition-colors ${
-                                comp.selected ? 'bg-green-50/40' : 'bg-white'
-                              }`}
-                            >
-                              <td className="px-4 py-4 bg-transparent text-sm text-gray-700 whitespace-nowrap">
-                                {new Date(comp.created_at).toLocaleString()}
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm max-w-[250px] truncate text-gray-600" title={comp.summary}>
-                                {comp.summary.slice(0, 80)}{comp.summary.length > 80 ? '...' : ''}
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm">
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-700 text-xs font-medium">
-                                  {comp.model_name}
-                                </span>
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
-                                {comp.bert_score != null ? (
-                                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-green-50 text-green-700">
-                                    {Number(comp.bert_score).toFixed(4)}
-                                  </span>
-                                ) : (
-                                  <span className="text-gray-400">--</span>
-                                )}
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
-                                {comp.rouge1 != null ? Number(comp.rouge1).toFixed(4) : '--'}
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm text-gray-600">
-                                {comp.latency_ms != null ? (
-                                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
-                                    {comp.latency_ms.toLocaleString()} ms
-                                  </span>
-                                ) : (
-                                  <span className="text-gray-400">--</span>
-                                )}
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm text-gray-600">
-                                {comp.estimated_cost_usd != null ? (
-                                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700">
-                                    ${Number(comp.estimated_cost_usd).toFixed(5)}
-                                  </span>
-                                ) : (
-                                  <span className="text-gray-400">&mdash;</span>
-                                )}
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm text-center">
-                                {comp.selected ? (
-                                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-700">
-                                    <Check className="w-4 h-4" />
-                                  </span>
-                                ) : (
-                                  <span className="text-gray-300">&mdash;</span>
-                                )}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    {/* Show More for eval comparisons */}
-                    {evalDecisions.length < evalTotal && (
-                      <div className="p-5 border-t border-gray-200 bg-gray-50 flex justify-center">
-                        <button
-                          onClick={handleEvalShowMore}
-                          disabled={evalLoadingMore}
-                          className="px-6 py-2 border border-blue-600 text-blue-600 font-medium rounded-md hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[160px]"
-                        >
-                          {evalLoadingMore ? (
-                            <>
-                              <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                              Loading...
-                            </>
-                          ) : (
-                            `Show More (${evalTotal - evalDecisions.length} remaining)`
-                          )}
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  <EvalModeGroupedResults
+                    evalDecisions={evalDecisions}
+                    evalComparisons={evalComparisons}
+                    evalTotal={evalTotal}
+                    evalLoadingMore={evalLoadingMore}
+                    onShowMore={handleEvalShowMore}
+                    onExportCsv={exportEvalComparisonsCsv}
+                  />
                 )}
 
                 {/* Empty state for evaluation mode */}
