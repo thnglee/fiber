@@ -66,7 +66,7 @@ Fiber injects a sidebar into supported Vietnamese news sites, generates LLM-powe
 | Anthropic | Claude Haiku 4.5, Sonnet 4.5, Sonnet 4.6, Opus 4.6 | Standard |
 | HuggingFace | ViT5-large (Vietnamese news summarization) | Base |
 
-> **Note:** PhoGPT-4B-Chat (`vinai/PhoGPT-4B-Chat`) is registered as a routing candidate but is not yet deployed — it is not available on HuggingFace's free Inference API. See [#28](https://github.com/thnglee/fiber/issues/28) for deployment plans. The fallback chain routes medium-complexity articles to GPT-4o in the meantime.
+> **Note:** Vistral-7B-Chat (`Viet-Mistral/Vistral-7B-Chat`) is registered as a routing candidate and deployed via Modal serverless GPU. Set `VISTRAL_SERVICE_URL` in backend/.env to enable it. The fallback chain routes medium-complexity articles to GPT-4o when unavailable.
 
 Reasoning models (o4-mini, o3-mini) automatically skip unsupported parameters like temperature and penalties. Missing API keys return clear error messages instead of crashing.
 
@@ -121,8 +121,8 @@ The routing system automatically selects the best model based on article complex
 
 | Complexity | Token Threshold | Preferred Model | Fallback Chain |
 |-----------|----------------|-----------------|----------------|
-| Short | ≤ 400 tokens | ViT5 | → PhoGPT → GPT-4o |
-| Medium | ≤ 1500 tokens | PhoGPT | → GPT-4o |
+| Short | ≤ 400 tokens | ViT5 | → Vistral → GPT-4o |
+| Medium | ≤ 1500 tokens | Vistral | → GPT-4o |
 | Long | > 1500 tokens | GPT-4o | — |
 
 Three routing modes are available:
@@ -166,7 +166,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 # Optional — additional LLM providers
 GEMINI_API_KEY=
 ANTHROPIC_API_KEY=
-HF_API_KEY=              # HuggingFace token for ViT5/PhoGPT routing
+HF_API_KEY=              # HuggingFace token for ViT5/Vistral routing
 
 # Optional — defaults
 OPENAI_MODEL=gpt-4o-mini

@@ -1,6 +1,6 @@
-# PhoGPT Summarizer — Modal Deployment
+# Vistral Summarizer — Modal Deployment
 
-Vietnamese news summarizer using [vinai/PhoGPT-4B-Chat](https://huggingface.co/vinai/PhoGPT-4B-Chat) on Modal serverless GPU.
+Vietnamese news summarizer using [Viet-Mistral/Vistral-7B-Chat](https://huggingface.co/Viet-Mistral/Vistral-7B-Chat) on Modal serverless GPU.
 
 ## Prerequisites
 
@@ -11,20 +11,20 @@ Vietnamese news summarizer using [vinai/PhoGPT-4B-Chat](https://huggingface.co/v
 ## Deploy
 
 ```bash
-cd phogpt
+cd vistral
 modal deploy modal_app.py
 ```
 
 After deployment, Modal prints the endpoint URL. Set it in `backend/.env`:
 
 ```
-PHOGPT_SERVICE_URL=https://<your-workspace>--phogpt-summarizer-summarize.modal.run
+VISTRAL_SERVICE_URL=https://<your-workspace>--vistral-summarizer-summarize.modal.run
 ```
 
 ## Test
 
 ```bash
-curl -X POST https://<your-workspace>--phogpt-summarizer-summarize.modal.run \
+curl -X POST https://<your-workspace>--vistral-summarizer-summarize.modal.run \
   -H "Content-Type: application/json" \
   -d '{"article_text": "Thủ tướng Phạm Minh Chính vừa ký quyết định phê duyệt quy hoạch..."}'
 ```
@@ -38,5 +38,5 @@ curl -X POST https://<your-workspace>--phogpt-summarizer-summarize.modal.run \
 ## Health Check
 
 ```bash
-curl https://<your-workspace>--phogpt-summarizer-health.modal.run
+curl https://<your-workspace>--vistral-summarizer-health.modal.run
 ```

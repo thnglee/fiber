@@ -92,7 +92,7 @@ const BAR_COLORS = [
 // ── Model color mapping ─────────────────────────────────────────────
 const MODEL_COLORS: Record<string, { bg: string; border: string; text: string; ring: string }> = {
   'VietAI/vit5-large-vietnews-summarization': { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', ring: 'ring-blue-500' },
-  'vinai/PhoGPT-4B-Chat': { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', ring: 'ring-purple-500' },
+  'Viet-Mistral/Vistral-7B-Chat': { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', ring: 'ring-purple-500' },
   'gpt-4o': { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-700', ring: 'ring-emerald-500' },
   'gpt-4o-mini': { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-700', ring: 'ring-teal-500' },
 };

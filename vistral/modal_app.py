@@ -43,7 +43,7 @@ image = (
     .run_function(download_model, secrets=[modal.Secret.from_name("huggingface-secret")])
 )
 
-app = modal.App("phogpt-summarizer", image=image)
+app = modal.App("vistral-summarizer", image=image)
 
 # ---------------------------------------------------------------------------
 # Prompt + helpers
@@ -65,7 +65,7 @@ def estimate_reading_time(text: str) -> int:
 # ---------------------------------------------------------------------------
 
 @app.cls(gpu="A10G", scaledown_window=120)
-class PhoGPTModel:
+class VistralModel:
     @modal.enter()
     def load(self):
         import torch

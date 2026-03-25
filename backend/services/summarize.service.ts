@@ -18,21 +18,21 @@ import { calculateLexicalMetrics, saveEvaluationMetrics } from "./evaluation.ser
 import { calculateBertScore } from "./bert.service"
 import { calculateCompressionRate } from "./compression.service"
 
-const PHOGPT_MODEL_NAME = 'vinai/PhoGPT-4B-Chat'
-const PHOGPT_INPUT_CHAR_LIMIT = 6000
+const VISTRAL_MODEL_NAME = 'Viet-Mistral/Vistral-7B-Chat'
+const VISTRAL_INPUT_CHAR_LIMIT = 6000
 
 /**
- * Call the dedicated PhoGPT Modal microservice.
+ * Call the dedicated Vistral Modal microservice.
  * Single POST → JSON response (no Gradio SSE polling).
  */
-async function callPhoGPTService(articleText: string): Promise<SummaryData> {
-  const serviceUrl = getEnvVar("PHOGPT_SERVICE_URL")
-  if (!serviceUrl) throw new Error("PHOGPT_SERVICE_URL is not set")
+async function callVistralService(articleText: string): Promise<SummaryData> {
+  const serviceUrl = getEnvVar("VISTRAL_SERVICE_URL")
+  if (!serviceUrl) throw new Error("VISTRAL_SERVICE_URL is not set")
 
   const timeoutMs = Number(getEnvVar("HF_TIMEOUT_MS")) || 120000
 
-  const truncated = articleText.length > PHOGPT_INPUT_CHAR_LIMIT
-    ? articleText.substring(0, PHOGPT_INPUT_CHAR_LIMIT)
+  const truncated = articleText.length > VISTRAL_INPUT_CHAR_LIMIT
+    ? articleText.substring(0, VISTRAL_INPUT_CHAR_LIMIT)
     : articleText
 
   const res = await fetch(serviceUrl, {
@@ -44,13 +44,13 @@ async function callPhoGPTService(articleText: string): Promise<SummaryData> {
 
   if (!res.ok) {
     const errText = await res.text()
-    throw new Error(`PhoGPT service error ${res.status}: ${errText}`)
+    throw new Error(`Vistral service error ${res.status}: ${errText}`)
   }
 
   const data = await res.json()
 
   if (data.error) {
-    throw new Error(`PhoGPT service returned error: ${data.error}`)
+    throw new Error(`Vistral service returned error: ${data.error}`)
   }
 
   return {
@@ -138,21 +138,21 @@ export async function performSummarize(request: SummarizeRequest, modelConfig?: 
     debugInfo.prompt = prompt
   }
 
-  // PhoGPT: bypass the standard LLM pipeline — call dedicated Modal microservice
-  if (modelConfig?.model_name === PHOGPT_MODEL_NAME) {
+  // Vistral: bypass the standard LLM pipeline — call dedicated Modal microservice
+  if (modelConfig?.model_name === VISTRAL_MODEL_NAME) {
     const startTime = Date.now()
-    const summaryData = await callPhoGPTService(extractedContent)
+    const summaryData = await callVistralService(extractedContent)
     const latency = Date.now() - startTime
 
     const response: SummarizeResponse = {
       summary: summaryData.summary,
       category: summaryData.category,
       readingTime: summaryData.readingTime,
-      model: PHOGPT_MODEL_NAME,
+      model: VISTRAL_MODEL_NAME,
       usage: undefined,
     }
 
-    logger.addLog('summarize', 'phogpt-complete', {
+    logger.addLog('summarize', 'vistral-complete', {
       latency,
       summaryLength: summaryData.summary.length,
     })
@@ -185,7 +185,7 @@ export async function performSummarize(request: SummarizeRequest, modelConfig?: 
           metrics: { ...metrics, bert_score: bertScore, compression_rate: compressionRate, total_tokens: null },
           latency,
           mode: 'sync',
-          model: PHOGPT_MODEL_NAME,
+          model: VISTRAL_MODEL_NAME,
         })
       } catch (err) {
         logger.addLog('summarize', 'evaluation-error', {

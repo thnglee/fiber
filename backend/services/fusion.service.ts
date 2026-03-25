@@ -8,13 +8,13 @@ import {
   estimateTokenCount,
   classifyComplexity,
   MODEL_VIT5,
-  MODEL_PHOGPT,
+  MODEL_VISTRAL,
   MODEL_GPT4O,
 } from "./routing.service"
 import type { ModelConfig, ModelComparisonResult, FusionResult } from "@/domain/types"
 
 // Tie-break preference: cheaper/specialized models preferred
-const TIE_BREAK_ORDER = [MODEL_VIT5, MODEL_PHOGPT, MODEL_GPT4O]
+const TIE_BREAK_ORDER = [MODEL_VIT5, MODEL_VISTRAL, MODEL_GPT4O]
 
 // ============================================================================
 // Main export
@@ -180,7 +180,7 @@ export async function runFusedSummarization(
 /**
  * Select the best candidate by highest BERTScore.
  * Falls back to ROUGE-1 if no BERTScore is available.
- * Tie-break: prefer ViT5 → PhoGPT → GPT-4o (cheaper/specialized first).
+ * Tie-break: prefer ViT5 → Vistral → GPT-4o (cheaper/specialized first).
  */
 function selectWinner(candidates: ModelComparisonResult[]): ModelComparisonResult {
   const hasBertScores = candidates.some(c => c.bert_score != null)

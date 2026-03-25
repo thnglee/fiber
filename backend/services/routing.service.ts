@@ -23,20 +23,20 @@ const DEFAULT_THRESHOLDS: ComplexityThresholds = {
 
 // Model names matching `model_configurations.model_name`
 const MODEL_VIT5 = 'VietAI/vit5-large-vietnews-summarization'
-const MODEL_PHOGPT = 'vinai/PhoGPT-4B-Chat'
+const MODEL_VISTRAL = 'Viet-Mistral/Vistral-7B-Chat'
 const MODEL_GPT4O = 'gpt-4o'
 
-// Fallback chain: ViT5 → PhoGPT → GPT-4o
+// Fallback chain: ViT5 → Vistral → GPT-4o
 const FALLBACK_MAP: Record<string, string | null> = {
-  [MODEL_VIT5]: MODEL_PHOGPT,
-  [MODEL_PHOGPT]: MODEL_GPT4O,
+  [MODEL_VIT5]: MODEL_VISTRAL,
+  [MODEL_VISTRAL]: MODEL_GPT4O,
   [MODEL_GPT4O]: null,
 }
 
 // Complexity → preferred model mapping
 const COMPLEXITY_MODEL_MAP: Record<ArticleComplexity, string> = {
   short: MODEL_VIT5,
-  medium: MODEL_PHOGPT,
+  medium: MODEL_VISTRAL,
   long: MODEL_GPT4O,
 }
 
@@ -93,7 +93,7 @@ function isModelAvailable(modelName: string, availableProviders: Set<string>): b
   if (modelName.startsWith('gpt-')) return availableProviders.has('openai')
   // HuggingFace models
   if (modelName === MODEL_VIT5) return availableProviders.has('huggingface')
-  if (modelName === MODEL_PHOGPT) return !!getEnvVar('PHOGPT_SERVICE_URL')
+  if (modelName === MODEL_VISTRAL) return !!getEnvVar('VISTRAL_SERVICE_URL')
   // Gemini
   if (modelName.startsWith('gemini')) return availableProviders.has('gemini')
   // Anthropic
@@ -199,7 +199,7 @@ export async function getModelConfigByName(modelName: string): Promise<ModelConf
  */
 export async function getRoutingCandidateConfigs(): Promise<ModelConfig[]> {
   const configs = await getAllModelConfigs()
-  const candidateNames = new Set([MODEL_VIT5, MODEL_PHOGPT, MODEL_GPT4O])
+  const candidateNames = new Set([MODEL_VIT5, MODEL_VISTRAL, MODEL_GPT4O])
   return configs.filter(c => candidateNames.has(c.model_name))
 }
 
@@ -234,5 +234,5 @@ export async function saveRoutingDecision(decision: Omit<RoutingDecision, 'id' |
 // Exported constants (for use in fusion service / settings)
 // ============================================================================
 
-export { MODEL_VIT5, MODEL_PHOGPT, MODEL_GPT4O, DEFAULT_THRESHOLDS }
+export { MODEL_VIT5, MODEL_VISTRAL, MODEL_GPT4O, DEFAULT_THRESHOLDS }
 export type { ComplexityThresholds }

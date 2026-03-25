@@ -60,7 +60,7 @@ function modelShortName(model) {
   if (model?.includes('vit5')) return 'vit5';
   if (model?.includes('gpt-4o-mini')) return 'gpt4o-mini';
   if (model?.includes('gpt-4o')) return 'gpt4o';
-  if (model?.includes('PhoGPT')) return 'phogpt';
+  if (model?.includes('Vistral')) return 'vistral';
   return model || 'unknown';
 }
 
