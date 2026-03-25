@@ -285,9 +285,9 @@ async function callHuggingFace(
   if (!apiKey) throw new Error("HF_API_KEY is not set — required for HuggingFace models")
 
   const timeoutMs = getEnvVar("HF_TIMEOUT_MS")
-  const modelId = config.model  // e.g. 'vinai/PhoGPT-4B-Chat'
+  const modelId = config.model
 
-  // Determine task type: ViT5 is text2text-generation, PhoGPT is text-generation
+  // Determine task type: ViT5 is text2text-generation, others are text-generation
   const hfTaskType: HFModelType =
     options.hfTaskType ??
     (modelId.toLowerCase().includes('vit5') || modelId.toLowerCase().includes('summarization')

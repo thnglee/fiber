@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { Search, Filter, Download, Trophy, Clock, DollarSign, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, Filter, Download, Trophy, Clock, DollarSign, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 
 // ── Types ───────────────────────────────────────────────────────────
 
@@ -92,7 +92,6 @@ const BAR_COLORS = [
 // ── Model color mapping ─────────────────────────────────────────────
 const MODEL_COLORS: Record<string, { bg: string; border: string; text: string; ring: string }> = {
   'VietAI/vit5-large-vietnews-summarization': { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', ring: 'ring-blue-500' },
-  'vinai/PhoGPT-4B-Chat': { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', ring: 'ring-purple-500' },
   'gpt-4o': { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-700', ring: 'ring-emerald-500' },
   'gpt-4o-mini': { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-700', ring: 'ring-teal-500' },
 };
@@ -819,172 +818,122 @@ export default function EvaluationDashboard() {
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 <p className="mt-4 text-gray-600">Loading metrics...</p>
               </div>
+            ) : filteredMetrics.length === 0 ? (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center text-gray-500 text-sm">
+                No evaluation metrics found.
+              </div>
             ) : (
-              <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full leading-normal">
-                    <thead>
-                      <tr>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[120px]">
-                          Date
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[200px]">
-                          Summary Preview
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[140px] max-w-[180px]">
-                          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Model</div>
-                          <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">LLM used</div>
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[120px]">
-                          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">ROUGE-1</div>
-                          <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">Unigram overlap</div>
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[120px]">
-                          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">ROUGE-2</div>
-                          <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">Bigram overlap</div>
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[130px]">
-                          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">ROUGE-L</div>
-                          <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">Longest common sub.</div>
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[110px]">
-                          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">BLEU</div>
-                          <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">N-gram precision</div>
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[120px]">
-                          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">BERTScore</div>
-                          <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">Semantic similarity</div>
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[100px]">
-                          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Latency</div>
-                          <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">first-chunk/full</div>
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[90px]">
-                          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Mode</div>
-                          <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">stream/sync</div>
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[120px]">
-                          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Compression</div>
-                          <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">summary/original</div>
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[110px]">
-                          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Total Tokens</div>
-                          <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">prompt + completion</div>
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left min-w-[100px]">
-                          <div className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Est. Cost</div>
-                          <div className="text-[10px] font-normal text-gray-500 normal-case mt-0.5">USD per request</div>
-                        </th>
-                        <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[110px]">
-                          URL
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                      {filteredMetrics.length === 0 ? (
-                        <tr>
-                          <td colSpan={14} className="px-4 py-8 bg-white text-sm text-center text-gray-500">
-                            No evaluation metrics found.
-                          </td>
-                        </tr>
-                      ) : (
-                        filteredMetrics.map((item, index) => (
-                          <tr key={index} className="hover:bg-blue-50/50 transition-colors bg-white">
-                            <td className="px-4 py-4 bg-transparent text-sm text-gray-700 whitespace-nowrap">
-                              {item.created_at ? new Date(item.created_at).toLocaleString() : 'N/A'}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm max-w-xs truncate text-gray-600" title={item.summary}>
-                              {item.summary}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm max-w-[180px]">
-                              {item.model ? (
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-700 text-xs font-medium whitespace-nowrap truncate max-w-full" title={item.model}>
-                                  {item.model.replace(/-\d{4}-\d{2}-\d{2}$/, '')}
-                                </span>
-                              ) : (
-                                <span className="text-gray-400">&mdash;</span>
-                              )}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
-                              {item.metrics.rouge1}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
-                              {item.metrics.rouge2}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
-                              {item.metrics.rougeL}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
-                              {item.metrics.bleu}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm text-gray-800 font-medium">
-                              {item.metrics.bert_score != null ? (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-green-50 text-green-700">
-                                  {item.metrics.bert_score.toFixed(4)}
-                                </span>
-                              ) : 'N/A'}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm text-gray-600 whitespace-nowrap">
-                              {item.latency ? (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
-                                  {item.latency} ms
-                                </span>
-                              ) : 'N/A'}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm">
-                              {item.mode ? (
-                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wider ${item.mode === 'stream' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}`}>
-                                  {item.mode}
-                                </span>
-                              ) : (
-                                <span className="text-gray-400">N/A</span>
-                              )}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm text-gray-600">
-                              {item.metrics.compression_rate != null
-                                ? `${item.metrics.compression_rate.toFixed(2)}%`
-                                : 'N/A'}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm text-gray-600">
-                              {item.metrics.total_tokens != null ? (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-amber-50 text-amber-700">
-                                  {item.metrics.total_tokens.toLocaleString()}
-                                </span>
-                              ) : 'N/A'}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm text-gray-600">
-                              {item.estimatedCostUsd != null ? (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700">
-                                  ${item.estimatedCostUsd.toFixed(5)}
-                                </span>
-                              ) : (
-                                <span className="text-gray-400">&mdash;</span>
-                              )}
-                            </td>
-                            <td className="px-4 py-4 bg-transparent text-sm text-center">
-                              {item.url ? (
-                                <a
-                                  href={item.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                                >
-                                  Source
-                                </a>
-                              ) : (
-                                <span className="text-gray-400 text-xs italic">N/A</span>
-                              )}
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
+              <div className="space-y-3">
+                {/* Results count */}
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-gray-500">
+                    Showing {filteredMetrics.length} of {total} results
+                  </p>
                 </div>
+
+                {filteredMetrics.map((item, index) => {
+                  const modelColor = item.model ? getModelColor(item.model) : DEFAULT_MODEL_COLOR;
+                  return (
+                    <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 hover:border-gray-300 transition-colors">
+                      {/* Card header — always visible */}
+                      <div className="px-5 py-4">
+                        <div className="flex items-start justify-between gap-4">
+                          {/* Left: date, model, mode */}
+                          <div className="flex items-center gap-3 flex-wrap min-w-0">
+                            <span className="text-sm text-gray-500 whitespace-nowrap">
+                              {item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A'}
+                            </span>
+                            {item.model && (
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${modelColor.bg} ${modelColor.text}`} title={item.model}>
+                                {item.model.replace(/-\d{4}-\d{2}-\d{2}$/, '')}
+                              </span>
+                            )}
+                            {item.mode && (
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wider ${item.mode === 'stream' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}`}>
+                                {item.mode}
+                              </span>
+                            )}
+                          </div>
+                          {/* Right: quick stats + source link */}
+                          <div className="flex items-center gap-3 shrink-0">
+                            {item.latency != null && (
+                              <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                                <Clock className="w-3.5 h-3.5" />
+                                {item.latency.toLocaleString()}ms
+                              </span>
+                            )}
+                            {item.estimatedCostUsd != null && (
+                              <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                                <DollarSign className="w-3.5 h-3.5" />
+                                ${item.estimatedCostUsd.toFixed(5)}
+                              </span>
+                            )}
+                            {item.url && (
+                              <a
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 transition-colors"
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                                Source
+                              </a>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Summary preview */}
+                        <p className="text-sm text-gray-600 mt-2 line-clamp-2" title={item.summary}>
+                          {item.summary}
+                        </p>
+
+                        {/* Scores grid */}
+                        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3 mt-3 pt-3 border-t border-gray-100">
+                          <div>
+                            <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-0.5">ROUGE-1</p>
+                            <p className="text-sm font-semibold text-gray-800">{item.metrics.rouge1?.toFixed(4) ?? 'N/A'}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-0.5">ROUGE-2</p>
+                            <p className="text-sm font-semibold text-gray-800">{item.metrics.rouge2?.toFixed(4) ?? 'N/A'}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-0.5">ROUGE-L</p>
+                            <p className="text-sm font-semibold text-gray-800">{item.metrics.rougeL?.toFixed(4) ?? 'N/A'}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-0.5">BLEU</p>
+                            <p className="text-sm font-semibold text-gray-800">{item.metrics.bleu?.toFixed(4) ?? 'N/A'}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-0.5">BERTScore</p>
+                            {item.metrics.bert_score != null ? (
+                              <p className="text-sm font-semibold text-green-700">{item.metrics.bert_score.toFixed(4)}</p>
+                            ) : (
+                              <p className="text-sm text-gray-400">N/A</p>
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-0.5">Compression</p>
+                            <p className="text-sm font-semibold text-gray-800">
+                              {item.metrics.compression_rate != null ? `${item.metrics.compression_rate.toFixed(2)}%` : 'N/A'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-0.5">Tokens</p>
+                            <p className="text-sm font-semibold text-gray-800">
+                              {item.metrics.total_tokens != null ? item.metrics.total_tokens.toLocaleString() : 'N/A'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
 
                 {/* Show More Button */}
                 {!loading && metrics.length < total && (
-                  <div className="p-5 border-t border-gray-200 bg-gray-50 flex justify-center mt-6 rounded-lg">
+                  <div className="flex justify-center pt-2">
                     <button
                       onClick={handleShowMore}
                       disabled={loadingMore}
@@ -1115,65 +1064,33 @@ export default function EvaluationDashboard() {
                   </div>
                 )}
 
-                {/* Recent Routing Decisions Table */}
-                <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
-                  <div className="px-6 py-4 border-b border-gray-200">
-                    <h2 className="text-lg font-semibold text-gray-900">Recent Routing Decisions</h2>
-                  </div>
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full leading-normal">
-                      <thead>
-                        <tr>
-                          <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                            Date
-                          </th>
-                          <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                            Complexity
-                          </th>
-                          <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                            Selected Model
-                          </th>
-                          <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                            Routing Mode
-                          </th>
-                          <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                            Fallback
-                          </th>
-                          <th className="px-4 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                            Article Tokens
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-100">
-                        {routingDecisions.length === 0 ? (
-                          <tr>
-                            <td colSpan={6} className="px-4 py-8 bg-white text-sm text-center text-gray-500">
-                              No routing decisions found.
-                            </td>
-                          </tr>
-                        ) : (
-                          routingDecisions.map((d) => (
-                            <tr key={d.id} className="hover:bg-blue-50/50 transition-colors bg-white">
-                              <td className="px-4 py-4 bg-transparent text-sm text-gray-700 whitespace-nowrap">
-                                {new Date(d.created_at).toLocaleString()}
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm">
-                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wider ${
-                                  d.complexity === 'short'
-                                    ? 'bg-green-100 text-green-800'
-                                    : d.complexity === 'medium'
-                                    ? 'bg-amber-100 text-amber-800'
-                                    : 'bg-red-100 text-red-800'
-                                }`}>
-                                  {d.complexity}
+                {/* Recent Routing Decisions */}
+                <div className="mt-8">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Routing Decisions</h2>
+
+                  {routingDecisions.length === 0 ? (
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center text-gray-500 text-sm">
+                      No routing data available yet. Routing decisions will appear here when summarization requests use routing mode (auto or evaluation).
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <p className="text-sm text-gray-500">
+                        Showing {routingDecisions.length} of {routingTotal} decisions
+                      </p>
+
+                      {routingDecisions.map((d) => {
+                        const modelColor = getModelColor(d.selected_model);
+                        return (
+                          <div key={d.id} className="bg-white rounded-xl shadow-sm border border-gray-200 hover:border-gray-300 transition-colors px-5 py-4">
+                            <div className="flex items-center justify-between gap-4 flex-wrap">
+                              {/* Left side: date + badges */}
+                              <div className="flex items-center gap-3 flex-wrap">
+                                <span className="text-sm text-gray-500 whitespace-nowrap">
+                                  {new Date(d.created_at).toLocaleDateString()}
                                 </span>
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm">
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-700 text-xs font-medium">
+                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${modelColor.bg} ${modelColor.text}`} title={d.selected_model}>
                                   {d.selected_model}
                                 </span>
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm">
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                                   d.routing_mode === 'auto'
                                     ? 'bg-blue-100 text-blue-800'
@@ -1183,53 +1100,62 @@ export default function EvaluationDashboard() {
                                 }`}>
                                   {d.routing_mode}
                                 </span>
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm">
-                                {d.fallback_used ? (
-                                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700" title={d.fallback_reason || ''}>
-                                    Yes
-                                  </span>
-                                ) : (
-                                  <span className="text-gray-400 text-xs">No</span>
-                                )}
-                              </td>
-                              <td className="px-4 py-4 bg-transparent text-sm text-gray-600">
-                                {d.article_tokens != null ? d.article_tokens.toLocaleString() : '--'}
-                              </td>
-                            </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
+                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wider ${
+                                  d.complexity === 'short'
+                                    ? 'bg-green-100 text-green-800'
+                                    : d.complexity === 'medium'
+                                    ? 'bg-amber-100 text-amber-800'
+                                    : 'bg-red-100 text-red-800'
+                                }`}>
+                                  {d.complexity}
+                                </span>
+                              </div>
 
-                  {/* Show More */}
-                  {routingDecisions.length < routingTotal && (
-                    <div className="p-5 border-t border-gray-200 bg-gray-50 flex justify-center">
-                      <button
-                        onClick={handleRoutingShowMore}
-                        disabled={routingLoadingMore}
-                        className="px-6 py-2 border border-blue-600 text-blue-600 font-medium rounded-md hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[160px]"
-                      >
-                        {routingLoadingMore ? (
-                          <>
-                            <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                            Loading...
-                          </>
-                        ) : (
-                          `Show More (${routingTotal - routingDecisions.length} remaining)`
-                        )}
-                      </button>
+                              {/* Right side: tokens + fallback */}
+                              <div className="flex items-center gap-4">
+                                {d.article_tokens != null && (
+                                  <span className="text-xs text-gray-500">
+                                    {d.article_tokens.toLocaleString()} tokens
+                                  </span>
+                                )}
+                                {d.fallback_used && (
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700" title={d.fallback_reason || ''}>
+                                    Fallback
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Fallback reason if present */}
+                            {d.fallback_used && d.fallback_reason && (
+                              <p className="text-xs text-red-600 mt-2">{d.fallback_reason}</p>
+                            )}
+                          </div>
+                        );
+                      })}
+
+                      {/* Show More */}
+                      {routingDecisions.length < routingTotal && (
+                        <div className="flex justify-center pt-2">
+                          <button
+                            onClick={handleRoutingShowMore}
+                            disabled={routingLoadingMore}
+                            className="px-6 py-2 border border-blue-600 text-blue-600 font-medium rounded-md hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[160px]"
+                          >
+                            {routingLoadingMore ? (
+                              <>
+                                <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                                Loading...
+                              </>
+                            ) : (
+                              `Show More (${routingTotal - routingDecisions.length} remaining)`
+                            )}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
-
-                {/* Empty state for entire routing tab */}
-                {routingDecisions.length === 0 && (
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center text-gray-500 text-sm">
-                    No routing data available yet. Routing decisions will appear here when summarization requests use routing mode (auto or evaluation).
-                  </div>
-                )}
               </>
             )}
           </>

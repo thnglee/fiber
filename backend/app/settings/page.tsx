@@ -59,7 +59,6 @@ const ROUTING_MODE_INFO: Record<RoutingMode, { label: string; description: strin
 
 const ROUTING_MODELS = [
   { name: "ViT5-large", key: "hf" },
-  { name: "PhoGPT-4B-Chat", key: "hf" },
   { name: "GPT-4o", key: "openai" },
 ] as const
 
@@ -516,7 +515,7 @@ export default function SettingsPage() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       <p className="text-xs text-gray-400 mt-1">
-                        Articles with token count at or below this use PhoGPT; above uses GPT-4o (default: 1500)
+                        Articles above this threshold use GPT-4o (default: 1500)
                       </p>
                     </div>
                     <button
