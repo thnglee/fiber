@@ -1,0 +1,88 @@
+\xpg@aux {}{vietnamese}
+\contentsline {chapter}{Tóm tắt}{}{chapter*.1}%
+\contentsline {chapter}{Abstract}{}{chapter*.2}%
+\contentsline {chapter}{Lời cam đoan}{i}{chapter*.3}%
+\contentsline {chapter}{Bảng các ký hiệu và chữ viết tắt}{1}{chapter*.7}%
+\contentsline {chapter}{Mở đầu}{2}{chapter*.8}%
+\contentsline {chapter}{\numberline {1}Tổng quan về tóm tắt văn bản và kiểm chứng tin tức}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Bài toán tóm tắt văn bản tự động}{4}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Định nghĩa và phân loại}{4}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Các phương pháp tiếp cận}{4}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}Tóm tắt văn bản tiếng Việt --- thách thức và hiện trạng}{4}{subsection.1.1.3}%
+\contentsline {section}{\numberline {1.2}Bài toán kiểm chứng tin tức}{4}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Tin giả và thông tin sai lệch}{4}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Các phương pháp kiểm chứng tự động}{4}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}Các công trình liên quan}{4}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Hệ thống tóm tắt tin tức}{4}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Công cụ kiểm chứng sự kiện}{4}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Browser extension cho xử lý tin tức}{4}{subsection.1.3.3}%
+\contentsline {section}{\numberline {1.4}Tổng kết chương}{4}{section.1.4}%
+\contentsline {chapter}{\numberline {2}Cơ sở lý thuyết}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Mô hình ngôn ngữ lớn (Large Language Models)}{6}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Kiến trúc Transformer}{6}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Các mô hình tiền huấn luyện}{6}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Các mô hình sử dụng trong khóa luận}{6}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}Các phương pháp đánh giá chất lượng tóm tắt}{6}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}ROUGE (Recall-Oriented Understudy for Gisting Evaluation)}{6}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}BLEU (Bilingual Evaluation Understudy)}{6}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}BERTScore}{6}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Tỷ lệ nén (Compression Rate)}{6}{subsection.2.2.4}%
+\contentsline {section}{\numberline {2.3}Kỹ thuật trích xuất nội dung web}{6}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Mozilla Readability}{6}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Xử lý đặc thù các trang báo Việt Nam}{6}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}Kiến trúc Search-Augmented Generation}{6}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Retrieval-Augmented Generation (RAG)}{6}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Tavily Search API}{6}{subsection.2.4.2}%
+\contentsline {section}{\numberline {2.5}Công nghệ phát triển tiện ích trình duyệt}{6}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Manifest V3 và Plasmo Framework}{6}{subsection.2.5.1}%
+\contentsline {section}{\numberline {2.6}Tổng kết chương}{6}{section.2.6}%
+\contentsline {chapter}{\numberline {3}Thiết kế và xây dựng hệ thống}{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Phân tích yêu cầu}{8}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Yêu cầu chức năng}{8}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Yêu cầu phi chức năng}{8}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}Kiến trúc hệ thống}{8}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Tổng quan kiến trúc}{8}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Tiện ích mở rộng trình duyệt (Browser Extension)}{8}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Máy chủ API (Backend Server)}{8}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}Dịch vụ BERTScore (BERTScore Microservice)}{8}{subsection.3.2.4}%
+\contentsline {section}{\numberline {3.3}Thiết kế chi tiết các module}{8}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Module tóm tắt văn bản}{8}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Module kiểm chứng sự kiện}{8}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Module đa mô hình (Multi-Provider LLM)}{8}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Cơ chế định tuyến mô hình (Routing Mechanism)}{8}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.5}Module đánh giá (Evaluation Module)}{8}{subsection.3.3.5}%
+\contentsline {section}{\numberline {3.4}Thiết kế cơ sở dữ liệu}{8}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Sơ đồ quan hệ}{8}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Mô tả chi tiết các bảng}{8}{subsection.3.4.2}%
+\contentsline {section}{\numberline {3.5}Thiết kế giao diện người dùng}{8}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Sidebar tóm tắt}{8}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Popover kiểm chứng}{8}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Trang Settings và Debug}{8}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Trang Metrics}{8}{subsection.3.5.4}%
+\contentsline {section}{\numberline {3.6}Tổng kết chương}{8}{section.3.6}%
+\contentsline {chapter}{\numberline {4}Thực nghiệm và đánh giá}{9}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Thiết lập thực nghiệm}{10}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Bộ dữ liệu đánh giá}{10}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Các mô hình được đánh giá}{10}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Các metrics đánh giá}{10}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Môi trường thực nghiệm}{10}{subsection.4.1.4}%
+\contentsline {section}{\numberline {4.2}Kết quả thực nghiệm}{10}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}So sánh tổng quan các mô hình}{10}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Phân tích theo chủ đề}{10}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Phân tích BERTScore chi tiết}{10}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Phân tích Compression Rate và Latency}{10}{subsection.4.2.4}%
+\contentsline {section}{\numberline {4.3}Đánh giá cơ chế Routing}{10}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Hiệu quả phân loại độ phức tạp}{10}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}So sánh routing tự động vs manual}{10}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}Đánh giá module kiểm chứng sự kiện}{10}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Chất lượng kiểm chứng}{10}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Hạn chế}{10}{subsection.4.4.2}%
+\contentsline {section}{\numberline {4.5}Thảo luận về thách thức triển khai mô hình tiếng Việt}{10}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Phân tích key findings}{10}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Tổng kết chương}{10}{section.4.7}%
+\contentsline {chapter}{Kết luận}{11}{chapter*.9}%
+\contentsline {chapter}{\numberline {5}Phụ lục}{12}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Mẫu kết quả tóm tắt}{12}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Mẫu kết quả kiểm chứng}{12}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Bảng kết quả đánh giá chi tiết}{12}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Hướng dẫn cài đặt và sử dụng}{12}{section.5.4}%

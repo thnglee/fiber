@@ -1,0 +1,128 @@
+% ============================================================
+% CHƯƠNG 3: THIẾT KẾ VÀ XÂY DỰNG HỆ THỐNG
+% ============================================================
+\chapter{Thiết kế và xây dựng hệ thống}
+
+\section{Phân tích yêu cầu}
+
+\subsection{Yêu cầu chức năng}
+% TODO:
+% FR1: Tóm tắt tự động bài viết tin tức tiếng Việt
+% FR2: Kiểm chứng sự kiện dựa trên highlight text
+% FR3: Hỗ trợ đa mô hình ngôn ngữ (multi-model)
+% FR4: Tự động định tuyến chọn model phù hợp (routing)
+% FR5: Chế độ đánh giá so sánh đa model (evaluation mode)
+% FR6: Dashboard theo dõi hoạt động người dùng
+% FR7: Trang metrics hiển thị kết quả đánh giá
+
+\subsection{Yêu cầu phi chức năng}
+% TODO:
+% NFR1: Thời gian phản hồi < 10 giây (streaming)
+% NFR2: Hoạt động trên Chrome, Edge, Brave
+% NFR3: Không ảnh hưởng hiệu năng trang web gốc (Shadow DOM)
+% NFR4: Bảo mật API key (server-side only)
+
+\section{Kiến trúc hệ thống}
+
+\subsection{Tổng quan kiến trúc}
+% TODO:
+% - Kiến trúc microservice 3 thành phần
+% - Sơ đồ kiến trúc tổng quan
+% Hình 3.1: Sơ đồ kiến trúc hệ thống Fiber
+
+\subsection{Tiện ích mở rộng trình duyệt (Browser Extension)}
+% TODO:
+% - Plasmo framework, React 18, TypeScript, Tailwind CSS
+% - Content Script injection vào các trang báo
+% - Shadow DOM isolation
+% - Sidebar (tóm tắt) và Popover (kiểm chứng)
+% Hình 3.2: Kiến trúc browser extension
+
+\subsection{Máy chủ API (Backend Server)}
+% TODO:
+% - Next.js 14 App Router
+% - API routes: /api/summarize, /api/fact-check, /api/metrics, /api/evaluate
+% - Services layer: llm, summarize, fact-check, evaluation, routing
+% - Zod schema validation cho request/response
+% Hình 3.3: Sơ đồ các API endpoint
+
+\subsection{Dịch vụ BERTScore (BERTScore Microservice)}
+% TODO:
+% - FastAPI, Python, PhoBERT (vinai/phobert-base)
+% - POST /calculate-score
+% - Truncation 256 tokens
+% - Triển khai trên HuggingFace Spaces
+% Hình 3.4: Kiến trúc BERTScore microservice
+
+\section{Thiết kế chi tiết các module}
+
+\subsection{Module tóm tắt văn bản}
+% TODO:
+% - Luồng xử lý: URL → Content Extraction → Prompt → LLM → Structured Output
+% - Prompt engineering cho tóm tắt tiếng Việt
+% - Structured output với Zod schema
+% - Streaming response (SSE)
+% Hình 3.5: Sequence diagram - Quy trình tóm tắt
+
+\subsection{Module kiểm chứng sự kiện}
+% TODO:
+% - Luồng: Selected text → Tavily Search → Context building → LLM reasoning → Trust score
+% - Thiết kế prompt cho fact-checking
+% - Trust scoring system (High/Medium/Low)
+% Hình 3.6: Sequence diagram - Quy trình kiểm chứng
+
+\subsection{Module đa mô hình (Multi-Provider LLM)}
+% TODO:
+% - Kiến trúc provider abstraction (OpenAI, Google Gemini, Anthropic Claude)
+% - 14 models across 3 providers
+% - Xử lý đặc thù từng provider (temperature, structured output, streaming)
+% - Model configuration trong database
+% Bảng 3.1: Danh sách các mô hình được hỗ trợ
+
+\subsection{Cơ chế định tuyến mô hình (Routing Mechanism)}
+% TODO:
+% - Bài toán: chọn model phù hợp dựa trên độ phức tạp bài viết
+% - Phân loại độ phức tạp: simple (< 500 tokens), medium (500-1500), complex (> 1500)
+% - Routing logic: simple → ViT5, medium → PhoGPT/GPT-4o, complex → GPT-4o
+% - Output Fusion: kết hợp kết quả từ nhiều model trong evaluation mode
+% Hình 3.7: Flowchart cơ chế routing
+% Bảng 3.2: Ma trận routing (complexity × model)
+
+\subsection{Module đánh giá (Evaluation Module)}
+% TODO:
+% - Evaluation mode: chạy đồng thời nhiều model
+% - Tính toán ROUGE, BLEU, BERTScore, Compression Rate, Latency
+% - BERTScore selection: chọn kết quả tốt nhất
+% - Lưu trữ metrics vào Supabase
+% Hình 3.8: Sequence diagram - Evaluation mode
+
+\section{Thiết kế cơ sở dữ liệu}
+
+\subsection{Sơ đồ quan hệ}
+% TODO:
+% - Bảng evaluation_metrics: lưu kết quả đánh giá
+% - Bảng dashboard_actions: log hành động người dùng
+% - Bảng model_configurations: cấu hình mô hình
+% Hình 3.9: ER Diagram
+
+\subsection{Mô tả chi tiết các bảng}
+% TODO:
+% Bảng 3.3: Cấu trúc bảng evaluation_metrics
+% Bảng 3.4: Cấu trúc bảng dashboard_actions
+
+\section{Thiết kế giao diện người dùng}
+
+\subsection{Sidebar tóm tắt}
+% TODO: Hình 3.10: Mockup/Screenshot sidebar
+
+\subsection{Popover kiểm chứng}
+% TODO: Hình 3.11: Mockup/Screenshot fact-check
+
+\subsection{Trang Settings và Debug}
+% TODO: Hình 3.12: Trang settings với model selector
+
+\subsection{Trang Metrics}
+% TODO: Hình 3.13: Trang metrics với biểu đồ
+
+\section{Tổng kết chương}
+% TODO: Tóm tắt các quyết định thiết kế chính

@@ -1,0 +1,117 @@
+% ============================================================
+% CHƯƠNG 4: THỰC NGHIỆM VÀ ĐÁNH GIÁ
+% ============================================================
+\chapter{Thực nghiệm và đánh giá}
+
+\section{Thiết lập thực nghiệm}
+
+\subsection{Bộ dữ liệu đánh giá}
+% TODO:
+% - 50 bài báo từ 4 trang: VnExpress, Tuổi Trẻ, Dân Trí, Thanh Niên
+% - 5 chủ đề: thời sự, pháp luật, kinh tế, giáo dục, văn hóa (10 bài/chủ đề)
+% - Tiêu chí chọn bài: đa dạng độ dài, chủ đề, nguồn
+% Bảng 4.1: Thống kê bộ dữ liệu đánh giá
+
+\subsection{Các mô hình được đánh giá}
+% TODO:
+% - GPT-4o (OpenAI) - baseline đa ngôn ngữ
+% - GPT-4o-mini (OpenAI) - phiên bản nhỏ hơn
+% - ViT5-large (VietAI) - chuyên biệt tiếng Việt
+% - Thảo luận: PhoGPT, Vistral chưa triển khai được (hosting constraints)
+% Bảng 4.2: Thông tin các mô hình
+
+\subsection{Các metrics đánh giá}
+% TODO:
+% - ROUGE-1, ROUGE-2, ROUGE-L
+% - BLEU
+% - BERTScore (PhoBERT-based)
+% - Compression Rate
+% - Latency (ms)
+
+\subsection{Môi trường thực nghiệm}
+% TODO:
+% - Backend: Next.js trên localhost
+% - BERTScore service: FastAPI trên HuggingFace Spaces
+% - ViT5: HuggingFace Inference API
+% - GPT-4o/4o-mini: OpenAI API
+
+\section{Kết quả thực nghiệm}
+
+\subsection{So sánh tổng quan các mô hình}
+% TODO:
+% Bảng 4.3: Kết quả trung bình các metrics theo model
+% - ROUGE-1, ROUGE-2, ROUGE-L, BLEU, BERTScore, Compression, Latency
+% - So sánh GPT-4o vs GPT-4o-mini vs ViT5
+% Hình 4.1: Biểu đồ radar so sánh các model
+
+\subsection{Phân tích theo chủ đề}
+% TODO:
+% Bảng 4.4: Kết quả theo chủ đề (thời sự)
+% Bảng 4.5: Kết quả theo chủ đề (pháp luật)
+% Bảng 4.6: Kết quả theo chủ đề (kinh tế)
+% Bảng 4.7: Kết quả theo chủ đề (giáo dục)
+% Bảng 4.8: Kết quả theo chủ đề (văn hóa)
+% Hình 4.2: Biểu đồ so sánh BERTScore theo chủ đề
+
+\subsection{Phân tích BERTScore chi tiết}
+% TODO:
+% - ViT5 đạt BERTScore cao hơn GPT-4o: phân tích nguyên nhân
+% - PhoBERT embeddings ưu tiên token overlap tiếng Việt
+% - ViT5 sinh tóm tắt extractive hơn → BERTScore cao hơn
+% - GPT-4o sinh tóm tắt abstractive hơn → đọc tự nhiên hơn nhưng BERTScore thấp hơn
+% Hình 4.3: Phân bố BERTScore theo model
+
+\subsection{Phân tích Compression Rate và Latency}
+% TODO:
+% - GPT-4o: tóm tắt dài hơn, latency ổn định
+% - ViT5: tóm tắt ngắn hơn, latency phụ thuộc HF Inference API
+% Hình 4.4: Scatter plot Compression Rate vs BERTScore
+% Hình 4.5: Box plot Latency theo model
+
+\section{Đánh giá cơ chế Routing}
+
+\subsection{Hiệu quả phân loại độ phức tạp}
+% TODO:
+% - Accuracy của phân loại simple/medium/complex
+% - Ví dụ minh họa routing decisions
+
+\subsection{So sánh routing tự động vs manual}
+% TODO:
+% - Routing tự động có chọn đúng model tối ưu không?
+% - Trade-off giữa chất lượng và chi phí API
+
+\section{Đánh giá module kiểm chứng sự kiện}
+
+\subsection{Chất lượng kiểm chứng}
+% TODO:
+% - Đánh giá định tính: mẫu fact-check results
+% - Độ chính xác của trust scoring
+% - Chất lượng nguồn tìm kiếm từ Tavily
+
+\subsection{Hạn chế}
+% TODO:
+% - Phụ thuộc chất lượng tìm kiếm
+% - Không thể kiểm chứng tin tức quá mới (chưa có nguồn)
+% - Bias của LLM trong đánh giá
+
+\section{Thảo luận về thách thức triển khai mô hình tiếng Việt}
+
+% TODO:
+% - PhoGPT-4B: yêu cầu GPU (T4 16GB), ZeroGPU cần HF Pro
+% - Vistral (Viet-Mistral): tương tự, GPU requirement
+% - So sánh chi phí hosting: HF Spaces vs Modal.com vs self-hosted
+% - Hàm ý: model chuyên biệt tiếng Việt cần hạ tầng GPU, rào cản cho nghiên cứu
+
+\section{Phân tích key findings}
+
+% TODO:
+% Finding 1: ViT5 > GPT-4o về BERTScore nhưng < về tính tự nhiên
+% Finding 2: Model chuyên biệt (fine-tuned) cho kết quả ngữ nghĩa tốt hơn
+%            trên tác vụ cụ thể, dù kích thước nhỏ hơn nhiều
+% Finding 3: Cơ chế routing giảm chi phí API mà vẫn đảm bảo chất lượng
+% Finding 4: BERTScore với PhoBERT phản ánh chất lượng ngữ nghĩa tiếng Việt
+%            tốt hơn ROUGE/BLEU
+% Finding 5: Search-augmented fact-checking khả thi cho tin tức tiếng Việt
+
+\section{Tổng kết chương}
+% TODO: Tóm tắt kết quả chính và nhận xét

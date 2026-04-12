@@ -1,0 +1,9 @@
+% ============================================================
+% Abstract in English (Phụ lục 06 - required for CLC)
+% ============================================================
+\chapter*{ABSTRACT}
+\addcontentsline{toc}{chapter}{Abstract}
+
+\textbf{Abstract:} The explosion of information on Vietnamese online news platforms poses significant challenges for readers in consuming and verifying news content. This thesis presents the development of \textit{Fiber} --- an automated Vietnamese news summarization and fact-checking system implemented as a browser extension, integrating multiple Large Language Models (LLMs). The system follows a microservice architecture comprising three components: a browser extension (Plasmo/React), an API server (Next.js), and a semantic evaluation service (FastAPI/PhoBERT). The main contributions of this thesis include: (1) proposing an intelligent routing mechanism that automatically selects the most suitable model based on article complexity; (2) building a search-augmented fact verification pipeline combining online search with LLM reasoning; (3) establishing a comprehensive evaluation framework using ROUGE, BLEU, and BERTScore metrics with the PhoBERT model for Vietnamese semantic similarity. Experiments conducted on a dataset of 50 articles across 5 topics from major Vietnamese news outlets (VnExpress, Tuoi Tre, Dan Tri, Thanh Nien) reveal that the ViT5 model (specialized for Vietnamese) achieves higher BERTScore than GPT-4o, while GPT-4o produces more natural and readable summaries. These findings suggest a promising direction for combining the strengths of language-specific and multilingual models in Vietnamese natural language processing.
+
+\textit{\textbf{Keywords:}} text summarization, fact-checking, large language models, Vietnamese

@@ -1,0 +1,452 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "VnExpress - Bao tieng Viet nhieu nguoi xem nhat" [ref=e4] [cursor=pointer]:
+        - /url: https://vnexpress.net
+        - img "VnExpress - Bao tieng Viet nhieu nguoi xem nhat" [ref=e5]
+      - generic "Hà Nội hiện tại 36 độ" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]:
+          - text: Hà Nội
+          - link "Mặc định" [ref=e9]:
+            - /url: javascript:void(0);
+            - generic [ref=e10]: Mặc định
+            - img [ref=e11]
+        - generic [ref=e13]:
+          - img [ref=e14]
+          - generic [ref=e17]:
+            - text: "36"
+            - superscript [ref=e18]: o
+          - generic [ref=e19]:
+            - text: Thời tiết từng địa phương
+            - generic [ref=e20]: ×
+      - link "Chủ nhật, 12/4/2026" [ref=e22] [cursor=pointer]:
+        - /url: https://vnexpress.net/lich-van-nien
+      - generic [ref=e23]:
+        - link "Mới nhất" [ref=e24] [cursor=pointer]:
+          - /url: https://vnexpress.net/tin-tuc-24h
+        - generic [ref=e26] [cursor=pointer]: Tin theo khu vực
+        - link "International" [ref=e27] [cursor=pointer]:
+          - /url: https://e.vnexpress.net/
+          - img [ref=e28]
+          - text: International
+        - generic [ref=e30]:
+          - textbox "Tìm kiếm"
+          - button "Tìm kiếm" [ref=e31] [cursor=pointer]:
+            - img [ref=e32]
+        - list [ref=e37]:
+          - listitem [ref=e38]:
+            - link "Đăng nhập" [ref=e39] [cursor=pointer]:
+              - /url: javascript:void(0);
+              - img [ref=e40]
+              - text: Đăng nhập
+          - listitem [ref=e42] [cursor=pointer]:
+            - link [ref=e43]:
+              - /url: javascript:;
+              - img [ref=e44]
+  - navigation [ref=e47]:
+    - list [ref=e48]:
+      - listitem [ref=e49]:
+        - link "Trang chủ" [ref=e50] [cursor=pointer]:
+          - /url: https://vnexpress.net
+          - img [ref=e51]
+          - img [ref=e53]
+      - listitem [ref=e55]:
+        - link "VnE-GO" [ref=e56] [cursor=pointer]:
+          - /url: https://vnexpress.net/vne-go
+      - listitem [ref=e57]:
+        - link "Thời sự" [ref=e58] [cursor=pointer]:
+          - /url: https://vnexpress.net/thoi-su
+      - listitem [ref=e59]:
+        - link "Thế giới" [ref=e60] [cursor=pointer]:
+          - /url: https://vnexpress.net/the-gioi
+      - listitem [ref=e61]:
+        - link "Kinh doanh" [ref=e62] [cursor=pointer]:
+          - /url: https://vnexpress.net/kinh-doanh
+      - listitem [ref=e63]:
+        - link "Khoa học công nghệ" [ref=e64] [cursor=pointer]:
+          - /url: https://vnexpress.net/khoa-hoc-cong-nghe
+      - listitem [ref=e65]:
+        - link "Góc nhìn" [ref=e66] [cursor=pointer]:
+          - /url: https://vnexpress.net/goc-nhin
+      - listitem [ref=e67]:
+        - link "Spotlight" [ref=e68] [cursor=pointer]:
+          - /url: https://vnexpress.net/spotlight
+      - listitem [ref=e69]:
+        - link "Bất động sản" [ref=e70] [cursor=pointer]:
+          - /url: https://vnexpress.net/bat-dong-san
+      - listitem [ref=e71]:
+        - link "Sức khỏe" [ref=e72] [cursor=pointer]:
+          - /url: https://vnexpress.net/suc-khoe
+      - listitem [ref=e73]:
+        - link "Giải trí" [ref=e74] [cursor=pointer]:
+          - /url: https://vnexpress.net/giai-tri
+      - listitem [ref=e75]:
+        - link "Thể thao" [ref=e76] [cursor=pointer]:
+          - /url: https://vnexpress.net/the-thao
+      - listitem [ref=e77]:
+        - link "Pháp luật" [ref=e78] [cursor=pointer]:
+          - /url: https://vnexpress.net/phap-luat
+      - listitem [ref=e79]:
+        - link "Giáo dục" [ref=e80] [cursor=pointer]:
+          - /url: https://vnexpress.net/giao-duc
+      - listitem [ref=e81]:
+        - link "Đời sống" [ref=e82] [cursor=pointer]:
+          - /url: https://vnexpress.net/doi-song
+      - listitem [ref=e83]:
+        - link "Xe" [ref=e84] [cursor=pointer]:
+          - /url: https://vnexpress.net/oto-xe-may
+      - listitem [ref=e85]:
+        - link "Du lịch" [ref=e86] [cursor=pointer]:
+          - /url: https://vnexpress.net/du-lich
+      - listitem [ref=e87]:
+        - link "Ảnh" [ref=e88] [cursor=pointer]:
+          - /url: https://vnexpress.net/anh
+      - listitem [ref=e89]:
+        - link "Infographic" [ref=e90] [cursor=pointer]:
+          - /url: https://vnexpress.net/infographics
+      - listitem [ref=e91]:
+        - link "Ý kiến" [ref=e92] [cursor=pointer]:
+          - /url: https://vnexpress.net/y-kien
+      - listitem [ref=e93]:
+        - link "Tâm sự" [ref=e94] [cursor=pointer]:
+          - /url: https://vnexpress.net/tam-su
+      - listitem [ref=e95]:
+        - link "Thư giãn" [ref=e96] [cursor=pointer]:
+          - /url: https://vnexpress.net/thu-gian
+      - listitem [ref=e97]:
+        - link "Tất cả" [ref=e98] [cursor=pointer]:
+          - /url: javascript:;
+          - text: Tất cả
+    - link [ref=e101] [cursor=pointer]:
+      - /url: javascript:;
+      - img [ref=e102]
+  - iframe [ref=e107]:
+    
+  - iframe [ref=e110]:
+    
+  - generic [ref=e113]:
+    - generic [ref=e114]:
+      - generic [ref=e115]:
+        - list [ref=e116]:
+          - listitem [ref=e117]:
+            - link "Kinh doanh" [ref=e118] [cursor=pointer]:
+              - /url: /kinh-doanh
+          - listitem [ref=e119]:
+            - link "Vĩ mô" [ref=e120] [cursor=pointer]:
+              - /url: /kinh-doanh/vi-mo
+        - generic [ref=e121]: Thứ sáu, 10/4/2026, 14:37 (GMT+7)
+      - heading "ADB dự báo GDP Việt Nam tăng 7,2% năm nay" [level=1] [ref=e122]
+      - generic [ref=e124]:
+        - generic [ref=e125]:
+          - link "VNE" [ref=e126] [cursor=pointer]:
+            - /url: /
+            - img [ref=e127]
+          - heading "ADB dự báo GDP Việt Nam tăng 7,2% năm nay" [level=2] [ref=e129]
+        - list [ref=e132]:
+          - listitem [ref=e133]:
+            - link "Chia sẻ bài viết lên Facebook" [ref=e134] [cursor=pointer]:
+              - /url: https://www.facebook.com/congdongvnexpress
+              - img [ref=e135]
+          - listitem [ref=e137]:
+            - link "Chia sẻ bài viết lên X" [ref=e138] [cursor=pointer]:
+              - /url: https://twitter.com/VnEnews
+              - img [ref=e139]
+          - listitem [ref=e141]:
+            - link "Chia sẻ bài viết lên Linkedin" [ref=e142] [cursor=pointer]:
+              - /url: javascript:;
+              - img [ref=e143]
+          - listitem "Lưu bài viết" [ref=e145]:
+            - link [ref=e146] [cursor=pointer]:
+              - /url: javascript:void(0);
+              - img [ref=e147]
+          - listitem [ref=e149]:
+            - link "Ý kiến" [ref=e150] [cursor=pointer]:
+              - /url: "#box_comment_vne"
+              - img [ref=e152]
+          - listitem [ref=e154]:
+            - link "In" [ref=e155] [cursor=pointer]:
+              - /url: javascript:;
+      - paragraph [ref=e157]: ADB dự báo tăng trưởng kinh tế Việt Nam năm nay ở mức 7,2% dù chịu ảnh hưởng xung đột Trung Đông.
+      - article [ref=e158]:
+        - paragraph [ref=e159]: Tại họp báo ngày 10/4, ông Nguyễn Bá Hùng, chuyên gia kinh tế trưởng ADB, cho biết tăng trưởng kinh tế Việt Nam được hỗ trợ nhờ các giải pháp ứng phó linh hoạt và kịp thời của nhà điều hành trước cú sốc giá dầu từ xung đột Trung Đông.
+        - paragraph [ref=e160]: Chính phủ đưa ra nhiều biện pháp tài khóa có thời hạn như giảm thuế, sử dụng Quỹ bình ổn kết hợp điều hành giá xăng dầu được vận dụng linh hoạt. Những động thái này góp phần kiềm chế áp lực lạm phát ngắn hạn và hỗ trợ tăng trưởng.
+        - paragraph [ref=e161]: ADB dự báo tăng trưởng kinh tế Việt Nam năm nay ở mức 7,2%, lạm phát 4%. Con số này thấp hơn mục tiêu 10% Chính phủ đặt ra năm nay, nhưng theo ADB dự báo này khả quan trên nền tăng trưởng cao 8% của năm 2025.
+        - 'figure "Cụm cảng Cái Mép - Thị Vải nhìn từ phía hạ lưu, ngày 15/8/2025. Ảnh: Trường Hà" [ref=e162]':
+          - 'img "Cụm cảng Cái Mép - Thị Vải nhìn từ phía hạ lưu, ngày 15/8/2025. Ảnh: Trường Hà" [ref=e164]'
+          - paragraph [ref=e166]:
+            - text: "Cụm cảng Cái Mép - Thị Vải nhìn từ phía hạ lưu, ngày 15/8/2025. Ảnh:"
+            - emphasis [ref=e167]: Trường Hà
+        - paragraph [ref=e168]: Dự báo mức tăng trưởng này được ADB đưa ra dựa trên kịch bản giá dầu Brent giao ngay giảm về mức 72 USD một thùng năm nay, giảm tiếp về 63 USD trong năm tiếp theo. Hiện giá dầu Brent giao tương lai gần 97 USD một thùng.
+        - paragraph [ref=e169]: Mức giá dầu ADB đưa ra cũng lạc quan hơn 3 kịch bản ngân hàng này công bố cuối tháng trước, là quanh 105-155 USD một thùng trong quý II, giảm dần cho đến khi xung đột chấm dứt.
+        - paragraph [ref=e170]:
+          - text: Ông Nguyễn Bá Hùng cho biết họ chưa đưa ra dự báo GDP cụ thể với các kịch bản khó khăn hơn, bởi đánh giá này cần dựa trên nhiều yếu tố, gồm phản ứng của các chính phủ. Ở phạm vi khu vực, ADB đã công bố tăng trưởng kinh tế của 10 nước khu vực ASEAN có thể
+          - link "giảm" [ref=e171] [cursor=pointer]:
+            - /url: https://vnexpress.net/adb-10-nuoc-asean-co-the-giam-toi-2-3-gdp-vi-xung-dot-trung-dong-5055396.html
+          - text: 0,6-2,3% trong giai đoạn 2026-2027. Tuy nhiên, các đánh giá này mới dừng ở mô hình, chưa tính đến ứng phó của các nước trước biến động xung đột.
+        - paragraph [ref=e172]: Chuyên gia ADB khuyến nghị về dài hạn, Việt Nam cần nâng cao hiệu quả sử dụng năng lượng, đa dạng nguồn cung và đẩy nhanh chuyển dịch sang năng lượng sạch.
+        - paragraph [ref=e173]: Tuy nhiên, cuộc xung đột kéo dài tại Trung Đông có thể tiếp tục gây gián đoạn dòng chảy dầu, khí và phân bón qua eo biển Hormuz, làm tăng chi phí và chậm thời gian vận chuyển. Tăng trưởng chậm lại tại các đối tác thương mại lớn cũng có thể thu hẹp thặng dư thương mại, làm giảm tốc độ tăng trưởng của Việt Nam.
+        - paragraph [ref=e174]: Bên cạnh đó, chính sách thuế của Mỹ sau 150 ngày áp thuế khẩn cấp còn khó lường. Trước nhiều biến động, chỉ số nhà quản trị mua hàng (PMI) đang về gần ngưỡng 50 trong tháng 3, thời điểm diễn ra xung đột, sau khi duy trì ở ngưỡng cao trong vài tháng trước đó.
+        - paragraph [ref=e175]: Trong trung hạn, giới phân tích cho rằng đòn bẩy tăng trưởng nằm ở việc nâng cao hiệu quả khu vực công, thu hút vốn tư nhân và củng cố sức chống chịu nền kinh tế. Nhóm giải pháp trọng tâm gồm đẩy mạnh cải cách thể chế, tái cơ cấu hành chính, kết hợp tối ưu hóa đầu tư công và hoàn thiện khuôn khổ pháp lý.
+        - paragraph [ref=e176]:
+          - strong [ref=e177]: Thủy Trương
+        - generic [ref=e178]:
+          - article [ref=e179]:
+            - 'link "ADB\\: 10 nước ASEAN có thể giảm tới 2,3% GDP vì xung đột Trung Đông" [ref=e181] [cursor=pointer]':
+              - /url: https://vnexpress.net/adb-10-nuoc-asean-co-the-giam-toi-2-3-gdp-vi-xung-dot-trung-dong-5055396.html
+              - 'img "ADB\\: 10 nước ASEAN có thể giảm tới 2,3% GDP vì xung đột Trung Đông" [ref=e182]'
+            - 'heading "ADB: 10 nước ASEAN có thể giảm tới 2,3% GDP vì xung đột Trung Đông" [level=4] [ref=e183]':
+              - 'link "ADB: 10 nước ASEAN có thể giảm tới 2,3% GDP vì xung đột Trung Đông" [ref=e184] [cursor=pointer]':
+                - /url: https://vnexpress.net/adb-10-nuoc-asean-co-the-giam-toi-2-3-gdp-vi-xung-dot-trung-dong-5055396.html
+            - paragraph [ref=e185]:
+              - link "ADB cho rằng, tăng trưởng kinh tế của 10 nước khu vực ASEAN có thể giảm 0,6-2,3% trong giai đoạn 2026-2027 theo các kịch bản tác động từ xung đột Trung Đông." [ref=e186] [cursor=pointer]:
+                - /url: https://vnexpress.net/adb-10-nuoc-asean-co-the-giam-toi-2-3-gdp-vi-xung-dot-trung-dong-5055396.html
+          - article [ref=e187]:
+            - link "'Xây kho dự trữ xăng dầu quốc gia như mua bảo hiểm cho nền kinh tế'" [ref=e189] [cursor=pointer]:
+              - /url: https://vnexpress.net/xay-kho-du-tru-xang-dau-quoc-gia-nhu-mua-bao-hiem-cho-nen-kinh-te-5060712.html
+              - img "'Xây kho dự trữ xăng dầu quốc gia như mua bảo hiểm cho nền kinh tế'" [ref=e190]
+            - heading "'Xây kho dự trữ xăng dầu quốc gia như mua bảo hiểm cho nền kinh tế'" [level=4] [ref=e191]:
+              - link "'Xây kho dự trữ xăng dầu quốc gia như mua bảo hiểm cho nền kinh tế'" [ref=e192] [cursor=pointer]:
+                - /url: https://vnexpress.net/xay-kho-du-tru-xang-dau-quoc-gia-nhu-mua-bao-hiem-cho-nen-kinh-te-5060712.html
+            - paragraph [ref=e193]:
+              - link "Đại biểu Đặng Ngọc Huy đề nghị sớm xây dựng kho dự trữ xăng dầu quốc gia bởi đây là \"bảo hiểm cho nền kinh tế\" dù chi phí có thể tốn kém." [ref=e194] [cursor=pointer]:
+                - /url: https://vnexpress.net/xay-kho-du-tru-xang-dau-quoc-gia-nhu-mua-bao-hiem-cho-nen-kinh-te-5060712.html
+          - article [ref=e195]:
+            - link "Nhiều doanh nghiệp cho nhân viên làm việc tại nhà khi giá xăng dầu tăng cao" [ref=e197] [cursor=pointer]:
+              - /url: https://vnexpress.net/nhieu-doanh-nghiep-cho-nhan-vien-lam-viec-tai-nha-khi-gia-xang-dau-tang-cao-5056500.html
+              - img "Nhiều doanh nghiệp cho nhân viên làm việc tại nhà khi giá xăng dầu tăng cao" [ref=e198]
+            - heading "Nhiều doanh nghiệp cho nhân viên làm việc tại nhà khi giá xăng dầu tăng cao" [level=4] [ref=e199]:
+              - link "Nhiều doanh nghiệp cho nhân viên làm việc tại nhà khi giá xăng dầu tăng cao" [ref=e200] [cursor=pointer]:
+                - /url: https://vnexpress.net/nhieu-doanh-nghiep-cho-nhan-vien-lam-viec-tai-nha-khi-gia-xang-dau-tang-cao-5056500.html
+            - paragraph [ref=e201]:
+              - link "Nhiều doanh nghiệp công nghệ, sản xuất cho nhân viên làm việc tại nhà hoặc hỗ trợ tiền xăng để giảm áp lực chi phí khi giá nhiên liệu tăng mạnh." [ref=e202] [cursor=pointer]:
+                - /url: https://vnexpress.net/nhieu-doanh-nghiep-cho-nhan-vien-lam-viec-tai-nha-khi-gia-xang-dau-tang-cao-5056500.html
+              - link "114" [ref=e204] [cursor=pointer]:
+                - /url: https://vnexpress.net/nhieu-doanh-nghiep-cho-nhan-vien-lam-viec-tai-nha-khi-gia-xang-dau-tang-cao-5056500.html#box_comment_vne
+                - img [ref=e205]
+                - text: "114"
+      - generic [ref=e207]:
+        - link "Trở lại Kinh doanh" [ref=e208] [cursor=pointer]:
+          - /url: /kinh-doanh
+          - img [ref=e209]
+          - text: Trở lại Kinh doanh
+        - generic "Lưu bài viết" [ref=e211]:
+          - link "Lưu" [ref=e212] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - img [ref=e213]
+            - text: Lưu
+        - generic [ref=e215]:
+          - link "Chia sẻ bài viết lên facebook" [ref=e216] [cursor=pointer]:
+            - /url: javascript:;
+            - img [ref=e217]
+          - link "Mail" [ref=e219] [cursor=pointer]:
+            - /url: javascript:;
+            - img [ref=e220]
+          - link "Copy link" [ref=e222] [cursor=pointer]:
+            - /url: javascript:;
+            - img [ref=e223]
+    - generic [ref=e228]:
+      - iframe [ref=e233]:
+        - iframe [ref=f81e3]:
+          - link [ref=f82e4] [cursor=pointer]:
+            - /url: https://adclick.g.doubleclick.net/pcs/click?xai=AKAOjstSN6illIQc0jcLhtGX95tVjscRDwBQGXBZE-b5BFv_sYtpdewIUVqSGfiuv51G2r3BGesjPeMbF2CWJ3C3dLBDPm7NG-5q9iIsMcis4GlvGP5z8az9-QY5NJ3lcymLC7SYHZoIFUIXKjW4e-ey6C-dq0UBeWPLAw4RamcnBUeR-zFHqYXl6HKnVv2Ldu3Per4vK8OJ1drQzBAt6vSiCkfH2podyt3N88wfZb6fqnoDVsFi0-rVVi_pFOE8PuFaBpEKnOWtiUOi-JJJQjhQOu_1NxvyFJl3MpPCcXinm_2mtmDxlfMs_3nhQl1ScXw8NOUPJP81WOFz556wGq3lb-Kaf5VoyGNRALGo46OXjrX2vgIO9NsgXDzkTeT2cJDIQPgFTvPphvfz7KYlsd_oMDr9fmjkiEqdB2-UQWe-ssoWjtH2fvpRDF-9PfhXiFPO&sai=AMfl-YRvI37Vc6V1j03AdYcJwFdFAzWZg29GLrHc5VT6gW2_zgUqiX88nNSRKHB-Mc3oFrKvRoQmq0PCHgTtrulqaGrMHHoeBuYQ6w6YV8wFlli44kOWHGDLrqty0dLdggcFSHsxBeOU8vQzpijg9FJFqC9zDPJaOClX8ZujN7idEPsG4rgPI1TXlYi-mnwNOBdJuQ0Ktc5M5cd30r6IPTjiul20621U39hAa8SmR8JvHfVS_4N0I7JYAsiA07XL3p5bb_ftH4Rz_nFyqErx8TUoP6Jc49wXcSBfWkyjPI-q-EHwYoOPlLLopQ1qrRE9WBJEoepiSDtz4mA6kj4c8G-VNsoreRetAcaBuAlMtBg-&sig=Cg0ArKJSzIBuPvEAx1VwEAE&fbs_aeid=%5Bgw_fbsaeid%5D&urlfix=1&adurl=https%3A%2F%2Fartisanpark.com.vn%2F%3Futm_source%3Dmac%26utm_medium%3DVnE-BackGroundU-Large1%26utm_campaign%3DArtisanPark-Phase01_HN_Bo01
+      - generic [ref=e234]:
+        - link "Xem nhiều" [ref=e236] [cursor=pointer]:
+          - /url: /tin-xem-nhieu
+        - article [ref=e237]:
+          - link "Jackpot gần 80 tỷ đồng có chủ" [ref=e239] [cursor=pointer]:
+            - /url: https://vnexpress.net/jackpot-gan-80-ty-dong-co-chu-5061074.html
+            - img "Jackpot gần 80 tỷ đồng có chủ" [ref=e240]
+          - generic [ref=e241]:
+            - link "Jackpot gần 80 tỷ đồng có chủ" [ref=e242] [cursor=pointer]:
+              - /url: https://vnexpress.net/jackpot-gan-80-ty-dong-co-chu-5061074.html
+            - link "31" [ref=e244] [cursor=pointer]:
+              - /url: https://vnexpress.net/jackpot-gan-80-ty-dong-co-chu-5061074.html#box_comment_vne
+              - img [ref=e245]
+              - text: "31"
+        - article [ref=e247]:
+          - link "Quốc hội chốt giảm thuế với xăng, dầu về 0 đến hết tháng 6" [ref=e249] [cursor=pointer]:
+            - /url: https://vnexpress.net/quoc-hoi-chot-giam-thue-voi-xang-dau-ve-0-den-het-thang-6-5061359.html
+            - img "Quốc hội chốt giảm thuế với xăng, dầu về 0 đến hết tháng 6" [ref=e250]
+          - link "Quốc hội chốt giảm thuế với xăng, dầu về 0 đến hết tháng 6" [ref=e252] [cursor=pointer]:
+            - /url: https://vnexpress.net/quoc-hoi-chot-giam-thue-voi-xang-dau-ve-0-den-het-thang-6-5061359.html
+        - article [ref=e253]:
+          - link "Ông Trần Khải Hoàn làm Tổng giám đốc Ngân hàng Nam Á" [ref=e255] [cursor=pointer]:
+            - /url: https://vnexpress.net/ong-tran-khai-hoan-lam-tong-giam-doc-ngan-hang-nam-a-5061017.html
+            - img "Ông Trần Khải Hoàn làm Tổng giám đốc Ngân hàng Nam Á" [ref=e256]
+          - link "Ông Trần Khải Hoàn làm Tổng giám đốc Ngân hàng Nam Á" [ref=e258] [cursor=pointer]:
+            - /url: https://vnexpress.net/ong-tran-khai-hoan-lam-tong-giam-doc-ngan-hang-nam-a-5061017.html
+        - article [ref=e259]:
+          - 'link "Bộ trưởng Công Thương\\: Dự trữ xăng dầu trong nước được nâng lên 26 ngày" [ref=e261] [cursor=pointer]':
+            - /url: https://vnexpress.net/bo-truong-cong-thuong-du-tru-xang-dau-trong-nuoc-duoc-nang-len-26-ngay-5060889.html
+            - 'img "Bộ trưởng Công Thương\\: Dự trữ xăng dầu trong nước được nâng lên 26 ngày" [ref=e262]'
+          - 'link "Bộ trưởng Công Thương: Dự trữ xăng dầu trong nước được nâng lên 26 ngày" [ref=e264] [cursor=pointer]':
+            - /url: https://vnexpress.net/bo-truong-cong-thuong-du-tru-xang-dau-trong-nuoc-duoc-nang-len-26-ngay-5060889.html
+        - article [ref=e265]:
+          - link "Tòa án Mỹ nghi ngờ tính pháp lý của thuế nhập khẩu 10%" [ref=e267] [cursor=pointer]:
+            - /url: https://vnexpress.net/toa-an-my-nghi-ngo-tinh-phap-ly-cua-thue-nhap-khau-10-5061177.html
+            - img "Tòa án Mỹ nghi ngờ tính pháp lý của thuế nhập khẩu 10%" [ref=e268]
+          - link "Tòa án Mỹ nghi ngờ tính pháp lý của thuế nhập khẩu 10%" [ref=e270] [cursor=pointer]:
+            - /url: https://vnexpress.net/toa-an-my-nghi-ngo-tinh-phap-ly-cua-thue-nhap-khau-10-5061177.html
+  - generic [ref=e284]:
+    - heading "Ý kiến" [level=3] [ref=e287]
+    - generic [ref=e288]:
+      - generic:
+        - textbox "Chia sẻ ý kiến của bạn" [ref=e290]
+        - img [ref=e292] [cursor=pointer]
+  - contentinfo [ref=e306]:
+    - generic [ref=e307]:
+      - list [ref=e308]:
+        - listitem [ref=e309]:
+          - link "Trang chủ" [ref=e310] [cursor=pointer]:
+            - /url: https://vnexpress.net/
+        - listitem [ref=e311]:
+          - link "Ảnh" [ref=e312] [cursor=pointer]:
+            - /url: https://vnexpress.net/anh
+        - listitem [ref=e313]:
+          - link "Infographics" [ref=e314] [cursor=pointer]:
+            - /url: https://vnexpress.net/infographics
+      - list [ref=e315]:
+        - listitem [ref=e316]:
+          - link "VnE-GO" [ref=e317] [cursor=pointer]:
+            - /url: https://vnexpress.net/vne-go
+        - listitem [ref=e318]:
+          - link "Thời sự" [ref=e319] [cursor=pointer]:
+            - /url: https://vnexpress.net/thoi-su
+        - listitem [ref=e320]:
+          - link "Thế giới" [ref=e321] [cursor=pointer]:
+            - /url: https://vnexpress.net/the-gioi
+        - listitem [ref=e322]:
+          - link "Kinh doanh" [ref=e323] [cursor=pointer]:
+            - /url: https://vnexpress.net/kinh-doanh
+        - listitem [ref=e324]:
+          - link "Khoa học công nghệ" [ref=e325] [cursor=pointer]:
+            - /url: https://vnexpress.net/khoa-hoc-cong-nghe
+        - listitem [ref=e326]:
+          - link "Góc nhìn" [ref=e327] [cursor=pointer]:
+            - /url: https://vnexpress.net/goc-nhin
+      - list [ref=e328]:
+        - listitem [ref=e329]:
+          - link "Bất động sản" [ref=e330] [cursor=pointer]:
+            - /url: https://vnexpress.net/bat-dong-san
+        - listitem [ref=e331]:
+          - link "Sức khỏe" [ref=e332] [cursor=pointer]:
+            - /url: https://vnexpress.net/suc-khoe
+        - listitem [ref=e333]:
+          - link "Giải trí" [ref=e334] [cursor=pointer]:
+            - /url: https://vnexpress.net/giai-tri
+        - listitem [ref=e335]:
+          - link "Thể thao" [ref=e336] [cursor=pointer]:
+            - /url: https://vnexpress.net/the-thao
+        - listitem [ref=e337]:
+          - link "Pháp luật" [ref=e338] [cursor=pointer]:
+            - /url: https://vnexpress.net/phap-luat
+        - listitem [ref=e339]:
+          - link "Giáo dục" [ref=e340] [cursor=pointer]:
+            - /url: https://vnexpress.net/giao-duc
+      - list [ref=e341]:
+        - listitem [ref=e342]:
+          - link "Đời sống" [ref=e343] [cursor=pointer]:
+            - /url: https://vnexpress.net/doi-song
+        - listitem [ref=e344]:
+          - link "Xe" [ref=e345] [cursor=pointer]:
+            - /url: https://vnexpress.net/oto-xe-may
+        - listitem [ref=e346]:
+          - link "Du lịch" [ref=e347] [cursor=pointer]:
+            - /url: https://vnexpress.net/du-lich
+        - listitem [ref=e348]:
+          - link "Ý kiến" [ref=e349] [cursor=pointer]:
+            - /url: https://vnexpress.net/y-kien
+        - listitem [ref=e350]:
+          - link "Tâm sự" [ref=e351] [cursor=pointer]:
+            - /url: https://vnexpress.net/tam-su
+        - listitem [ref=e352]:
+          - link "Thư giãn" [ref=e353] [cursor=pointer]:
+            - /url: https://vnexpress.net/thu-gian
+      - list [ref=e354]:
+        - listitem [ref=e355]:
+          - link "Mới nhất" [ref=e356] [cursor=pointer]:
+            - /url: https://vnexpress.net/tin-tuc-24h
+        - listitem [ref=e357]:
+          - link "Xem nhiều" [ref=e358] [cursor=pointer]:
+            - /url: https://vnexpress.net/tin-xem-nhieu
+        - listitem [ref=e359]:
+          - link "Tin nóng" [ref=e360] [cursor=pointer]:
+            - /url: https://vnexpress.net/tin-nong
+        - listitem [ref=e361]:
+          - link "Lịch vạn niên" [ref=e362] [cursor=pointer]:
+            - /url: https://vnexpress.net/lich-van-nien
+        - listitem [ref=e363]:
+          - link "Rao vặt" [ref=e364] [cursor=pointer]:
+            - /url: https://raovat.vnexpress.net/?utm_campaign=VNEXPRESS&utm_source=footer&utm_medium=menu&_gl=1*q5n8mf*_gcl_au*NDA0NTYyOS4xNzQ0NTk0NzAx
+      - generic [ref=e365]:
+        - generic [ref=e366]:
+          - paragraph [ref=e367]: Tải ứng dụng
+          - link "VnExpress" [ref=e368] [cursor=pointer]:
+            - /url: "#down-app-popup_vne"
+            - img [ref=e369]
+            - text: VnExpress
+          - link "International" [ref=e371] [cursor=pointer]:
+            - /url: "#down-app-popup_evne"
+            - img [ref=e372]
+            - text: International
+        - generic [ref=e374]:
+          - paragraph [ref=e375]: Liên hệ
+          - link "Tòa soạn" [ref=e376] [cursor=pointer]:
+            - /url: https://vnexpress.net/lien-he-toa-soan
+            - img [ref=e377]
+            - text: Tòa soạn
+          - link "Quảng cáo" [ref=e379] [cursor=pointer]:
+            - /url: https://eclick.vn/lien-he/?utm_source=VNE&utm_medium=CPC_BOX&utm_campaign=LienHeQuangCao
+            - img [ref=e380]
+            - text: Quảng cáo
+        - generic [ref=e381]:
+          - paragraph [ref=e382]: Đường dây nóng
+          - generic [ref=e383]:
+            - strong [ref=e384]: 083.888.0123
+            - paragraph [ref=e385]: (Hà Nội)
+          - generic [ref=e386]:
+            - strong [ref=e387]: 082.233.3555
+            - paragraph [ref=e388]: (TP. Hồ Chí Minh)
+    - generic [ref=e389]:
+      - paragraph [ref=e390]:
+        - link "Báo điện tử VnExpress - Bao tieng Viet nhieu nguoi xem nhat" [ref=e391] [cursor=pointer]:
+          - /url: https://vnexpress.net/
+          - generic [ref=e392]: Báo điện tử
+          - img "VnExpress - Bao tieng Viet nhieu nguoi xem nhat" [ref=e393]
+      - generic [ref=e394]:
+        - link "Điều khoản sử dụng" [ref=e395] [cursor=pointer]:
+          - /url: https://vnexpress.net/dieu-khoan-su-dung
+        - link "Chính sách bảo mật" [ref=e396] [cursor=pointer]:
+          - /url: https://vnexpress.net/chinh-sach-bao-mat
+        - link "Cookies" [ref=e397] [cursor=pointer]:
+          - /url: https://vnexpress.net/chinh-sach-cookies
+        - link "RSS" [ref=e398] [cursor=pointer]:
+          - /url: /rss
+        - generic [ref=e399]: Theo dõi VnExpress trên
+        - link "Facebook" [ref=e400] [cursor=pointer]:
+          - /url: https://www.facebook.com/congdongvnexpress/
+          - img [ref=e401]
+        - link "Twitter" [ref=e403] [cursor=pointer]:
+          - /url: https://twitter.com/VnEnews
+          - img [ref=e404]
+        - link "Youtube" [ref=e406] [cursor=pointer]:
+          - /url: https://www.youtube.com/channel/UCpK5nl5llhUL4QKq03qan8g?sub_confirmation=1
+          - img [ref=e407]
+        - link "Tiktok" [ref=e409] [cursor=pointer]:
+          - /url: https://www.tiktok.com/@vnexpress.official?lang=en
+          - img [ref=e410]
+    - generic [ref=e412]:
+      - paragraph [ref=e413]:
+        - strong [ref=e414]: Báo tiếng Việt nhiều người xem nhất
+        - text: Thuộc Bộ Khoa học và Công nghệ
+        - text: "Số giấy phép: 548/GP-BTTTT do Bộ Thông tin và Truyền thông cấp ngày 24/08/2021"
+      - paragraph [ref=e415]:
+        - text: "Tổng biên tập: Phạm Văn Hiếu"
+        - text: "Địa chỉ: Tầng 10, Tòa A FPT Tower, số 10 Phạm Văn Bạch, phường Cầu Giấy, Hà Nội"
+        - text: "Điện thoại: 024 7300 8899 - máy lẻ 4500"
+        - 'link "Email: webmaster@vnexpress.net" [ref=e416] [cursor=pointer]':
+          - /url: mailto:webmaster@vnexpress.net
+      - paragraph [ref=e417]: © 1997-2026. Toàn bộ bản quyền thuộc VnExpress
+  - link "Lên đầu trang" [ref=e418] [cursor=pointer]:
+    - /url: javascript:;
+    - img [ref=e419]

@@ -1,0 +1,1085 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "VnExpress - Bao tieng Viet nhieu nguoi xem nhat" [ref=e4] [cursor=pointer]:
+        - /url: https://vnexpress.net
+        - img "VnExpress - Bao tieng Viet nhieu nguoi xem nhat" [ref=e5]
+      - link "Chủ nhật, 12/4/2026" [ref=e7] [cursor=pointer]:
+        - /url: https://vnexpress.net/lich-van-nien
+      - generic [ref=e8]:
+        - link "Mới nhất" [ref=e9] [cursor=pointer]:
+          - /url: https://vnexpress.net/tin-tuc-24h
+        - generic [ref=e11] [cursor=pointer]: Tin theo khu vực
+        - link "International" [ref=e12] [cursor=pointer]:
+          - /url: https://e.vnexpress.net/
+          - img [ref=e13]
+          - text: International
+        - generic [ref=e15]:
+          - textbox "Tìm kiếm"
+          - button "Tìm kiếm" [ref=e16] [cursor=pointer]:
+            - img [ref=e17]
+        - list [ref=e22]:
+          - listitem [ref=e23]:
+            - link "Đăng nhập" [ref=e24] [cursor=pointer]:
+              - /url: javascript:void(0);
+              - img [ref=e25]
+              - text: Đăng nhập
+          - listitem [ref=e27] [cursor=pointer]:
+            - link [ref=e28]:
+              - /url: javascript:;
+              - img [ref=e29]
+  - navigation [ref=e32]:
+    - list [ref=e33]:
+      - listitem [ref=e34]:
+        - link "Trang chủ" [ref=e35] [cursor=pointer]:
+          - /url: /
+          - img [ref=e36]
+          - img [ref=e38]
+      - listitem [ref=e40]:
+        - link "VnE-GO" [ref=e41] [cursor=pointer]:
+          - /url: /vne-go
+      - listitem [ref=e42]:
+        - link "Thời sự" [ref=e43] [cursor=pointer]:
+          - /url: /thoi-su
+      - listitem [ref=e44]:
+        - link "Thế giới" [ref=e45] [cursor=pointer]:
+          - /url: /the-gioi
+      - listitem [ref=e46]:
+        - link "Kinh doanh" [ref=e47] [cursor=pointer]:
+          - /url: /kinh-doanh
+      - listitem [ref=e48]:
+        - link "Khoa học công nghệ" [ref=e49] [cursor=pointer]:
+          - /url: /khoa-hoc-cong-nghe
+      - listitem [ref=e50]:
+        - link "Góc nhìn" [ref=e51] [cursor=pointer]:
+          - /url: /goc-nhin
+      - listitem [ref=e52]:
+        - link "Bất động sản" [ref=e53] [cursor=pointer]:
+          - /url: /bat-dong-san
+      - listitem [ref=e54]:
+        - link "Sức khỏe" [ref=e55] [cursor=pointer]:
+          - /url: /suc-khoe
+      - listitem [ref=e56]:
+        - link "Thể thao" [ref=e57] [cursor=pointer]:
+          - /url: /the-thao
+      - listitem [ref=e58]:
+        - link "Giải trí" [ref=e59] [cursor=pointer]:
+          - /url: /giai-tri
+      - listitem [ref=e60]:
+        - link "Pháp luật" [ref=e61] [cursor=pointer]:
+          - /url: /phap-luat
+      - listitem [ref=e62]:
+        - link "Giáo dục" [ref=e63] [cursor=pointer]:
+          - /url: /giao-duc
+      - listitem [ref=e64]:
+        - link "Đời sống" [ref=e65] [cursor=pointer]:
+          - /url: /doi-song
+      - listitem [ref=e66]:
+        - link "Xe" [ref=e67] [cursor=pointer]:
+          - /url: /oto-xe-may
+      - listitem [ref=e68]:
+        - link "Du lịch" [ref=e69] [cursor=pointer]:
+          - /url: /du-lich
+      - listitem [ref=e70]:
+        - link "Ý kiến" [ref=e71] [cursor=pointer]:
+          - /url: /y-kien
+      - listitem [ref=e72]:
+        - link "Tâm sự" [ref=e73] [cursor=pointer]:
+          - /url: /tam-su
+      - listitem [ref=e74]:
+        - link "Thư giãn" [ref=e75] [cursor=pointer]:
+          - /url: /thu-gian
+      - listitem [ref=e76]:
+        - link "Tất cả" [ref=e77] [cursor=pointer]:
+          - /url: javascript:;
+          - text: Tất cả
+    - link [ref=e80] [cursor=pointer]:
+      - /url: javascript:;
+      - img [ref=e81]
+  - iframe [ref=e86]:
+    
+  - iframe [ref=e89]:
+    
+  - navigation [ref=e93]:
+    - generic [ref=e94]:
+      - heading "Kinh doanh" [level=1] [ref=e96]:
+        - link "Kinh doanh" [ref=e97] [cursor=pointer]:
+          - /url: /kinh-doanh
+      - generic [ref=e98]:
+        - list [ref=e99]:
+          - listitem [ref=e100]:
+            - link "NetZero" [ref=e101] [cursor=pointer]:
+              - /url: /kinh-doanh/net-zero
+          - listitem [ref=e102]:
+            - link "Quốc tế" [ref=e103] [cursor=pointer]:
+              - /url: /kinh-doanh/quoc-te
+          - listitem [ref=e104]:
+            - link "Doanh nghiệp" [ref=e105] [cursor=pointer]:
+              - /url: /kinh-doanh/doanh-nghiep
+          - listitem [ref=e106]:
+            - link "Chứng khoán" [ref=e107] [cursor=pointer]:
+              - /url: /kinh-doanh/chung-khoan
+          - listitem [ref=e108]:
+            - link "Ebank" [ref=e109] [cursor=pointer]:
+              - /url: /kinh-doanh/ebank
+          - listitem [ref=e110]:
+            - link "Vĩ mô" [ref=e111] [cursor=pointer]:
+              - /url: /kinh-doanh/vi-mo
+          - listitem [ref=e112]:
+            - link "Tiền của tôi" [ref=e113] [cursor=pointer]:
+              - /url: /kinh-doanh/tien-cua-toi
+          - listitem [ref=e114]:
+            - link "Hàng hóa" [ref=e115] [cursor=pointer]:
+              - /url: /kinh-doanh/hang-hoa
+          - listitem [ref=e116]:
+            - link "Kinh tế vùng" [ref=e117] [cursor=pointer]:
+              - /url: /kinh-doanh/kinh-te-vung
+          - listitem [ref=e118]:
+            - link "Doanh nghiệp vươn mình" [ref=e119] [cursor=pointer]:
+              - /url: /kinh-doanh/doanh-nghiep-vuon-minh
+        - link [ref=e121] [cursor=pointer]:
+          - /url: javascript:;
+          - img [ref=e122]
+  - generic [ref=e126]:
+    - generic [ref=e128]:
+      - article [ref=e129]:
+        - link "EU cân nhắc áp thêm thuế với các hãng dầu, khí" [ref=e131] [cursor=pointer]:
+          - /url: https://vnexpress.net/eu-can-nhac-ap-them-thue-voi-cac-hang-dau-khi-5061390.html
+          - img "EU cân nhắc áp thêm thuế với các hãng dầu, khí" [ref=e132]
+        - heading "EU cân nhắc áp thêm thuế với các hãng dầu, khí" [level=3] [ref=e133]:
+          - link "EU cân nhắc áp thêm thuế với các hãng dầu, khí" [ref=e134] [cursor=pointer]:
+            - /url: https://vnexpress.net/eu-can-nhac-ap-them-thue-voi-cac-hang-dau-khi-5061390.html
+        - paragraph [ref=e135]:
+          - link "Quan chức Liên minh châu Âu (EU) đang nghiên cứu thuế với lợi nhuận bất thường của các công ty năng lượng, khi giá dầu tăng cao vì chiến sự." [ref=e136] [cursor=pointer]:
+            - /url: https://vnexpress.net/eu-can-nhac-ap-them-thue-voi-cac-hang-dau-khi-5061390.html
+        - paragraph [ref=e137]:
+          - generic [ref=e138]: 2h trước
+          - link "Quốc tế" [ref=e139] [cursor=pointer]:
+            - /url: /kinh-doanh/quoc-te
+      - generic [ref=e140]:
+        - article [ref=e141]:
+          - generic [ref=e142]:
+            - link "Việt Nam chi gần 3 tỷ USD nhập khẩu xăng dầu" [ref=e143] [cursor=pointer]:
+              - /url: https://vnexpress.net/viet-nam-chi-gan-3-ty-usd-nhap-khau-xang-dau-5061350.html
+              - img "Việt Nam chi gần 3 tỷ USD nhập khẩu xăng dầu" [ref=e144]
+            - heading "Việt Nam chi gần 3 tỷ USD nhập khẩu xăng dầu" [level=3] [ref=e145]:
+              - link "Việt Nam chi gần 3 tỷ USD nhập khẩu xăng dầu" [ref=e146] [cursor=pointer]:
+                - /url: https://vnexpress.net/viet-nam-chi-gan-3-ty-usd-nhap-khau-xang-dau-5061350.html
+        - article [ref=e147]:
+          - generic [ref=e148]:
+            - link "Quốc hội chốt giảm thuế với xăng, dầu về 0 đến hết tháng 6" [ref=e149] [cursor=pointer]:
+              - /url: https://vnexpress.net/quoc-hoi-chot-giam-thue-voi-xang-dau-ve-0-den-het-thang-6-5061359.html
+              - img "Quốc hội chốt giảm thuế với xăng, dầu về 0 đến hết tháng 6" [ref=e150]
+            - heading "Quốc hội chốt giảm thuế với xăng, dầu về 0 đến hết tháng 6" [level=3] [ref=e151]:
+              - link "Quốc hội chốt giảm thuế với xăng, dầu về 0 đến hết tháng 6" [ref=e152] [cursor=pointer]:
+                - /url: https://vnexpress.net/quoc-hoi-chot-giam-thue-voi-xang-dau-ve-0-den-het-thang-6-5061359.html
+        - article [ref=e153]:
+          - generic [ref=e154]:
+            - link "Giá dầu thế giới có tuần giảm mạnh nhất 4 năm" [ref=e155] [cursor=pointer]:
+              - /url: https://vnexpress.net/gia-dau-the-gioi-co-tuan-giam-manh-nhat-4-nam-5061344.html
+              - img "Giá dầu thế giới có tuần giảm mạnh nhất 4 năm" [ref=e156]
+            - heading "Giá dầu thế giới có tuần giảm mạnh nhất 4 năm" [level=3] [ref=e157]:
+              - link "Giá dầu thế giới có tuần giảm mạnh nhất 4 năm" [ref=e158] [cursor=pointer]:
+                - /url: https://vnexpress.net/gia-dau-the-gioi-co-tuan-giam-manh-nhat-4-nam-5061344.html
+    - complementary [ref=e159]:
+      - iframe [ref=e165]:
+        - iframe [ref=f17e3]:
+          - link [ref=f18e4] [cursor=pointer]:
+            - /url: https://adclick.g.doubleclick.net/pcs/click?xai=AKAOjsv7lkYZXTYNS7mlkFmYCVqYzwvrknIVWv8Nvj1J_AArVXDaCa70J88XfW8tS5HmdA4ES8BUt4nEPzyTHKWfAdwkkC6KxU8pny3JvlANtQ7vpVK_Duf5Xq7PaBAVMNnhu8Hmhl67QnOfhVVB5cQY_yqPUyTiwVRt2T4Y9-L5w5uEUIhj3N8BM9J7s_iz4txR-zG2u57Ut8eljHg4d6AGS-RkDbbbbPJ5nFvbe1yRmvVzN5ohTU5ww7zSS8lRA_myMgsLPD4a8n4QdSrPmOPo0DCweLXdd8TKZXjCFP0ncFGO4vkoHNywOSnkvjIc48RbmVUou75_Mvu4BCPRPK5Uq7KXTR9brqxVWof4eBzSLY3HX5fAk7tWcfnCOW7Z9hVMwxU9SMjxP7oRrG_7i5aMiCyOg6Ci1uUwQQkF_IlofpFBWbn2lT5ip5H3DQ&sai=AMfl-YSMhZGn0IjfipqLcZjUeSTbG_q6SZ_B4NXIeA3YwcWPiaTlCxUktvts1tU6juGvzeRTWGmHcGyar0gRZc4DfDFjew32E7-MFhejVz5uRM3nacOy3tr7w3XmcIwE3LUsPetXg-yXlVIdWvf7T8wJcj_rpUF9K9tRIAxW4CzrLNS4lr8RQ-EekqBbfYJgyoaILFavLGB4YBPtx5Fd3o3bc9na94hLdumW1_vRqpFfijtEbqRrHHvuLkj6Hr34xgDl7j1ffgEx3WUPRh0kkTLgfpo0TxDCuci35Z-bA8U8uOY-cCSj7IT0qwS541Dl4-cLTMTTfSxTvQiHHpBq6nbCfU3Sk-A14ZwvZ017Dzjk76W2j0EB8k5vwEzARkiIok1xAQ&sig=Cg0ArKJSzCCN-O4S9uizEAE&fbs_aeid=%5Bgw_fbsaeid%5D&urlfix=1&adurl=https%3A%2F%2Fmasterisehomes.com%2Fmasteri-grand-coast%3Futm_source%3Dvne%26utm_medium%3Dimpression%26utm_campaign%3DMGC_launch_Masteri-MGC-OCP2-Apr6_fpt_vne_impression_Digital_sync-background-cpm_hn-plus_pc_mass
+  - generic [ref=e167]:
+    - generic [ref=e168]:
+      - article [ref=e169]:
+        - heading "Chuyện gì xảy ra khi Trái Đất đón siêu El Nino mạnh nhất lịch sử?" [level=3] [ref=e170]:
+          - link "Chuyện gì xảy ra khi Trái Đất đón siêu El Nino mạnh nhất lịch sử?" [ref=e171] [cursor=pointer]:
+            - /url: https://vnexpress.net/chuyen-gi-xay-ra-khi-trai-dat-don-sieu-el-nino-manh-nhat-lich-su-5061278.html
+        - link "Chuyện gì xảy ra khi Trái Đất đón siêu El Nino mạnh nhất lịch sử?" [ref=e173] [cursor=pointer]:
+          - /url: https://vnexpress.net/chuyen-gi-xay-ra-khi-trai-dat-don-sieu-el-nino-manh-nhat-lich-su-5061278.html
+          - img "Chuyện gì xảy ra khi Trái Đất đón siêu El Nino mạnh nhất lịch sử?" [ref=e174]
+        - paragraph [ref=e175]:
+          - link "Cơ quan khí tượng Bắc Mỹ và châu Âu cảnh báo nguy cơ diễn ra hiện tượng siêu El Nino mạnh nhất lịch sử, vẽ lại bản đồ thời tiết toàn cầu và đẩy Trái Đất nóng kỷ lục." [ref=e176] [cursor=pointer]:
+            - /url: https://vnexpress.net/chuyen-gi-xay-ra-khi-trai-dat-don-sieu-el-nino-manh-nhat-lich-su-5061278.html
+      - article [ref=e177]:
+        - heading "CZ cược 1 tỷ USD khi khẩu chiến với chủ sàn OKX" [level=3] [ref=e178]:
+          - link "CZ cược 1 tỷ USD khi khẩu chiến với chủ sàn OKX" [ref=e179] [cursor=pointer]:
+            - /url: https://vnexpress.net/cz-cuoc-1-ty-usd-khi-khau-chien-voi-chu-san-okx-5061299.html
+        - link "CZ cược 1 tỷ USD khi khẩu chiến với chủ sàn OKX" [ref=e181] [cursor=pointer]:
+          - /url: https://vnexpress.net/cz-cuoc-1-ty-usd-khi-khau-chien-voi-chu-san-okx-5061299.html
+          - img "CZ cược 1 tỷ USD khi khẩu chiến với chủ sàn OKX" [ref=e182]
+        - paragraph [ref=e183]:
+          - link "CZ và Star Xu, hai người đứng đầu hai sàn giao dịch tiền số hàng đầu thế giới Binance và OKX, khẩu chiến, dẫn đến màn cược 1 tỷ USD." [ref=e184] [cursor=pointer]:
+            - /url: https://vnexpress.net/cz-cuoc-1-ty-usd-khi-khau-chien-voi-chu-san-okx-5061299.html
+          - link "20" [ref=e186] [cursor=pointer]:
+            - /url: https://vnexpress.net/cz-cuoc-1-ty-usd-khi-khau-chien-voi-chu-san-okx-5061299.html#box_comment_vne
+            - img [ref=e187]
+            - text: "20"
+      - article [ref=e189]:
+        - heading "Hồi sinh khu Casino Đồ Sơn với dự án hơn 2.100 tỷ đồng" [level=3] [ref=e190]:
+          - link "Hồi sinh khu Casino Đồ Sơn với dự án hơn 2.100 tỷ đồng" [ref=e191] [cursor=pointer]:
+            - /url: https://vnexpress.net/hoi-sinh-khu-casino-do-son-voi-du-an-hon-2-100-ty-dong-5061288.html
+        - link "Hồi sinh khu Casino Đồ Sơn với dự án hơn 2.100 tỷ đồng" [ref=e193] [cursor=pointer]:
+          - /url: https://vnexpress.net/hoi-sinh-khu-casino-do-son-voi-du-an-hon-2-100-ty-dong-5061288.html
+          - img "Hồi sinh khu Casino Đồ Sơn với dự án hơn 2.100 tỷ đồng" [ref=e194]
+        - paragraph [ref=e195]:
+          - link "Hải PhòngDự án Trung tâm Hội nghị, thương mại và du lịch quốc tế Hải Phòng sẽ được xây tại khu đất Casino Đồ Sơn, diện tích 25 ha." [ref=e196] [cursor=pointer]:
+            - /url: https://vnexpress.net/hoi-sinh-khu-casino-do-son-voi-du-an-hon-2-100-ty-dong-5061288.html
+      - article [ref=e197]:
+        - heading "Xuất khẩu thanh long sang Thái Lan, Trung Đông tăng mạnh" [level=3] [ref=e198]:
+          - link "Xuất khẩu thanh long sang Thái Lan, Trung Đông tăng mạnh" [ref=e199] [cursor=pointer]:
+            - /url: https://vnexpress.net/xuat-khau-thanh-long-sang-thai-lan-trung-dong-tang-manh-5061211.html
+        - link "Xuất khẩu thanh long sang Thái Lan, Trung Đông tăng mạnh" [ref=e201] [cursor=pointer]:
+          - /url: https://vnexpress.net/xuat-khau-thanh-long-sang-thai-lan-trung-dong-tang-manh-5061211.html
+          - img "Xuất khẩu thanh long sang Thái Lan, Trung Đông tăng mạnh" [ref=e202]
+        - paragraph [ref=e203]:
+          - link "Xuất khẩu thanh long phục hồi trong 2 tháng đầu năm, với lực kéo rõ rệt từ Thái Lan và UAE, trong khi Trung Quốc - thị trường dẫn đầu ổn định trở lại sau giai đoạn giảm sâu." [ref=e204] [cursor=pointer]:
+            - /url: https://vnexpress.net/xuat-khau-thanh-long-sang-thai-lan-trung-dong-tang-manh-5061211.html
+      - article [ref=e205]:
+        - heading "Tòa án Mỹ nghi ngờ tính pháp lý của thuế nhập khẩu 10%" [level=3] [ref=e206]:
+          - link "Tòa án Mỹ nghi ngờ tính pháp lý của thuế nhập khẩu 10%" [ref=e207] [cursor=pointer]:
+            - /url: https://vnexpress.net/toa-an-my-nghi-ngo-tinh-phap-ly-cua-thue-nhap-khau-10-5061177.html
+        - link "Tòa án Mỹ nghi ngờ tính pháp lý của thuế nhập khẩu 10%" [ref=e209] [cursor=pointer]:
+          - /url: https://vnexpress.net/toa-an-my-nghi-ngo-tinh-phap-ly-cua-thue-nhap-khau-10-5061177.html
+          - img "Tòa án Mỹ nghi ngờ tính pháp lý của thuế nhập khẩu 10%" [ref=e210]
+        - paragraph [ref=e211]:
+          - link "Các thẩm phán cho rằng thâm hụt thương mại lớn có thể không đủ là lý do để ông Trump áp thuế nhập khẩu diện rộng như vậy." [ref=e212] [cursor=pointer]:
+            - /url: https://vnexpress.net/toa-an-my-nghi-ngo-tinh-phap-ly-cua-thue-nhap-khau-10-5061177.html
+      - article [ref=e213]:
+        - heading "Niềm tin tiêu dùng của người Mỹ thấp kỷ lục" [level=3] [ref=e214]:
+          - link "Niềm tin tiêu dùng của người Mỹ thấp kỷ lục" [ref=e215] [cursor=pointer]:
+            - /url: https://vnexpress.net/niem-tin-tieu-dung-cua-nguoi-my-thap-ky-luc-5061145.html
+        - link "Niềm tin tiêu dùng của người Mỹ thấp kỷ lục" [ref=e217] [cursor=pointer]:
+          - /url: https://vnexpress.net/niem-tin-tieu-dung-cua-nguoi-my-thap-ky-luc-5061145.html
+          - img "Niềm tin tiêu dùng của người Mỹ thấp kỷ lục" [ref=e218]
+        - paragraph [ref=e219]:
+          - link "Xung đột tại Trung Đông kéo lạm phát tại Mỹ lên cao, đẩy niềm tin tiêu dùng xuống thấp kỷ lục trong tháng 4." [ref=e220] [cursor=pointer]:
+            - /url: https://vnexpress.net/niem-tin-tieu-dung-cua-nguoi-my-thap-ky-luc-5061145.html
+      - article [ref=e222]:
+        - insertion
+    - generic [ref=e223]:
+      - generic [ref=e225]:
+        - generic [ref=e226]:
+          - generic [ref=e227]:
+            - generic [ref=e228]: Niềm tin kinh doanh 2026 - Khảo sát thường niên của Ban IV & VnExpress
+            - heading "Bạn đánh giá thế nào về kinh tế Việt Nam hiện nay?" [level=3] [ref=e229]
+          - generic [ref=e230]:
+            - generic [ref=e231] [cursor=pointer]:
+              - text: Rất tích cực
+              - radio "Rất tích cực"
+            - generic [ref=e233] [cursor=pointer]:
+              - text: Tích cực
+              - radio "Tích cực"
+            - generic [ref=e235] [cursor=pointer]:
+              - text: Bình thường
+              - radio "Bình thường"
+            - generic [ref=e237] [cursor=pointer]:
+              - text: Tiêu cực
+              - radio "Tiêu cực"
+            - generic [ref=e239] [cursor=pointer]:
+              - text: Rất tiêu cực
+              - radio "Rất tiêu cực"
+        - button "Tiếp tục" [ref=e241] [cursor=pointer]
+      - generic [ref=e242]:
+        - generic [ref=e243]:
+          - link "Bảng giá vàng mới nhất" [ref=e244] [cursor=pointer]:
+            - /url: /chu-de/gia-vang-1403
+          - table "Bảng giá vàng mới nhất" [ref=e245]:
+            - rowgroup [ref=e246]:
+              - row "Giá vàng Mua Bán" [ref=e247]:
+                - cell "Giá vàng" [ref=e248]: Giá vàng
+                - cell "Mua" [ref=e250]
+                - cell "Bán" [ref=e251]
+            - rowgroup [ref=e252]:
+              - row "Thế giới 4.747,2$ 4.749,2$" [ref=e253]:
+                - cell "Thế giới" [ref=e254]
+                - cell "4.747,2$" [ref=e255]
+                - cell "4.749,2$" [ref=e256]
+              - row "SJC 1L, 10L, 1KG 169,4 172,4" [ref=e257]:
+                - cell "SJC 1L, 10L, 1KG" [ref=e258]
+                - cell "169,4" [ref=e259]
+                - cell "172,4" [ref=e260]
+              - row "SJC 2C, 1C, 5 phân 169,4 172,43" [ref=e261]:
+                - cell "SJC 2C, 1C, 5 phân" [ref=e262]
+                - cell "169,4" [ref=e263]
+                - cell "172,43" [ref=e264]
+          - generic [ref=e265]:
+            - generic [ref=e266]: "Đơn vị: triệu đồng/lượng; Giá vàng thế giới: USD/ounce"
+            - generic [ref=e267]: "Cập nhật lúc: 15h55 ngày 12/4/2026"
+        - generic [ref=e268]:
+          - heading "Tính thuế thu nhập cá nhân" [level=3] [ref=e269]: Tính thuế thu nhập cá nhân
+          - generic [ref=e271]:
+            - generic [ref=e274]:
+              - textbox "Lương tháng (VNĐ)" [ref=e275]
+              - generic:
+                - generic:
+                  - list
+            - generic [ref=e276]:
+              - generic [ref=e278]:
+                - textbox "Lương đóng bảo hiểm (VNĐ)" [ref=e279]
+                - generic:
+                  - generic:
+                    - list
+              - generic [ref=e281] [cursor=pointer]:
+                - text: Bằng lương tháng
+                - checkbox "Bằng lương tháng" [ref=e282]
+            - generic [ref=e284]:
+              - generic [ref=e286]:
+                - textbox "Số người phụ thuộc" [ref=e287]
+                - generic:
+                  - generic:
+                    - list
+              - button "Xem kết quả" [ref=e288] [cursor=pointer]
+      - generic [ref=e289]:
+        - generic [ref=e290]:
+          - link "Hậu trường doanh nghiệp - doanh nhân" [ref=e293] [cursor=pointer]:
+            - /url: /topic/hau-truong-doanh-nghiep-doanh-nhan-25880
+          - article [ref=e294]:
+            - link "Vì sao mảng TV của Sony và TCL cần nhau\\?" [ref=e296] [cursor=pointer]:
+              - /url: https://vnexpress.net/vi-sao-mang-tv-cua-sony-va-tcl-can-nhau-5057329.html
+              - img "Vì sao mảng TV của Sony và TCL cần nhau\\?" [ref=e297]
+            - heading "Vì sao mảng TV của Sony và TCL cần nhau? 37" [level=3] [ref=e299]:
+              - link "Vì sao mảng TV của Sony và TCL cần nhau?" [ref=e300] [cursor=pointer]:
+                - /url: https://vnexpress.net/vi-sao-mang-tv-cua-sony-va-tcl-can-nhau-5057329.html
+              - link "37" [ref=e302] [cursor=pointer]:
+                - /url: https://vnexpress.net/vi-sao-mang-tv-cua-sony-va-tcl-can-nhau-5057329.html#box_comment_vne
+                - img [ref=e303]
+                - text: "37"
+          - heading "Converse - thương hiệu giày trăm tuổi hụt hơi 46" [level=3] [ref=e306]:
+            - link "Converse - thương hiệu giày trăm tuổi hụt hơi" [ref=e307] [cursor=pointer]:
+              - /url: https://vnexpress.net/converse-thuong-hieu-giay-tram-tuoi-hut-hoi-5039560.html
+            - link "46" [ref=e309] [cursor=pointer]:
+              - /url: https://vnexpress.net/converse-thuong-hieu-giay-tram-tuoi-hut-hoi-5039560.html#box_comment_vne
+              - img [ref=e310]
+              - text: "46"
+        - generic [ref=e312]:
+          - link "Cẩm nang đầu tư F0" [ref=e315] [cursor=pointer]:
+            - /url: /kinh-doanh/tien-cua-toi/cam-nang-dau-tu-f0
+          - article [ref=e316]:
+            - link "Khả năng chịu rủi ro đầu tư chứng khoán là gì\\?" [ref=e318] [cursor=pointer]:
+              - /url: https://vnexpress.net/kha-nang-chiu-rui-ro-dau-tu-chung-khoan-la-gi-4859484.html
+              - img "Khả năng chịu rủi ro đầu tư chứng khoán là gì\\?" [ref=e319]
+            - heading "Khả năng chịu rủi ro đầu tư chứng khoán là gì?" [level=3] [ref=e321]:
+              - link "Khả năng chịu rủi ro đầu tư chứng khoán là gì?" [ref=e322] [cursor=pointer]:
+                - /url: https://vnexpress.net/kha-nang-chiu-rui-ro-dau-tu-chung-khoan-la-gi-4859484.html
+          - heading "Mẹo đọc báo cáo tài chính dành cho đầu tư chứng khoán" [level=3] [ref=e324]:
+            - link "Mẹo đọc báo cáo tài chính dành cho đầu tư chứng khoán" [ref=e325] [cursor=pointer]:
+              - /url: https://vnexpress.net/meo-doc-bao-cao-tai-chinh-danh-cho-dau-tu-chung-khoan-4862943.html
+      - generic [ref=e326]:
+        - generic [ref=e327]:
+          - link "Kinh tế vùng" [ref=e328] [cursor=pointer]:
+            - /url: /kinh-doanh/kinh-te-vung
+            - img "Kinh tế vùng" [ref=e329]
+          - heading "Kinh tế" [level=3] [ref=e330]:
+            - link "Kinh tế" [ref=e331] [cursor=pointer]:
+              - /url: /kinh-doanh/kinh-te-vung/kinh-te
+          - heading "Xã hội" [level=3] [ref=e332]:
+            - link "Xã hội" [ref=e333] [cursor=pointer]:
+              - /url: /kinh-doanh/kinh-te-vung/xa-hoi
+          - heading "Hạ tầng" [level=3] [ref=e334]:
+            - link "Hạ tầng" [ref=e335] [cursor=pointer]:
+              - /url: /kinh-doanh/kinh-te-vung/ha-tang
+          - heading "Bất động sản" [level=3] [ref=e336]:
+            - link "Bất động sản" [ref=e337] [cursor=pointer]:
+              - /url: /kinh-doanh/kinh-te-vung/bat-dong-san
+          - heading "Du lịch" [level=3] [ref=e338]:
+            - link "Du lịch" [ref=e339] [cursor=pointer]:
+              - /url: /kinh-doanh/kinh-te-vung/du-lich
+        - generic [ref=e340]:
+          - article [ref=e341]:
+            - link "Đà Nẵng sắp có thêm hai dự án nhà ở xã hội gần 1\\.600 tỷ đồng" [ref=e343] [cursor=pointer]:
+              - /url: https://vnexpress.net/da-nang-sap-co-them-hai-du-an-nha-o-xa-hoi-gan-1-600-ty-dong-5061381.html
+              - img "Đà Nẵng sắp có thêm hai dự án nhà ở xã hội gần 1\\.600 tỷ đồng" [ref=e344]
+            - generic [ref=e345]:
+              - heading "Đà Nẵng sắp có thêm hai dự án nhà ở xã hội gần 1.600 tỷ đồng" [level=3] [ref=e346]:
+                - link "Đà Nẵng sắp có thêm hai dự án nhà ở xã hội gần 1.600 tỷ đồng" [ref=e347] [cursor=pointer]:
+                  - /url: https://vnexpress.net/da-nang-sap-co-them-hai-du-an-nha-o-xa-hoi-gan-1-600-ty-dong-5061381.html
+              - paragraph [ref=e348]:
+                - link "Đà NẵngKhu nhà ở xã hội Vịnh An Hòa và Núi Thành thuộc khu kinh tế mở Chu Lai vừa được thành phố duyệt chủ..." [ref=e349] [cursor=pointer]:
+                  - /url: https://vnexpress.net/da-nang-sap-co-them-hai-du-an-nha-o-xa-hoi-gan-1-600-ty-dong-5061381.html
+          - generic [ref=e350]:
+            - article [ref=e351]:
+              - heading "Hà Nội, TP HCM lọt top 10 thành phố có giá thuê văn phòng cao nhất châu Á 12" [level=3] [ref=e352]:
+                - link "Hà Nội, TP HCM lọt top 10 thành phố có giá thuê văn phòng cao nhất châu Á" [ref=e353] [cursor=pointer]:
+                  - /url: https://vnexpress.net/ha-noi-tp-hcm-lot-top-10-thanh-pho-co-gia-thue-van-phong-cao-nhat-chau-a-5061208.html
+                - link "12" [ref=e355] [cursor=pointer]:
+                  - /url: https://vnexpress.net/ha-noi-tp-hcm-lot-top-10-thanh-pho-co-gia-thue-van-phong-cao-nhat-chau-a-5061208.html#box_comment_vne
+                  - img [ref=e356]
+                  - text: "12"
+            - article [ref=e358]:
+              - heading "Quảng Ninh yêu cầu giải quyết tồn đọng tại 2 dự án nghìn tỷ của FLC" [level=3] [ref=e359]:
+                - link "Quảng Ninh yêu cầu giải quyết tồn đọng tại 2 dự án nghìn tỷ của FLC" [ref=e360] [cursor=pointer]:
+                  - /url: https://vnexpress.net/quang-ninh-yeu-cau-giai-quyet-ton-dong-tai-2-du-an-nghin-ty-cua-flc-5060801.html
+      - generic [ref=e361]:
+        - generic [ref=e362]:
+          - link "NetZero" [ref=e363] [cursor=pointer]:
+            - /url: /kinh-doanh/net-zero
+          - heading "Cẩm nang" [level=3] [ref=e364]:
+            - link "Cẩm nang" [ref=e365] [cursor=pointer]:
+              - /url: /kinh-doanh/net-zero/cam-nang
+          - heading "Hành tinh kêu cứu" [level=3] [ref=e366]:
+            - link "Hành tinh kêu cứu" [ref=e367] [cursor=pointer]:
+              - /url: /kinh-doanh/net-zero/hanh-tinh-keu-cuu
+          - heading "Chính sách" [level=3] [ref=e368]:
+            - link "Chính sách" [ref=e369] [cursor=pointer]:
+              - /url: /kinh-doanh/net-zero/chinh-sach
+          - heading "Doanh nghiệp xanh" [level=3] [ref=e370]:
+            - link "Doanh nghiệp xanh" [ref=e371] [cursor=pointer]:
+              - /url: /kinh-doanh/net-zero/doanh-nghiep-xanh
+        - generic [ref=e372]:
+          - article [ref=e373]:
+            - link "Tỷ lệ tái chế bắt buộc với pin xe điện giảm về 0% tới 2029" [ref=e375] [cursor=pointer]:
+              - /url: https://vnexpress.net/ty-le-tai-che-bat-buoc-voi-pin-xe-dien-giam-ve-0-toi-2029-5059766.html
+              - img "Tỷ lệ tái chế bắt buộc với pin xe điện giảm về 0% tới 2029" [ref=e376]
+            - generic [ref=e377]:
+              - heading "Tỷ lệ tái chế bắt buộc với pin xe điện giảm về 0% tới 2029" [level=3] [ref=e378]:
+                - link "Tỷ lệ tái chế bắt buộc với pin xe điện giảm về 0% tới 2029" [ref=e379] [cursor=pointer]:
+                  - /url: https://vnexpress.net/ty-le-tai-che-bat-buoc-voi-pin-xe-dien-giam-ve-0-toi-2029-5059766.html
+              - paragraph [ref=e380]:
+                - link "Tỷ lệ tái chế bắt buộc với pin xe điện, hybrid được giảm về 0% và duy trì tới 2029, theo nghị định mới của..." [ref=e381] [cursor=pointer]:
+                  - /url: https://vnexpress.net/ty-le-tai-che-bat-buoc-voi-pin-xe-dien-giam-ve-0-toi-2029-5059766.html
+                - link "28" [ref=e383] [cursor=pointer]:
+                  - /url: https://vnexpress.net/ty-le-tai-che-bat-buoc-voi-pin-xe-dien-giam-ve-0-toi-2029-5059766.html#box_comment_vne
+                  - img [ref=e384]
+                  - text: "28"
+          - generic [ref=e386]:
+            - article [ref=e387]:
+              - heading "Xe máy điện đắt hàng ở Pakistan vì giá xăng tăng" [level=3] [ref=e388]:
+                - link "Xe máy điện đắt hàng ở Pakistan vì giá xăng tăng" [ref=e389] [cursor=pointer]:
+                  - /url: https://vnexpress.net/xe-may-dien-dat-hang-o-pakistan-vi-gia-xang-tang-5059599.html
+            - article [ref=e390]:
+              - heading "Hỗ trợ tới 20 tỷ đồng cho doanh nghiệp tái chế pin, xe cũ" [level=3] [ref=e391]:
+                - link "Hỗ trợ tới 20 tỷ đồng cho doanh nghiệp tái chế pin, xe cũ" [ref=e392] [cursor=pointer]:
+                  - /url: https://vnexpress.net/ho-tro-toi-20-ty-dong-cho-doanh-nghiep-tai-che-pin-xe-cu-5059344.html
+      - generic [ref=e393]:
+        - generic [ref=e394]:
+          - heading "Quốc tế" [level=2] [ref=e395]:
+            - link "Quốc tế" [ref=e396] [cursor=pointer]:
+              - /url: /kinh-doanh/quoc-te
+          - link "Phân tích" [ref=e398] [cursor=pointer]:
+            - /url: /kinh-doanh/quoc-te/phan-tich
+        - generic [ref=e399]:
+          - article [ref=e400]:
+            - link "Goldman Sachs hạ dự báo giá dầu thô" [ref=e402] [cursor=pointer]:
+              - /url: https://vnexpress.net/goldman-sachs-ha-du-bao-gia-dau-tho-5060936.html
+              - img "Goldman Sachs hạ dự báo giá dầu thô" [ref=e403]
+            - generic [ref=e404]:
+              - heading "Goldman Sachs hạ dự báo giá dầu thô" [level=3] [ref=e405]:
+                - link "Goldman Sachs hạ dự báo giá dầu thô" [ref=e406] [cursor=pointer]:
+                  - /url: https://vnexpress.net/goldman-sachs-ha-du-bao-gia-dau-tho-5060936.html
+              - paragraph [ref=e407]:
+                - link "Ngân hàng Mỹ Goldman Sachs kỳ vọng giá dầu thô trung bình quý II giảm khoảng 10% so với dự báo trước đó." [ref=e408] [cursor=pointer]:
+                  - /url: https://vnexpress.net/goldman-sachs-ha-du-bao-gia-dau-tho-5060936.html
+          - generic [ref=e409]:
+            - article [ref=e410]:
+              - heading "Giá hàng hóa xuất xưởng Trung Quốc tăng sau 3 năm" [level=3] [ref=e411]:
+                - link "Giá hàng hóa xuất xưởng Trung Quốc tăng sau 3 năm" [ref=e412] [cursor=pointer]:
+                  - /url: https://vnexpress.net/gia-hang-hoa-xuat-xuong-trung-quoc-tang-sau-3-nam-5060893.html
+            - article [ref=e413]:
+              - heading "Eo biển Hormuz - đòn bẩy mặc cả trong thỏa thuận Mỹ - Iran" [level=3] [ref=e414]:
+                - link "Eo biển Hormuz - đòn bẩy mặc cả trong thỏa thuận Mỹ - Iran" [ref=e415] [cursor=pointer]:
+                  - /url: https://vnexpress.net/eo-bien-hormuz-don-bay-mac-ca-trong-thoa-thuan-my-iran-5060266.html
+      - generic [ref=e416]:
+        - generic [ref=e417]:
+          - heading "Doanh nghiệp" [level=2] [ref=e418]:
+            - link "Doanh nghiệp" [ref=e419] [cursor=pointer]:
+              - /url: /kinh-doanh/doanh-nghiep
+          - link "Doanh nhân" [ref=e421] [cursor=pointer]:
+            - /url: /kinh-doanh/doanh-nghiep/doanh-nhan
+          - link "Quản trị" [ref=e423] [cursor=pointer]:
+            - /url: /kinh-doanh/doanh-nghiep/quan-tri
+          - link "Doanh nghiệp viết" [ref=e425] [cursor=pointer]:
+            - /url: /kinh-doanh/doanh-nghiep/doanh-nghiep-viet
+        - generic [ref=e426]:
+          - article [ref=e427]:
+            - link "TBS Group và Lefaso tiếp đoàn công tác Bộ Công Thương" [ref=e429] [cursor=pointer]:
+              - /url: https://vnexpress.net/tbs-group-va-lefaso-tiep-doan-cong-tac-bo-cong-thuong-5061400.html
+              - img "TBS Group và Lefaso tiếp đoàn công tác Bộ Công Thương" [ref=e430]
+            - generic [ref=e431]:
+              - heading "TBS Group và Lefaso tiếp đoàn công tác Bộ Công Thương" [level=3] [ref=e432]:
+                - link "TBS Group và Lefaso tiếp đoàn công tác Bộ Công Thương" [ref=e433] [cursor=pointer]:
+                  - /url: https://vnexpress.net/tbs-group-va-lefaso-tiep-doan-cong-tac-bo-cong-thuong-5061400.html
+              - paragraph [ref=e434]:
+                - link "TBS Group phối hợp Lefaso cùng đoàn Bộ Công Thương thảo luận chiến lược phát triển ngành thời trang quốc gia..." [ref=e435] [cursor=pointer]:
+                  - /url: https://vnexpress.net/tbs-group-va-lefaso-tiep-doan-cong-tac-bo-cong-thuong-5061400.html
+          - generic [ref=e436]:
+            - article [ref=e437]:
+              - heading "Nhà sản xuất 'Anh trai say hi' lãi 380 tỷ đồng" [level=3] [ref=e438]:
+                - link "Nhà sản xuất 'Anh trai say hi' lãi 380 tỷ đồng" [ref=e439] [cursor=pointer]:
+                  - /url: https://vnexpress.net/nha-san-xuat-anh-trai-say-hi-lai-380-ty-dong-5061069.html
+            - article [ref=e440]:
+              - heading "GG Power giới thiệu nhà máy sản xuất pin lưu trữ năng lượng" [level=3] [ref=e441]:
+                - link "GG Power giới thiệu nhà máy sản xuất pin lưu trữ năng lượng" [ref=e442] [cursor=pointer]:
+                  - /url: https://vnexpress.net/gg-power-gioi-thieu-nha-may-san-xuat-pin-luu-tru-nang-luong-5061297.html
+  - generic [ref=e450]:
+    - article [ref=e451]:
+      - link "Mận hậu đầu mùa 250.000 đồng một kg vẫn hút khách" [ref=e453] [cursor=pointer]:
+        - /url: https://vnexpress.net/man-hau-dau-mua-250-000-dong-mot-kg-van-hut-khach-5060937.html
+        - img "Mận hậu đầu mùa 250.000 đồng một kg vẫn hút khách" [ref=e454]
+      - heading "Mận hậu đầu mùa 250.000 đồng một kg vẫn hút khách" [level=3] [ref=e455]:
+        - link "Mận hậu đầu mùa 250.000 đồng một kg vẫn hút khách" [ref=e456] [cursor=pointer]:
+          - /url: https://vnexpress.net/man-hau-dau-mua-250-000-dong-mot-kg-van-hut-khach-5060937.html
+      - paragraph [ref=e457]:
+        - link "Mận hậu Sơn La đầu mùa đang được bán tại TP HCM với giá tới 250.000 đồng một kg, cao hơn 5-10% so với cùng kỳ và tiệm cận nhiều loại trái cây nhập khẩu." [ref=e458] [cursor=pointer]:
+          - /url: https://vnexpress.net/man-hau-dau-mua-250-000-dong-mot-kg-van-hut-khach-5060937.html
+        - link "29" [ref=e460] [cursor=pointer]:
+          - /url: https://vnexpress.net/man-hau-dau-mua-250-000-dong-mot-kg-van-hut-khach-5060937.html#box_comment_vne
+          - img [ref=e461]
+          - text: "29"
+    - article [ref=e463]:
+      - link "Chứng khoán Thiên Việt muốn bầu cựu CEO ACB Lý Xuân Hải vào hội đồng quản trị" [ref=e465] [cursor=pointer]:
+        - /url: https://vnexpress.net/chung-khoan-thien-viet-muon-bau-cuu-ceo-acb-ly-xuan-hai-vao-hoi-dong-quan-tri-5061118.html
+        - img "Chứng khoán Thiên Việt muốn bầu cựu CEO ACB Lý Xuân Hải vào hội đồng quản trị" [ref=e466]
+      - heading "Chứng khoán Thiên Việt muốn bầu cựu CEO ACB Lý Xuân Hải vào hội đồng quản trị" [level=3] [ref=e467]:
+        - link "Chứng khoán Thiên Việt muốn bầu cựu CEO ACB Lý Xuân Hải vào hội đồng quản trị" [ref=e468] [cursor=pointer]:
+          - /url: https://vnexpress.net/chung-khoan-thien-viet-muon-bau-cuu-ceo-acb-ly-xuan-hai-vao-hoi-dong-quan-tri-5061118.html
+      - paragraph [ref=e469]:
+        - link "Chứng khoán Thiên Việt muốn trình cổ đông bầu ông Lý Xuân Hải, cựu Tổng giám đốc ACB, làm thành viên Hội đồng quản trị." [ref=e470] [cursor=pointer]:
+          - /url: https://vnexpress.net/chung-khoan-thien-viet-muon-bau-cuu-ceo-acb-ly-xuan-hai-vao-hoi-dong-quan-tri-5061118.html
+    - article [ref=e471]:
+      - link "LPBank cùng Sở Công Thương Cần Thơ hỗ trợ doanh nghiệp tiếp cận vốn" [ref=e473] [cursor=pointer]:
+        - /url: https://vnexpress.net/lpbank-cung-so-cong-thuong-can-tho-ho-tro-doanh-nghiep-tiep-can-von-5061243.html
+        - img "LPBank cùng Sở Công Thương Cần Thơ hỗ trợ doanh nghiệp tiếp cận vốn" [ref=e474]
+      - heading "LPBank cùng Sở Công Thương Cần Thơ hỗ trợ doanh nghiệp tiếp cận vốn" [level=3] [ref=e475]:
+        - link "LPBank cùng Sở Công Thương Cần Thơ hỗ trợ doanh nghiệp tiếp cận vốn" [ref=e476] [cursor=pointer]:
+          - /url: https://vnexpress.net/lpbank-cung-so-cong-thuong-can-tho-ho-tro-doanh-nghiep-tiep-can-von-5061243.html
+      - paragraph [ref=e477]:
+        - link "LPBank triển khai chương trình kết nối tại Cần Thơ, thúc đẩy đối thoại, tư vấn giải pháp vốn, ký kết hợp tác và mở rộng liên kết giữa doanh nghiệp, chính quyền và cơ sở đào tạo." [ref=e478] [cursor=pointer]:
+          - /url: https://vnexpress.net/lpbank-cung-so-cong-thuong-can-tho-ho-tro-doanh-nghiep-tiep-can-von-5061243.html
+    - article [ref=e479]:
+      - link "Jackpot gần 80 tỷ đồng có chủ" [ref=e481] [cursor=pointer]:
+        - /url: https://vnexpress.net/jackpot-gan-80-ty-dong-co-chu-5061074.html
+        - img "Jackpot gần 80 tỷ đồng có chủ" [ref=e482]
+      - heading "Jackpot gần 80 tỷ đồng có chủ" [level=3] [ref=e483]:
+        - link "Jackpot gần 80 tỷ đồng có chủ" [ref=e484] [cursor=pointer]:
+          - /url: https://vnexpress.net/jackpot-gan-80-ty-dong-co-chu-5061074.html
+      - paragraph [ref=e485]:
+        - link "Tối 10/4, Vietlott đã xác định được một khách hàng trúng Jackpot trị giá gần 80 tỷ đồng." [ref=e486] [cursor=pointer]:
+          - /url: https://vnexpress.net/jackpot-gan-80-ty-dong-co-chu-5061074.html
+        - link "31" [ref=e488] [cursor=pointer]:
+          - /url: https://vnexpress.net/jackpot-gan-80-ty-dong-co-chu-5061074.html#box_comment_vne
+          - img [ref=e489]
+          - text: "31"
+    - article [ref=e491]:
+      - insertion
+    - article [ref=e492]:
+      - link "Ông Trần Khải Hoàn làm Tổng giám đốc Ngân hàng Nam Á" [ref=e494] [cursor=pointer]:
+        - /url: https://vnexpress.net/ong-tran-khai-hoan-lam-tong-giam-doc-ngan-hang-nam-a-5061017.html
+        - img "Ông Trần Khải Hoàn làm Tổng giám đốc Ngân hàng Nam Á" [ref=e495]
+      - heading "Ông Trần Khải Hoàn làm Tổng giám đốc Ngân hàng Nam Á" [level=3] [ref=e496]:
+        - link "Ông Trần Khải Hoàn làm Tổng giám đốc Ngân hàng Nam Á" [ref=e497] [cursor=pointer]:
+          - /url: https://vnexpress.net/ong-tran-khai-hoan-lam-tong-giam-doc-ngan-hang-nam-a-5061017.html
+      - paragraph [ref=e498]:
+        - link "Sau hai năm giữ vị trí quyền Tổng giám đốc, ông Trần Khải Hoàn chính thức được bổ nhiệm làm Tổng giám đốc Nam A Bank từ 10/4." [ref=e499] [cursor=pointer]:
+          - /url: https://vnexpress.net/ong-tran-khai-hoan-lam-tong-giam-doc-ngan-hang-nam-a-5061017.html
+    - article [ref=e500]:
+      - link "Đề xuất giảm thuế với xăng, dầu về 0 đến hết năm" [ref=e502] [cursor=pointer]:
+        - /url: https://vnexpress.net/de-xuat-giam-thue-voi-xang-dau-ve-0-den-het-nam-5061041.html
+        - img "Đề xuất giảm thuế với xăng, dầu về 0 đến hết năm" [ref=e503]
+      - heading "Đề xuất giảm thuế với xăng, dầu về 0 đến hết năm" [level=3] [ref=e504]:
+        - link "Đề xuất giảm thuế với xăng, dầu về 0 đến hết năm" [ref=e505] [cursor=pointer]:
+          - /url: https://vnexpress.net/de-xuat-giam-thue-voi-xang-dau-ve-0-den-het-nam-5061041.html
+      - paragraph [ref=e506]:
+        - link "PGS. TS Trần Hoàng Ngân kiến nghị giảm thuế với xăng, dầu về 0 đến hết năm nay, thay vì 30/6 như Chính phủ đang đề xuất." [ref=e507] [cursor=pointer]:
+          - /url: https://vnexpress.net/de-xuat-giam-thue-voi-xang-dau-ve-0-den-het-nam-5061041.html
+    - article [ref=e508]:
+      - link "Chứng khoán tăng trở lại" [ref=e510] [cursor=pointer]:
+        - /url: https://vnexpress.net/chung-khoan-tang-tro-lai-5060950.html
+        - img "Chứng khoán tăng trở lại" [ref=e511]
+      - heading "Chứng khoán tăng trở lại" [level=3] [ref=e512]:
+        - link "Chứng khoán tăng trở lại" [ref=e513] [cursor=pointer]:
+          - /url: https://vnexpress.net/chung-khoan-tang-tro-lai-5060950.html
+      - paragraph [ref=e514]:
+        - link "Với sự hỗ trợ của nhóm ngân hàng, dầu khí và cổ phiếu Vingroup, chứng khoán trở lại sắc xanh khi VN-Index tăng hơn 13 điểm." [ref=e515] [cursor=pointer]:
+          - /url: https://vnexpress.net/chung-khoan-tang-tro-lai-5060950.html
+    - article [ref=e516]:
+      - 'link "Bộ trưởng Công Thương: Dự trữ xăng dầu trong nước được nâng lên 26 ngày" [ref=e518] [cursor=pointer]':
+        - /url: https://vnexpress.net/bo-truong-cong-thuong-du-tru-xang-dau-trong-nuoc-duoc-nang-len-26-ngay-5060889.html
+        - 'img "Bộ trưởng Công Thương: Dự trữ xăng dầu trong nước được nâng lên 26 ngày" [ref=e519]'
+      - 'heading "Bộ trưởng Công Thương: Dự trữ xăng dầu trong nước được nâng lên 26 ngày" [level=3] [ref=e520]':
+        - 'link "Bộ trưởng Công Thương: Dự trữ xăng dầu trong nước được nâng lên 26 ngày" [ref=e521] [cursor=pointer]':
+          - /url: https://vnexpress.net/bo-truong-cong-thuong-du-tru-xang-dau-trong-nuoc-duoc-nang-len-26-ngay-5060889.html
+      - paragraph [ref=e522]:
+        - link "Bộ trưởng Công Thương Lê Mạnh Hùng cho biết cơ quan này triển khai 5 nhóm giải pháp đảm bảo an ninh năng lượng, trong đó nâng dự trữ xăng dầu lên 26 ngày." [ref=e523] [cursor=pointer]:
+          - /url: https://vnexpress.net/bo-truong-cong-thuong-du-tru-xang-dau-trong-nuoc-duoc-nang-len-26-ngay-5060889.html
+    - article [ref=e524]:
+      - link "Bảy cửa hàng bán sản phẩm giả nhãn hiệu Gucci, Nike bị phạt hơn 200 triệu đồng" [ref=e526] [cursor=pointer]:
+        - /url: https://vnexpress.net/bay-cua-hang-ban-san-pham-gia-nhan-hieu-gucci-nike-bi-phat-hon-200-trieu-dong-5060807.html
+        - img "Bảy cửa hàng bán sản phẩm giả nhãn hiệu Gucci, Nike bị phạt hơn 200 triệu đồng" [ref=e527]
+      - heading "Bảy cửa hàng bán sản phẩm giả nhãn hiệu Gucci, Nike bị phạt hơn 200 triệu đồng" [level=3] [ref=e528]:
+        - link "Bảy cửa hàng bán sản phẩm giả nhãn hiệu Gucci, Nike bị phạt hơn 200 triệu đồng" [ref=e529] [cursor=pointer]:
+          - /url: https://vnexpress.net/bay-cua-hang-ban-san-pham-gia-nhan-hieu-gucci-nike-bi-phat-hon-200-trieu-dong-5060807.html
+      - paragraph [ref=e530]:
+        - link "Đà NẵngCơ quan quản lý thị trường vừa xử phạt 7 cơ sở kinh doanh với tổng số tiền hơn 215 triệu đồng do bán hàng giả mạo các nhãn hiệu thời trang lớn." [ref=e531] [cursor=pointer]:
+          - /url: https://vnexpress.net/bay-cua-hang-ban-san-pham-gia-nhan-hieu-gucci-nike-bi-phat-hon-200-trieu-dong-5060807.html
+    - article [ref=e532]:
+      - link "ADB dự báo GDP Việt Nam tăng 7,2% năm nay" [ref=e534] [cursor=pointer]:
+        - /url: https://vnexpress.net/adb-du-bao-gdp-viet-nam-tang-7-2-nam-nay-5060816.html
+        - img "ADB dự báo GDP Việt Nam tăng 7,2% năm nay" [ref=e535]
+      - heading "ADB dự báo GDP Việt Nam tăng 7,2% năm nay" [level=3] [ref=e536]:
+        - link "ADB dự báo GDP Việt Nam tăng 7,2% năm nay" [ref=e537] [cursor=pointer]:
+          - /url: https://vnexpress.net/adb-du-bao-gdp-viet-nam-tang-7-2-nam-nay-5060816.html
+      - paragraph [ref=e538]:
+        - link "ADB dự báo tăng trưởng kinh tế Việt Nam năm nay ở mức 7,2% dù chịu ảnh hưởng xung đột Trung Đông." [ref=e539] [cursor=pointer]:
+          - /url: https://vnexpress.net/adb-du-bao-gdp-viet-nam-tang-7-2-nam-nay-5060816.html
+    - article [ref=e540]:
+      - insertion
+    - article [ref=e541]:
+      - 'link "Thủ tướng: Không chấp nhận tăng trưởng nóng, đánh đổi bất ổn vĩ mô" [ref=e543] [cursor=pointer]':
+        - /url: https://vnexpress.net/thu-tuong-khong-chap-nhan-tang-truong-nong-danh-doi-bat-on-vi-mo-5060809.html
+        - 'img "Thủ tướng: Không chấp nhận tăng trưởng nóng, đánh đổi bất ổn vĩ mô" [ref=e544]'
+      - 'heading "Thủ tướng: Không chấp nhận tăng trưởng nóng, đánh đổi bất ổn vĩ mô" [level=3] [ref=e545]':
+        - 'link "Thủ tướng: Không chấp nhận tăng trưởng nóng, đánh đổi bất ổn vĩ mô" [ref=e546] [cursor=pointer]':
+          - /url: https://vnexpress.net/thu-tuong-khong-chap-nhan-tang-truong-nong-danh-doi-bat-on-vi-mo-5060809.html
+      - paragraph [ref=e547]:
+        - link "Theo Thủ tướng Lê Minh Hưng, tăng trưởng phải đi kèm với ổn định và kiểm soát các cân đối lớn về cung cầu, tài chính, Việt Nam không chấp nhận tăng trưởng nóng, bất ổn vĩ mô." [ref=e548] [cursor=pointer]:
+          - /url: https://vnexpress.net/thu-tuong-khong-chap-nhan-tang-truong-nong-danh-doi-bat-on-vi-mo-5060809.html
+    - article [ref=e549]:
+      - link "OKX đầu tư vào sàn giao dịch tiền số của VPBank" [ref=e551] [cursor=pointer]:
+        - /url: https://vnexpress.net/okx-dau-tu-vao-san-giao-dich-tien-so-cua-vpbank-5060832.html
+        - img "OKX đầu tư vào sàn giao dịch tiền số của VPBank" [ref=e552]
+      - heading "OKX đầu tư vào sàn giao dịch tiền số của VPBank" [level=3] [ref=e553]:
+        - link "OKX đầu tư vào sàn giao dịch tiền số của VPBank" [ref=e554] [cursor=pointer]:
+          - /url: https://vnexpress.net/okx-dau-tu-vao-san-giao-dich-tien-so-cua-vpbank-5060832.html
+      - paragraph [ref=e555]:
+        - link "Sàn giao dịch lớn thứ 4 toàn cầu OKX đầu tư vào CAEX - công ty tài sản số liên quan VPBank, để giúp nâng vốn lên chuẩn 10.000 tỷ đồng." [ref=e556] [cursor=pointer]:
+          - /url: https://vnexpress.net/okx-dau-tu-vao-san-giao-dich-tien-so-cua-vpbank-5060832.html
+    - article [ref=e557]:
+      - link "PV GAS nhập gần 60.000 tấn LNG" [ref=e559] [cursor=pointer]:
+        - /url: https://vnexpress.net/pv-gas-nhap-gan-60-000-tan-lng-5060808.html
+        - img "PV GAS nhập gần 60.000 tấn LNG" [ref=e560]
+      - heading "PV GAS nhập gần 60.000 tấn LNG" [level=3] [ref=e561]:
+        - link "PV GAS nhập gần 60.000 tấn LNG" [ref=e562] [cursor=pointer]:
+          - /url: https://vnexpress.net/pv-gas-nhap-gan-60-000-tan-lng-5060808.html
+      - paragraph [ref=e563]:
+        - link "PV GAS cho biết đã tiếp nhận hai chuyến tàu LNG đầu tháng 4, với tổng khối lượng gần 60.000 tấn, bổ sung nguồn khí cho giai đoạn cao điểm mùa khô." [ref=e564] [cursor=pointer]:
+          - /url: https://vnexpress.net/pv-gas-nhap-gan-60-000-tan-lng-5060808.html
+  - generic [ref=e573]:
+    - generic [ref=e574]:
+      - article [ref=e575]:
+        - link "Có nên vào lại chứng khoán sau tin xác nhận nâng hạng?" [ref=e577] [cursor=pointer]:
+          - /url: https://vnexpress.net/co-nen-vao-lai-chung-khoan-sau-tin-xac-nhan-nang-hang-5060257.html
+          - img "Có nên vào lại chứng khoán sau tin xác nhận nâng hạng?" [ref=e578]
+        - heading "Có nên vào lại chứng khoán sau tin xác nhận nâng hạng?" [level=3] [ref=e579]:
+          - link "Có nên vào lại chứng khoán sau tin xác nhận nâng hạng?" [ref=e580] [cursor=pointer]:
+            - /url: https://vnexpress.net/co-nen-vao-lai-chung-khoan-sau-tin-xac-nhan-nang-hang-5060257.html
+        - paragraph [ref=e581]:
+          - link "Thông tin nâng hạng hỗ trợ chứng khoán tăng điểm, thích hợp cho tầm nhìn dài hạn, nhưng cần xem đây chỉ là \"điểm cộng\" trong quy trình đầu tư, theo chuyên gia." [ref=e582] [cursor=pointer]:
+            - /url: https://vnexpress.net/co-nen-vao-lai-chung-khoan-sau-tin-xac-nhan-nang-hang-5060257.html
+      - article [ref=e583]:
+        - link "'Xây kho dự trữ xăng dầu quốc gia như mua bảo hiểm cho nền kinh tế'" [ref=e585] [cursor=pointer]:
+          - /url: https://vnexpress.net/xay-kho-du-tru-xang-dau-quoc-gia-nhu-mua-bao-hiem-cho-nen-kinh-te-5060712.html
+          - img "'Xây kho dự trữ xăng dầu quốc gia như mua bảo hiểm cho nền kinh tế'" [ref=e586]
+        - heading "'Xây kho dự trữ xăng dầu quốc gia như mua bảo hiểm cho nền kinh tế'" [level=3] [ref=e587]:
+          - link "'Xây kho dự trữ xăng dầu quốc gia như mua bảo hiểm cho nền kinh tế'" [ref=e588] [cursor=pointer]:
+            - /url: https://vnexpress.net/xay-kho-du-tru-xang-dau-quoc-gia-nhu-mua-bao-hiem-cho-nen-kinh-te-5060712.html
+        - paragraph [ref=e589]:
+          - link "Đại biểu Đặng Ngọc Huy đề nghị sớm xây dựng kho dự trữ xăng dầu quốc gia bởi đây là \"bảo hiểm cho nền kinh tế\" dù chi phí có thể tốn kém." [ref=e590] [cursor=pointer]:
+            - /url: https://vnexpress.net/xay-kho-du-tru-xang-dau-quoc-gia-nhu-mua-bao-hiem-cho-nen-kinh-te-5060712.html
+      - article [ref=e591]:
+        - insertion
+      - article [ref=e592]:
+        - link "Kinh tế Iran thêm khó khăn vì chiến sự" [ref=e594] [cursor=pointer]:
+          - /url: https://vnexpress.net/kinh-te-iran-them-kho-khan-vi-chien-su-5060513.html
+          - img "Kinh tế Iran thêm khó khăn vì chiến sự" [ref=e595]
+        - heading "Kinh tế Iran thêm khó khăn vì chiến sự" [level=3] [ref=e596]:
+          - link "Kinh tế Iran thêm khó khăn vì chiến sự" [ref=e597] [cursor=pointer]:
+            - /url: https://vnexpress.net/kinh-te-iran-them-kho-khan-vi-chien-su-5060513.html
+        - paragraph [ref=e598]:
+          - link "Lạm phát tại Iran đã lên tới gần 50% trước khi xung đột nổ ra, và giờ lại càng trầm trọng hơn." [ref=e599] [cursor=pointer]:
+            - /url: https://vnexpress.net/kinh-te-iran-them-kho-khan-vi-chien-su-5060513.html
+      - article [ref=e600]:
+        - link "Giá ớt giảm hơn chục lần" [ref=e602] [cursor=pointer]:
+          - /url: https://vnexpress.net/gia-ot-giam-hon-chuc-lan-5060418.html
+          - img "Giá ớt giảm hơn chục lần" [ref=e603]
+        - heading "Giá ớt giảm hơn chục lần" [level=3] [ref=e604]:
+          - link "Giá ớt giảm hơn chục lần" [ref=e605] [cursor=pointer]:
+            - /url: https://vnexpress.net/gia-ot-giam-hon-chuc-lan-5060418.html
+        - paragraph [ref=e606]:
+          - link "Quảng NgãiTrung Quốc giảm nhập khẩu, cùng với giá dầu cao khiến xe container dừng chạy, giá ớt tươi xuống còn 5.000 - 7.000 đồng một kg." [ref=e607] [cursor=pointer]:
+            - /url: https://vnexpress.net/gia-ot-giam-hon-chuc-lan-5060418.html
+          - link "38" [ref=e609] [cursor=pointer]:
+            - /url: https://vnexpress.net/gia-ot-giam-hon-chuc-lan-5060418.html#box_comment_vne
+            - img [ref=e610]
+            - text: "38"
+      - article [ref=e612]:
+        - link "Vingroup đầu tư thêm 6,5 tỷ USD vào Ấn Độ" [ref=e614] [cursor=pointer]:
+          - /url: https://vnexpress.net/vingroup-dau-tu-them-6-5-ty-usd-vao-an-do-5060978.html
+          - img "Vingroup đầu tư thêm 6,5 tỷ USD vào Ấn Độ" [ref=e615]
+        - heading "Vingroup đầu tư thêm 6,5 tỷ USD vào Ấn Độ" [level=3] [ref=e616]:
+          - link "Vingroup đầu tư thêm 6,5 tỷ USD vào Ấn Độ" [ref=e617] [cursor=pointer]:
+            - /url: https://vnexpress.net/vingroup-dau-tu-them-6-5-ty-usd-vao-an-do-5060978.html
+        - paragraph [ref=e618]:
+          - link "Tập đoàn Vingroup và Chính quyền bang Maharashtra (Ấn Độ) ký kết Biên bản ghi nhớ (MOU) nghiên cứu đầu tư hệ sinh thái đa ngành, tổng vốn dự kiến khoảng 6,5 tỷ USD." [ref=e619] [cursor=pointer]:
+            - /url: https://vnexpress.net/vingroup-dau-tu-them-6-5-ty-usd-vao-an-do-5060978.html
+      - article [ref=e620]:
+        - link "MobiFone hợp tác Techcombank thúc đẩy hệ sinh thái tài chính - công nghệ số" [ref=e622] [cursor=pointer]:
+          - /url: https://vnexpress.net/mobifone-hop-tac-techcombank-thuc-day-he-sinh-thai-tai-chinh-cong-nghe-so-5060680.html
+          - img "MobiFone hợp tác Techcombank thúc đẩy hệ sinh thái tài chính - công nghệ số" [ref=e623]
+        - heading "MobiFone hợp tác Techcombank thúc đẩy hệ sinh thái tài chính - công nghệ số" [level=3] [ref=e624]:
+          - link "MobiFone hợp tác Techcombank thúc đẩy hệ sinh thái tài chính - công nghệ số" [ref=e625] [cursor=pointer]:
+            - /url: https://vnexpress.net/mobifone-hop-tac-techcombank-thuc-day-he-sinh-thai-tai-chinh-cong-nghe-so-5060680.html
+        - paragraph [ref=e626]:
+          - link "MobiFone và Techcombank ký kết hợp tác toàn diện trong lĩnh vực tài chính, viễn thông và công nghệ số, ngày 7/4." [ref=e627] [cursor=pointer]:
+            - /url: https://vnexpress.net/mobifone-hop-tac-techcombank-thuc-day-he-sinh-thai-tai-chinh-cong-nghe-so-5060680.html
+      - article [ref=e628]:
+        - link "Các ngân hàng cam kết giảm lãi suất" [ref=e630] [cursor=pointer]:
+          - /url: https://vnexpress.net/cac-ngan-hang-cam-ket-giam-lai-suat-5060604.html
+          - img "Các ngân hàng cam kết giảm lãi suất" [ref=e631]
+        - heading "Các ngân hàng cam kết giảm lãi suất" [level=3] [ref=e632]:
+          - link "Các ngân hàng cam kết giảm lãi suất" [ref=e633] [cursor=pointer]:
+            - /url: https://vnexpress.net/cac-ngan-hang-cam-ket-giam-lai-suat-5060604.html
+        - paragraph [ref=e634]:
+          - link "Các nhà băng cam kết giảm lãi suất tiền gửi và cho vay ngay sau cuộc họp với Thống đốc chiều 9/4." [ref=e635] [cursor=pointer]:
+            - /url: https://vnexpress.net/cac-ngan-hang-cam-ket-giam-lai-suat-5060604.html
+          - link "98" [ref=e637] [cursor=pointer]:
+            - /url: https://vnexpress.net/cac-ngan-hang-cam-ket-giam-lai-suat-5060604.html#box_comment_vne
+            - img [ref=e638]
+            - text: "98"
+      - article [ref=e640]:
+        - link "Doanh thu dầu khí Nga tăng gấp đôi" [ref=e642] [cursor=pointer]:
+          - /url: https://vnexpress.net/doanh-thu-dau-khi-nga-tang-gap-doi-5060573.html
+          - img "Doanh thu dầu khí Nga tăng gấp đôi" [ref=e643]
+        - heading "Doanh thu dầu khí Nga tăng gấp đôi" [level=3] [ref=e644]:
+          - link "Doanh thu dầu khí Nga tăng gấp đôi" [ref=e645] [cursor=pointer]:
+            - /url: https://vnexpress.net/doanh-thu-dau-khi-nga-tang-gap-doi-5060573.html
+        - paragraph [ref=e646]:
+          - link "Khủng hoảng nguồn cung do xung đột Trung Đông giúp doanh thu dầu khí của Nga tăng gấp đôi trong tháng 4, theo Reuters." [ref=e647] [cursor=pointer]:
+            - /url: https://vnexpress.net/doanh-thu-dau-khi-nga-tang-gap-doi-5060573.html
+          - link "12" [ref=e649] [cursor=pointer]:
+            - /url: https://vnexpress.net/doanh-thu-dau-khi-nga-tang-gap-doi-5060573.html#box_comment_vne
+            - img [ref=e650]
+            - text: "12"
+      - article [ref=e652]:
+        - insertion
+      - article [ref=e653]:
+        - 'link "Đại biểu Quốc hội: ''Muốn tăng trưởng hai con số phải gắn với phát triển năng lượng''" [ref=e655] [cursor=pointer]':
+          - /url: https://vnexpress.net/dai-bieu-quoc-hoi-muon-tang-truong-hai-con-so-phai-gan-voi-phat-trien-nang-luong-5060608.html
+          - 'img "Đại biểu Quốc hội: ''Muốn tăng trưởng hai con số phải gắn với phát triển năng lượng''" [ref=e656]'
+        - 'heading "Đại biểu Quốc hội: ''Muốn tăng trưởng hai con số phải gắn với phát triển năng lượng''" [level=3] [ref=e657]':
+          - 'link "Đại biểu Quốc hội: ''Muốn tăng trưởng hai con số phải gắn với phát triển năng lượng''" [ref=e658] [cursor=pointer]':
+            - /url: https://vnexpress.net/dai-bieu-quoc-hoi-muon-tang-truong-hai-con-so-phai-gan-voi-phat-trien-nang-luong-5060608.html
+        - paragraph [ref=e659]:
+          - link "Theo đại biểu Nguyễn Ngọc Sơn, tăng trưởng hai con số phải gắn với phát triển năng lượng, coi đảm bảo điện cho sản xuất là mục tiêu số một." [ref=e660] [cursor=pointer]:
+            - /url: https://vnexpress.net/dai-bieu-quoc-hoi-muon-tang-truong-hai-con-so-phai-gan-voi-phat-trien-nang-luong-5060608.html
+          - link "15" [ref=e662] [cursor=pointer]:
+            - /url: https://vnexpress.net/dai-bieu-quoc-hoi-muon-tang-truong-hai-con-so-phai-gan-voi-phat-trien-nang-luong-5060608.html#box_comment_vne
+            - img [ref=e663]
+            - text: "15"
+      - article [ref=e665]:
+        - link "Bộ Công Thương nêu lý do điều chỉnh giá xăng dầu ban đêm" [ref=e667] [cursor=pointer]:
+          - /url: https://vnexpress.net/bo-cong-thuong-neu-ly-do-dieu-chinh-gia-xang-dau-ban-dem-5060606.html
+          - img "Bộ Công Thương nêu lý do điều chỉnh giá xăng dầu ban đêm" [ref=e668]
+        - heading "Bộ Công Thương nêu lý do điều chỉnh giá xăng dầu ban đêm" [level=3] [ref=e669]:
+          - link "Bộ Công Thương nêu lý do điều chỉnh giá xăng dầu ban đêm" [ref=e670] [cursor=pointer]:
+            - /url: https://vnexpress.net/bo-cong-thuong-neu-ly-do-dieu-chinh-gia-xang-dau-ban-dem-5060606.html
+        - paragraph [ref=e671]:
+          - link "Các kỳ điều hành giá xăng dầu vào ban đêm chỉ áp dụng trong trường hợp bất thường, nhằm bám sát biến động thị trường thế giới và hạn chế đầu cơ, găm hàng, theo đại diện Bộ Công Thương." [ref=e672] [cursor=pointer]:
+            - /url: https://vnexpress.net/bo-cong-thuong-neu-ly-do-dieu-chinh-gia-xang-dau-ban-dem-5060606.html
+      - article [ref=e673]:
+        - link "Ngành thuế tăng kiểm soát dòng tiền sau vụ Bảo Tín Minh Châu" [ref=e675] [cursor=pointer]:
+          - /url: https://vnexpress.net/nganh-thue-tang-kiem-soat-dong-tien-sau-vu-bao-tin-minh-chau-5060587.html
+          - img "Ngành thuế tăng kiểm soát dòng tiền sau vụ Bảo Tín Minh Châu" [ref=e676]
+        - heading "Ngành thuế tăng kiểm soát dòng tiền sau vụ Bảo Tín Minh Châu" [level=3] [ref=e677]:
+          - link "Ngành thuế tăng kiểm soát dòng tiền sau vụ Bảo Tín Minh Châu" [ref=e678] [cursor=pointer]:
+            - /url: https://vnexpress.net/nganh-thue-tang-kiem-soat-dong-tien-sau-vu-bao-tin-minh-chau-5060587.html
+        - paragraph [ref=e679]:
+          - link "Sau vụ việc nhiều doanh nghiệp lập hai hệ thống sổ kế toán che giấu doanh thu, ngành thuế sẽ tăng kiểm soát dòng tiền, kết nối dữ liệu ngân hàng để phát hiện rủi ro." [ref=e680] [cursor=pointer]:
+            - /url: https://vnexpress.net/nganh-thue-tang-kiem-soat-dong-tien-sau-vu-bao-tin-minh-chau-5060587.html
+      - article [ref=e681]:
+        - link "Dự kiến đầu tư 8,22 triệu tỷ đồng vốn công 5 năm tới" [ref=e683] [cursor=pointer]:
+          - /url: https://vnexpress.net/du-kien-dau-tu-8-22-trieu-ty-dong-von-cong-5-nam-toi-5060525.html
+          - img "Dự kiến đầu tư 8,22 triệu tỷ đồng vốn công 5 năm tới" [ref=e684]
+        - heading "Dự kiến đầu tư 8,22 triệu tỷ đồng vốn công 5 năm tới" [level=3] [ref=e685]:
+          - link "Dự kiến đầu tư 8,22 triệu tỷ đồng vốn công 5 năm tới" [ref=e686] [cursor=pointer]:
+            - /url: https://vnexpress.net/du-kien-dau-tu-8-22-trieu-ty-dong-von-cong-5-nam-toi-5060525.html
+        - paragraph [ref=e687]:
+          - link "Từ nay đến 2030, Chính phủ đề xuất tổng vốn đầu tư công là 8,22 triệu tỷ đồng - gấp 2,7 lần thực hiện 5 năm trước." [ref=e688] [cursor=pointer]:
+            - /url: https://vnexpress.net/du-kien-dau-tu-8-22-trieu-ty-dong-von-cong-5-nam-toi-5060525.html
+      - article [ref=e689]:
+        - link "'Giá đầu vào ngành thực phẩm, đồ uống leo thang'" [ref=e691] [cursor=pointer]:
+          - /url: https://vnexpress.net/gia-dau-vao-nganh-thuc-pham-do-uong-leo-thang-5060481.html
+          - img "'Giá đầu vào ngành thực phẩm, đồ uống leo thang'" [ref=e692]
+        - heading "'Giá đầu vào ngành thực phẩm, đồ uống leo thang'" [level=3] [ref=e693]:
+          - link "'Giá đầu vào ngành thực phẩm, đồ uống leo thang'" [ref=e694] [cursor=pointer]:
+            - /url: https://vnexpress.net/gia-dau-vao-nganh-thuc-pham-do-uong-leo-thang-5060481.html
+        - paragraph [ref=e695]:
+          - link "Xung đột Trung Đông đẩy chi phí đầu vào ngành thực phẩm, đồ uống tăng 5-10%, thậm chí 15% ở một số nguyên liệu, gây áp lực lớn lên doanh nghiệp sản xuất, theo chuyên gia." [ref=e696] [cursor=pointer]:
+            - /url: https://vnexpress.net/gia-dau-vao-nganh-thuc-pham-do-uong-leo-thang-5060481.html
+          - link "32" [ref=e698] [cursor=pointer]:
+            - /url: https://vnexpress.net/gia-dau-vao-nganh-thuc-pham-do-uong-leo-thang-5060481.html#box_comment_vne
+            - img [ref=e699]
+            - text: "32"
+      - article [ref=e701]:
+        - 'link "Thủ tướng: Không để mất ổn định, khủng hoảng kinh tế trong mọi tình huống" [ref=e703] [cursor=pointer]':
+          - /url: https://vnexpress.net/thu-tuong-khong-de-mat-on-dinh-khung-hoang-kinh-te-trong-moi-tinh-huong-5060478.html
+          - 'img "Thủ tướng: Không để mất ổn định, khủng hoảng kinh tế trong mọi tình huống" [ref=e704]'
+        - 'heading "Thủ tướng: Không để mất ổn định, khủng hoảng kinh tế trong mọi tình huống" [level=3] [ref=e705]':
+          - 'link "Thủ tướng: Không để mất ổn định, khủng hoảng kinh tế trong mọi tình huống" [ref=e706] [cursor=pointer]':
+            - /url: https://vnexpress.net/thu-tuong-khong-de-mat-on-dinh-khung-hoang-kinh-te-trong-moi-tinh-huong-5060478.html
+        - paragraph [ref=e707]:
+          - link "Thủ tướng Lê Minh Hưng cho biết Chính phủ sẽ không để xảy ra mất ổn định, khủng hoảng kinh tế trong mọi tình huống và có giải pháp dự phòng ứng phó biến động." [ref=e708] [cursor=pointer]:
+            - /url: https://vnexpress.net/thu-tuong-khong-de-mat-on-dinh-khung-hoang-kinh-te-trong-moi-tinh-huong-5060478.html
+      - article [ref=e709]:
+        - 'link "Ông Trần Hùng Huy: ''Sẽ phát triển ACB thành tập đoàn tài chính''" [ref=e711] [cursor=pointer]':
+          - /url: https://vnexpress.net/ong-tran-hung-huy-se-phat-trien-acb-thanh-tap-doan-tai-chinh-5060446.html
+          - 'img "Ông Trần Hùng Huy: ''Sẽ phát triển ACB thành tập đoàn tài chính''" [ref=e712]'
+        - 'heading "Ông Trần Hùng Huy: ''Sẽ phát triển ACB thành tập đoàn tài chính''" [level=3] [ref=e713]':
+          - 'link "Ông Trần Hùng Huy: ''Sẽ phát triển ACB thành tập đoàn tài chính''" [ref=e714] [cursor=pointer]':
+            - /url: https://vnexpress.net/ong-tran-hung-huy-se-phat-trien-acb-thanh-tap-doan-tai-chinh-5060446.html
+        - paragraph [ref=e715]:
+          - link "Chủ tịch ACB Trần Hùng Huy muốn đưa ACB thành tập đoàn tài chính sở hữu hệ sinh thái riêng, trong đó bảo hiểm phi nhân thọ là mảnh ghép quan trọng." [ref=e716] [cursor=pointer]:
+            - /url: https://vnexpress.net/ong-tran-hung-huy-se-phat-trien-acb-thanh-tap-doan-tai-chinh-5060446.html
+      - article [ref=e717]:
+        - link "Thêm công ty chứng khoán muốn vào 'câu lạc bộ' lãi nghìn tỷ" [ref=e719] [cursor=pointer]:
+          - /url: https://vnexpress.net/them-cong-ty-chung-khoan-muon-vao-cau-lac-bo-lai-nghin-ty-5060469.html
+          - img "Thêm công ty chứng khoán muốn vào 'câu lạc bộ' lãi nghìn tỷ" [ref=e720]
+        - heading "Thêm công ty chứng khoán muốn vào 'câu lạc bộ' lãi nghìn tỷ" [level=3] [ref=e721]:
+          - link "Thêm công ty chứng khoán muốn vào 'câu lạc bộ' lãi nghìn tỷ" [ref=e722] [cursor=pointer]:
+            - /url: https://vnexpress.net/them-cong-ty-chung-khoan-muon-vao-cau-lac-bo-lai-nghin-ty-5060469.html
+        - paragraph [ref=e723]:
+          - link "Chứng khoán Kafi đặt mục tiêu lãi trước thuế năm nay 1.050 tỷ đồng, tăng 129% so với năm trước, lên mức kỷ lục trước thềm chào bán lần đầu ra công chúng (IPO)." [ref=e724] [cursor=pointer]:
+            - /url: https://vnexpress.net/them-cong-ty-chung-khoan-muon-vao-cau-lac-bo-lai-nghin-ty-5060469.html
+      - article [ref=e725]:
+        - link "Chứng khoán giảm mạnh nhất hơn nửa tháng qua" [ref=e727] [cursor=pointer]:
+          - /url: https://vnexpress.net/chung-khoan-giam-manh-nhat-hon-nua-thang-qua-5060512.html
+          - img "Chứng khoán giảm mạnh nhất hơn nửa tháng qua" [ref=e728]
+        - heading "Chứng khoán giảm mạnh nhất hơn nửa tháng qua" [level=3] [ref=e729]:
+          - link "Chứng khoán giảm mạnh nhất hơn nửa tháng qua" [ref=e730] [cursor=pointer]:
+            - /url: https://vnexpress.net/chung-khoan-giam-manh-nhat-hon-nua-thang-qua-5060512.html
+        - paragraph [ref=e731]:
+          - link "Áp lực bán dâng lên ở nhóm cổ phiếu trụ khiến chứng khoán điều chỉnh trở lại, VN-Index giảm 20 điểm, mạnh nhất nửa tháng qua." [ref=e732] [cursor=pointer]:
+            - /url: https://vnexpress.net/chung-khoan-giam-manh-nhat-hon-nua-thang-qua-5060512.html
+      - article [ref=e733]:
+        - link "Bộ Công Thương đề xuất bán xăng E10 trên cả nước từ 30/4" [ref=e735] [cursor=pointer]:
+          - /url: https://vnexpress.net/bo-cong-thuong-de-xuat-ban-xang-e10-tren-ca-nuoc-tu-30-4-5060477.html
+          - img "Bộ Công Thương đề xuất bán xăng E10 trên cả nước từ 30/4" [ref=e736]
+        - heading "Bộ Công Thương đề xuất bán xăng E10 trên cả nước từ 30/4" [level=3] [ref=e737]:
+          - link "Bộ Công Thương đề xuất bán xăng E10 trên cả nước từ 30/4" [ref=e738] [cursor=pointer]:
+            - /url: https://vnexpress.net/bo-cong-thuong-de-xuat-ban-xang-e10-tren-ca-nuoc-tu-30-4-5060477.html
+        - paragraph [ref=e739]:
+          - link "Bộ Công Thương đề xuất từ 30/4, xăng không chì phải phối trộn, pha chế thành xăng E10 để sử dụng cho các loại phương tiện trên toàn quốc." [ref=e740] [cursor=pointer]:
+            - /url: https://vnexpress.net/bo-cong-thuong-de-xuat-ban-xang-e10-tren-ca-nuoc-tu-30-4-5060477.html
+          - link "19" [ref=e742] [cursor=pointer]:
+            - /url: https://vnexpress.net/bo-cong-thuong-de-xuat-ban-xang-e10-tren-ca-nuoc-tu-30-4-5060477.html#box_comment_vne
+            - img [ref=e743]
+            - text: "19"
+      - article [ref=e745]:
+        - link "Giá dầu diesel hạ gần 10.000 đồng một lít" [ref=e747] [cursor=pointer]:
+          - /url: https://vnexpress.net/gia-xang-dau-moi-nhat-hom-nay-9-4-5057659.html
+          - img "Giá dầu diesel hạ gần 10.000 đồng một lít" [ref=e748]
+        - heading "Giá dầu diesel hạ gần 10.000 đồng một lít" [level=3] [ref=e749]:
+          - link "Giá dầu diesel hạ gần 10.000 đồng một lít" [ref=e750] [cursor=pointer]:
+            - /url: https://vnexpress.net/gia-xang-dau-moi-nhat-hom-nay-9-4-5057659.html
+        - paragraph [ref=e751]:
+          - link "Từ 15h30 ngày 9/4, giá xăng RON 95-III giảm 2.990 đồng, dầu diesel hạ 9.880 đồng một lít." [ref=e752] [cursor=pointer]:
+            - /url: https://vnexpress.net/gia-xang-dau-moi-nhat-hom-nay-9-4-5057659.html
+          - link "194" [ref=e754] [cursor=pointer]:
+            - /url: https://vnexpress.net/gia-xang-dau-moi-nhat-hom-nay-9-4-5057659.html#box_comment_vne
+            - img [ref=e755]
+            - text: "194"
+      - article [ref=e757]:
+        - link "Chính phủ đề xuất giảm thuế với xăng, dầu về 0 đến hết tháng 6" [ref=e759] [cursor=pointer]:
+          - /url: https://vnexpress.net/chinh-phu-de-xuat-giam-thue-voi-xang-dau-ve-0-den-het-thang-6-5060425.html
+          - img "Chính phủ đề xuất giảm thuế với xăng, dầu về 0 đến hết tháng 6" [ref=e760]
+        - heading "Chính phủ đề xuất giảm thuế với xăng, dầu về 0 đến hết tháng 6" [level=3] [ref=e761]:
+          - link "Chính phủ đề xuất giảm thuế với xăng, dầu về 0 đến hết tháng 6" [ref=e762] [cursor=pointer]:
+            - /url: https://vnexpress.net/chinh-phu-de-xuat-giam-thue-voi-xang-dau-ve-0-den-het-thang-6-5060425.html
+        - paragraph [ref=e763]:
+          - link "Chính phủ đề xuất giảm các loại thuế với xăng, dầu, nhiên liệu bay gồm thuế bảo vệ môi trường, VAT, tiêu thụ đặc biệt về 0 đến hết ngày 30/6." [ref=e764] [cursor=pointer]:
+            - /url: https://vnexpress.net/chinh-phu-de-xuat-giam-thue-voi-xang-dau-ve-0-den-het-thang-6-5060425.html
+      - article [ref=e765]:
+        - link "Fed ngày càng cởi mở với việc nâng lãi suất" [ref=e767] [cursor=pointer]:
+          - /url: https://vnexpress.net/fed-ngay-cang-coi-mo-voi-viec-nang-lai-suat-5060341.html
+          - img "Fed ngày càng cởi mở với việc nâng lãi suất" [ref=e768]
+        - heading "Fed ngày càng cởi mở với việc nâng lãi suất" [level=3] [ref=e769]:
+          - link "Fed ngày càng cởi mở với việc nâng lãi suất" [ref=e770] [cursor=pointer]:
+            - /url: https://vnexpress.net/fed-ngay-cang-coi-mo-voi-viec-nang-lai-suat-5060341.html
+        - paragraph [ref=e771]:
+          - link "Biên bản cuộc họp tháng 3 của Cục Dự trữ liên bang Mỹ (Fed) cho thấy nhiều quan chức cảm thấy có thể nâng lãi suất để đối phó lạm phát." [ref=e772] [cursor=pointer]:
+            - /url: https://vnexpress.net/fed-ngay-cang-coi-mo-voi-viec-nang-lai-suat-5060341.html
+      - article [ref=e773]:
+        - link "Bài toán 'giữ phong độ' xuất khẩu trong xung đột Trung Đông" [ref=e775] [cursor=pointer]:
+          - /url: https://vnexpress.net/bai-toan-giu-phong-do-xuat-khau-trong-xung-dot-trung-dong-5059167.html
+          - img "Bài toán 'giữ phong độ' xuất khẩu trong xung đột Trung Đông" [ref=e776]
+        - heading "Bài toán 'giữ phong độ' xuất khẩu trong xung đột Trung Đông" [level=3] [ref=e777]:
+          - link "Bài toán 'giữ phong độ' xuất khẩu trong xung đột Trung Đông" [ref=e778] [cursor=pointer]:
+            - /url: https://vnexpress.net/bai-toan-giu-phong-do-xuat-khau-trong-xung-dot-trung-dong-5059167.html
+        - paragraph [ref=e779]:
+          - link "Xuất khẩu tăng trưởng mạnh quý I nhưng dấu hiệu đơn hàng chậm lại, doanh nghiệp trong nước bắt đầu \"ngấm đòn\" trước." [ref=e780] [cursor=pointer]:
+            - /url: https://vnexpress.net/bai-toan-giu-phong-do-xuat-khau-trong-xung-dot-trung-dong-5059167.html
+      - article [ref=e781]:
+        - insertion
+    - generic [ref=e782]:
+      - generic [ref=e783] [cursor=pointer]:
+        - img [ref=e784]
+        - textbox "Xem theo ngày" [ref=e786]
+      - generic [ref=e788]:
+        - link "1" [ref=e789] [cursor=pointer]:
+          - /url: javascript:;
+        - link "2" [ref=e790] [cursor=pointer]:
+          - /url: /kinh-doanh-p2
+        - link "3" [ref=e791] [cursor=pointer]:
+          - /url: /kinh-doanh-p3
+        - link "4" [ref=e792] [cursor=pointer]:
+          - /url: /kinh-doanh-p4
+        - link [ref=e793] [cursor=pointer]:
+          - /url: /kinh-doanh-p2
+          - img [ref=e794]
+  - generic [ref=e800]:
+    - generic:
+      - insertion
+  - contentinfo [ref=e809]:
+    - generic [ref=e810]:
+      - list [ref=e811]:
+        - listitem [ref=e812]:
+          - link "Trang chủ" [ref=e813] [cursor=pointer]:
+            - /url: https://vnexpress.net/
+        - listitem [ref=e814]:
+          - link "Ảnh" [ref=e815] [cursor=pointer]:
+            - /url: https://vnexpress.net/anh
+        - listitem [ref=e816]:
+          - link "Infographics" [ref=e817] [cursor=pointer]:
+            - /url: https://vnexpress.net/infographics
+      - list [ref=e818]:
+        - listitem [ref=e819]:
+          - link "VnE-GO" [ref=e820] [cursor=pointer]:
+            - /url: https://vnexpress.net/vne-go
+        - listitem [ref=e821]:
+          - link "Thời sự" [ref=e822] [cursor=pointer]:
+            - /url: https://vnexpress.net/thoi-su
+        - listitem [ref=e823]:
+          - link "Thế giới" [ref=e824] [cursor=pointer]:
+            - /url: https://vnexpress.net/the-gioi
+        - listitem [ref=e825]:
+          - link "Kinh doanh" [ref=e826] [cursor=pointer]:
+            - /url: https://vnexpress.net/kinh-doanh
+        - listitem [ref=e827]:
+          - link "Khoa học công nghệ" [ref=e828] [cursor=pointer]:
+            - /url: https://vnexpress.net/khoa-hoc-cong-nghe
+        - listitem [ref=e829]:
+          - link "Góc nhìn" [ref=e830] [cursor=pointer]:
+            - /url: https://vnexpress.net/goc-nhin
+      - list [ref=e831]:
+        - listitem [ref=e832]:
+          - link "Giải trí" [ref=e833] [cursor=pointer]:
+            - /url: https://vnexpress.net/giai-tri
+        - listitem [ref=e834]:
+          - link "Pháp luật" [ref=e835] [cursor=pointer]:
+            - /url: https://vnexpress.net/phap-luat
+        - listitem [ref=e836]:
+          - link "Bất động sản" [ref=e837] [cursor=pointer]:
+            - /url: https://vnexpress.net/bat-dong-san
+        - listitem [ref=e838]:
+          - link "Sức khỏe" [ref=e839] [cursor=pointer]:
+            - /url: https://vnexpress.net/suc-khoe
+        - listitem [ref=e840]:
+          - link "Thể thao" [ref=e841] [cursor=pointer]:
+            - /url: https://vnexpress.net/the-thao
+        - listitem [ref=e842]:
+          - link "Giáo dục" [ref=e843] [cursor=pointer]:
+            - /url: https://vnexpress.net/giao-duc
+      - list [ref=e844]:
+        - listitem [ref=e845]:
+          - link "Đời sống" [ref=e846] [cursor=pointer]:
+            - /url: https://vnexpress.net/doi-song
+        - listitem [ref=e847]:
+          - link "Xe" [ref=e848] [cursor=pointer]:
+            - /url: https://vnexpress.net/oto-xe-may
+        - listitem [ref=e849]:
+          - link "Du lịch" [ref=e850] [cursor=pointer]:
+            - /url: https://vnexpress.net/du-lich
+        - listitem [ref=e851]:
+          - link "Ý kiến" [ref=e852] [cursor=pointer]:
+            - /url: https://vnexpress.net/y-kien
+        - listitem [ref=e853]:
+          - link "Tâm sự" [ref=e854] [cursor=pointer]:
+            - /url: https://vnexpress.net/tam-su
+        - listitem [ref=e855]:
+          - link "Thư giãn" [ref=e856] [cursor=pointer]:
+            - /url: https://vnexpress.net/thu-gian
+      - list [ref=e857]:
+        - listitem [ref=e858]:
+          - link "Mới nhất" [ref=e859] [cursor=pointer]:
+            - /url: https://vnexpress.net/tin-tuc-24h
+        - listitem [ref=e860]:
+          - link "Xem nhiều" [ref=e861] [cursor=pointer]:
+            - /url: https://vnexpress.net/tin-xem-nhieu
+        - listitem [ref=e862]:
+          - link "Tin nóng" [ref=e863] [cursor=pointer]:
+            - /url: https://vnexpress.net/tin-nong
+        - listitem [ref=e864]:
+          - link "Lịch vạn niên" [ref=e865] [cursor=pointer]:
+            - /url: https://vnexpress.net/lich-van-nien
+        - listitem [ref=e866]:
+          - link "Rao vặt" [ref=e867] [cursor=pointer]:
+            - /url: https://raovat.vnexpress.net/?utm_campaign=VNEXPRESS&utm_source=footer&utm_medium=menu&_gl=1*q5n8mf*_gcl_au*NDA0NTYyOS4xNzQ0NTk0NzAx
+      - generic [ref=e868]:
+        - generic [ref=e869]:
+          - paragraph [ref=e870]: Tải ứng dụng
+          - link "VnExpress" [ref=e871] [cursor=pointer]:
+            - /url: "#down-app-popup_vne"
+            - img [ref=e872]
+            - text: VnExpress
+          - link "International" [ref=e874] [cursor=pointer]:
+            - /url: "#down-app-popup_evne"
+            - img [ref=e875]
+            - text: International
+        - generic [ref=e877]:
+          - paragraph [ref=e878]: Liên hệ
+          - link "Tòa soạn" [ref=e879] [cursor=pointer]:
+            - /url: https://vnexpress.net/lien-he-toa-soan
+            - img [ref=e880]
+            - text: Tòa soạn
+          - link "Quảng cáo" [ref=e882] [cursor=pointer]:
+            - /url: https://eclick.vn/lien-he/?utm_source=VNE&utm_medium=CPC_BOX&utm_campaign=LienHeQuangCao
+            - img [ref=e883]
+            - text: Quảng cáo
+        - generic [ref=e884]:
+          - paragraph [ref=e885]: Đường dây nóng
+          - generic [ref=e886]:
+            - strong [ref=e887]: 083.888.0123
+            - paragraph [ref=e888]: (Hà Nội)
+          - generic [ref=e889]:
+            - strong [ref=e890]: 082.233.3555
+            - paragraph [ref=e891]: (TP. Hồ Chí Minh)
+    - generic [ref=e892]:
+      - paragraph [ref=e893]:
+        - link "Báo điện tử VnExpress - Bao tieng Viet nhieu nguoi xem nhat" [ref=e894] [cursor=pointer]:
+          - /url: https://vnexpress.net/
+          - generic [ref=e895]: Báo điện tử
+          - img "VnExpress - Bao tieng Viet nhieu nguoi xem nhat" [ref=e896]
+      - generic [ref=e897]:
+        - link "Điều khoản sử dụng" [ref=e898] [cursor=pointer]:
+          - /url: https://vnexpress.net/dieu-khoan-su-dung
+        - link "Chính sách bảo mật" [ref=e899] [cursor=pointer]:
+          - /url: https://vnexpress.net/chinh-sach-bao-mat
+        - link "Cookies" [ref=e900] [cursor=pointer]:
+          - /url: https://vnexpress.net/chinh-sach-cookies
+        - link "RSS" [ref=e901] [cursor=pointer]:
+          - /url: /rss
+        - generic [ref=e902]: Theo dõi VnExpress trên
+        - link "Facebook" [ref=e903] [cursor=pointer]:
+          - /url: https://www.facebook.com/congdongvnexpress/
+          - img [ref=e904]
+        - link "Twitter" [ref=e906] [cursor=pointer]:
+          - /url: https://twitter.com/VnEnews
+          - img [ref=e907]
+        - link "Youtube" [ref=e909] [cursor=pointer]:
+          - /url: https://www.youtube.com/channel/UCpK5nl5llhUL4QKq03qan8g?sub_confirmation=1
+          - img [ref=e910]
+        - link "Tiktok" [ref=e912] [cursor=pointer]:
+          - /url: https://www.tiktok.com/@vnexpress.official?lang=en
+          - img [ref=e913]
+    - generic [ref=e915]:
+      - paragraph [ref=e916]:
+        - strong [ref=e917]: Báo tiếng Việt nhiều người xem nhất
+        - text: Thuộc Bộ Khoa học và Công nghệ
+        - text: "Số giấy phép: 548/GP-BTTTT do Bộ Thông tin và Truyền thông cấp ngày 24/08/2021"
+      - paragraph [ref=e918]:
+        - text: "Tổng biên tập: Phạm Văn Hiếu"
+        - text: "Địa chỉ: Tầng 10, Tòa A FPT Tower, số 10 Phạm Văn Bạch, phường Cầu Giấy, Hà Nội"
+        - text: "Điện thoại: 024 7300 8899 - máy lẻ 4500"
+        - 'link "Email: webmaster@vnexpress.net" [ref=e919] [cursor=pointer]':
+          - /url: mailto:webmaster@vnexpress.net
+      - paragraph [ref=e920]: © 1997-2026. Toàn bộ bản quyền thuộc VnExpress
+  - link "Lên đầu trang" [ref=e921] [cursor=pointer]:
+    - /url: javascript:;
+    - img [ref=e922]

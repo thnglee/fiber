@@ -1,0 +1,9 @@
+% ============================================================
+% Tóm tắt tiếng Việt (Phụ lục 03)
+% ============================================================
+\chapter*{TÓM TẮT}
+\addcontentsline{toc}{chapter}{Tóm tắt}
+
+\textbf{Tóm tắt:} Sự bùng nổ thông tin trên các trang báo điện tử tiếng Việt đặt ra thách thức lớn cho người đọc trong việc tiếp nhận và xác minh thông tin. Khóa luận này trình bày việc xây dựng \textit{Fiber} --- một hệ thống tóm tắt tự động và kiểm chứng tin tức tiếng Việt dưới dạng tiện ích mở rộng trình duyệt (browser extension), tích hợp nhiều mô hình ngôn ngữ lớn (Large Language Models -- LLM). Hệ thống được thiết kế theo kiến trúc microservice gồm ba thành phần: tiện ích mở rộng trình duyệt (Plasmo/React), máy chủ API (Next.js), và dịch vụ đánh giá ngữ nghĩa (FastAPI/PhoBERT). Đóng góp chính của khóa luận bao gồm: (1) đề xuất cơ chế định tuyến thông minh (routing mechanism) tự động lựa chọn mô hình phù hợp dựa trên độ phức tạp của bài viết; (2) xây dựng quy trình kiểm chứng sự kiện kết hợp tìm kiếm trực tuyến (search-augmented fact verification); (3) thiết lập khung đánh giá toàn diện sử dụng các độ đo ROUGE, BLEU và BERTScore với mô hình PhoBERT cho ngữ nghĩa tiếng Việt. Thực nghiệm trên bộ dữ liệu 50 bài báo thuộc 5 chủ đề từ các trang báo lớn (VnExpress, Tuổi Trẻ, Dân Trí, Thanh Niên) cho thấy mô hình ViT5 (chuyên biệt cho tiếng Việt) đạt điểm BERTScore cao hơn GPT-4o, trong khi GPT-4o cho kết quả tóm tắt tự nhiên và dễ đọc hơn. Kết quả này gợi mở hướng kết hợp điểm mạnh của các mô hình chuyên biệt và đa ngôn ngữ trong xử lý ngôn ngữ tự nhiên tiếng Việt.
+
+\textit{\textbf{Từ khóa:}} tóm tắt văn bản, kiểm chứng tin tức, mô hình ngôn ngữ lớn, tiếng Việt

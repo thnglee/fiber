@@ -1,0 +1,321 @@
+% ============================================================
+% OUTLINE / MỤC LỤC CHI TIẾT — Gửi cô hướng dẫn
+% Compile: xelatex outline.tex (2 lần)
+% ============================================================
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+\setotherlanguage{english}
+
+\usepackage[top=2.5cm, bottom=3cm, left=3cm, right=2cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.3}
+\usepackage{indentfirst}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\hypersetup{colorlinks=false}
+
+\usepackage{scrextend}
+\changefontsizes{13pt}
+
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{4pt}
+
+% ============================================================
+\begin{document}
+
+\begin{center}
+{\fontsize{12pt}{14pt}\selectfont\bfseries
+ĐẠI HỌC QUỐC GIA HÀ NỘI \\
+TRƯỜNG ĐẠI HỌC CÔNG NGHỆ}
+
+\vspace{0.8cm}
+
+{\fontsize{14pt}{16pt}\selectfont\bfseries
+OUTLINE KHÓA LUẬN TỐT NGHIỆP}
+
+\vspace{0.4cm}
+
+{\fontsize{13pt}{15pt}\selectfont
+\textbf{Đề tài:} Xây dựng hệ thống tóm tắt và kiểm chứng tin tức tiếng Việt \\
+sử dụng mô hình ngôn ngữ lớn}
+
+\vspace{0.3cm}
+
+{\fontsize{13pt}{15pt}\selectfont
+Sinh viên: Lê Văn Thắng — 22028313 \\
+Cán bộ hướng dẫn: TS. Vương Thị Hồng}
+
+\end{center}
+
+\vspace{0.5cm}
+\noindent\rule{\textwidth}{0.5pt}
+\vspace{0.3cm}
+
+% ---- Phần đầu ----
+{\fontsize{13pt}{15pt}\selectfont\bfseries MỤC LỤC DỰ KIẾN}
+
+\vspace{0.4cm}
+
+\begin{itemize}[leftmargin=0.5cm, labelsep=0.3cm, itemsep=2pt]
+  \item[] Trang bìa
+  \item[] Trang phụ bìa tiếng Việt
+  \item[] Trang phụ bìa tiếng Anh (CLC)
+  \item[] Tóm tắt tiếng Việt
+  \item[] Abstract (tiếng Anh — CLC)
+  \item[] Lời cam đoan
+  \item[] Mục lục
+  \item[] Danh mục hình vẽ
+  \item[] Danh mục bảng biểu
+  \item[] Bảng các ký hiệu và chữ viết tắt
+\end{itemize}
+
+\vspace{0.5cm}
+
+% ---- Mở đầu ----
+{\fontsize{13pt}{15pt}\selectfont\bfseries MỞ ĐẦU}
+\begin{itemize}[leftmargin=1cm, labelsep=0.3cm, itemsep=3pt, label={--}]
+  \item Tính cấp thiết của đề tài \\
+    {\small\itshape Sự bùng nổ tin tức trực tuyến tiếng Việt, nhu cầu tóm tắt tự động và kiểm chứng thông tin.}
+  \item Ý nghĩa khoa học và thực tiễn \\
+    {\small\itshape Đóng góp về ứng dụng LLM cho tiếng Việt; công cụ hỗ trợ người đọc báo điện tử.}
+  \item Đối tượng và phạm vi nghiên cứu \\
+    {\small\itshape Bài báo tiếng Việt từ nhiều trang báo lớn; 5 chủ đề.}
+  \item Phương pháp nghiên cứu \\
+    {\small\itshape Thực nghiệm so sánh đa mô hình, đánh giá tự động (ROUGE, BLEU, BERTScore).}
+  \item Cấu trúc khóa luận \\
+    {\small\itshape Mô tả nội dung 4 chương chính của khóa luận.}
+\end{itemize}
+
+\vspace{0.5cm}
+
+% ---- Chương 1 ----
+{\fontsize{13pt}{15pt}\selectfont\bfseries Chương 1. Tổng quan về tóm tắt văn bản và kiểm chứng tin tức}
+
+\begin{itemize}[leftmargin=1cm, labelsep=0.3cm, itemsep=1pt, label={}]
+  \item \textbf{1.1.} Bài toán tóm tắt văn bản tự động \\
+  {\small\itshape Khảo sát toàn diện bài toán tóm tắt văn bản tự động, bao gồm định nghĩa bài toán, các hướng tiếp cận từ phương pháp trích xuất truyền thống đến sinh tóm tắt trừu tượng bằng mô hình ngôn ngữ lớn, cùng phân tích các thách thức đặc thù khi áp dụng cho văn bản tiếng Việt.}
+  \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={}]
+    \item 1.1.1. Định nghĩa và phân loại \\
+      {\small\itshape Trình bày định nghĩa bài toán tóm tắt văn bản; phân biệt hai phương pháp chính: tóm tắt trích xuất (extractive) và tóm tắt trừu tượng (abstractive); phân loại theo số lượng tài liệu đầu vào (single-document và multi-document summarization).}
+    \item 1.1.2. Các phương pháp tiếp cận \\
+      {\small\itshape Tổng quan quá trình phát triển các phương pháp tóm tắt: từ kỹ thuật thống kê (TF-IDF, TextRank, LexRank), mô hình sequence-to-sequence dựa trên mạng nơ-ron (RNN, LSTM với cơ chế attention), đến các phương pháp hiện đại sử dụng mô hình ngôn ngữ lớn (LLM) kết hợp prompt engineering.}
+    \item 1.1.3. Tóm tắt văn bản tiếng Việt — thách thức và hiện trạng \\
+      {\small\itshape Phân tích các thách thức đặc thù của xử lý ngôn ngữ tự nhiên tiếng Việt: cấu trúc từ ghép đa âm tiết, thiếu hụt bộ dữ liệu chuẩn (benchmark corpus) cho tóm tắt; khảo sát các nghiên cứu và hệ thống tóm tắt tiếng Việt hiện có, xác định khoảng trống nghiên cứu mà khóa luận hướng tới giải quyết.}
+  \end{itemize}
+
+  \item \textbf{1.2.} Bài toán kiểm chứng tin tức \\
+  {\small\itshape Tổng quan về hiện tượng tin giả (fake news) và thông tin sai lệch (misinformation) trong bối cảnh truyền thông số, đồng thời trình bày các phương pháp kiểm chứng sự kiện tự động dựa trên kỹ thuật tìm kiếm và truy xuất bằng chứng.}
+  \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={}]
+    \item 1.2.1. Tin giả và thông tin sai lệch \\
+      {\small\itshape Định nghĩa và phân loại các dạng thông tin sai lệch (misinformation, disinformation, malinformation); phân tích tác động xã hội nghiêm trọng đặc biệt trong bối cảnh Việt Nam với sự phát triển nhanh chóng của mạng xã hội và báo điện tử.}
+    \item 1.2.2. Các phương pháp kiểm chứng tự động \\
+      {\small\itshape Trình bày pipeline kiểm chứng sự kiện tự động gồm ba giai đoạn: phát hiện tuyên bố cần kiểm chứng (claim detection), truy xuất bằng chứng từ nguồn tin cậy (evidence retrieval), và dự đoán kết luận (verdict prediction); giới thiệu hướng tiếp cận search-augmented verification kết hợp công cụ tìm kiếm web với LLM.}
+  \end{itemize}
+
+  \item \textbf{1.3.} Các công trình liên quan \\
+  {\small\itshape Khảo sát các hệ thống và công cụ tương tự, xác định khoảng trống nghiên cứu.}
+  \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={}]
+    \item 1.3.1. Hệ thống tóm tắt tin tức \\
+      {\small\itshape Google News, Báo Mới, các hệ thống tóm tắt tự động đã được công bố.}
+    \item 1.3.2. Công cụ kiểm chứng sự kiện \\
+      {\small\itshape ClaimBuster, Google Fact Check Tools, các sáng kiến fact-check tại Việt Nam.}
+    \item 1.3.3. Browser extension cho xử lý tin tức \\
+      {\small\itshape TLDR, Newsguard; phân tích ưu nhược điểm, chưa có giải pháp tích hợp cho tiếng Việt.}
+  \end{itemize}
+
+  \item \textbf{1.4.} Tổng kết chương \\
+  {\small\itshape Tóm tắt khoảng trống nghiên cứu và đóng góp dự kiến của khóa luận.}
+\end{itemize}
+
+\vspace{0.5cm}
+
+% ---- Chương 2 ----
+{\fontsize{13pt}{15pt}\selectfont\bfseries Chương 2. Cơ sở lý thuyết}
+
+\begin{itemize}[leftmargin=1cm, labelsep=0.3cm, itemsep=1pt, label={}]
+  \item \textbf{2.1.} Mô hình ngôn ngữ lớn (Large Language Models) \\
+  {\small\itshape Trình bày nền tảng lý thuyết về mô hình ngôn ngữ lớn, bao gồm kiến trúc Transformer làm cơ sở, các dòng mô hình tiền huấn luyện chính (BERT, GPT, T5), và phân tích chi tiết đặc điểm cùng lý do lựa chọn từng mô hình cụ thể được sử dụng trong hệ thống.}
+  \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={}]
+    \item 2.1.1. Kiến trúc Transformer \\
+      {\small\itshape Trình bày chi tiết kiến trúc Transformer (Vaswani et al., 2017): cơ chế self-attention cho phép mô hình nắm bắt quan hệ giữa mọi cặp từ trong câu, multi-head attention để học nhiều biểu diễn song song, cấu trúc encoder-decoder với positional encoding và feed-forward network; phân tích vì sao Transformer trở thành nền tảng cho các mô hình ngôn ngữ lớn hiện đại.}
+    \item 2.1.2. Các mô hình tiền huấn luyện (BERT, GPT, T5) \\
+      {\small\itshape Phân loại ba dòng kiến trúc chính: encoder-only (BERT --- masked language modeling, phù hợp cho hiểu ngôn ngữ), decoder-only (GPT --- autoregressive, phù hợp cho sinh văn bản), và encoder-decoder (T5 --- text-to-text, phù hợp cho các bài toán chuyển đổi); so sánh chiến lược huấn luyện, kích thước mô hình và phạm vi ứng dụng của từng dòng.}
+    \item 2.1.3. Các mô hình sử dụng trong khóa luận \\
+      {\small\itshape Bảng so sánh chi tiết thông số kỹ thuật (số tham số, context window, ngôn ngữ hỗ trợ), đặc điểm kiến trúc, và lý do lựa chọn từng mô hình trong hệ thống.}
+    \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={--}]
+      \item GPT-4o (OpenAI) — {\small\itshape mô hình đa ngôn ngữ mạnh nhất, dùng làm baseline}
+      \item ViT5-large (VietAI) — {\small\itshape mô hình T5 huấn luyện riêng cho tiếng Việt}
+      \item PhoBERT (VinAI) — {\small\itshape mô hình BERT tiếng Việt, dùng cho BERTScore}
+      \item PhoGPT-4B-Chat (VinAI) — {\small\itshape mô hình sinh tiếng Việt 4B tham số}
+    \end{itemize}
+  \end{itemize}
+
+  \item \textbf{2.2.} Các phương pháp đánh giá chất lượng tóm tắt \\
+  {\small\itshape Trình bày cơ sở toán học, công thức tính toán và ý nghĩa thực tiễn của các độ đo tự động (automatic evaluation metrics) được sử dụng để đánh giá chất lượng bản tóm tắt sinh ra bởi các mô hình.}
+  \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={}]
+    \item 2.2.1. ROUGE (Recall-Oriented Understudy for Gisting Evaluation) \\
+      {\small\itshape Trình bày công thức tính Precision, Recall và F1 dựa trên độ trùng lặp n-gram giữa bản tóm tắt và văn bản tham chiếu; phân biệt ba biến thể ROUGE-1 (unigram), ROUGE-2 (bigram) và ROUGE-L (longest common subsequence); phân tích ưu nhược điểm khi áp dụng cho tiếng Việt.}
+    \item 2.2.2. BLEU (Bilingual Evaluation Understudy) \\
+      {\small\itshape Công thức tính modified n-gram precision kết hợp brevity penalty để xử lý bản tóm tắt quá ngắn; so sánh BLEU với ROUGE về hướng đánh giá (precision-oriented vs.\ recall-oriented); giải thích lý do sử dụng BLEU như metric bổ sung cho đánh giá tóm tắt.}
+    \item 2.2.3. BERTScore với PhoBERT cho tiếng Việt \\
+      {\small\itshape Trình bày cơ chế tính BERTScore dựa trên cosine similarity giữa các token embedding ngữ cảnh hóa (contextual embeddings); lý do sử dụng mô hình PhoBERT (vinai/phobert-base) thay vì BERT đa ngôn ngữ để đánh giá tương đồng ngữ nghĩa chính xác hơn cho tiếng Việt; ưu điểm so với các metrics dựa trên từ vựng.}
+    \item 2.2.4. Tỷ lệ nén (Compression Rate) \\
+      {\small\itshape Định nghĩa tỷ lệ nén là tỷ số giữa độ dài bản tóm tắt và độ dài văn bản gốc; ý nghĩa trong việc đánh giá mức độ cô đọng thông tin; phân tích trade-off giữa tỷ lệ nén cao và nguy cơ mất thông tin quan trọng.}
+  \end{itemize}
+
+  \item \textbf{2.3.} Kỹ thuật trích xuất nội dung web \\
+  {\small\itshape Trình bày các phương pháp và công cụ tự động trích xuất nội dung chính của bài báo trực tuyến từ trang web, loại bỏ các thành phần không liên quan như quảng cáo, menu điều hướng và sidebar.}
+  \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={}]
+    \item 2.3.1. Mozilla Readability \\
+      {\small\itshape Phân tích thuật toán Readability của Mozilla: cách chấm điểm và xếp hạng các nút DOM để xác định khối nội dung chính, quá trình loại bỏ phần tử nhiễu; đánh giá hiệu quả và các trường hợp hạn chế khi áp dụng cho trang báo Việt Nam.}
+    \item 2.3.2. Xử lý đặc thù các trang báo Việt Nam \\
+      {\small\itshape Phân tích cấu trúc HTML riêng biệt của bốn trang báo lớn (VnExpress, Tuổi Trẻ, Dân Trí, Thanh Niên); cách xử lý các thẻ đặc thù, bố cục đa dạng và nội dung nhúng để đảm bảo trích xuất chính xác.}
+  \end{itemize}
+
+  \item \textbf{2.4.} Kiến trúc Search-Augmented Generation (RAG) \\
+  {\small\itshape Trình bày kiến trúc Retrieval-Augmented Generation: nguyên lý kết hợp truy xuất thông tin từ nguồn bên ngoài (thông qua API tìm kiếm Tavily) với khả năng suy luận của LLM để kiểm chứng tính chính xác của các tuyên bố (claims) dựa trên bằng chứng thực tế thu thập từ web.}
+
+  \item \textbf{2.5.} Công nghệ phát triển tiện ích trình duyệt (Manifest V3, Plasmo) \\
+  {\small\itshape Tổng quan về nền tảng phát triển tiện ích trình duyệt: kiến trúc Chrome Extension Manifest V3 (service worker, content scripts, permissions model), kỹ thuật Shadow DOM để cách ly giao diện tiện ích khỏi trang web chủ, và framework Plasmo giúp đơn giản hóa quy trình phát triển với hỗ trợ React, TypeScript và hot reload.}
+
+  \item \textbf{2.6.} Tổng kết chương \\
+  {\small\itshape Tóm tắt các nền tảng lý thuyết và công nghệ đã trình bày, làm cơ sở cho các quyết định thiết kế và triển khai hệ thống được mô tả ở Chương 3.}
+\end{itemize}
+
+\vspace{0.5cm}
+
+% ---- Chương 3 ----
+{\fontsize{13pt}{15pt}\selectfont\bfseries Chương 3. Thiết kế và xây dựng hệ thống}
+
+\begin{itemize}[leftmargin=1cm, labelsep=0.3cm, itemsep=1pt, label={}]
+  \item \textbf{3.1.} Phân tích yêu cầu \\
+  {\small\itshape Xác định các yêu cầu hệ thống dựa trên mục tiêu đề tài và nhu cầu người dùng.}
+  \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={}]
+    \item 3.1.1. Yêu cầu chức năng \\
+      {\small\itshape Tóm tắt bài báo, kiểm chứng sự kiện, chọn mô hình, xem metrics đánh giá.}
+    \item 3.1.2. Yêu cầu phi chức năng \\
+      {\small\itshape Thời gian phản hồi, khả năng mở rộng, bảo mật API key, tương thích trình duyệt.}
+  \end{itemize}
+
+  \item \textbf{3.2.} Kiến trúc hệ thống \\
+  {\small\itshape Sơ đồ kiến trúc tổng quan 3 thành phần và luồng dữ liệu giữa chúng.}
+  \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={}]
+    \item 3.2.1. Tổng quan kiến trúc microservice \\
+      {\small\itshape Mô hình 3 service: Extension, Backend API, BERTScore; giao tiếp qua REST/SSE.}
+    \item 3.2.2. Tiện ích mở rộng trình duyệt (Browser Extension) \\
+      {\small\itshape Plasmo framework, Content Script inject sidebar vào trang báo, giao tiếp với backend.}
+    \item 3.2.3. Máy chủ API (Next.js Backend) \\
+      {\small\itshape App Router API routes, services layer, xử lý nghiệp vụ chính và gọi LLM providers.}
+    \item 3.2.4. Dịch vụ BERTScore (FastAPI/PhoBERT) \\
+      {\small\itshape Microservice Python tính BERTScore với vinai/phobert-base, triển khai trên HF Spaces.}
+  \end{itemize}
+
+  \item \textbf{3.3.} Thiết kế chi tiết các module \\
+  {\small\itshape Mô tả chi tiết luồng xử lý, sequence diagram và thuật toán của từng module.}
+  \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={}]
+    \item 3.3.1. Module tóm tắt văn bản \\
+      {\small\itshape Luồng: trích xuất nội dung → prompt engineering → gọi LLM → structured output (Zod).}
+    \item 3.3.2. Module kiểm chứng sự kiện \\
+      {\small\itshape Pipeline: trích claims → tìm kiếm Tavily → LLM đánh giá → trust score cho từng claim.}
+    \item 3.3.3. Module đa mô hình (Multi-Provider LLM) \\
+      {\small\itshape Abstraction layer cho 14 mô hình từ 3 providers (OpenAI, Gemini, Anthropic); chuyển đổi linh hoạt.}
+    \item 3.3.4. Cơ chế định tuyến mô hình (Routing Mechanism) \\
+      {\small\itshape Phân loại độ phức tạp bài báo → chọn mô hình phù hợp (ViT5 cho đơn giản, GPT-4o cho phức tạp).}
+    \item 3.3.5. Module đánh giá (Evaluation Mode) \\
+      {\small\itshape Chạy song song nhiều mô hình, tính metrics, chọn bản tóm tắt tốt nhất theo BERTScore.}
+  \end{itemize}
+
+  \item \textbf{3.4.} Thiết kế cơ sở dữ liệu \\
+  {\small\itshape Supabase PostgreSQL: bảng evaluation\_metrics (lưu kết quả đánh giá) và dashboard\_actions (log hành vi).}
+
+  \item \textbf{3.5.} Thiết kế giao diện người dùng \\
+  {\small\itshape Sidebar tóm tắt, popup kiểm chứng, trang settings chọn mô hình, trang metrics/debug.}
+
+  \item \textbf{3.6.} Tổng kết chương \\
+  {\small\itshape Tóm tắt các quyết định thiết kế và công nghệ đã lựa chọn.}
+\end{itemize}
+
+\vspace{0.5cm}
+
+% ---- Chương 4 ----
+{\fontsize{13pt}{15pt}\selectfont\bfseries Chương 4. Thực nghiệm và đánh giá}
+
+\begin{itemize}[leftmargin=1cm, labelsep=0.3cm, itemsep=1pt, label={}]
+  \item \textbf{4.1.} Thiết lập thực nghiệm \\
+  {\small\itshape Mô tả chi tiết bộ dữ liệu, mô hình, metrics và môi trường dùng cho thực nghiệm.}
+  \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={}]
+    \item 4.1.1. Bộ dữ liệu đánh giá (50 bài, 5 chủ đề, 4 trang báo) \\
+      {\small\itshape 50 bài từ VnExpress, Tuổi Trẻ, Dân Trí, Thanh Niên; 5 chủ đề: thời sự, pháp luật, kinh tế, giáo dục, văn hóa.}
+    \item 4.1.2. Các mô hình được đánh giá (GPT-4o, GPT-4o-mini, ViT5) \\
+      {\small\itshape 3 mô hình chính; cùng prompt, cùng tham số; mỗi bài chạy trên cả 3 mô hình.}
+    \item 4.1.3. Các metrics đánh giá \\
+      {\small\itshape ROUGE-1/2/L, BLEU, BERTScore (PhoBERT), Compression Rate, Latency.}
+    \item 4.1.4. Môi trường thực nghiệm \\
+      {\small\itshape Cấu hình phần cứng, phần mềm, API endpoints, BERTScore microservice trên HF Spaces.}
+  \end{itemize}
+
+  \item \textbf{4.2.} Kết quả thực nghiệm \\
+  {\small\itshape Bảng kết quả, biểu đồ so sánh hiệu năng các mô hình theo nhiều chiều phân tích.}
+  \begin{itemize}[leftmargin=1cm, itemsep=0pt, label={}]
+    \item 4.2.1. So sánh tổng quan các mô hình \\
+      {\small\itshape Bảng trung bình ROUGE/BLEU/BERTScore; biểu đồ radar tổng hợp.}
+    \item 4.2.2. Phân tích theo chủ đề \\
+      {\small\itshape So sánh hiệu năng mô hình trên từng chủ đề; nhận xét chủ đề nào khó/dễ tóm tắt.}
+    \item 4.2.3. Phân tích BERTScore chi tiết \\
+      {\small\itshape Phát hiện chính: ViT5 đạt BERTScore cao hơn GPT-4o; phân tích extractive vs.\ abstractive.}
+    \item 4.2.4. Phân tích Compression Rate và Latency \\
+      {\small\itshape So sánh mức độ nén và thời gian xử lý; trade-off giữa chất lượng và tốc độ.}
+  \end{itemize}
+
+  \item \textbf{4.3.} Đánh giá cơ chế Routing \\
+  {\small\itshape Hiệu quả của việc tự động chọn mô hình theo độ phức tạp bài báo; so sánh với dùng cố định 1 mô hình.}
+
+  \item \textbf{4.4.} Đánh giá module kiểm chứng sự kiện \\
+  {\small\itshape Ví dụ minh họa kết quả fact-check; phân tích chất lượng search evidence và verdict.}
+
+  \item \textbf{4.5.} Thảo luận về thách thức triển khai mô hình tiếng Việt \\
+  {\small\itshape PhoGPT cần GPU (ZeroGPU/HF Pro), Vistral yêu cầu tài nguyên lớn; chi phí và giải pháp.}
+
+  \item \textbf{4.6.} Phân tích các phát hiện chính (Key Findings) \\
+  {\small\itshape Tổng hợp 5 phát hiện quan trọng từ thực nghiệm; đối chiếu với giả thuyết ban đầu.}
+
+  \item \textbf{4.7.} Tổng kết chương \\
+  {\small\itshape Tóm tắt kết quả thực nghiệm và ý nghĩa cho việc lựa chọn mô hình tóm tắt tiếng Việt.}
+\end{itemize}
+
+\vspace{0.5cm}
+
+% ---- Kết luận ----
+{\fontsize{13pt}{15pt}\selectfont\bfseries KẾT LUẬN}
+\begin{itemize}[leftmargin=1cm, labelsep=0.3cm, itemsep=3pt, label={--}]
+  \item Kết quả đạt được \\
+    {\small\itshape Tóm tắt các đóng góp: hệ thống hoàn chỉnh, kết quả so sánh mô hình, cơ chế routing.}
+  \item Hạn chế \\
+    {\small\itshape Giới hạn bộ dữ liệu, phụ thuộc API bên ngoài, chưa triển khai được PhoGPT trên GPU.}
+  \item Hướng phát triển \\
+    {\small\itshape Mở rộng nguồn báo, fine-tune mô hình tiếng Việt, đánh giá bởi chuyên gia, tích hợp thêm ngôn ngữ.}
+\end{itemize}
+
+\vspace{0.5cm}
+
+{\fontsize{13pt}{15pt}\selectfont\bfseries TÀI LIỆU THAM KHẢO}
+
+\vspace{0.3cm}
+
+{\fontsize{13pt}{15pt}\selectfont\bfseries PHỤ LỤC}
+\begin{itemize}[leftmargin=1cm, labelsep=0.3cm, itemsep=3pt, label={--}]
+  \item Mẫu kết quả tóm tắt (input/output mỗi model) \\
+    {\small\itshape Ví dụ bài gốc và bản tóm tắt từ GPT-4o, GPT-4o-mini, ViT5 trên cùng một bài báo.}
+  \item Mẫu kết quả kiểm chứng sự kiện \\
+    {\small\itshape Ví dụ claims được trích, nguồn tìm kiếm, và verdict cho từng claim.}
+  \item Bảng kết quả đánh giá chi tiết \\
+    {\small\itshape Bảng đầy đủ ROUGE/BLEU/BERTScore cho 50 bài × 3 mô hình.}
+  \item Hướng dẫn cài đặt và sử dụng \\
+    {\small\itshape Các bước cài đặt backend, extension, BERTScore service; cấu hình biến môi trường.}
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,107 @@
+% ============================================================
+% CHƯƠNG 2: CƠ SỞ LÝ THUYẾT
+% ============================================================
+\chapter{Cơ sở lý thuyết}
+
+\section{Mô hình ngôn ngữ lớn (Large Language Models)}
+
+\subsection{Kiến trúc Transformer}
+% TODO:
+% - Self-Attention mechanism
+% - Multi-head attention
+% - Encoder-Decoder architecture
+% - Positional encoding
+% Hình 2.1: Kiến trúc Transformer
+
+\subsection{Các mô hình tiền huấn luyện}
+% TODO:
+% - BERT và các biến thể (encoder-only)
+% - GPT và các biến thể (decoder-only)
+% - T5 và các biến thể (encoder-decoder)
+% - So sánh kiến trúc và ứng dụng phù hợp
+
+\subsection{Các mô hình sử dụng trong khóa luận}
+% TODO:
+% 2.1.3.1. GPT-4o (OpenAI)
+%   - Kiến trúc decoder-only, đa ngôn ngữ
+%   - Khả năng zero-shot summarization
+%   - Structured output với JSON mode
+%
+% 2.1.3.2. ViT5 (VietAI/vit5-large-vietnews-summarization)
+%   - Kiến trúc encoder-decoder (T5-based)
+%   - Pre-trained trên CC100-vi, fine-tuned trên VietnewsQA
+%   - Chuyên biệt cho tóm tắt tin tức tiếng Việt
+%
+% 2.1.3.3. PhoBERT (vinai/phobert-base)
+%   - Kiến trúc encoder-only (BERT-based)
+%   - Pre-trained trên 20GB tiếng Việt
+%   - Sử dụng cho BERTScore (đánh giá ngữ nghĩa)
+%
+% 2.1.3.4. PhoGPT-4B-Chat (vinai/PhoGPT-4B-Chat)
+%   - Kiến trúc decoder-only (GPT-based), 4B tham số
+%   - Thảo luận về thách thức triển khai (GPU requirements)
+
+\section{Các phương pháp đánh giá chất lượng tóm tắt}
+
+\subsection{ROUGE (Recall-Oriented Understudy for Gisting Evaluation)}
+% TODO:
+% - ROUGE-1 (unigram), ROUGE-2 (bigram), ROUGE-L (longest common subsequence)
+% - Công thức tính Precision, Recall, F1
+% - Ưu điểm: đơn giản, phổ biến
+% - Nhược điểm: chỉ so sánh bề mặt từ vựng
+
+\subsection{BLEU (Bilingual Evaluation Understudy)}
+% TODO:
+% - Nguyên lý: precision-based n-gram matching
+% - Brevity penalty
+% - Ưu điểm: standard metric
+% - Nhược điểm: không phản ánh ngữ nghĩa
+
+\subsection{BERTScore}
+% TODO:
+% - Nguyên lý: cosine similarity giữa các token embeddings
+% - Sử dụng PhoBERT cho tiếng Việt (thay vì BERT tiếng Anh)
+% - Ưu điểm: đánh giá ngữ nghĩa, phù hợp tóm tắt abstractive
+% - Truncation 256 tokens cho PhoBERT
+% Hình 2.2: Minh họa BERTScore
+
+\subsection{Tỷ lệ nén (Compression Rate)}
+% TODO:
+% - Công thức: len(summary) / len(original)
+% - Ý nghĩa: đánh giá mức độ cô đọng thông tin
+
+\section{Kỹ thuật trích xuất nội dung web}
+
+\subsection{Mozilla Readability}
+% TODO:
+% - Thuật toán phân tích DOM
+% - Loại bỏ noise (quảng cáo, menu, sidebar)
+% - Trích xuất nội dung chính
+
+\subsection{Xử lý đặc thù các trang báo Việt Nam}
+% TODO:
+% - Cấu trúc DOM khác nhau giữa VnExpress, Tuổi Trẻ, Dân Trí, Thanh Niên
+% - Xử lý ảnh, video, bảng biểu trong bài viết
+
+\section{Kiến trúc Search-Augmented Generation}
+
+\subsection{Retrieval-Augmented Generation (RAG)}
+% TODO:
+% - Nguyên lý: kết hợp tìm kiếm với sinh văn bản
+% - Ứng dụng trong fact-checking: tìm nguồn xác minh
+
+\subsection{Tavily Search API}
+% TODO:
+% - API tìm kiếm tối ưu cho AI/LLM
+% - Trả về nội dung có cấu trúc, phù hợp làm context cho LLM
+
+\section{Công nghệ phát triển tiện ích trình duyệt}
+
+\subsection{Manifest V3 và Plasmo Framework}
+% TODO:
+% - Chrome Extension Manifest V3
+% - Plasmo: framework React cho browser extension
+% - Shadow DOM và content script injection
+
+\section{Tổng kết chương}
+% TODO: Tóm tắt các cơ sở lý thuyết đã trình bày
