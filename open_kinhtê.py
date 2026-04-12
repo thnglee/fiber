@@ -1,12 +1,8 @@
 import webbrowser
 
 articles = [
-    # VnExpress
-    "https://vnexpress.net/kinh-doanh",
     # Tuổi Trẻ
     "https://tuoitre.vn/kinh-doanh.htm",
-    # Dân Trí
-    "https://dantri.com.vn/kinh-doanh.htm",
     # Thanh Niên
     "https://thanhnien.vn/kinh-te.htm",
     # VietnamNet
@@ -15,6 +11,8 @@ articles = [
     "https://laodong.vn/kinh-doanh",
     # Tiền Phong
     "https://tienphong.vn/kinh-te/",
+    # VTV
+    "https://vtv.vn/kinh-te.htm",
     # NLD
     "https://nld.com.vn/kinh-te.htm",
 ]
