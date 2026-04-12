@@ -64,6 +64,9 @@ export const SELECTORS = {
     /** Site-specific article content selectors */
     SITE_SPECIFIC: {
         vnexpress: ".fck_detail",
+        vnexpress_alt1: "article.fck_detail",
+        vnexpress_alt2: ".detail-content",
+        vnexpress_alt3: ".content_detail",
         tuoitre: ".content-detail",
         dantri: ".dt-news__content",
         thanhnien: ".detail-content",

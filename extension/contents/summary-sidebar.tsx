@@ -99,6 +99,12 @@ const SummarySidebar: React.FC = () => {
             minimalDoc.querySelectorAll("script,noscript,style,iframe,svg,video,audio,canvas").forEach(
               el => el.parentNode?.removeChild(el)
             )
+            // Strip custom web components (e.g. VnExpress AVP-* elements) that crash Readability
+            minimalDoc.querySelectorAll("*").forEach(el => {
+              if (el && el.tagName && el.tagName.includes("-")) {
+                el.parentNode?.removeChild(el)
+              }
+            })
             const reader = new Readability(minimalDoc)
             article = reader.parse()
             if (article?.textContent && article.textContent.trim().length > 200) {
@@ -129,7 +135,7 @@ const SummarySidebar: React.FC = () => {
               documentClone.querySelectorAll(sel).forEach(el => el.parentNode?.removeChild(el))
             })
             documentClone.querySelectorAll("*").forEach(el => {
-              if (el.tagName && el.tagName.includes("-")) {
+              if (el && el.tagName && el.tagName.includes("-")) {
                 el.parentNode?.removeChild(el)
               }
             })

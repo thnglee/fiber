@@ -37,6 +37,9 @@ export const SITE_CONFIGS: SiteConfig[] = [
         name: "VnExpress",
         articleSelectors: [
             ".fck_detail",
+            "article.fck_detail",
+            ".detail-content",
+            ".content_detail",
             "article",
             '[itemtype="http://schema.org/NewsArticle"]',
         ],
@@ -47,6 +50,9 @@ export const SITE_CONFIGS: SiteConfig[] = [
         ],
         contentSelectors: [
             ".fck_detail",
+            "article.fck_detail",
+            ".detail-content",
+            ".content_detail",
             ".sidebar-1",
         ],
         urlPatterns: [
