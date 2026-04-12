@@ -30,9 +30,7 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://vnexpress.net/*",
       "https://tuoitre.vn/*",
-      "https://dantri.com.vn/*",
       "https://thanhnien.vn/*"
     ],
     "permissions": [

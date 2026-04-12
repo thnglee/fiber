@@ -9,7 +9,7 @@
  * Configuration for a specific news site
  */
 export interface SiteConfig {
-    /** Site domain (e.g., "vnexpress.net") */
+    /** Site domain (e.g., "tuoitre.vn") */
     domain: string
 
     /** Human-readable site name */
@@ -33,33 +33,6 @@ export interface SiteConfig {
  */
 export const SITE_CONFIGS: SiteConfig[] = [
     {
-        domain: "vnexpress.net",
-        name: "VnExpress",
-        articleSelectors: [
-            ".fck_detail",
-            "article.fck_detail",
-            ".detail-content",
-            ".content_detail",
-            "article",
-            '[itemtype="http://schema.org/NewsArticle"]',
-        ],
-        metadataSelectors: [
-            ".date-time",
-            ".author-name",
-            'meta[property="article:published_time"]',
-        ],
-        contentSelectors: [
-            ".fck_detail",
-            "article.fck_detail",
-            ".detail-content",
-            ".content_detail",
-            ".sidebar-1",
-        ],
-        urlPatterns: [
-            /\/[\w-]+-\d+\.html?$/i,
-        ],
-    },
-    {
         domain: "tuoitre.vn",
         name: "Tuổi Trẻ",
         articleSelectors: [
@@ -79,27 +52,6 @@ export const SITE_CONFIGS: SiteConfig[] = [
         urlPatterns: [
             /\/[\w-]+-\d+$/i,
             /\/[\w-]+-\d+\.htm/i,
-        ],
-    },
-    {
-        domain: "dantri.com.vn",
-        name: "Dân Trí",
-        articleSelectors: [
-            ".dt-news__content",
-            "article",
-            '[itemtype="http://schema.org/NewsArticle"]',
-        ],
-        metadataSelectors: [
-            ".dt-news__time",
-            ".dt-news__author",
-            'meta[property="article:published_time"]',
-        ],
-        contentSelectors: [
-            ".dt-news__content",
-            ".dt-news__body",
-        ],
-        urlPatterns: [
-            /-\d{7,}\.htm/i,
         ],
     },
     {
@@ -233,7 +185,7 @@ export const SITE_CONFIGS: SiteConfig[] = [
 /**
  * Get site configuration for a hostname
  * 
- * @param hostname - Site hostname (e.g., "vnexpress.net" or "www.vnexpress.net")
+ * @param hostname - Site hostname (e.g., "tuoitre.vn" or "www.tuoitre.vn")
  * @returns Site configuration or null if not found
  */
 export function getSiteConfig(hostname: string): SiteConfig | null {

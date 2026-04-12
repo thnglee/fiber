@@ -38,7 +38,7 @@ const Popup: React.FC = () => {
 
         <div className="pt-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            Truy cập vnexpress.net, tuoitre.vn để sử dụng
+            Truy cập tuoitre.vn, thanhnien.vn để sử dụng
           </p>
         </div>
       </div>

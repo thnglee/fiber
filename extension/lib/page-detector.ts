@@ -53,8 +53,7 @@ async function hasSubstantialContent(): Promise<{ hasContent: boolean; contentHa
 
         let article: ReturnType<Readability["parse"]> = null
 
-        // Strategy 1: Try site-specific container first (avoids full DOM clone
-        // which crashes on VnExpress due to AVP-* custom web components)
+        // Strategy 1: Try site-specific container first
         const siteSelectors = [
             ...Object.values(SELECTORS.SITE_SPECIFIC),
             ...SELECTORS.ARTICLE,
@@ -68,7 +67,7 @@ async function hasSubstantialContent(): Promise<{ hasContent: boolean; contentHa
                     minimalDoc.querySelectorAll("script,noscript,style,iframe,svg,video,audio,canvas").forEach(
                         el => el.parentNode?.removeChild(el)
                     )
-                    // Strip custom web components (e.g. VnExpress AVP-* elements) that crash Readability
+                    // Strip custom web components that may crash Readability
                     minimalDoc.querySelectorAll("*").forEach(el => {
                         if (el && el.tagName && el.tagName.includes("-")) {
                             el.parentNode?.removeChild(el)

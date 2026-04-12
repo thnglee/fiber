@@ -63,12 +63,7 @@ export const SELECTORS = {
 
     /** Site-specific article content selectors */
     SITE_SPECIFIC: {
-        vnexpress: ".fck_detail",
-        vnexpress_alt1: "article.fck_detail",
-        vnexpress_alt2: ".detail-content",
-        vnexpress_alt3: ".content_detail",
         tuoitre: ".content-detail",
-        dantri: ".dt-news__content",
         thanhnien: ".detail-content",
     },
 
@@ -90,9 +85,7 @@ export const SELECTORS = {
 export const URL_PATTERNS = {
     /** Common article URL patterns for Vietnamese news sites */
     ARTICLE: [
-        /\/[\w-]+-\d+\.html?$/i,        // vnexpress: /article-title-1234567.html
         /\/[\w-]+-\d+$/i,               // tuoitre: /article-title-1234567
-        /-\d{7,}\.htm/i,                // dantri: /article-title-1234567.htm
         /\/[\w-]+\/[\w-]+-\d+/i,        // thanhnien: /category/article-title-1234567
         /\/post\d+/i,                   // generic post pattern
         /\/bai-viet\//i,                // Vietnamese "article" path

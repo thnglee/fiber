@@ -17,9 +17,7 @@ import { getPageContext } from "~/lib/context-provider"
 // Note: Plasmo requires a literal array for matches, cannot use dynamic generation
 export const config: PlasmoCSConfig = {
   matches: [
-    "https://vnexpress.net/*",
     "https://tuoitre.vn/*",
-    "https://dantri.com.vn/*",
     "https://thanhnien.vn/*",
     "https://vietnamnet.vn/*",
     "https://laodong.vn/*",
@@ -77,8 +75,7 @@ const SummarySidebar: React.FC = () => {
       }
 
       // Extract article content.
-      // Strategy 1: Try site-specific selector first (avoids cloning the entire
-      //   DOM which crashes on VnExpress due to AVP-* custom web components).
+      // Strategy 1: Try site-specific selector first.
       // Strategy 2: Clone full document + Readability.
       // Strategy 3: Grab visible body text directly.
       let article: ReturnType<Readability["parse"]> = null
@@ -99,7 +96,7 @@ const SummarySidebar: React.FC = () => {
             minimalDoc.querySelectorAll("script,noscript,style,iframe,svg,video,audio,canvas").forEach(
               el => el.parentNode?.removeChild(el)
             )
-            // Strip custom web components (e.g. VnExpress AVP-* elements) that crash Readability
+            // Strip custom web components that may crash Readability
             minimalDoc.querySelectorAll("*").forEach(el => {
               if (el && el.tagName && el.tagName.includes("-")) {
                 el.parentNode?.removeChild(el)

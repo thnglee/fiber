@@ -11,9 +11,7 @@ import type { ModelConfig } from "@/domain/types"
  * These domains are used to filter search results from Tavily API
  */
 export const SUPPORTED_DOMAINS = [
-  "vnexpress.net",
   "tuoitre.vn",
-  "dantri.com.vn",
   "thanhnien.vn",
   "vietnamnet.vn", // Added
   "laodong.vn",    // Added

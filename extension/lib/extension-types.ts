@@ -65,7 +65,7 @@ export interface ContentExtractionResult {
  * Runtime context information for API calls
  */
 export interface PageContext {
-    /** Current page hostname (e.g., "vnexpress.net") */
+    /** Current page hostname (e.g., "tuoitre.vn") */
     hostname: string
     /** Current page pathname (e.g., "/tin-tuc/article-123.html") */
     pathname: string

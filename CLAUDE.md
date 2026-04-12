@@ -111,7 +111,7 @@ Two main tables:
 
 ## Supported News Sites
 
-vnexpress.net, tuoitre.vn, dantri.com.vn, thanhnien.vn
+tuoitre.vn, thanhnien.vn, vietnamnet.vn, laodong.vn, tienphong.vn, vtv.vn, nld.com.vn
 
 ## Notes
 
