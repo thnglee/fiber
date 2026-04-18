@@ -1,6 +1,54 @@
 import type { FactCheckResponse, SummaryResponse, ApiError, PageContext } from "./types"
 import { getPageContext } from "./context-provider"
 import { API } from "./constants"
+import type { RoutingMode, FusionSettings } from "./settings"
+
+/**
+ * Mirror of the backend `ModelAvailability` type (see
+ * `backend/output-fusion/moa.types.ts`). Returned by GET /api/models/availability.
+ */
+export interface ModelAvailability {
+  model_name: string
+  display_name: string
+  provider: string
+  is_available: boolean
+  unavailable_reason?: string
+  can_be_proposer: boolean
+  can_be_aggregator: boolean
+}
+
+/**
+ * Shape of the extra MoA payload the backend returns when routing_mode === 'fusion'.
+ * Kept loose (structural) so this module doesn't grow a dependency on backend types.
+ */
+export interface FusionSummaryResponse extends SummaryResponse {
+  model?: string
+  fusion?: {
+    fused: { summary: string; category: string; readingTime: number; scores?: unknown }
+    drafts: unknown[]
+    aggregator: { model_name: string; provider: string; latency_ms?: number }
+    pipeline: {
+      total_latency_ms?: number
+      total_cost_usd?: number | null
+      total_tokens?: number | null
+      proposer_count?: number
+      successful_proposers?: number
+      failed_proposers?: string[]
+    }
+    routing_id?: string
+  }
+}
+
+export interface SummarizeOptions {
+  context?: PageContext
+  url?: string
+  routingMode?: RoutingMode
+  fusionConfig?: {
+    proposerModels?: string[]
+    aggregatorModel?: string
+    timeoutMs?: number
+  }
+}
 
 const API_BASE_URL = process.env.PLASMO_PUBLIC_API_URL || "http://localhost:3000/api"
 
@@ -103,28 +151,40 @@ async function fetchAPI<T>(
 }
 
 /**
- * Summarize article content
- * 
- * @param content - Article content to summarize
- * @param context - Optional page context (will be auto-detected if not provided)
- * @param url - Optional URL of the page being summarized (for tracking purposes)
- * @returns Promise resolving to summary response
+ * Summarize article content (non-streaming).
+ *
+ * Accepts an optional `routingMode` / `fusionConfig` so the extension options
+ * page can opt into fusion or evaluation modes. Fusion mode always returns
+ * via this path (streaming is not supported for fusion by the backend).
  */
 export async function summarizeArticle(
   content: string,
-  context?: PageContext,
-  url?: string
-): Promise<SummaryResponse> {
-  // Get context if not provided
-  const pageContext = context || getPageContext()
+  options: SummarizeOptions = {}
+): Promise<FusionSummaryResponse> {
+  const pageContext = options.context || getPageContext()
+  const body: Record<string, unknown> = {
+    content,
+    url: options.url,
+    website: pageContext.hostname,
+  }
+  if (options.routingMode) body.routing_mode = options.routingMode
+  if (options.routingMode === "fusion" && options.fusionConfig) {
+    body.fusion_config = options.fusionConfig
+  }
 
-  return fetchAPI<SummaryResponse>("/summarize", {
+  return fetchAPI<FusionSummaryResponse>("/summarize", {
     method: "POST",
-    body: JSON.stringify({
-      content,
-      url, // Include URL for proper input type tracking
-      website: pageContext.hostname,
-    }),
+    body: JSON.stringify(body),
+  })
+}
+
+/**
+ * Fetch the per-model availability table used to populate the options page
+ * (proposer checklist + aggregator dropdown).
+ */
+export async function fetchModelAvailability(): Promise<ModelAvailability[]> {
+  return fetchAPI<ModelAvailability[]>("/models/availability", {
+    method: "GET",
   })
 }
 
@@ -139,8 +199,7 @@ export async function summarizeArticle(
  */
 export async function* summarizeArticleStream(
   content: string,
-  context?: PageContext,
-  url?: string
+  options: SummarizeOptions = {}
 ): AsyncGenerator<{
   type: 'summary-delta' | 'metadata' | 'error' | 'done'
   delta?: string
@@ -148,12 +207,20 @@ export async function* summarizeArticleStream(
   readingTime?: number
   error?: string
 }> {
-  // Get context if not provided
-  const pageContext = context || getPageContext()
+  const pageContext = options.context || getPageContext()
 
   const apiUrl = `${API_BASE_URL}/summarize?stream=true`
 
   console.log('[API] Starting streaming summarization', { url: apiUrl })
+
+  const body: Record<string, unknown> = {
+    content,
+    url: options.url,
+    website: pageContext.hostname,
+  }
+  if (options.routingMode && options.routingMode !== "fusion") {
+    body.routing_mode = options.routingMode
+  }
 
   try {
     const response = await fetch(apiUrl, {
@@ -161,11 +228,7 @@ export async function* summarizeArticleStream(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        content,
-        url,
-        website: pageContext.hostname,
-      }),
+      body: JSON.stringify(body),
       signal: AbortSignal.timeout(API.TIMEOUT),
     })
 

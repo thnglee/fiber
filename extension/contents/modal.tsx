@@ -306,7 +306,9 @@ const SummarizeModal: React.FC<{
 
     try {
       // Manual text selection - don't pass URL, should be tracked as 'text' input type
-      const data = await summarizeArticle(text, contextRef.current || undefined)
+      const data = await summarizeArticle(text, {
+        context: contextRef.current || undefined,
+      })
       setResult(data)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Đã xảy ra lỗi"

@@ -2,8 +2,9 @@ import React, { useEffect, useState, useCallback, useRef } from "react"
 import { Readability } from "@mozilla/readability"
 import type { PlasmoCSConfig } from "plasmo"
 import cssText from "data-text:~/contents/style.css"
-import { summarizeArticleStream } from "~/lib/api-client"
+import { summarizeArticle, summarizeArticleStream } from "~/lib/api-client"
 import type { PageContext } from "~/lib/types"
+import { loadSettings, DEFAULT_SETTINGS, type FiberSettings } from "~/lib/settings"
 import { Card } from "~/components/ui/Card"
 import { Button } from "~/components/ui/Button"
 import { Skeleton } from "~/components/ui/Skeleton"
@@ -44,6 +45,7 @@ const SummarySidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true)
   const [pageIsArticle, setPageIsArticle] = useState<boolean | null>(null) // null = detecting, true = article, false = not article
   const contextRef = useRef<PageContext | null>(null)
+  const settingsRef = useRef<FiberSettings>(DEFAULT_SETTINGS)
 
   // Get page context once on mount
   useEffect(() => {
@@ -52,6 +54,15 @@ const SummarySidebar: React.FC = () => {
     } catch (err) {
       console.error("[SummarySidebar] Failed to get page context:", err)
     }
+  }, [])
+
+  // Load user settings once on mount; auto-summarize effect waits below.
+  useEffect(() => {
+    loadSettings()
+      .then(s => {
+        settingsRef.current = s
+      })
+      .catch(err => console.error("[SummarySidebar] Failed to load settings:", err))
   }, [])
 
   const extractAndSummarize = useCallback(async () => {
@@ -170,18 +181,57 @@ const SummarySidebar: React.FC = () => {
       }
 
       setIsLoading(false)
-      setIsStreaming(true)
 
       // article is guaranteed non-null here (we threw or assigned fallback above)
       const articleText: string = article!.textContent!
+      const settings = settingsRef.current
 
-      // Stream summary from backend API
+      if (settings.routingMode === "fusion") {
+        // Fusion mode is non-streaming — wait for full response then render.
+        const response = await summarizeArticle(articleText, {
+          context: contextRef.current || undefined,
+          url: window.location.href,
+          routingMode: "fusion",
+          fusionConfig: {
+            proposerModels: settings.fusion.proposerModels,
+            aggregatorModel: settings.fusion.aggregatorModel,
+            timeoutMs: settings.fusion.timeoutMs,
+          },
+        })
+        setStreamingText(response.summary)
+        setCategory(response.category || null)
+        setReadingTime(response.readingTime || null)
+        setIsStreaming(false)
+        if (response.fusion) {
+          // Make the fusion trace available to the debug page (Phase 4).
+          try {
+            ;(globalThis as any).__fiberLastFusion = response.fusion
+            if (
+              typeof chrome !== "undefined" &&
+              chrome.runtime &&
+              typeof chrome.runtime.sendMessage === "function"
+            ) {
+              chrome.runtime.sendMessage({
+                type: "fiber:last-fusion",
+                payload: response.fusion,
+              })
+            }
+          } catch (broadcastErr) {
+            console.warn("[SummarySidebar] Could not broadcast fusion result:", broadcastErr)
+          }
+        }
+        return
+      }
+
+      setIsStreaming(true)
+
+      // Stream summary from backend API (auto / evaluation / forced).
       let accumulatedJson = ""
-      for await (const chunk of summarizeArticleStream(
-        articleText,
-        contextRef.current || undefined,
-        window.location.href
-      )) {
+      for await (const chunk of summarizeArticleStream(articleText, {
+        context: contextRef.current || undefined,
+        url: window.location.href,
+        routingMode: settings.routingMode,
+      })) {
         if (chunk.type === 'summary-delta' && chunk.delta) {
           // Accumulate JSON deltas
           accumulatedJson += chunk.delta
