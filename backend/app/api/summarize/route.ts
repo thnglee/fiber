@@ -50,7 +50,15 @@ export async function POST(request: NextRequest) {
       return zodErrorResponse(parseResult.error, 400)
     }
 
-    const { content, url, debug, website, model: modelOverride, routing_mode: requestRoutingMode } = parseResult.data
+    const {
+      content,
+      url,
+      debug,
+      website,
+      model: modelOverride,
+      routing_mode: requestRoutingMode,
+      fusion_config: fusionConfigOverride,
+    } = parseResult.data
 
     // Resolve routing mode
     const { resolveRoutingMode } = await import('@/services/routing.service')
@@ -59,6 +67,168 @@ export async function POST(request: NextRequest) {
     // Check if streaming is requested
     const { searchParams } = new URL(request.url)
     const isStreaming = searchParams.get('stream') === 'true'
+
+    // ============================================================================
+    // FUSION MODE — MoA pipeline (N proposers → aggregator)
+    // ============================================================================
+    if (routingMode === 'fusion') {
+      if (isStreaming) {
+        return NextResponse.json(
+          { error: 'Streaming is not supported in fusion mode' },
+          { status: 400, headers: getCorsHeaders() }
+        )
+      }
+
+      // Resolve article text (reuse client-provided content when possible)
+      let articleText = content || ''
+      if (url && !content) {
+        const { extractContentFromUrl } = await import('@/services/content-extraction.service')
+        const extracted = await extractContentFromUrl(url)
+        articleText = extracted.content
+      }
+
+      if (!articleText) {
+        return NextResponse.json(
+          { error: "Either 'content' or 'url' is required for fusion mode" },
+          { status: 400, headers: getCorsHeaders() }
+        )
+      }
+
+      const { buildMoAConfig } = await import('@/output-fusion/moa.config')
+      const { runMoAFusion } = await import('@/output-fusion/moa.service')
+      const { MoAInsufficientDraftsError } = await import('@/output-fusion/moa.types')
+      const { saveMoAFusionResult } = await import('@/output-fusion/moa.persistence')
+
+      let moaConfig
+      try {
+        moaConfig = await buildMoAConfig(fusionConfigOverride)
+      } catch (configErr) {
+        return NextResponse.json(
+          {
+            error: configErr instanceof Error
+              ? configErr.message
+              : 'Failed to build MoA configuration',
+          },
+          { status: 400, headers: getCorsHeaders() }
+        )
+      }
+
+      try {
+        const fusionResult = await runMoAFusion(articleText, website, moaConfig)
+
+        // Save routing decision + persist fusion detail + evaluation row (fire-and-forget)
+        const { saveRoutingDecision, estimateTokenCount, classifyComplexity } = await import('@/services/routing.service')
+        const complexity = classifyComplexity(articleText)
+
+        waitUntil(
+          (async () => {
+            const routingId = await saveRoutingDecision({
+              article_length: articleText.length,
+              article_tokens: estimateTokenCount(articleText),
+              category: fusionResult.fused.category,
+              complexity,
+              routing_mode: 'fusion',
+              selected_model: `moa:${fusionResult.aggregator.model_name}`,
+              fallback_used: fusionResult.pipeline.failed_proposers.length > 0,
+              fallback_reason: fusionResult.pipeline.failed_proposers.length > 0
+                ? `Proposers failed: ${fusionResult.pipeline.failed_proposers.join(', ')}`
+                : undefined,
+            })
+
+            const fusionId = await saveMoAFusionResult({
+              result: fusionResult,
+              articleUrl: url,
+              routingId,
+            })
+            if (fusionId) fusionResult.routing_id = routingId ?? undefined
+
+            const { saveEvaluationMetrics } = await import('@/services/evaluation.service')
+            await saveEvaluationMetrics({
+              summary: fusionResult.fused.summary,
+              original: articleText,
+              url,
+              metrics: {
+                rouge1: fusionResult.fused.scores.rouge1 ?? 0,
+                rouge2: fusionResult.fused.scores.rouge2 ?? 0,
+                rougeL: fusionResult.fused.scores.rougeL ?? 0,
+                bleu: fusionResult.fused.scores.bleu ?? 0,
+                bert_score: fusionResult.fused.scores.bert_score,
+                compression_rate: fusionResult.fused.scores.compression_rate,
+                total_tokens: fusionResult.pipeline.total_tokens,
+              },
+              latency: fusionResult.pipeline.total_latency_ms,
+              mode: 'fusion',
+              model: `moa:${fusionResult.aggregator.model_name}`,
+              promptTokens: fusionResult.aggregator.prompt_tokens ?? undefined,
+              completionTokens: fusionResult.aggregator.completion_tokens ?? undefined,
+              estimatedCostUsd: fusionResult.pipeline.total_cost_usd ?? undefined,
+            }).catch(err =>
+              console.error('[Summarize Fusion] Failed to save evaluation metrics:', err)
+            )
+          })().catch(err =>
+            console.error('[Summarize Fusion] Persistence task failed:', err)
+          )
+        )
+
+        // Track user action (fire-and-forget)
+        const processingTime = Date.now() - startTime
+        const { trackAction, getClientIP, extractTokenUsage } = await import('@/services/action-tracking.service')
+        const tokenUsage = extractTokenUsage({
+          usage: {
+            prompt_tokens: fusionResult.aggregator.prompt_tokens ?? undefined,
+            completion_tokens: fusionResult.aggregator.completion_tokens ?? undefined,
+            total_tokens: fusionResult.pipeline.total_tokens ?? undefined,
+          },
+        })
+
+        waitUntil(
+          trackAction({
+            actionType: 'summarize',
+            inputType: url ? 'url' : 'text',
+            inputContent: url || content || '',
+            outputContent: {
+              summary: fusionResult.fused.summary,
+              category: fusionResult.fused.category,
+              readingTime: fusionResult.fused.readingTime,
+            },
+            category: fusionResult.fused.category,
+            tokenUsage,
+            model: `moa:${fusionResult.aggregator.model_name}`,
+            userIp: getClientIP(request.headers),
+            website: website || 'unknown',
+            userAgent: request.headers.get('user-agent') || 'unknown',
+            processingTimeMs: processingTime,
+          }).catch(err => console.error('[Summarize Fusion] Failed to track action:', err))
+        )
+
+        const response = {
+          summary: fusionResult.fused.summary,
+          category: fusionResult.fused.category,
+          readingTime: fusionResult.fused.readingTime,
+          model: `moa:${fusionResult.aggregator.model_name}`,
+          usage: {
+            prompt_tokens: fusionResult.aggregator.prompt_tokens ?? undefined,
+            completion_tokens: fusionResult.aggregator.completion_tokens ?? undefined,
+            total_tokens: fusionResult.pipeline.total_tokens ?? undefined,
+          },
+          routing: {
+            selected_model: fusionResult.aggregator.model_name,
+            complexity,
+            fallback_used: fusionResult.pipeline.failed_proposers.length > 0,
+          },
+          fusion: fusionResult,
+        }
+
+        return NextResponse.json(response, { headers: getCorsHeaders() })
+      } catch (err) {
+        if (err instanceof MoAInsufficientDraftsError) {
+          // Fall back to a regular forced summarize with the active model below.
+          console.warn('[Summarize Fusion] Insufficient drafts, falling back to forced mode:', err.message)
+        } else {
+          throw err
+        }
+      }
+    }
 
     // ============================================================================
     // EVALUATION MODE — run all models in parallel, pick best

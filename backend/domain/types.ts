@@ -232,7 +232,7 @@ export interface RoutingDecision {
   article_tokens: number
   category?: string
   complexity: 'short' | 'medium' | 'long'
-  routing_mode: 'auto' | 'evaluation' | 'forced'
+  routing_mode: 'auto' | 'evaluation' | 'forced' | 'fusion'
   selected_model: string
   fallback_used: boolean
   fallback_reason?: string
@@ -265,6 +265,20 @@ export interface FusionResult {
   candidates: ModelComparisonResult[]
   routingId: string
 }
+
+// ============================================================================
+// MoA Output Fusion — re-exports
+// ============================================================================
+
+export type {
+  MoAConfig,
+  MoADraftResult,
+  MoADraftStatus,
+  MoAFusionResult,
+  MoAScoredDraft,
+  MoAScores,
+  ModelAvailability,
+} from "@/output-fusion/moa.types"
 
 // ============================================================================
 // Logging Domain Types
