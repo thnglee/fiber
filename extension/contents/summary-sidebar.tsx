@@ -5,6 +5,7 @@ import cssText from "data-text:~/contents/style.css"
 import { summarizeArticle, summarizeArticleStream } from "~/lib/api-client"
 import type { PageContext } from "~/lib/types"
 import { loadSettings, DEFAULT_SETTINGS, type FiberSettings } from "~/lib/settings"
+import { FUSION_STORAGE_KEY } from "~/lib/fusion-types"
 import { Card } from "~/components/ui/Card"
 import { Button } from "~/components/ui/Button"
 import { Skeleton } from "~/components/ui/Skeleton"
@@ -206,6 +207,20 @@ const SummarySidebar: React.FC = () => {
           // Make the fusion trace available to the debug page (Phase 4).
           try {
             ;(globalThis as any).__fiberLastFusion = response.fusion
+            if (
+              typeof chrome !== "undefined" &&
+              chrome.storage &&
+              chrome.storage.local
+            ) {
+              chrome.storage.local.set({
+                [FUSION_STORAGE_KEY]: {
+                  result: response.fusion,
+                  capturedAt: Date.now(),
+                  articleUrl: window.location.href,
+                  articleTitle: document.title,
+                },
+              })
+            }
             if (
               typeof chrome !== "undefined" &&
               chrome.runtime &&

@@ -1,7 +1,8 @@
 import type { FactCheckResponse, SummaryResponse, ApiError, PageContext } from "./types"
 import { getPageContext } from "./context-provider"
 import { API } from "./constants"
-import type { RoutingMode, FusionSettings } from "./settings"
+import type { RoutingMode } from "./settings"
+import type { MoAFusionResult } from "./fusion-types"
 
 /**
  * Mirror of the backend `ModelAvailability` type (see
@@ -23,20 +24,7 @@ export interface ModelAvailability {
  */
 export interface FusionSummaryResponse extends SummaryResponse {
   model?: string
-  fusion?: {
-    fused: { summary: string; category: string; readingTime: number; scores?: unknown }
-    drafts: unknown[]
-    aggregator: { model_name: string; provider: string; latency_ms?: number }
-    pipeline: {
-      total_latency_ms?: number
-      total_cost_usd?: number | null
-      total_tokens?: number | null
-      proposer_count?: number
-      successful_proposers?: number
-      failed_proposers?: string[]
-    }
-    routing_id?: string
-  }
+  fusion?: MoAFusionResult
 }
 
 export interface SummarizeOptions {
