@@ -1,0 +1,10 @@
+{
+  "description": "Sample URL list for MoA metrics collection. Replace with real article URLs before running. The CLI also accepts a plain array of strings.",
+  "urls": [
+    "https://tuoitre.vn/replace-with-a-real-article.html",
+    "https://thanhnien.vn/replace-with-a-real-article.html",
+    "https://vietnamnet.vn/replace-with-a-real-article.html",
+    "https://laodong.vn/replace-with-a-real-article.html",
+    "https://tienphong.vn/replace-with-a-real-article.html"
+  ]
+}
