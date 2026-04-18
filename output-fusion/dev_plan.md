@@ -180,7 +180,7 @@ export async function scoreSummary(
 This function:
 1. Calls `calculateLexicalMetrics(summary, originalArticle)` for ROUGE-1/2/L, BLEU
 2. Calls `calculateBertScore(originalArticle, summary)` for BERTScore (try/catch, null on failure)
-3. Calculates compression rate: `summary.length / originalArticle.length`
+3. Calculates compression rate via `calculateCompressionRate({ originalText: originalArticle, summaryText: summary })` — returns `result.compressionRate` (takes an object, not two strings; throws `EmptyOriginalTextError` if original is empty so wrap in try/catch)
 4. Returns `MoAScores` object
 
 **Note on methodology:** ROUGE/BLEU are computed against the original article text (not a human-written reference summary), consistent with the existing evaluation pipeline. This measures content coverage rather than classical summarization quality. BERTScore is the most meaningful metric here as it captures semantic similarity regardless of length difference. The thesis should state this methodology explicitly.
@@ -232,7 +232,11 @@ export async function runMoAFusion(
        latency_ms: latencyMs,
        prompt_tokens: response.usage?.prompt_tokens ?? null,
        completion_tokens: response.usage?.completion_tokens ?? null,
-       estimated_cost_usd: computeCost(model, response.usage),
+       // No computeCost() helper exists — compute inline (same formula as summarize.service.ts:217-218)
+       estimated_cost_usd: model.input_cost_per_1m != null
+         ? ((response.usage?.prompt_tokens ?? 0) / 1_000_000 * model.input_cost_per_1m)
+           + ((response.usage?.completion_tokens ?? 0) / 1_000_000 * (model.output_cost_per_1m ?? 0))
+         : null,
        status: 'success',
      }
      ```
@@ -299,10 +303,25 @@ export async function runMoAFusion(
   }).optional()
   ```
 
+**File:** `backend/services/routing.service.ts`
+
+- `RoutingMode` is defined here (line 12), **not** in `domain/types.ts`. Add `'fusion'` here:
+  ```typescript
+  export type RoutingMode = 'auto' | 'evaluation' | 'forced' | 'fusion'
+  ```
+- Also update `resolveRoutingMode` return type to `RoutingMode` (already inferred, but confirm it accepts `'fusion'` passthrough)
+
 **File:** `backend/domain/types.ts`
 
-- Add `'fusion'` to `RoutingDecision.routing_mode` type
+- `RoutingDecision.routing_mode` is typed `'auto' | 'evaluation' | 'forced'` — add `'fusion'`
 - Export `MoAFusionResult`, `ModelAvailability` types (re-export from `@/output-fusion/moa.types`)
+
+**File:** `backend/domain/schemas.ts` (additional change)
+
+- `SummarizeResponseSchema` does not currently have a `fusion` field. Add it so the route handler can return full pipeline data for the debug page:
+  ```typescript
+  fusion: z.any().optional(),  // MoAFusionResult — only present when routing_mode === 'fusion'
+  ```
 
 ### 2.1b Create Model Availability Endpoint
 
@@ -349,13 +368,14 @@ if (routing_mode === 'fusion') {
     )
 
     // 4. Return response matching SummarizeResponseSchema
+    // `fusion` field is now part of SummarizeResponseSchema (z.any().optional()) — schema-validated
     return NextResponse.json({
       summary: fusionResult.fused.summary,
       category: fusionResult.fused.category,
       readingTime: fusionResult.fused.readingTime,
       model: `moa:${fusionResult.aggregator.model_name}`,
-      routing: { mode: 'fusion' },
-      fusion: fusionResult,  // Full pipeline data for debug page
+      routing: { mode: 'fusion', selected_model: fusionResult.aggregator.model_name, complexity: 'long', fallback_used: false },
+      fusion: fusionResult,  // Full MoAFusionResult — used by extension debug page
     })
   } catch (err) {
     // Fallback to forced mode
@@ -367,32 +387,18 @@ if (routing_mode === 'fusion') {
 }
 ```
 
-### 2.3 SSE Streaming for Fusion Pipeline
+### 2.3 SSE Streaming for Fusion Pipeline — DEFERRED
 
-**File:** `backend/app/api/summarize/route.ts` (streaming branch)
+**Status:** Out of scope for initial implementation. `performSummarize()` has no progress callback interface, so threading SSE events through the proposer layer requires non-trivial refactoring. Fusion mode always returns a regular JSON response (non-streaming).
 
-When `routing_mode === 'fusion'` and `stream === true`:
-
-Send SSE events for each pipeline stage:
-```
-{ type: 'fusion-start', data: { proposers: [...modelNames], aggregator: modelName } }
-{ type: 'proposer-done', data: { model: 'gpt-4o-mini', latency_ms: 2100, status: 'success' } }
-{ type: 'proposer-done', data: { model: 'gemini-flash', latency_ms: 1800, status: 'success' } }
-{ type: 'proposer-done', data: { model: 'claude-haiku', latency_ms: null, status: 'timeout' } }
-{ type: 'aggregating', data: { draftCount: 2 } }
-{ type: 'summary-delta', data: { content: '...' } }  // Aggregator streaming output
-{ type: 'fusion-done', data: { fusionResult: MoAFusionResult } }
-```
-
-This requires modifying `moa.service.ts` to accept a callback/emitter for progress events:
-
+When `routing_mode === 'fusion'` and `stream === true` arrives, return a 400 error (same as evaluation mode):
 ```typescript
-export async function runMoAFusionStreaming(
-  articleText: string,
-  website: string | undefined,
-  config: MoAConfig,
-  onEvent: (event: MoAStreamEvent) => void
-): AsyncGenerator<...>
+if (routingMode === 'fusion' && isStreaming) {
+  return NextResponse.json(
+    { error: 'Streaming is not supported in fusion mode' },
+    { status: 400, headers: getCorsHeaders() }
+  )
+}
 ```
 
 ### 2.4 Supabase Migration
