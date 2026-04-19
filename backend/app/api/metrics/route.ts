@@ -186,6 +186,122 @@ export async function GET(request: Request) {
     }
   }
 
+  // ── Fusion view (MoA output-fusion runs) ──────────────────────────
+  if (view === 'fusion') {
+    try {
+      const supabase = getSupabaseAdmin();
+      const limit = parseInt(searchParams.get('limit') || '50');
+      const offset = parseInt(searchParams.get('offset') || '0');
+
+      const { data: fusionRows, error: fusionError, count } = await supabase
+        .from('moa_fusion_results')
+        .select('*', { count: 'exact' })
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (fusionError) {
+        return NextResponse.json(
+          { error: `Failed to fetch fusion results: ${fusionError.message}` },
+          { status: 500 }
+        );
+      }
+
+      const fusions = fusionRows || [];
+      const fusionIds = fusions.map((f: { id: string }) => f.id);
+
+      let drafts: unknown[] = [];
+      if (fusionIds.length > 0) {
+        const { data: draftsData } = await supabase
+          .from('moa_draft_results')
+          .select('*')
+          .in('fusion_id', fusionIds)
+          .order('created_at', { ascending: true });
+        drafts = draftsData || [];
+      }
+
+      // Summary stats: paginate over all fusion rows to bypass 1000-row cap
+      const PAGE_SIZE = 1000;
+      let allFusions: Array<{
+        aggregator_model: string;
+        fused_bert_score: number | null;
+        proposer_count: number | null;
+        successful_proposers: number | null;
+      }> = [];
+      let from = 0;
+      let hasMore = true;
+
+      while (hasMore) {
+        const { data: page } = await supabase
+          .from('moa_fusion_results')
+          .select('aggregator_model, fused_bert_score, proposer_count, successful_proposers')
+          .range(from, from + PAGE_SIZE - 1);
+
+        if (page && page.length > 0) {
+          allFusions = allFusions.concat(page);
+          from += PAGE_SIZE;
+          hasMore = page.length === PAGE_SIZE;
+        } else {
+          hasMore = false;
+        }
+      }
+
+      const totalRuns = allFusions.length;
+
+      const bertValues = allFusions
+        .map(f => f.fused_bert_score)
+        .filter((v): v is number => v != null);
+      const avgBertScore = bertValues.length > 0
+        ? Math.round((bertValues.reduce((a, b) => a + Number(b), 0) / bertValues.length) * 10000) / 10000
+        : null;
+
+      const totalProposers = allFusions.reduce((sum, f) => sum + (f.proposer_count ?? 0), 0);
+      const totalSuccessful = allFusions.reduce((sum, f) => sum + (f.successful_proposers ?? 0), 0);
+      const proposerSuccessRate = totalProposers > 0
+        ? Math.round((totalSuccessful / totalProposers) * 100 * 10) / 10
+        : 0;
+
+      const aggCounts: Record<string, number> = {};
+      for (const f of allFusions) {
+        aggCounts[f.aggregator_model] = (aggCounts[f.aggregator_model] || 0) + 1;
+      }
+      const aggregatorDistribution = Object.entries(aggCounts)
+        .map(([model, cnt]) => ({
+          model,
+          count: cnt,
+          percentage: totalRuns > 0 ? Math.round((cnt / totalRuns) * 100 * 10) / 10 : 0,
+        }))
+        .sort((a, b) => b.count - a.count);
+
+      return NextResponse.json(
+        {
+          data: fusions,
+          drafts,
+          count: count || 0,
+          stats: {
+            total_runs: totalRuns,
+            avg_bert_score: avgBertScore,
+            proposer_success_rate: proposerSuccessRate,
+            aggregator_distribution: aggregatorDistribution,
+            most_used_aggregator: aggregatorDistribution[0] || null,
+          },
+        },
+        {
+          headers: {
+            'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
+          },
+        }
+      );
+    } catch (error) {
+      console.error('[Metrics Fusion] Error:', error);
+      return NextResponse.json(
+        {
+          error: error instanceof Error ? error.message : 'Failed to fetch fusion metrics',
+        },
+        { status: 500 }
+      );
+    }
+  }
+
   // ── Default evaluation metrics view ───────────────────────────────
   const limit = parseInt(searchParams.get('limit') || '50');
   const offset = parseInt(searchParams.get('offset') || '0');
