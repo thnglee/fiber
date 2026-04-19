@@ -4,6 +4,7 @@ import type { PlasmoCSConfig } from "plasmo"
 import cssText from "data-text:~/contents/style.css"
 import { summarizeArticleStream } from "~/lib/api-client"
 import type { PageContext } from "~/lib/types"
+import { loadSettings, DEFAULT_SETTINGS, type FiberSettings } from "~/lib/settings"
 import { Card } from "~/components/ui/Card"
 import { Button } from "~/components/ui/Button"
 import { Skeleton } from "~/components/ui/Skeleton"
@@ -44,6 +45,7 @@ const SummarySidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true)
   const [pageIsArticle, setPageIsArticle] = useState<boolean | null>(null) // null = detecting, true = article, false = not article
   const contextRef = useRef<PageContext | null>(null)
+  const settingsRef = useRef<FiberSettings>(DEFAULT_SETTINGS)
 
   // Get page context once on mount
   useEffect(() => {
@@ -52,6 +54,15 @@ const SummarySidebar: React.FC = () => {
     } catch (err) {
       console.error("[SummarySidebar] Failed to get page context:", err)
     }
+  }, [])
+
+  // Load user settings once on mount; auto-summarize effect waits below.
+  useEffect(() => {
+    loadSettings()
+      .then(s => {
+        settingsRef.current = s
+      })
+      .catch(err => console.error("[SummarySidebar] Failed to load settings:", err))
   }, [])
 
   const extractAndSummarize = useCallback(async () => {
@@ -170,18 +181,20 @@ const SummarySidebar: React.FC = () => {
       }
 
       setIsLoading(false)
-      setIsStreaming(true)
 
       // article is guaranteed non-null here (we threw or assigned fallback above)
       const articleText: string = article!.textContent!
+      const settings = settingsRef.current
 
-      // Stream summary from backend API
+      setIsStreaming(true)
+
+      // Stream summary from backend API (auto / evaluation / forced).
       let accumulatedJson = ""
-      for await (const chunk of summarizeArticleStream(
-        articleText,
-        contextRef.current || undefined,
-        window.location.href
-      )) {
+      for await (const chunk of summarizeArticleStream(articleText, {
+        context: contextRef.current || undefined,
+        url: window.location.href,
+        routingMode: settings.routingMode,
+      })) {
         if (chunk.type === 'summary-delta' && chunk.delta) {
           // Accumulate JSON deltas
           accumulatedJson += chunk.delta

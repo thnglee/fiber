@@ -1,6 +1,13 @@
 import type { FactCheckResponse, SummaryResponse, ApiError, PageContext } from "./types"
 import { getPageContext } from "./context-provider"
 import { API } from "./constants"
+import type { RoutingMode } from "./settings"
+
+export interface SummarizeOptions {
+  context?: PageContext
+  url?: string
+  routingMode?: RoutingMode
+}
 
 const API_BASE_URL = process.env.PLASMO_PUBLIC_API_URL || "http://localhost:3000/api"
 
@@ -103,28 +110,26 @@ async function fetchAPI<T>(
 }
 
 /**
- * Summarize article content
- * 
- * @param content - Article content to summarize
- * @param context - Optional page context (will be auto-detected if not provided)
- * @param url - Optional URL of the page being summarized (for tracking purposes)
- * @returns Promise resolving to summary response
+ * Summarize article content (non-streaming).
+ *
+ * Accepts an optional `routingMode` so the extension options page can switch
+ * between forced / auto / evaluation modes.
  */
 export async function summarizeArticle(
   content: string,
-  context?: PageContext,
-  url?: string
+  options: SummarizeOptions = {}
 ): Promise<SummaryResponse> {
-  // Get context if not provided
-  const pageContext = context || getPageContext()
+  const pageContext = options.context || getPageContext()
+  const body: Record<string, unknown> = {
+    content,
+    url: options.url,
+    website: pageContext.hostname,
+  }
+  if (options.routingMode) body.routing_mode = options.routingMode
 
   return fetchAPI<SummaryResponse>("/summarize", {
     method: "POST",
-    body: JSON.stringify({
-      content,
-      url, // Include URL for proper input type tracking
-      website: pageContext.hostname,
-    }),
+    body: JSON.stringify(body),
   })
 }
 
@@ -139,8 +144,7 @@ export async function summarizeArticle(
  */
 export async function* summarizeArticleStream(
   content: string,
-  context?: PageContext,
-  url?: string
+  options: SummarizeOptions = {}
 ): AsyncGenerator<{
   type: 'summary-delta' | 'metadata' | 'error' | 'done'
   delta?: string
@@ -148,12 +152,20 @@ export async function* summarizeArticleStream(
   readingTime?: number
   error?: string
 }> {
-  // Get context if not provided
-  const pageContext = context || getPageContext()
+  const pageContext = options.context || getPageContext()
 
   const apiUrl = `${API_BASE_URL}/summarize?stream=true`
 
   console.log('[API] Starting streaming summarization', { url: apiUrl })
+
+  const body: Record<string, unknown> = {
+    content,
+    url: options.url,
+    website: pageContext.hostname,
+  }
+  if (options.routingMode) {
+    body.routing_mode = options.routingMode
+  }
 
   try {
     const response = await fetch(apiUrl, {
@@ -161,11 +173,7 @@ export async function* summarizeArticleStream(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        content,
-        url,
-        website: pageContext.hostname,
-      }),
+      body: JSON.stringify(body),
       signal: AbortSignal.timeout(API.TIMEOUT),
     })
 

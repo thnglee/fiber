@@ -34,12 +34,28 @@ const PROVIDER_LABELS: Record<ProviderKey, string> = {
   huggingface: "HuggingFace",
 }
 
-type RoutingMode = "auto" | "evaluation" | "forced"
+type RoutingMode = "auto" | "evaluation" | "forced" | "fusion"
+
+interface FusionConfigPersist {
+  proposerModels?: string[]
+  aggregatorModel?: string
+}
 
 interface RoutingConfig {
   routing_mode: RoutingMode
   complexity_thresholds: { short: number; medium: number }
+  fusion_config: FusionConfigPersist | null
   hf_available: boolean
+}
+
+interface ModelAvailability {
+  model_name: string
+  display_name: string
+  provider: string
+  is_available: boolean
+  unavailable_reason?: string
+  can_be_proposer: boolean
+  can_be_aggregator: boolean
 }
 
 const ROUTING_MODE_INFO: Record<RoutingMode, { label: string; description: string }> = {
@@ -54,6 +70,10 @@ const ROUTING_MODE_INFO: Record<RoutingMode, { label: string; description: strin
   forced: {
     label: "Forced",
     description: "Use the currently active model (existing behavior)",
+  },
+  fusion: {
+    label: "Fusion (MoA)",
+    description: "Run N proposers in parallel, aggregate into a single answer",
   },
 }
 
@@ -98,6 +118,7 @@ export default function SettingsPage() {
   const [routingConfig, setRoutingConfig] = useState<RoutingConfig>({
     routing_mode: "forced",
     complexity_thresholds: { short: 400, medium: 1500 },
+    fusion_config: null,
     hf_available: false,
   })
   const [routingLoading, setRoutingLoading] = useState(true)
@@ -105,6 +126,12 @@ export default function SettingsPage() {
   const [thresholdsOpen, setThresholdsOpen] = useState(false)
   const [shortThreshold, setShortThreshold] = useState("400")
   const [mediumThreshold, setMediumThreshold] = useState("1500")
+
+  // Fusion (MoA) state
+  const [fusionAvailability, setFusionAvailability] = useState<ModelAvailability[]>([])
+  const [fusionAvailabilityLoading, setFusionAvailabilityLoading] = useState(false)
+  const [fusionProposerDraft, setFusionProposerDraft] = useState<string[]>([])
+  const [fusionAggregatorDraft, setFusionAggregatorDraft] = useState<string>("")
 
   const loadParamsFromModel = useCallback((model: ModelConfig) => {
     setTemperature(model.temperature)
@@ -144,6 +171,8 @@ export default function SettingsPage() {
       setRoutingConfig(data)
       setShortThreshold(String(data.complexity_thresholds.short))
       setMediumThreshold(String(data.complexity_thresholds.medium))
+      setFusionProposerDraft(data.fusion_config?.proposerModels ?? [])
+      setFusionAggregatorDraft(data.fusion_config?.aggregatorModel ?? "")
     } catch {
       // Use defaults on error
     } finally {
@@ -151,7 +180,21 @@ export default function SettingsPage() {
     }
   }, [])
 
-  const handleSaveRoutingConfig = async (updates: Partial<Pick<RoutingConfig, "routing_mode" | "complexity_thresholds">>) => {
+  const fetchFusionAvailability = useCallback(async () => {
+    setFusionAvailabilityLoading(true)
+    try {
+      const res = await fetch("/api/models/availability")
+      if (!res.ok) throw new Error("Failed to fetch model availability")
+      const data: ModelAvailability[] = await res.json()
+      setFusionAvailability(data)
+    } catch {
+      setFusionAvailability([])
+    } finally {
+      setFusionAvailabilityLoading(false)
+    }
+  }, [])
+
+  const handleSaveRoutingConfig = async (updates: Partial<Pick<RoutingConfig, "routing_mode" | "complexity_thresholds" | "fusion_config">>) => {
     setRoutingSaving(true)
     setSaveSuccess(null)
     setSaveError(null)
@@ -170,6 +213,12 @@ export default function SettingsPage() {
 
       const data: RoutingConfig = await res.json()
       setRoutingConfig(data)
+      if (data.complexity_thresholds) {
+        setShortThreshold(String(data.complexity_thresholds.short))
+        setMediumThreshold(String(data.complexity_thresholds.medium))
+      }
+      setFusionProposerDraft(data.fusion_config?.proposerModels ?? [])
+      setFusionAggregatorDraft(data.fusion_config?.aggregatorModel ?? "")
       setSaveSuccess("Routing configuration saved")
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : "Failed to save routing config")
@@ -182,6 +231,12 @@ export default function SettingsPage() {
     fetchSettings()
     fetchRoutingConfig()
   }, [fetchSettings, fetchRoutingConfig])
+
+  useEffect(() => {
+    if (routingConfig.routing_mode === "fusion" && fusionAvailability.length === 0 && !fusionAvailabilityLoading) {
+      fetchFusionAvailability()
+    }
+  }, [routingConfig.routing_mode, fusionAvailability.length, fusionAvailabilityLoading, fetchFusionAvailability])
 
   const handleSelectModel = (model: ModelConfig) => {
     setSelectedModel(model)
@@ -434,7 +489,7 @@ export default function SettingsPage() {
                   Routing Mode
                 </label>
                 <div className="space-y-2">
-                  {(["auto", "evaluation", "forced"] as RoutingMode[]).map(mode => (
+                  {(["auto", "evaluation", "forced", "fusion"] as RoutingMode[]).map(mode => (
                     <label
                       key={mode}
                       className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
@@ -537,6 +592,136 @@ export default function SettingsPage() {
                   </div>
                 )}
               </div>
+
+              {/* Fusion (MoA) Configuration — visible when routing_mode === "fusion" */}
+              {routingConfig.routing_mode === "fusion" && (
+                <div className="border border-gray-200 rounded-lg p-4 space-y-4 bg-gray-50/50">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-700">
+                      Fusion (MoA) Configuration
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Pick 2–5 proposer models (Layer 1) and one aggregator (Layer 2).
+                      Leave empty to let the system auto-select based on provider availability.
+                    </p>
+                  </div>
+
+                  {fusionAvailabilityLoading ? (
+                    <div className="text-xs text-gray-400">Loading available models…</div>
+                  ) : fusionAvailability.length === 0 ? (
+                    <div className="text-xs text-gray-400">No models available.</div>
+                  ) : (
+                    <>
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                          Proposers (Layer 1)
+                        </label>
+                        <div className="space-y-1.5 max-h-56 overflow-y-auto border border-gray-200 rounded-lg bg-white p-2">
+                          {fusionAvailability.map(m => {
+                            const checked = fusionProposerDraft.includes(m.model_name)
+                            const disabled = !m.can_be_proposer
+                            return (
+                              <label
+                                key={`proposer-${m.model_name}`}
+                                className={`flex items-start gap-2 p-1.5 rounded text-xs ${
+                                  disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-gray-50"
+                                }`}
+                                title={disabled ? m.unavailable_reason ?? "Not available" : undefined}
+                              >
+                                <input
+                                  type="checkbox"
+                                  disabled={disabled}
+                                  checked={checked}
+                                  onChange={e => {
+                                    setFusionProposerDraft(prev => {
+                                      if (e.target.checked) {
+                                        if (prev.includes(m.model_name)) return prev
+                                        if (prev.length >= 5) return prev
+                                        return [...prev, m.model_name]
+                                      }
+                                      return prev.filter(name => name !== m.model_name)
+                                    })
+                                  }}
+                                  className="mt-0.5"
+                                />
+                                <div className="flex-1">
+                                  <span className="font-medium text-gray-900">{m.display_name}</span>
+                                  <span className="ml-1.5 text-gray-400">({m.provider})</span>
+                                  {disabled && (
+                                    <span className="ml-1.5 text-red-500">• {m.unavailable_reason}</span>
+                                  )}
+                                </div>
+                              </label>
+                            )
+                          })}
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Selected: {fusionProposerDraft.length} / 5 (min 2)
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                          Aggregator (Layer 2)
+                        </label>
+                        <select
+                          value={fusionAggregatorDraft}
+                          onChange={e => setFusionAggregatorDraft(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Auto-select (preferred aggregator)</option>
+                          {fusionAvailability
+                            .filter(m => m.can_be_aggregator)
+                            .map(m => (
+                              <option key={`agg-${m.model_name}`} value={m.model_name}>
+                                {m.display_name} ({m.provider})
+                              </option>
+                            ))}
+                        </select>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Only models that support structured output can aggregate.
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 pt-2">
+                        <button
+                          onClick={() => {
+                            const proposers = fusionProposerDraft
+                            if (proposers.length > 0 && proposers.length < 2) {
+                              setSaveError("Fusion requires at least 2 proposers (or none for auto-select).")
+                              return
+                            }
+                            handleSaveRoutingConfig({
+                              fusion_config:
+                                proposers.length === 0 && !fusionAggregatorDraft
+                                  ? null
+                                  : {
+                                      proposerModels: proposers.length > 0 ? proposers : undefined,
+                                      aggregatorModel: fusionAggregatorDraft || undefined,
+                                    },
+                            })
+                          }}
+                          disabled={routingSaving}
+                          className="px-4 py-2 bg-black text-white rounded-lg text-sm font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          {routingSaving ? "Saving..." : "Save Fusion Config"}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setFusionProposerDraft([])
+                            setFusionAggregatorDraft("")
+                            handleSaveRoutingConfig({ fusion_config: null })
+                          }}
+                          disabled={routingSaving}
+                          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          Reset to auto-select
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
 
               {/* Available Models for Routing */}
               <div>

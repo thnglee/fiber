@@ -5,6 +5,7 @@ node_modules/
 build/
 dist/
 .plasmo/
+*.tsbuildinfo
 
 # Environment
 .env

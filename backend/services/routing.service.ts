@@ -9,7 +9,7 @@ import type { ModelConfig, RoutingDecision } from "@/domain/types"
 // ============================================================================
 
 export type ArticleComplexity = 'short' | 'medium' | 'long'
-export type RoutingMode = 'auto' | 'evaluation' | 'forced'
+export type RoutingMode = 'auto' | 'evaluation' | 'forced' | 'fusion'
 
 interface ComplexityThresholds {
   short: number   // max tokens for 'short'

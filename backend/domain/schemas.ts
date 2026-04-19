@@ -64,13 +64,20 @@ export const FactCheckResponseSchema = z.object({
 // Summarize Schemas
 // ============================================================================
 
+export const FusionConfigSchema = z.object({
+  proposerModels: z.array(z.string()).min(2).max(5).optional(),
+  aggregatorModel: z.string().optional(),
+  timeoutMs: z.number().min(5_000).max(30_000).optional(),
+})
+
 export const SummarizeRequestSchema = z.object({
   content: z.string().optional(),
   url: z.string().url().optional(),
   debug: z.boolean().optional(),
   website: z.string().optional(), // Website where the action was taken
   model: z.string().optional(),   // Optional model override
-  routing_mode: z.enum(['auto', 'evaluation', 'forced']).optional(), // Routing mode for model selection
+  routing_mode: z.enum(['auto', 'evaluation', 'forced', 'fusion']).optional(), // Routing mode for model selection
+  fusion_config: FusionConfigSchema.optional(),
 }).refine(
   (data) => data.content || data.url,
   {
@@ -134,6 +141,10 @@ export const SummarizeResponseSchema = z.object({
   model: z.string().optional(),       // Model used for this request
   usage: TokenUsageSchema.optional(), // Token usage for tracking (always present)
   routing: RoutingInfoSchema.optional(), // Routing info (auto/evaluation modes)
+  // Full MoAFusionResult payload when routing_mode === 'fusion'.
+  // Shape is validated at the output-fusion module boundary; using z.any() here
+  // avoids cross-module schema coupling for the debug page payload.
+  fusion: z.any().optional(),
   debug: SummarizeDebugInfoSchema.optional(),
 })
 
@@ -218,6 +229,7 @@ export type SummarizeRequest = z.infer<typeof SummarizeRequestSchema>
 export type SummarizeResponse = z.infer<typeof SummarizeResponseSchema>
 export type SummarizeDebugInfo = z.infer<typeof SummarizeDebugInfoSchema>
 export type SummaryData = z.infer<typeof SummaryDataSchema>
+export type FusionConfig = z.infer<typeof FusionConfigSchema>
 
 export type LogEntry = z.infer<typeof LogEntrySchema>
 export type Env = z.infer<typeof EnvSchema>

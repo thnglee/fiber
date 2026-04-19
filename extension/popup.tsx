@@ -36,6 +36,18 @@ const Popup: React.FC = () => {
           </div>
         </Card>
 
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => {
+            if (typeof chrome !== "undefined" && chrome.runtime?.openOptionsPage) {
+              chrome.runtime.openOptionsPage()
+            }
+          }}
+        >
+          Cài đặt
+        </Button>
+
         <div className="pt-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
             Truy cập tuoitre.vn, thanhnien.vn để sử dụng
