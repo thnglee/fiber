@@ -38,7 +38,63 @@ interface RoutingStats {
   avg_bert_scores: Array<{ model: string; avg_bert_score: number; count: number }>
 }
 
-type RoutingMode = "forced" | "auto" | "evaluation"
+type RoutingMode = "forced" | "auto" | "evaluation" | "fusion"
+
+interface ModelAvailability {
+  model_name: string
+  display_name: string
+  provider: string
+  is_available: boolean
+  unavailable_reason?: string
+  can_be_proposer: boolean
+  can_be_aggregator: boolean
+}
+
+interface FusionDraft {
+  model_name: string
+  provider: string
+  summary: string
+  status: "success" | "failed" | "timeout"
+  latency_ms: number
+  prompt_tokens: number | null
+  completion_tokens: number | null
+  estimated_cost_usd: number | null
+  error?: string
+  scores: {
+    rouge1: number | null
+    rouge2: number | null
+    rougeL: number | null
+    bleu: number | null
+    bert_score: number | null
+    compression_rate: number | null
+  }
+}
+
+interface FusionResult {
+  fused: {
+    summary: string
+    category: string
+    readingTime: number
+    scores: FusionDraft["scores"]
+  }
+  drafts: FusionDraft[]
+  aggregator: {
+    model_name: string
+    provider: string
+    latency_ms: number
+    prompt_tokens: number | null
+    completion_tokens: number | null
+    estimated_cost_usd: number | null
+  }
+  pipeline: {
+    total_latency_ms: number
+    total_cost_usd: number | null
+    total_tokens: number | null
+    proposer_count: number
+    successful_proposers: number
+    failed_proposers: string[]
+  }
+}
 
 export default function DebugPage() {
   const [summaryUrl, setSummaryUrl] = useState("")
@@ -68,6 +124,11 @@ export default function DebugPage() {
   const [routingMode, setRoutingMode] = useState<RoutingMode>("forced")
   const [comparisonExpanded, setComparisonExpanded] = useState(false)
 
+  // Fusion state
+  const [fusionAvailability, setFusionAvailability] = useState<ModelAvailability[]>([])
+  const [fusionProposers, setFusionProposers] = useState<string[]>([])
+  const [fusionAggregator, setFusionAggregator] = useState<string>("")
+
   // Routing Stats state
   const [routingStatsExpanded, setRoutingStatsExpanded] = useState(false)
   const [routingStats, setRoutingStats] = useState<RoutingStats | null>(null)
@@ -80,6 +141,29 @@ export default function DebugPage() {
       .then((data) => {
         if (data.available) {
           setAvailableModels(data.available)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    if (routingMode !== "fusion" || fusionAvailability.length > 0) return
+    fetch("/api/models/availability")
+      .then(res => (res.ok ? res.json() : Promise.reject(new Error("fetch failed"))))
+      .then((data: ModelAvailability[]) => setFusionAvailability(data))
+      .catch(() => setFusionAvailability([]))
+  }, [routingMode, fusionAvailability.length])
+
+  // Seed fusion defaults from persisted routing config (if any).
+  useEffect(() => {
+    fetch("/api/settings/routing")
+      .then(res => (res.ok ? res.json() : Promise.reject(new Error("fetch failed"))))
+      .then(data => {
+        if (data?.fusion_config?.proposerModels) {
+          setFusionProposers(data.fusion_config.proposerModels)
+        }
+        if (data?.fusion_config?.aggregatorModel) {
+          setFusionAggregator(data.fusion_config.aggregatorModel)
         }
       })
       .catch(() => {})
@@ -114,7 +198,14 @@ export default function DebugPage() {
     setSummaryResult(null)
 
     try {
-      const body: { debug: boolean; url?: string; content?: string; model?: string; routing_mode?: string } = { debug: true }
+      const body: {
+        debug: boolean
+        url?: string
+        content?: string
+        model?: string
+        routing_mode?: string
+        fusion_config?: { proposerModels?: string[]; aggregatorModel?: string }
+      } = { debug: true }
       if (summaryInputType === "url") {
         body.url = summaryUrl
       } else {
@@ -125,6 +216,12 @@ export default function DebugPage() {
       }
       if (routingMode !== "forced") {
         body.routing_mode = routingMode
+      }
+      if (routingMode === "fusion" && (fusionProposers.length > 0 || fusionAggregator)) {
+        body.fusion_config = {
+          ...(fusionProposers.length > 0 ? { proposerModels: fusionProposers } : {}),
+          ...(fusionAggregator ? { aggregatorModel: fusionAggregator } : {}),
+        }
       }
 
       const response = await fetch("/api/summarize", {
@@ -280,6 +377,18 @@ export default function DebugPage() {
               <span className="text-sm">Evaluation</span>
               <span className="text-xs text-gray-400 ml-1">(run all, pick best)</span>
             </label>
+            <label className="inline-flex items-center cursor-pointer">
+              <input
+                type="radio"
+                name="routingMode"
+                value="fusion"
+                checked={routingMode === "fusion"}
+                onChange={() => setRoutingMode("fusion")}
+                className="mr-2"
+              />
+              <span className="text-sm">Fusion (MoA)</span>
+              <span className="text-xs text-gray-400 ml-1">(N proposers → aggregator)</span>
+            </label>
           </div>
         </div>
 
@@ -313,8 +422,89 @@ export default function DebugPage() {
           </div>
         )}
 
-        {/* Spacing when model override is hidden */}
-        {routingMode !== "forced" && <div className="mb-8" />}
+        {/* Fusion Override Panel — only shown in Fusion mode */}
+        {routingMode === "fusion" && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+            <h2 className="text-sm font-semibold text-gray-700 mb-2">Fusion Override (optional)</h2>
+            <p className="text-xs text-gray-500 mb-3">
+              Leave empty to use the saved Settings config or auto-select.
+              Proposers = 2–5 models, aggregator = one structured-output-capable model.
+            </p>
+
+            {fusionAvailability.length === 0 ? (
+              <div className="text-xs text-gray-400">Loading available models…</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                    Proposers (Layer 1)
+                  </label>
+                  <div className="space-y-1 max-h-52 overflow-y-auto border border-gray-200 rounded-lg p-2">
+                    {fusionAvailability.map(m => {
+                      const checked = fusionProposers.includes(m.model_name)
+                      const disabled = !m.can_be_proposer
+                      return (
+                        <label
+                          key={`dbg-prop-${m.model_name}`}
+                          className={`flex items-start gap-2 p-1 text-xs rounded ${
+                            disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-gray-50"
+                          }`}
+                          title={disabled ? m.unavailable_reason ?? "Not available" : undefined}
+                        >
+                          <input
+                            type="checkbox"
+                            disabled={disabled}
+                            checked={checked}
+                            onChange={e => {
+                              setFusionProposers(prev => {
+                                if (e.target.checked) {
+                                  if (prev.includes(m.model_name) || prev.length >= 5) return prev
+                                  return [...prev, m.model_name]
+                                }
+                                return prev.filter(n => n !== m.model_name)
+                              })
+                            }}
+                            className="mt-0.5"
+                          />
+                          <span>
+                            <span className="font-medium text-gray-900">{m.display_name}</span>
+                            <span className="text-gray-400 ml-1">({m.provider})</span>
+                          </span>
+                        </label>
+                      )
+                    })}
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Selected: {fusionProposers.length} / 5
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                    Aggregator (Layer 2)
+                  </label>
+                  <select
+                    value={fusionAggregator}
+                    onChange={e => setFusionAggregator(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Auto-select</option>
+                    {fusionAvailability
+                      .filter(m => m.can_be_aggregator)
+                      .map(m => (
+                        <option key={`dbg-agg-${m.model_name}`} value={m.model_name}>
+                          {m.display_name} ({m.provider})
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Spacing when no override panel is shown */}
+        {routingMode === "auto" || routingMode === "evaluation" ? <div className="mb-8" /> : null}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Summary Feature */}
@@ -486,6 +676,104 @@ export default function DebugPage() {
                         )}
                       </div>
                     )}
+
+                    {/* Fusion (MoA) Pipeline Panel */}
+                    {summaryResult.fusion && (() => {
+                      const fusion = summaryResult.fusion as FusionResult
+                      const drafts = fusion.drafts ?? []
+                      const bestDraft = drafts.reduce<FusionDraft | null>((best, d) => {
+                        const curr = d.scores.bert_score ?? -Infinity
+                        const prev = best?.scores.bert_score ?? -Infinity
+                        return curr > prev ? d : best
+                      }, null)
+                      return (
+                        <div className="mb-4 space-y-3">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+                              MoA Pipeline
+                            </span>
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                              Aggregator: {fusion.aggregator.model_name}
+                            </span>
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                              {fusion.pipeline.successful_proposers}/{fusion.pipeline.proposer_count} proposers OK
+                            </span>
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                              Latency: {fusion.pipeline.total_latency_ms}ms
+                            </span>
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                              Cost: {formatCost(fusion.pipeline.total_cost_usd)}
+                            </span>
+                          </div>
+
+                          <div className="border border-gray-200 rounded-lg overflow-x-auto">
+                            <table className="w-full text-xs">
+                              <thead>
+                                <tr className="bg-gray-50 border-b border-gray-200">
+                                  <th className="px-3 py-2 text-left font-semibold text-gray-600">Model</th>
+                                  <th className="px-3 py-2 text-right font-semibold text-gray-600">Status</th>
+                                  <th className="px-3 py-2 text-right font-semibold text-gray-600">BERTScore</th>
+                                  <th className="px-3 py-2 text-right font-semibold text-gray-600">ROUGE-1</th>
+                                  <th className="px-3 py-2 text-right font-semibold text-gray-600">Latency</th>
+                                  <th className="px-3 py-2 text-right font-semibold text-gray-600">Cost</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {drafts.map(d => (
+                                  <tr
+                                    key={`draft-${d.model_name}`}
+                                    className={`border-t border-gray-100 ${bestDraft?.model_name === d.model_name ? "bg-blue-50/60" : ""}`}
+                                  >
+                                    <td className="px-3 py-2 font-medium text-gray-900">{d.model_name}</td>
+                                    <td className="px-3 py-2 text-right">
+                                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                        d.status === "success"
+                                          ? "bg-green-50 text-green-700"
+                                          : d.status === "timeout"
+                                          ? "bg-yellow-50 text-yellow-700"
+                                          : "bg-red-50 text-red-700"
+                                      }`}>
+                                        {d.status}
+                                      </span>
+                                    </td>
+                                    <td className="px-3 py-2 text-right text-gray-700">
+                                      {d.scores.bert_score !== null ? d.scores.bert_score.toFixed(4) : "N/A"}
+                                    </td>
+                                    <td className="px-3 py-2 text-right text-gray-700">
+                                      {d.scores.rouge1 !== null ? d.scores.rouge1.toFixed(4) : "N/A"}
+                                    </td>
+                                    <td className="px-3 py-2 text-right text-gray-700">{d.latency_ms}ms</td>
+                                    <td className="px-3 py-2 text-right text-gray-700">{formatCost(d.estimated_cost_usd)}</td>
+                                  </tr>
+                                ))}
+                                <tr className="border-t border-gray-200 bg-indigo-50/80">
+                                  <td className="px-3 py-2 font-semibold text-indigo-900">MoA Fused</td>
+                                  <td className="px-3 py-2 text-right">
+                                    <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                      aggregated
+                                    </span>
+                                  </td>
+                                  <td className="px-3 py-2 text-right font-semibold text-indigo-900">
+                                    {fusion.fused.scores.bert_score !== null ? fusion.fused.scores.bert_score.toFixed(4) : "N/A"}
+                                  </td>
+                                  <td className="px-3 py-2 text-right font-semibold text-indigo-900">
+                                    {fusion.fused.scores.rouge1 !== null ? fusion.fused.scores.rouge1.toFixed(4) : "N/A"}
+                                  </td>
+                                  <td className="px-3 py-2 text-right text-indigo-900">{fusion.aggregator.latency_ms}ms</td>
+                                  <td className="px-3 py-2 text-right text-indigo-900">{formatCost(fusion.aggregator.estimated_cost_usd)}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+
+                          {fusion.pipeline.failed_proposers.length > 0 && (
+                            <div className="text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded-lg p-2">
+                              Failed proposers: {fusion.pipeline.failed_proposers.join(", ")}
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })()}
 
                     <div className="space-y-2">
                       <div>

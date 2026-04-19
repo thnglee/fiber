@@ -3,19 +3,26 @@ import { z } from "zod"
 import { getCorsHeaders } from "@/middleware/cors"
 import { getSupabaseAdmin } from "@/lib/supabase"
 
+const FusionConfigPersistSchema = z.object({
+  proposerModels: z.array(z.string()).min(2).max(5).optional(),
+  aggregatorModel: z.string().optional(),
+})
+
 const UpdateRoutingSchema = z.object({
-  routing_mode: z.enum(["auto", "evaluation", "forced"]).optional(),
+  routing_mode: z.enum(["auto", "evaluation", "forced", "fusion"]).optional(),
   complexity_thresholds: z
     .object({
       short: z.number().int().positive(),
       medium: z.number().int().positive(),
     })
     .optional(),
+  fusion_config: FusionConfigPersistSchema.nullable().optional(),
 })
 
 const DEFAULT_ROUTING_CONFIG = {
   routing_mode: "forced",
   complexity_thresholds: { short: 400, medium: 1500 },
+  fusion_config: null as null | { proposerModels?: string[]; aggregatorModel?: string },
 }
 
 export async function OPTIONS() {
@@ -43,6 +50,7 @@ export async function GET() {
         routing_mode: config.routing_mode ?? DEFAULT_ROUTING_CONFIG.routing_mode,
         complexity_thresholds:
           config.complexity_thresholds ?? DEFAULT_ROUTING_CONFIG.complexity_thresholds,
+        fusion_config: config.fusion_config ?? DEFAULT_ROUTING_CONFIG.fusion_config,
         hf_available: !!process.env.HF_API_KEY,
       },
       { headers: getCorsHeaders() }
@@ -83,13 +91,19 @@ export async function POST(request: NextRequest) {
 
     const currentConfig = existing?.value ?? DEFAULT_ROUTING_CONFIG
 
-    // Merge updates
+    // Merge updates. fusion_config: `null` clears the stored selection, `undefined` leaves it untouched.
+    const fusionConfigNext =
+      parseResult.data.fusion_config === undefined
+        ? currentConfig.fusion_config ?? null
+        : parseResult.data.fusion_config
+
     const updatedConfig = {
       ...currentConfig,
       ...parseResult.data,
       complexity_thresholds: parseResult.data.complexity_thresholds
         ? parseResult.data.complexity_thresholds
         : currentConfig.complexity_thresholds,
+      fusion_config: fusionConfigNext,
     }
 
     const { error } = await supabase.from("app_settings").upsert(
@@ -110,6 +124,7 @@ export async function POST(request: NextRequest) {
         success: true,
         routing_mode: updatedConfig.routing_mode,
         complexity_thresholds: updatedConfig.complexity_thresholds,
+        fusion_config: updatedConfig.fusion_config ?? null,
         hf_available: !!process.env.HF_API_KEY,
       },
       { headers: getCorsHeaders() }
