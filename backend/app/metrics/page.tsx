@@ -75,7 +75,69 @@ interface RoutingStats {
   avg_bert_scores: AvgBertItem[];
 }
 
-type Tab = 'evaluation' | 'routing';
+type Tab = 'evaluation' | 'routing' | 'fusion';
+
+interface FusionRow {
+  id: string;
+  routing_id: string | null;
+  fused_summary: string;
+  fused_category: string | null;
+  fused_reading_time: number | null;
+  fused_rouge1: number | null;
+  fused_rouge2: number | null;
+  fused_rouge_l: number | null;
+  fused_bleu: number | null;
+  fused_bert_score: number | null;
+  fused_compression_rate: number | null;
+  aggregator_model: string;
+  aggregator_provider: string;
+  aggregator_latency_ms: number | null;
+  aggregator_prompt_tokens: number | null;
+  aggregator_completion_tokens: number | null;
+  aggregator_cost_usd: number | null;
+  total_latency_ms: number | null;
+  total_cost_usd: number | null;
+  proposer_count: number | null;
+  successful_proposers: number | null;
+  failed_proposers: string[] | null;
+  article_url: string | null;
+  created_at: string;
+}
+
+interface FusionDraft {
+  id: string;
+  fusion_id: string;
+  model_name: string;
+  provider: string;
+  summary: string;
+  status: 'success' | 'failed' | 'timeout';
+  error: string | null;
+  rouge1: number | null;
+  rouge2: number | null;
+  rouge_l: number | null;
+  bleu: number | null;
+  bert_score: number | null;
+  compression_rate: number | null;
+  latency_ms: number | null;
+  prompt_tokens: number | null;
+  completion_tokens: number | null;
+  estimated_cost_usd: number | null;
+  created_at: string;
+}
+
+interface AggregatorDistItem {
+  model: string;
+  count: number;
+  percentage: number;
+}
+
+interface FusionStats {
+  total_runs: number;
+  avg_bert_score: number | null;
+  proposer_success_rate: number;
+  aggregator_distribution: AggregatorDistItem[];
+  most_used_aggregator: AggregatorDistItem | null;
+}
 
 // ── Bar colors for model distribution chart ─────────────────────────
 const BAR_COLORS = [
@@ -373,6 +435,321 @@ function EvalModeGroupedResults({
   );
 }
 
+// ── Fusion results component ────────────────────────────────────────
+function FusionResults({
+  fusions,
+  drafts,
+  total,
+  loadingMore,
+  onShowMore,
+  onExportCsv,
+}: {
+  fusions: FusionRow[];
+  drafts: FusionDraft[];
+  total: number;
+  loadingMore: boolean;
+  onShowMore: () => void;
+  onExportCsv: () => void;
+}) {
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
+
+  const draftsByFusion = useMemo(() => {
+    const map = new Map<string, FusionDraft[]>();
+    for (const d of drafts) {
+      const list = map.get(d.fusion_id) || [];
+      list.push(d);
+      map.set(d.fusion_id, list);
+    }
+    for (const [, list] of map) {
+      list.sort((a, b) => {
+        if (a.status === 'success' && b.status !== 'success') return -1;
+        if (a.status !== 'success' && b.status === 'success') return 1;
+        return (Number(b.bert_score) || 0) - (Number(a.bert_score) || 0);
+      });
+    }
+    return map;
+  }, [drafts]);
+
+  const toggleExpanded = (id: string) => {
+    setExpandedCards(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-900">
+          Fusion Runs
+          <span className="ml-2 text-sm font-normal text-gray-500">
+            ({fusions.length} of {total})
+          </span>
+        </h2>
+        <button
+          onClick={onExportCsv}
+          className="flex items-center gap-2 px-4 py-2 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+        >
+          <Download className="w-4 h-4" />
+          Export CSV
+        </button>
+      </div>
+
+      {fusions.map(fusion => {
+        const fusionDrafts = draftsByFusion.get(fusion.id) || [];
+        const isExpanded = expandedCards.has(fusion.id);
+        const aggColor = getModelColor(fusion.aggregator_model);
+
+        const successful = fusion.successful_proposers ?? 0;
+        const totalProposers = fusion.proposer_count ?? 0;
+        const allSucceeded = successful === totalProposers && totalProposers > 0;
+
+        const bestDraftBert = Math.max(
+          0,
+          ...fusionDrafts
+            .filter(d => d.status === 'success' && d.bert_score != null)
+            .map(d => Number(d.bert_score))
+        );
+        const fusedBert = fusion.fused_bert_score != null ? Number(fusion.fused_bert_score) : null;
+        const fusionImproved = fusedBert != null && bestDraftBert > 0 && fusedBert > bestDraftBert;
+
+        return (
+          <div key={fusion.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <button
+              onClick={() => toggleExpanded(fusion.id)}
+              className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+            >
+              <div className="flex items-center gap-4">
+                <div className="text-left">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-medium text-gray-900">
+                      {new Date(fusion.created_at).toLocaleString()}
+                    </span>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wider bg-indigo-100 text-indigo-800">
+                      MoA
+                    </span>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${aggColor.bg} ${aggColor.text}`} title={`Aggregator: ${fusion.aggregator_model}`}>
+                      agg: {fusion.aggregator_model}
+                    </span>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                      allSucceeded ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
+                    }`}>
+                      {successful}/{totalProposers} proposers
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                    {fusedBert != null && (
+                      <span className={`inline-flex items-center gap-1 ${fusionImproved ? 'text-green-700 font-semibold' : ''}`}>
+                        BERT: {fusedBert.toFixed(4)}
+                        {fusionImproved && <span title="Fusion beat best draft">↑</span>}
+                      </span>
+                    )}
+                    {fusion.total_latency_ms != null && (
+                      <span className="inline-flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" />
+                        {fusion.total_latency_ms.toLocaleString()}ms
+                      </span>
+                    )}
+                    {fusion.total_cost_usd != null && (
+                      <span className="inline-flex items-center gap-1">
+                        <DollarSign className="w-3.5 h-3.5" />
+                        ${Number(fusion.total_cost_usd).toFixed(5)}
+                      </span>
+                    )}
+                    {fusion.article_url && (
+                      <a
+                        href={fusion.article_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={e => e.stopPropagation()}
+                        className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        Source
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+              {isExpanded ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+            </button>
+
+            {isExpanded && (
+              <div className="px-6 pb-6 pt-2 border-t border-gray-100 space-y-6">
+                {/* Fused summary */}
+                <div className="rounded-lg border-2 border-indigo-200 bg-indigo-50 p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                      <Trophy className="w-3.5 h-3.5" />
+                      Fused Output
+                    </span>
+                    <div className="flex items-center gap-3 text-xs text-gray-600">
+                      {fusion.fused_category && <span>{fusion.fused_category}</span>}
+                      {fusion.fused_reading_time != null && <span>{fusion.fused_reading_time} min read</span>}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-800 whitespace-pre-wrap">{fusion.fused_summary}</p>
+
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 mt-4 pt-3 border-t border-indigo-200">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-0.5">ROUGE-1</p>
+                      <p className="text-sm font-semibold text-gray-800">{fusion.fused_rouge1 != null ? Number(fusion.fused_rouge1).toFixed(4) : 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-0.5">ROUGE-2</p>
+                      <p className="text-sm font-semibold text-gray-800">{fusion.fused_rouge2 != null ? Number(fusion.fused_rouge2).toFixed(4) : 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-0.5">ROUGE-L</p>
+                      <p className="text-sm font-semibold text-gray-800">{fusion.fused_rouge_l != null ? Number(fusion.fused_rouge_l).toFixed(4) : 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-0.5">BLEU</p>
+                      <p className="text-sm font-semibold text-gray-800">{fusion.fused_bleu != null ? Number(fusion.fused_bleu).toFixed(4) : 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-0.5">BERTScore</p>
+                      {fusion.fused_bert_score != null ? (
+                        <p className="text-sm font-semibold text-green-700">{Number(fusion.fused_bert_score).toFixed(4)}</p>
+                      ) : (
+                        <p className="text-sm text-gray-400">N/A</p>
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-0.5">Compression</p>
+                      <p className="text-sm font-semibold text-gray-800">
+                        {fusion.fused_compression_rate != null ? `${Number(fusion.fused_compression_rate).toFixed(2)}%` : 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Aggregator metadata */}
+                <div className="rounded-lg bg-gray-50 border border-gray-200 p-3">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Aggregator</p>
+                  <div className="flex items-center gap-4 text-xs text-gray-700 flex-wrap">
+                    <span className="font-medium">{fusion.aggregator_model}</span>
+                    <span className="text-gray-500">{fusion.aggregator_provider}</span>
+                    {fusion.aggregator_latency_ms != null && (
+                      <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />{fusion.aggregator_latency_ms.toLocaleString()}ms</span>
+                    )}
+                    {fusion.aggregator_cost_usd != null && (
+                      <span className="inline-flex items-center gap-1"><DollarSign className="w-3 h-3" />${Number(fusion.aggregator_cost_usd).toFixed(5)}</span>
+                    )}
+                    {fusion.aggregator_prompt_tokens != null && fusion.aggregator_completion_tokens != null && (
+                      <span>{fusion.aggregator_prompt_tokens.toLocaleString()} in / {fusion.aggregator_completion_tokens.toLocaleString()} out</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Proposer drafts */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-700 mb-3 uppercase tracking-wider">Proposer Drafts ({fusionDrafts.length})</p>
+                  <div className={`grid gap-4 ${fusionDrafts.length === 2 ? 'grid-cols-1 md:grid-cols-2' : fusionDrafts.length >= 3 ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+                    {fusionDrafts.map(draft => {
+                      const color = getModelColor(draft.model_name);
+                      const isFailed = draft.status !== 'success';
+                      return (
+                        <div
+                          key={draft.id}
+                          className={`rounded-lg border-2 p-4 ${
+                            isFailed ? 'border-red-200 bg-red-50' : `${color.border} ${color.bg}`
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${color.bg} ${color.text}`}>
+                              {draft.model_name}
+                            </span>
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wider ${
+                              draft.status === 'success'
+                                ? 'bg-green-100 text-green-700'
+                                : draft.status === 'timeout'
+                                ? 'bg-amber-100 text-amber-700'
+                                : 'bg-red-100 text-red-700'
+                            }`}>
+                              {draft.status}
+                            </span>
+                          </div>
+
+                          {isFailed && draft.error && (
+                            <p className="text-xs text-red-700 mb-2 italic">{draft.error}</p>
+                          )}
+
+                          {draft.status === 'success' && (
+                            <>
+                              <div className="space-y-3">
+                                <ScoreBar
+                                  value={draft.bert_score != null ? Number(draft.bert_score) : null}
+                                  max={1}
+                                  label="BERTScore"
+                                  color="bg-green-500"
+                                />
+                                <ScoreBar
+                                  value={draft.rouge1 != null ? Number(draft.rouge1) : null}
+                                  max={1}
+                                  label="ROUGE-1"
+                                  color="bg-blue-500"
+                                />
+                              </div>
+
+                              <div className="flex items-center gap-3 mt-3 pt-3 border-t border-gray-200 text-xs text-gray-600">
+                                {draft.latency_ms != null && (
+                                  <span className="inline-flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{draft.latency_ms.toLocaleString()}ms</span>
+                                )}
+                                {draft.estimated_cost_usd != null && (
+                                  <span className="inline-flex items-center gap-1"><DollarSign className="w-3.5 h-3.5" />${Number(draft.estimated_cost_usd).toFixed(5)}</span>
+                                )}
+                              </div>
+
+                              <div className="mt-3 pt-3 border-t border-gray-200">
+                                <p className="text-xs text-gray-600 line-clamp-4 whitespace-pre-wrap" title={draft.summary}>
+                                  {draft.summary}
+                                </p>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {fusion.failed_proposers && fusion.failed_proposers.length > 0 && (
+                  <div className="rounded-lg bg-red-50 border border-red-200 p-3">
+                    <p className="text-xs font-semibold text-red-700 mb-1 uppercase tracking-wider">Failed Proposers</p>
+                    <p className="text-xs text-red-700">{fusion.failed_proposers.join(', ')}</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      {fusions.length < total && (
+        <div className="flex justify-center">
+          <button
+            onClick={onShowMore}
+            disabled={loadingMore}
+            className="px-6 py-2 border border-blue-600 text-blue-600 font-medium rounded-md hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[160px]"
+          >
+            {loadingMore ? (
+              <>
+                <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                Loading...
+              </>
+            ) : (
+              `Show More (${total - fusions.length} remaining)`
+            )}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Main component ──────────────────────────────────────────────────
 
 export default function EvaluationDashboard() {
@@ -413,6 +790,15 @@ export default function EvaluationDashboard() {
   const [evalOffset, setEvalOffset] = useState(0);
   const [evalLoading, setEvalLoading] = useState(false);
   const [evalLoadingMore, setEvalLoadingMore] = useState(false);
+
+  // ── Fusion state ──────────────────────────────────────────────────
+  const [fusions, setFusions] = useState<FusionRow[]>([]);
+  const [fusionDrafts, setFusionDrafts] = useState<FusionDraft[]>([]);
+  const [fusionTotal, setFusionTotal] = useState(0);
+  const [fusionOffset, setFusionOffset] = useState(0);
+  const [fusionStats, setFusionStats] = useState<FusionStats | null>(null);
+  const [fusionLoading, setFusionLoading] = useState(false);
+  const [fusionLoadingMore, setFusionLoadingMore] = useState(false);
 
   // ── Evaluation metrics fetch (unchanged) ──────────────────────────
 
@@ -516,6 +902,38 @@ export default function EvaluationDashboard() {
     }
   }, []);
 
+  const fetchFusionData = useCallback(async (currentOffset: number = 0, isInitial: boolean = false) => {
+    if (isInitial) setFusionLoading(true);
+    else setFusionLoadingMore(true);
+
+    try {
+      const params = new URLSearchParams();
+      params.set('view', 'fusion');
+      params.set('limit', LIMIT.toString());
+      params.set('offset', currentOffset.toString());
+
+      const response = await fetch(`/api/metrics?${params}`);
+      const result = await response.json();
+
+      if (isInitial) {
+        setFusions(result.data || []);
+        setFusionDrafts(result.drafts || []);
+      } else {
+        setFusions(prev => [...prev, ...(result.data || [])]);
+        setFusionDrafts(prev => [...prev, ...(result.drafts || [])]);
+      }
+
+      setFusionTotal(result.count || 0);
+      setFusionStats(result.stats || null);
+      setLastUpdated(new Date().toLocaleString());
+    } catch (error) {
+      console.error('Failed to fetch fusion data:', error);
+    } finally {
+      if (isInitial) setFusionLoading(false);
+      else setFusionLoadingMore(false);
+    }
+  }, []);
+
   // ── Effects ───────────────────────────────────────────────────────
 
   // Fetch available models from settings API
@@ -549,6 +967,12 @@ export default function EvaluationDashboard() {
     }
   }, [activeTab, fetchRoutingData, fetchEvalModeData]);
 
+  useEffect(() => {
+    if (activeTab === 'fusion') {
+      fetchFusionData(0, true);
+    }
+  }, [activeTab, fetchFusionData]);
+
   // ── Handlers ──────────────────────────────────────────────────────
 
   const handleShowMore = () => {
@@ -567,6 +991,12 @@ export default function EvaluationDashboard() {
     const nextOffset = evalOffset + LIMIT;
     setEvalOffset(nextOffset);
     fetchEvalModeData(nextOffset, false);
+  };
+
+  const handleFusionShowMore = () => {
+    const nextOffset = fusionOffset + LIMIT;
+    setFusionOffset(nextOffset);
+    fetchFusionData(nextOffset, false);
   };
 
   const applyFilters = () => {
@@ -647,6 +1077,81 @@ export default function EvaluationDashboard() {
     URL.revokeObjectURL(url);
   };
 
+  const exportFusionCsv = () => {
+    const headers = [
+      'Date',
+      'Fusion ID',
+      'Role',
+      'Model',
+      'Provider',
+      'Status',
+      'BERTScore',
+      'ROUGE-1',
+      'ROUGE-2',
+      'ROUGE-L',
+      'BLEU',
+      'Compression (%)',
+      'Latency (ms)',
+      'Cost (USD)',
+      'Summary Excerpt',
+    ];
+
+    const csvRows = [headers.join(',')];
+    const escape = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+
+    for (const f of fusions) {
+      const date = f.created_at ? new Date(f.created_at).toISOString() : '';
+      csvRows.push([
+        date,
+        f.id,
+        'fusion',
+        f.aggregator_model,
+        f.aggregator_provider,
+        'success',
+        f.fused_bert_score ?? '',
+        f.fused_rouge1 ?? '',
+        f.fused_rouge2 ?? '',
+        f.fused_rouge_l ?? '',
+        f.fused_bleu ?? '',
+        f.fused_compression_rate ?? '',
+        f.total_latency_ms ?? '',
+        f.total_cost_usd ?? '',
+        escape((f.fused_summary || '').slice(0, 120)),
+      ].join(','));
+
+      for (const d of fusionDrafts.filter(x => x.fusion_id === f.id)) {
+        csvRows.push([
+          date,
+          f.id,
+          'draft',
+          d.model_name,
+          d.provider,
+          d.status,
+          d.bert_score ?? '',
+          d.rouge1 ?? '',
+          d.rouge2 ?? '',
+          d.rouge_l ?? '',
+          d.bleu ?? '',
+          d.compression_rate ?? '',
+          d.latency_ms ?? '',
+          d.estimated_cost_usd ?? '',
+          escape((d.summary || '').slice(0, 120)),
+        ].join(','));
+      }
+    }
+
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `fusion-results-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   // ── Render ────────────────────────────────────────────────────────
 
   return (
@@ -680,6 +1185,16 @@ export default function EvaluationDashboard() {
             }`}
           >
             Routing
+          </button>
+          <button
+            onClick={() => setActiveTab('fusion')}
+            className={`px-6 py-3 text-sm font-medium transition-colors ${
+              activeTab === 'fusion'
+                ? 'border-b-2 border-black text-black'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Fusion
           </button>
         </div>
 
@@ -1156,6 +1671,93 @@ export default function EvaluationDashboard() {
                     </div>
                   )}
                 </div>
+              </>
+            )}
+          </>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════
+            FUSION TAB (MoA output-fusion runs)
+            ═══════════════════════════════════════════════════════════ */}
+        {activeTab === 'fusion' && (
+          <>
+            {fusionLoading ? (
+              <div className="bg-white shadow-md rounded-lg p-8 text-center">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p className="mt-4 text-gray-600">Loading fusion data...</p>
+              </div>
+            ) : (
+              <>
+                {/* Summary cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <p className="text-sm text-gray-500 mb-1">Total Fusion Runs</p>
+                    <p className="text-3xl font-bold text-gray-900">{fusionStats?.total_runs ?? 0}</p>
+                  </div>
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <p className="text-sm text-gray-500 mb-1">Avg Fused BERTScore</p>
+                    <p className="text-3xl font-bold text-gray-900">
+                      {fusionStats?.avg_bert_score != null ? fusionStats.avg_bert_score.toFixed(4) : '--'}
+                    </p>
+                  </div>
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <p className="text-sm text-gray-500 mb-1">Proposer Success Rate</p>
+                    <p className="text-3xl font-bold text-gray-900">{fusionStats?.proposer_success_rate ?? 0}%</p>
+                  </div>
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <p className="text-sm text-gray-500 mb-1">Most Used Aggregator</p>
+                    {fusionStats?.most_used_aggregator ? (
+                      <>
+                        <p className="text-xl font-bold text-gray-900 truncate" title={fusionStats.most_used_aggregator.model}>
+                          {fusionStats.most_used_aggregator.model}
+                        </p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          {fusionStats.most_used_aggregator.percentage}% ({fusionStats.most_used_aggregator.count} runs)
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-3xl font-bold text-gray-400">--</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Aggregator distribution */}
+                {fusionStats?.aggregator_distribution && fusionStats.aggregator_distribution.length > 0 && (
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Aggregator Distribution</h2>
+                    <div className="space-y-3">
+                      {fusionStats.aggregator_distribution.map((item, idx) => (
+                        <div key={item.model}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-sm font-medium text-gray-700">{item.model}</span>
+                            <span className="text-sm text-gray-500">{item.count} ({item.percentage}%)</span>
+                          </div>
+                          <div className="w-full bg-gray-100 rounded-full h-3">
+                            <div
+                              className={`h-3 rounded-full ${BAR_COLORS[idx % BAR_COLORS.length]}`}
+                              style={{ width: `${Math.max(item.percentage, 1)}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {fusions.length === 0 ? (
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center text-gray-500 text-sm">
+                    No fusion runs yet. Run summarization with routing mode &quot;fusion&quot; to see MoA pipeline results here.
+                  </div>
+                ) : (
+                  <FusionResults
+                    fusions={fusions}
+                    drafts={fusionDrafts}
+                    total={fusionTotal}
+                    loadingMore={fusionLoadingMore}
+                    onShowMore={handleFusionShowMore}
+                    onExportCsv={exportFusionCsv}
+                  />
+                )}
               </>
             )}
           </>
