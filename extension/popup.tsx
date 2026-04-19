@@ -36,32 +36,17 @@ const Popup: React.FC = () => {
           </div>
         </Card>
 
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              if (typeof chrome !== "undefined" && chrome.runtime?.openOptionsPage) {
-                chrome.runtime.openOptionsPage()
-              }
-            }}
-          >
-            Cài đặt
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              if (typeof chrome !== "undefined" && chrome.tabs?.create) {
-                chrome.tabs.create({
-                  url: chrome.runtime.getURL("tabs/debug.html"),
-                })
-              }
-            }}
-          >
-            Debug
-          </Button>
-        </div>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => {
+            if (typeof chrome !== "undefined" && chrome.runtime?.openOptionsPage) {
+              chrome.runtime.openOptionsPage()
+            }
+          }}
+        >
+          Cài đặt
+        </Button>
 
         <div className="pt-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">

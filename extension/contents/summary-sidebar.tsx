@@ -2,10 +2,9 @@ import React, { useEffect, useState, useCallback, useRef } from "react"
 import { Readability } from "@mozilla/readability"
 import type { PlasmoCSConfig } from "plasmo"
 import cssText from "data-text:~/contents/style.css"
-import { summarizeArticle, summarizeArticleStream } from "~/lib/api-client"
+import { summarizeArticleStream } from "~/lib/api-client"
 import type { PageContext } from "~/lib/types"
 import { loadSettings, DEFAULT_SETTINGS, type FiberSettings } from "~/lib/settings"
-import { FUSION_STORAGE_KEY } from "~/lib/fusion-types"
 import { Card } from "~/components/ui/Card"
 import { Button } from "~/components/ui/Button"
 import { Skeleton } from "~/components/ui/Skeleton"
@@ -186,57 +185,6 @@ const SummarySidebar: React.FC = () => {
       // article is guaranteed non-null here (we threw or assigned fallback above)
       const articleText: string = article!.textContent!
       const settings = settingsRef.current
-
-      if (settings.routingMode === "fusion") {
-        // Fusion mode is non-streaming — wait for full response then render.
-        const response = await summarizeArticle(articleText, {
-          context: contextRef.current || undefined,
-          url: window.location.href,
-          routingMode: "fusion",
-          fusionConfig: {
-            proposerModels: settings.fusion.proposerModels,
-            aggregatorModel: settings.fusion.aggregatorModel,
-            timeoutMs: settings.fusion.timeoutMs,
-          },
-        })
-        setStreamingText(response.summary)
-        setCategory(response.category || null)
-        setReadingTime(response.readingTime || null)
-        setIsStreaming(false)
-        if (response.fusion) {
-          // Make the fusion trace available to the debug page (Phase 4).
-          try {
-            ;(globalThis as any).__fiberLastFusion = response.fusion
-            if (
-              typeof chrome !== "undefined" &&
-              chrome.storage &&
-              chrome.storage.local
-            ) {
-              chrome.storage.local.set({
-                [FUSION_STORAGE_KEY]: {
-                  result: response.fusion,
-                  capturedAt: Date.now(),
-                  articleUrl: window.location.href,
-                  articleTitle: document.title,
-                },
-              })
-            }
-            if (
-              typeof chrome !== "undefined" &&
-              chrome.runtime &&
-              typeof chrome.runtime.sendMessage === "function"
-            ) {
-              chrome.runtime.sendMessage({
-                type: "fiber:last-fusion",
-                payload: response.fusion,
-              })
-            }
-          } catch (broadcastErr) {
-            console.warn("[SummarySidebar] Could not broadcast fusion result:", broadcastErr)
-          }
-        }
-        return
-      }
 
       setIsStreaming(true)
 
