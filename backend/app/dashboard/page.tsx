@@ -137,7 +137,7 @@ function DashboardContent() {
             <div className="text-2xl font-bold text-gray-900">
               {stats?.total_actions?.toLocaleString() || 0}
             </div>
-            <div className="text-sm text-gray-500 mt-1">Total Actions</div>
+            <div className="text-sm text-gray-500 mt-1">Total Requests</div>
           </div>
 
           {/* Total Tokens */}
@@ -176,7 +176,7 @@ function DashboardContent() {
             <div className="text-2xl font-bold text-gray-900">
               {stats?.actions_today || 0}
             </div>
-            <div className="text-sm text-gray-500 mt-1">Actions Today</div>
+            <div className="text-sm text-gray-500 mt-1">Requests Today</div>
           </div>
         </div>
 
@@ -188,7 +188,7 @@ function DashboardContent() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search actions by content, website, or type..."
+                placeholder="Search requests by content, website, or type..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm"

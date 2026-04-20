@@ -60,27 +60,22 @@ interface ModelAvailability {
 
 const ROUTING_MODE_INFO: Record<RoutingMode, { label: string; description: string }> = {
   auto: {
-    label: "Auto",
-    description: "System picks model based on article complexity",
+    label: "Auto (complexity-based)",
+    description: "Short articles route to ViT5, long ones to GPT-4o, medium falls through to GPT-4o. Stats on the Evaluation Mode → Routing Telemetry panel.",
   },
   evaluation: {
-    label: "Evaluation",
-    description: "Run all models, pick best (slower, for research)",
+    label: "Evaluation Mode",
+    description: "Run every configured model in parallel, score each summary with BERTScore, return the winner. Results appear under Metrics → Evaluation Mode.",
   },
   forced: {
-    label: "Forced",
-    description: "Use the currently active model (existing behavior)",
+    label: "Forced (single model)",
+    description: "Always use the model marked Active above. This is the default; skip routing entirely.",
   },
   fusion: {
-    label: "Fusion (MoA)",
-    description: "Run N proposers in parallel, aggregate into a single answer",
+    label: "Fusion (Mixture-of-Agents)",
+    description: "Run 2–5 proposer models in parallel, then an aggregator fuses their drafts into one summary. Results appear under Metrics → Fusion (MoA).",
   },
 }
-
-const ROUTING_MODELS = [
-  { name: "ViT5-large", key: "hf" },
-  { name: "GPT-4o", key: "openai" },
-] as const
 
 function formatContextWindow(tokens: number): string {
   if (tokens >= 1_000_000) return `${(tokens / 1_000_000).toFixed(tokens % 1_000_000 === 0 ? 0 : 1)}M`
@@ -377,9 +372,9 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Model Settings</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
         <p className="text-gray-600 mb-8">
-          Configure the active LLM provider and model
+          Pick the active LLM, tune its generation parameters, and choose how incoming summarization requests get routed (forced, auto, evaluation, or fusion).
         </p>
 
         {/* Feedback messages */}
@@ -723,41 +718,15 @@ export default function SettingsPage() {
                 </div>
               )}
 
-              {/* Available Models for Routing */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Available Models for Routing
-                </label>
-                <div className="space-y-2">
-                  {ROUTING_MODELS.map(model => {
-                    const isAvailable = model.key === "openai" ? true : routingConfig.hf_available
-
-                    return (
-                      <div
-                        key={model.name}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100"
-                      >
-                        <span className="text-sm font-medium text-gray-900">{model.name}</span>
-                        {isAvailable ? (
-                          <span className="flex items-center gap-1.5 text-sm text-green-600">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                            Available
-                          </span>
-                        ) : (
-                          <span className="flex items-center gap-1.5 text-sm text-gray-400">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
-                            Unavailable (HF_API_KEY not set)
-                          </span>
-                        )}
-                      </div>
-                    )
-                  })}
+              {/* HuggingFace availability hint — affects Auto/Evaluation modes */}
+              {!routingConfig.hf_available && (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <p className="text-xs text-amber-800">
+                    <span className="font-semibold">HuggingFace unavailable:</span> set <code className="font-mono bg-amber-100 px-1 rounded">HF_API_KEY</code> to enable ViT5-large.
+                    Auto mode will fall back to GPT-4o for short articles; Evaluation mode will skip HF models.
+                  </p>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>

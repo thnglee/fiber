@@ -1168,33 +1168,36 @@ export default function EvaluationDashboard() {
         <div className="flex border-b border-gray-200 mb-6">
           <button
             onClick={() => setActiveTab('evaluation')}
+            title="ROUGE / BLEU / BERTScore per summarization request"
             className={`px-6 py-3 text-sm font-medium transition-colors ${
               activeTab === 'evaluation'
                 ? 'border-b-2 border-black text-black'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            Evaluation Metrics
+            Requests
           </button>
           <button
             onClick={() => setActiveTab('routing')}
+            title="Evaluation mode: models compete on the same article, the highest-scoring summary is selected"
             className={`px-6 py-3 text-sm font-medium transition-colors ${
               activeTab === 'routing'
                 ? 'border-b-2 border-black text-black'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            Routing
+            Evaluation Mode
           </button>
           <button
             onClick={() => setActiveTab('fusion')}
+            title="Mixture-of-Agents: proposer drafts aggregated into a single fused summary"
             className={`px-6 py-3 text-sm font-medium transition-colors ${
               activeTab === 'fusion'
                 ? 'border-b-2 border-black text-black'
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            Fusion
+            Fusion (MoA)
           </button>
         </div>
 
@@ -1471,97 +1474,28 @@ export default function EvaluationDashboard() {
         )}
 
         {/* ═══════════════════════════════════════════════════════════
-            ROUTING TAB
+            EVALUATION MODE TAB — models compete on the same article,
+            the highest-scoring summary is selected.
             ═══════════════════════════════════════════════════════════ */}
         {activeTab === 'routing' && (
           <>
-            {routingLoading ? (
+            {/* Tab subtitle */}
+            <div className="mb-6">
+              <p className="text-sm text-gray-600">
+                Each card below is one article summarized by <span className="font-medium">multiple models in parallel</span>.
+                The winner (highest BERTScore) is returned to the client; the rest are kept for comparison.
+              </p>
+            </div>
+
+            {routingLoading || evalLoading ? (
               <div className="bg-white shadow-md rounded-lg p-8 text-center">
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <p className="mt-4 text-gray-600">Loading routing data...</p>
+                <p className="mt-4 text-gray-600">Loading evaluation-mode data...</p>
               </div>
             ) : (
               <>
-                {/* Summary Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                  {/* Total Routed Requests */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <p className="text-sm text-gray-500 mb-1">Total Routed Requests</p>
-                    <p className="text-3xl font-bold text-gray-900">
-                      {routingStats?.total_decisions ?? 0}
-                    </p>
-                  </div>
-
-                  {/* Fallback Rate */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <p className="text-sm text-gray-500 mb-1">Fallback Rate</p>
-                    <p className="text-3xl font-bold text-gray-900">
-                      {routingStats?.fallback_rate ?? 0}%
-                    </p>
-                  </div>
-
-                  {/* Avg BERTScore (best model) */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <p className="text-sm text-gray-500 mb-1">Best Avg BERTScore</p>
-                    {routingStats?.avg_bert_scores && routingStats.avg_bert_scores.length > 0 ? (
-                      <>
-                        <p className="text-3xl font-bold text-gray-900">
-                          {routingStats.avg_bert_scores[0].avg_bert_score.toFixed(4)}
-                        </p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          {routingStats.avg_bert_scores[0].model}
-                        </p>
-                      </>
-                    ) : (
-                      <p className="text-3xl font-bold text-gray-400">--</p>
-                    )}
-                  </div>
-
-                  {/* Most Used Model */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <p className="text-sm text-gray-500 mb-1">Most Used Model</p>
-                    {routingStats?.most_used_model ? (
-                      <>
-                        <p className="text-xl font-bold text-gray-900 truncate" title={routingStats.most_used_model.model}>
-                          {routingStats.most_used_model.model}
-                        </p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          {routingStats.most_used_model.percentage}% ({routingStats.most_used_model.count} requests)
-                        </p>
-                      </>
-                    ) : (
-                      <p className="text-3xl font-bold text-gray-400">--</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Model Distribution */}
-                {routingStats?.model_distribution && routingStats.model_distribution.length > 0 && (
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Model Distribution</h2>
-                    <div className="space-y-3">
-                      {routingStats.model_distribution.map((item, idx) => (
-                        <div key={item.model}>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-sm font-medium text-gray-700">{item.model}</span>
-                            <span className="text-sm text-gray-500">
-                              {item.count} ({item.percentage}%)
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-100 rounded-full h-3">
-                            <div
-                              className={`h-3 rounded-full ${BAR_COLORS[idx % BAR_COLORS.length]}`}
-                              style={{ width: `${Math.max(item.percentage, 1)}%` }}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Evaluation Mode Results — Grouped by routing decision */}
-                {!evalLoading && evalComparisons.length > 0 && (
+                {/* PRIMARY CONTENT — Competition cards, front and center */}
+                {evalComparisons.length > 0 ? (
                   <EvalModeGroupedResults
                     evalDecisions={evalDecisions}
                     evalComparisons={evalComparisons}
@@ -1570,30 +1504,103 @@ export default function EvaluationDashboard() {
                     onShowMore={handleEvalShowMore}
                     onExportCsv={exportEvalComparisonsCsv}
                   />
-                )}
-
-                {/* Empty state for evaluation mode */}
-                {!evalLoading && evalComparisons.length === 0 && routingDecisions.length > 0 && (
+                ) : (
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center text-gray-500 text-sm">
-                    No evaluation mode results found. Run summarization with routing_mode &quot;evaluation&quot; to see model comparisons here.
+                    No evaluation-mode runs yet. In Debug or Settings, set routing mode to <span className="font-mono">evaluation</span> and run a summarization to see model-vs-model comparisons here.
                   </div>
                 )}
 
-                {/* Recent Routing Decisions */}
-                <div className="mt-8">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Routing Decisions</h2>
-
-                  {routingDecisions.length === 0 ? (
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center text-gray-500 text-sm">
-                      No routing data available yet. Routing decisions will appear here when summarization requests use routing mode (auto or evaluation).
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <p className="text-sm text-gray-500">
-                        Showing {routingDecisions.length} of {routingTotal} decisions
+                {/* SECONDARY — Routing telemetry (all modes combined) collapsed */}
+                <details className="mt-10 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden group">
+                  <summary className="cursor-pointer px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors list-none">
+                    <div>
+                      <h2 className="text-base font-semibold text-gray-900">Routing Telemetry</h2>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        Aggregate stats across all routing modes (auto, evaluation, forced, fusion).
                       </p>
+                    </div>
+                    <ChevronDown className="w-5 h-5 text-gray-400 transition-transform group-open:rotate-180" />
+                  </summary>
 
-                      {routingDecisions.map((d) => {
+                  <div className="px-6 pb-6 pt-2 border-t border-gray-100">
+                    {/* Summary Cards */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 mt-4">
+                      <div className="bg-gray-50 rounded-lg border border-gray-200 p-5">
+                        <p className="text-xs text-gray-500 mb-1">Total Routed Requests</p>
+                        <p className="text-2xl font-bold text-gray-900">{routingStats?.total_decisions ?? 0}</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg border border-gray-200 p-5">
+                        <p className="text-xs text-gray-500 mb-1">Fallback Rate</p>
+                        <p className="text-2xl font-bold text-gray-900">{routingStats?.fallback_rate ?? 0}%</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg border border-gray-200 p-5">
+                        <p className="text-xs text-gray-500 mb-1">Best Avg BERTScore</p>
+                        {routingStats?.avg_bert_scores && routingStats.avg_bert_scores.length > 0 ? (
+                          <>
+                            <p className="text-2xl font-bold text-gray-900">
+                              {routingStats.avg_bert_scores[0].avg_bert_score.toFixed(4)}
+                            </p>
+                            <p className="text-xs text-gray-400 mt-1">{routingStats.avg_bert_scores[0].model}</p>
+                          </>
+                        ) : (
+                          <p className="text-2xl font-bold text-gray-400">--</p>
+                        )}
+                      </div>
+                      <div className="bg-gray-50 rounded-lg border border-gray-200 p-5">
+                        <p className="text-xs text-gray-500 mb-1">Most Used Model</p>
+                        {routingStats?.most_used_model ? (
+                          <>
+                            <p className="text-base font-bold text-gray-900 truncate" title={routingStats.most_used_model.model}>
+                              {routingStats.most_used_model.model}
+                            </p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              {routingStats.most_used_model.percentage}% ({routingStats.most_used_model.count} requests)
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-2xl font-bold text-gray-400">--</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Model Distribution */}
+                    {routingStats?.model_distribution && routingStats.model_distribution.length > 0 && (
+                      <div className="mb-6">
+                        <h3 className="text-sm font-semibold text-gray-700 mb-3">Model Distribution</h3>
+                        <div className="space-y-3">
+                          {routingStats.model_distribution.map((item, idx) => (
+                            <div key={item.model}>
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-sm font-medium text-gray-700">{item.model}</span>
+                                <span className="text-sm text-gray-500">
+                                  {item.count} ({item.percentage}%)
+                                </span>
+                              </div>
+                              <div className="w-full bg-gray-100 rounded-full h-3">
+                                <div
+                                  className={`h-3 rounded-full ${BAR_COLORS[idx % BAR_COLORS.length]}`}
+                                  style={{ width: `${Math.max(item.percentage, 1)}%` }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Recent Routing Decisions */}
+                    <h3 className="text-sm font-semibold text-gray-700 mb-3 mt-6">Recent Routing Decisions</h3>
+                    {routingDecisions.length === 0 ? (
+                      <div className="bg-gray-50 rounded-lg border border-gray-200 p-6 text-center text-gray-500 text-sm">
+                        No routing decisions recorded yet.
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <p className="text-xs text-gray-500">
+                          Showing {routingDecisions.length} of {routingTotal} decisions
+                        </p>
+
+                        {routingDecisions.map((d) => {
                         const modelColor = getModelColor(d.selected_model);
                         return (
                           <div key={d.id} className="bg-white rounded-xl shadow-sm border border-gray-200 hover:border-gray-300 transition-colors px-5 py-4">
@@ -1670,7 +1677,8 @@ export default function EvaluationDashboard() {
                       )}
                     </div>
                   )}
-                </div>
+                  </div>
+                </details>
               </>
             )}
           </>

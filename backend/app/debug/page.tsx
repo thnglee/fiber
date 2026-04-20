@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 
 interface ModelOption {
   model_name: string
@@ -27,15 +27,6 @@ interface RoutingInfo {
   complexity: string
   fallback_used: boolean
   candidates?: RoutingCandidate[]
-}
-
-interface RoutingStats {
-  days: number
-  total_decisions: number
-  model_distribution: Array<{ model: string; count: number; percentage: number }>
-  complexity_breakdown: Array<{ complexity: string; count: number; percentage: number }>
-  fallback_rates: Array<{ model: string; total: number; fallbacks: number; rate: number }>
-  avg_bert_scores: Array<{ model: string; avg_bert_score: number; count: number }>
 }
 
 type RoutingMode = "forced" | "auto" | "evaluation" | "fusion"
@@ -129,12 +120,6 @@ export default function DebugPage() {
   const [fusionProposers, setFusionProposers] = useState<string[]>([])
   const [fusionAggregator, setFusionAggregator] = useState<string>("")
 
-  // Routing Stats state
-  const [routingStatsExpanded, setRoutingStatsExpanded] = useState(false)
-  const [routingStats, setRoutingStats] = useState<RoutingStats | null>(null)
-  const [routingStatsLoading, setRoutingStatsLoading] = useState(false)
-  const [routingStatsError, setRoutingStatsError] = useState<string | null>(null)
-
   useEffect(() => {
     fetch("/api/settings")
       .then((res) => res.json())
@@ -168,29 +153,6 @@ export default function DebugPage() {
       })
       .catch(() => {})
   }, [])
-
-  const fetchRoutingStats = useCallback(async () => {
-    setRoutingStatsLoading(true)
-    setRoutingStatsError(null)
-    try {
-      const response = await fetch("/api/routing/stats?days=7")
-      if (!response.ok) {
-        throw new Error("Failed to fetch routing stats")
-      }
-      const data = await response.json()
-      setRoutingStats(data)
-    } catch (err) {
-      setRoutingStatsError(err instanceof Error ? err.message : "Unknown error")
-    } finally {
-      setRoutingStatsLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (routingStatsExpanded && !routingStats && !routingStatsLoading) {
-      fetchRoutingStats()
-    }
-  }, [routingStatsExpanded, routingStats, routingStatsLoading, fetchRoutingStats])
 
   const handleSummarize = async () => {
     setSummaryLoading(true)
@@ -332,9 +294,9 @@ export default function DebugPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Debug Interface</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Debug</h1>
         <p className="text-gray-600 mb-8">
-          Test and inspect intermediate results for Summary and Fact-Check features
+          Run ad-hoc Summarize, Fact-Check, and Evaluation-metric requests end-to-end, with full inspection of every intermediate step (extracted content, prompt, LLM response, routing decision, fusion drafts, ROUGE/BLEU/BERT scores).
         </p>
 
         {/* Routing Mode Selector */}
@@ -1162,166 +1124,6 @@ export default function DebugPage() {
             </div>
           </div>
 
-          {/* Routing Stats Mini-Dashboard */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 lg:col-span-2">
-            <button
-              onClick={() => setRoutingStatsExpanded(!routingStatsExpanded)}
-              className="w-full flex items-center justify-between"
-            >
-              <h2 className="text-xl font-semibold text-gray-900">Routing Stats</h2>
-              <svg
-                className={`w-5 h-5 text-gray-500 transition-transform ${routingStatsExpanded ? "rotate-180" : ""}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {routingStatsExpanded && (
-              <div className="mt-4">
-                {routingStatsLoading && (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="text-sm text-gray-500">Loading routing stats...</div>
-                  </div>
-                )}
-
-                {routingStatsError && (
-                  <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-sm text-red-700">{routingStatsError}</p>
-                    <button
-                      onClick={fetchRoutingStats}
-                      className="mt-2 text-xs text-red-600 underline hover:text-red-800"
-                    >
-                      Retry
-                    </button>
-                  </div>
-                )}
-
-                {routingStats && !routingStatsLoading && (
-                  <div className="space-y-6">
-                    <p className="text-xs text-gray-500">
-                      Last {routingStats.days} days — {routingStats.total_decisions} total routing decisions
-                    </p>
-
-                    {/* Model Distribution */}
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                        Model Distribution
-                      </h3>
-                      {routingStats.model_distribution.length === 0 ? (
-                        <p className="text-sm text-gray-400">No data available</p>
-                      ) : (
-                        <div className="space-y-2">
-                          {routingStats.model_distribution.map((item) => (
-                            <div key={item.model} className="flex items-center gap-3">
-                              <span className="text-xs text-gray-700 w-32 truncate font-medium" title={item.model}>
-                                {item.model}
-                              </span>
-                              <div className="flex-1 bg-gray-100 rounded-full h-5 overflow-hidden">
-                                <div
-                                  className="bg-gray-800 h-full rounded-full transition-all"
-                                  style={{ width: `${Math.max(item.percentage, 2)}%` }}
-                                />
-                              </div>
-                              <span className="text-xs text-gray-500 w-16 text-right">
-                                {item.percentage.toFixed(1)}% ({item.count})
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Complexity Breakdown */}
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                        Complexity Breakdown
-                      </h3>
-                      <div className="grid grid-cols-3 gap-4">
-                        {["short", "medium", "long"].map((level) => {
-                          const item = routingStats.complexity_breakdown.find(
-                            (c) => c.complexity === level
-                          )
-                          const colorMap: Record<string, string> = {
-                            short: "bg-green-50 border-green-200 text-green-700",
-                            medium: "bg-yellow-50 border-yellow-200 text-yellow-700",
-                            long: "bg-red-50 border-red-200 text-red-700",
-                          }
-                          return (
-                            <div
-                              key={level}
-                              className={`p-4 rounded-lg border text-center ${colorMap[level]}`}
-                            >
-                              <div className="text-xs font-semibold uppercase mb-1">
-                                {level}
-                              </div>
-                              <div className="text-2xl font-bold">
-                                {item ? `${item.percentage.toFixed(1)}%` : "0%"}
-                              </div>
-                              <div className="text-xs mt-1">
-                                {item ? `${item.count} requests` : "0 requests"}
-                              </div>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Fallback Rates */}
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                        Fallback Rate by Model
-                      </h3>
-                      {routingStats.fallback_rates.length === 0 ? (
-                        <p className="text-sm text-gray-400">No data available</p>
-                      ) : (
-                        <div className="overflow-x-auto">
-                          <table className="w-full text-xs">
-                            <thead>
-                              <tr className="border-b border-gray-200">
-                                <th className="px-3 py-2 text-left font-semibold text-gray-600">Model</th>
-                                <th className="px-3 py-2 text-right font-semibold text-gray-600">Total</th>
-                                <th className="px-3 py-2 text-right font-semibold text-gray-600">Fallbacks</th>
-                                <th className="px-3 py-2 text-right font-semibold text-gray-600">Rate</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {routingStats.fallback_rates.map((item) => (
-                                <tr key={item.model} className="border-b border-gray-100">
-                                  <td className="px-3 py-2 font-medium text-gray-900">{item.model}</td>
-                                  <td className="px-3 py-2 text-right text-gray-700">{item.total}</td>
-                                  <td className="px-3 py-2 text-right text-gray-700">{item.fallbacks}</td>
-                                  <td className="px-3 py-2 text-right">
-                                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                                      item.rate > 0.5
-                                        ? "bg-red-50 text-red-700"
-                                        : item.rate > 0.2
-                                        ? "bg-yellow-50 text-yellow-700"
-                                        : "bg-green-50 text-green-700"
-                                    }`}>
-                                      {(item.rate * 100).toFixed(1)}%
-                                    </span>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {!routingStats && !routingStatsLoading && !routingStatsError && (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="text-sm text-gray-400">No routing stats loaded yet.</div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
         </div>
 
       </div>

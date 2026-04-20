@@ -54,8 +54,8 @@ export function ActionLogsTable({ initialActions, total, loading = false }: Acti
     return (
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
             <div className="px-4 py-4 border-b border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-900">Action Logs</h2>
-                <p className="text-sm text-gray-500 mt-1">{total} total actions</p>
+                <h2 className="text-xl font-semibold text-gray-900">Request Logs</h2>
+                <p className="text-sm text-gray-500 mt-1">{total} total requests</p>
             </div>
 
             <div className="overflow-x-auto">
@@ -332,13 +332,13 @@ export function ActionLogsTable({ initialActions, total, loading = false }: Acti
             {loading && actions.length === 0 && (
                 <div className="bg-white p-8 text-center">
                     <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                    <p className="mt-4 text-gray-600">Loading actions...</p>
+                    <p className="mt-4 text-gray-600">Loading requests...</p>
                 </div>
             )}
 
             {!loading && actions.length === 0 && (
                 <div className="px-4 py-8 bg-white text-sm text-center text-gray-500">
-                    No actions found. Start using the extension to see data here.
+                    No requests found. Start using the extension to see data here.
                 </div>
             )}
         </div>
