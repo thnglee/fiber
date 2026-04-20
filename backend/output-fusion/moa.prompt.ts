@@ -1,4 +1,3 @@
-const ARTICLE_CHAR_LIMIT = 10_000
 const DRAFT_CHAR_LIMIT = 3_000
 
 export interface AggregatorDraft {
@@ -7,45 +6,32 @@ export interface AggregatorDraft {
 }
 
 export function buildAggregatorPrompt(
-  originalArticle: string,
+  _originalArticle: string,
   drafts: AggregatorDraft[],
 ): string {
-  const articlePreview =
-    originalArticle.length > ARTICLE_CHAR_LIMIT
-      ? originalArticle.substring(0, ARTICLE_CHAR_LIMIT)
-      : originalArticle
-
   const draftBlocks = drafts
     .map((draft, index) => {
       const trimmed =
         draft.summary.length > DRAFT_CHAR_LIMIT
           ? draft.summary.substring(0, DRAFT_CHAR_LIMIT)
           : draft.summary
-      return `Bản tóm tắt #${index + 1} — mô hình: ${draft.model_name}\n"""\n${trimmed}\n"""`
+      return `${index + 1}. [Mô hình ${draft.model_name}]\n"""\n${trimmed}\n"""`
     })
     .join("\n\n")
 
-  return `Bạn là một biên tập viên báo chí cao cấp tại một toà soạn lớn ở Việt Nam. Nhiệm vụ của bạn là tổng hợp nhiều bản tóm tắt được các mô hình AI khác nhau đề xuất thành một bản tóm tắt cuối cùng duy nhất, chất lượng cao nhất.
+  return `Bạn đã được cung cấp một tập các bản tóm tắt do nhiều mô hình ngôn ngữ khác nhau đề xuất cho cùng một bài báo tiếng Việt. Nhiệm vụ của bạn là tổng hợp các bản tóm tắt này thành một bản tóm tắt cuối cùng duy nhất, chất lượng cao nhất.
 
-Nguyên tắc tổng hợp:
-1. Giữ lại những thông tin có mặt trong bài báo gốc và được nhiều bản tóm tắt đồng thuận.
-2. Loại bỏ thông tin mâu thuẫn, sai lệch, hoặc không xuất hiện trong bài báo gốc (tránh "bịa đặt").
-3. Ưu tiên cách diễn đạt mạch lạc, chính xác và trung lập của báo chí Việt Nam.
-4. Không sao chép nguyên văn một bản tóm tắt; hãy tổng hợp các ý tốt nhất.
-5. Bản tóm tắt cuối cùng phải bám sát nội dung bài báo gốc, không đưa thêm quan điểm cá nhân.
+Điều quan trọng là phải đánh giá có phản biện những thông tin trong các bản tóm tắt được đề xuất, nhận thức rằng một số thông tin có thể bị thiên lệch hoặc sai lệch. Bản tóm tắt của bạn KHÔNG nên chỉ sao chép nguyên văn các bản tóm tắt được đưa ra; thay vào đó hãy đưa ra một câu trả lời đã được tinh chỉnh, chính xác và toàn diện. Đảm bảo bản tóm tắt có cấu trúc tốt, mạch lạc, trung lập theo phong cách báo chí Việt Nam, và tuân thủ tiêu chuẩn cao nhất về độ chính xác và độ tin cậy.
 
-Bài báo gốc (nguồn sự thật duy nhất):
-"""
-${articlePreview}
-"""
+Yêu cầu về độ dài: cô đọng, tối đa 150 từ.
 
-Các bản tóm tắt đề xuất từ những mô hình khác nhau:
+Các bản tóm tắt do các mô hình đề xuất:
 ${draftBlocks}
 
-Hãy tạo bản tóm tắt cuối cùng dựa trên các nguyên tắc trên, sau đó phân loại và ước tính thời gian đọc.
+Sau khi tổng hợp, hãy phân loại bài viết và ước tính thời gian đọc.
 
 Yêu cầu đầu ra (JSON có cấu trúc, đúng schema):
-- summary: Tóm tắt cuối cùng (2–3 đoạn văn ngắn, tiếng Việt, trung lập, chính xác).
+- summary: Bản tóm tắt tổng hợp cuối cùng (tiếng Việt, tối đa 150 từ).
 - category: Thể loại chính của bài viết. Nếu phù hợp, dùng một trong các giá trị sau:
   * Chính trị - Xã hội
   * Kinh tế - Tài chính

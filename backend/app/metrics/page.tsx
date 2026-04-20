@@ -649,17 +649,16 @@ function FusionResults({
                   <p className="text-xs font-semibold text-gray-700 mb-3 uppercase tracking-wider">Proposer Drafts ({fusionDrafts.length})</p>
                   <div className={`grid gap-4 ${fusionDrafts.length === 2 ? 'grid-cols-1 md:grid-cols-2' : fusionDrafts.length >= 3 ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
                     {fusionDrafts.map(draft => {
-                      const color = getModelColor(draft.model_name);
                       const isFailed = draft.status !== 'success';
                       return (
                         <div
                           key={draft.id}
-                          className={`rounded-lg border-2 p-4 ${
-                            isFailed ? 'border-red-200 bg-red-50' : `${color.border} ${color.bg}`
+                          className={`rounded-lg border p-4 ${
+                            isFailed ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-white'
                           }`}
                         >
                           <div className="flex items-center justify-between mb-3">
-                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${color.bg} ${color.text}`}>
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
                               {draft.model_name}
                             </span>
                             <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wider ${

@@ -85,6 +85,7 @@ const PROPOSERS = getArg("models", DEFAULT_PROPOSERS.join(","))
 const AGGREGATOR = getArg("aggregator", "gpt-4o")
 const TIMEOUT_MS = getIntArg("timeout", 300_000)
 const LIMIT = getIntArg("limit", 0)
+const SKIP_FORCED = args.includes("--skip-forced")
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -464,6 +465,7 @@ async function main() {
   console.log(`Articles:    ${urls.length}`)
   console.log(`Proposers:   ${PROPOSERS.join(", ")}`)
   console.log(`Aggregator:  ${AGGREGATOR}`)
+  console.log(`Skip forced: ${SKIP_FORCED}`)
   console.log("=".repeat(70))
 
   const startedAt = new Date().toISOString()
@@ -477,20 +479,22 @@ async function main() {
     // Run forced passes sequentially so we don't blow up the upstream rate
     // limits. Could be parallelised if the backend is generous.
     const forcedRuns: ForcedRun[] = []
-    for (const model of PROPOSERS) {
-      process.stdout.write(`  forced/${model} … `)
-      const run = await runForced(url, model)
-      if (run.error) {
-        console.log(`✗ ${run.error}`)
-      } else {
-        console.log(
-          `✓ ${run.latency_ms}ms · BERT ${fmt(run.bert_score, 4)} · ROUGE-1 ${fmt(
-            run.rouge1,
-            4,
-          )}`,
-        )
+    if (!SKIP_FORCED) {
+      for (const model of PROPOSERS) {
+        process.stdout.write(`  forced/${model} … `)
+        const run = await runForced(url, model)
+        if (run.error) {
+          console.log(`✗ ${run.error}`)
+        } else {
+          console.log(
+            `✓ ${run.latency_ms}ms · BERT ${fmt(run.bert_score, 4)} · ROUGE-1 ${fmt(
+              run.rouge1,
+              4,
+            )}`,
+          )
+        }
+        forcedRuns.push(run)
       }
-      forcedRuns.push(run)
     }
 
     process.stdout.write(`  fusion … `)
