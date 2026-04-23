@@ -119,3 +119,130 @@ tuoitre.vn, thanhnien.vn, vietnamnet.vn, laodong.vn, tienphong.vn, vtv.vn, nld.c
 - BERTScore input is truncated to 256 tokens before calling the microservice
 - Supabase service role key is server-side only via `getSupabaseAdmin()`
 - Evaluation datasets stored in `metrics_reports/` across 5 topic categories: thoi_su, phap_luat, kinh_te, giao_duc, van_hoa
+
+## Output Fusion (MoA) — Open Investigation
+
+**Status:** Shipped on `main` (PRs #32, #33, tuning commit `0b00421`). Quality is NOT improving as the paper claims. Experimental branch `fix/moa-aggregator-source-prompt` tried the "inject the original article into the aggregator prompt" hypothesis and **falsified** it — see three-way results below.
+
+**Source of truth:** `fusion.pdf` (Wang et al., 2024, arXiv:2406.04692) and `fusion_PRD.md`.
+
+### Three-way batch comparison (3 OpenAI proposers + gpt-4o aggregator, 50 tienphong.vn articles)
+
+| Metric | **Baseline** (no source in agg) | v1 (strict source rules) | v2 (soft source reference) |
+|--------|---------------------------------|--------------------------|-----------------------------|
+| N | 48 | 49 | 49 |
+| Fused BERT | 0.6387 | 0.6233 | 0.6143 |
+| Best-draft BERT | 0.6506 | 0.6541 | 0.6525 |
+| Fused − Best BERT | **−0.0118** | −0.0308 | −0.0382 |
+| Fused ROUGE-1 | 0.3442 | 0.2349 | 0.2396 |
+| Fused ROUGE-L | 0.2551 | 0.1842 | 0.1822 |
+| Fused BLEU | 0.0708 | 0.0273 | 0.0277 |
+| Fused length (% of article) | 35.6 | 24.2 | 24.7 |
+| Avg-draft length (% of article) | 29.2 | 28.8 | 28.9 |
+| Wins vs best-draft BERT | 17/48 (35%) | 3/49 (6%) | 1/49 (2%) |
+| Wins vs best-draft ROUGE-1 | 24/48 (50%) | 0/49 | 0/49 |
+
+**Evidence files** (checked into `metrics_reports/results/`):
+- `fusion-batch-50.{json,md}` — baseline
+- `fusion-batch-50-with-source.{json,md}` — v1 strict (experimental branch)
+- `fusion-batch-50-source-v2.{json,md}` — v2 soft (experimental branch)
+
+### Key finding — the "missing article" bug was not actually a bug
+
+The mere presence of the article in the aggregator's context shifts its behavior from *draft-stitching* to *editorial synthesis from source*. The aggregator confidently extracts the minimum key facts and rewrites them cleanly instead of leaning on draft phrasing. Compression flips from 22% **longer** than average draft (baseline) to ~17% **shorter** (v1/v2). Shorter + editorial rewrite ⇒ collapsed n-gram overlap ⇒ ROUGE / BLEU / BERTScore all drop.
+
+This confirms the top hypothesis: **our metrics (ROUGE / BLEU / BERTScore against the source) punish the exact behavior the paper's LLM-judge evaluators reward.** The paper's aggregator prompt doesn't include source material either — because AlpacaEval / MT-Bench / FLASK are instruction-following, not grounded summarization, and the judging is done by GPT-4 preference rather than overlap.
+
+Softening the rules (v2) vs strict rules (v1) made no meaningful difference — the effect is driven by the article being in context at all, not by the exact wording around it.
+
+### Implications for the thesis
+
+1. **Overlap metrics cannot tell the MoA story.** Our current numeric setup structurally disadvantages a correctly-implemented aggregator. Any "fix" that improves overlap is likely just making the aggregator parrot draft phrasing (which the paper explicitly says NOT to do: *"should not simply replicate the given answers; instead provide a refined, accurate, and comprehensive reply"*).
+2. **Add an LLM-judge preference comparator.** This is the single most important thesis artefact — it lets us report results in the paper's own terms (GPT-4 grading fused vs best-draft on a rubric). Without it, the thesis has no way to show MoA's real contribution.
+3. **Document the methodology caveat explicitly** (PRD §7 already flags this): ROUGE/BLEU are computed against the original article, not a human-written reference summary — so they measure content-retention, not summary quality.
+4. **Diverse proposers (Gemini + Anthropic + OpenAI) remains untested** — still worth trying with the LLM-judge metric once that's in place, but overlap metrics are no longer a useful signal here.
+
+### What to try next
+
+- Add an LLM-judge comparator (priority — unblocks the thesis).
+- Re-run the diverse-proposer configuration with LLM-judge (not with overlap metrics alone).
+- Keep `main`'s aggregator prompt as-is (baseline is the best overlap-metric configuration the system is capable of, even though it's not "correctly" implemented per the PRD).
+
+### Key files
+
+- `backend/output-fusion/moa.service.ts` — orchestration
+- `backend/output-fusion/moa.prompt.ts` — aggregator prompt (main = no source; branch `fix/moa-aggregator-source-prompt` = source injected, falsified)
+- `backend/output-fusion/moa.config.ts` — proposer/aggregator defaults
+- `backend/output-fusion/scripts/collect-metrics.ts` — batch harness (`--skip-forced` for fusion-only)
+- `metrics_reports/results/fusion-batch-50*.{json,md}` — three-way evidence
+- `fusion.pdf` / `fusion_PRD.md` — spec
+
+## Evaluation Redesign — New Direction (2026-04-24)
+
+The MoA investigation converted from "fix the feature" to "fix the
+measurement." The thesis contribution reframes as: *"Why overlap metrics
+cannot evaluate Mixture-of-Agents summarization: a three-axis empirical
+analysis."*
+
+**Two new PRDs ship on branch `feature/llm-judge-evaluation`:**
+
+### `llm_judge_PRD.md` — LLM-as-Judge module
+
+Paper-aligned (Wang et al. 2024, fusion.pdf Appendix Table 5 + §3.1)
+evaluation pathway with four judge styles:
+
+- **Rubric** (FLASK-derived, 5 dims × 1–5) — per-summary display
+- **Absolute** (MT-Bench-style, 1–10 holistic) — single-number compare
+- **Pairwise** (AlpacaEval-style, length-controlled) — fused vs best-draft; the defense-critical number
+- **N-way ranker** (paper Appendix Table 5 prompt) — optional
+
+Settings persistence follows the existing `/api/settings/routing` pattern
+(server-side via Supabase, NOT `chrome.storage.local`). UI lives in the
+Next.js backend (`backend/app/settings`, `backend/app/metrics`,
+`backend/app/debug`), not the Plasmo extension. Judge mode is
+`metrics_only` / `judge_only` / `both`, **orthogonal** to routing mode.
+
+Plan: 9 phases, ~5 days. See `llm_judge_PRD.md`.
+
+### `metrics_system_PRD.md` — Three-axis evaluation framework
+
+Wraps the LLM-judge module and the existing overlap metrics into a single
+coherent system:
+
+- **Axis A — Content Retention**: ROUGE / BLEU / BERTScore / compression
+  (existing, kept; document the "vs source not human reference" caveat).
+- **Axis B — Quality & Preference**: LLM-judge (from judge PRD) + new
+  `factuality.service.ts` (claim-entailment + hallucination counting via
+  `gpt-4o-mini`).
+- **Axis C — Human Validation**: new `backend/app/evaluate/` page with
+  blind K-way ranking UI, 20-article peer study, Fleiss' κ reported, CSV
+  export.
+
+Metrics page gains a `Compact / Full` axis-view toggle with color-coded
+axis strips (green=A, blue=B, orange=C). Unified report generator emits a
+single thesis-ready Markdown with all three axes.
+
+Plan: 8 phases, ~6 days on top of the judge PRD (total ≈ 11 days).
+
+### Thesis narrative (what this unlocks)
+
+The defense chapter reframes as:
+1. Methodology (introduce the three axes + overlap caveat)
+2. Axis A results (MoA loses on overlap — expected, documented)
+3. Axis B results (MoA wins on judge + factuality — the paper's story)
+4. Axis C results (20-article human peer study with κ)
+5. Cross-axis analysis (when do axes agree/disagree — the novel
+   methodological contribution)
+6. Recommendation (which approach to ship)
+
+### Branch hygiene
+
+- `feature/llm-judge-evaluation` — contains the two PRDs. Implementation
+  work (phases 1–9 of judge + A–H of metrics system) happens on this
+  branch.
+- `fix/moa-aggregator-source-prompt` — experimental artefact (v1 strict
+  article-in-prompt). Do NOT merge to main. Preserves the falsification
+  evidence + the `fusion-batch-50-with-source.{json,md}` and
+  `fusion-batch-50-source-v2.{json,md}` batches.
+- `main` — untouched by the evaluation redesign until judge + factuality
+  are merged.
