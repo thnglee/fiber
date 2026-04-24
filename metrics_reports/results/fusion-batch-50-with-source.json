@@ -1,0 +1,3513 @@
+{
+  "started_at": "2026-04-23T08:42:51.767Z",
+  "finished_at": "2026-04-23T08:54:39.596Z",
+  "api_base": "http://localhost:3000",
+  "proposers": [
+    "gpt-4o-mini",
+    "gpt-4.1-mini",
+    "o4-mini"
+  ],
+  "aggregator": "gpt-4o",
+  "records": [
+    {
+      "index": 1,
+      "url": "https://tienphong.vn/chu-nhat-do-2026-gap-nu-sinh-gan-10-lan-hien-mau-post1823998.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 19496,
+        "total_cost_usd": 0.018284599999999998,
+        "total_tokens": 11332,
+        "fused_summary": "Ngày hội hiến máu Chủ Nhật Đỏ là một dịp đặc biệt để sinh viên thể hiện tinh thần sẻ chia và trách nhiệm cộng đồng. Nguyễn Khánh Huyền, sinh viên Trường ĐH Tài chính - Marketing, đã ghi dấu ấn với 6 lần hiến máu, cảm nhận sâu sắc khi máu của mình cứu sống bệnh nhân. Cùng với Huyền, Nguyễn Khánh Duyên và Đoàn Ngọc Toàn cũng tham gia tích cực, lấy động lực từ những trải nghiệm cá nhân. Chương trình do Báo Tiền Phong tổ chức, dự kiến thu hút hơn 5.000 sinh viên và nhiều nghệ sĩ tham gia, lan tỏa thông điệp nhân văn về hiến máu cứu người.",
+        "fused_scores": {
+          "rouge1": 0.0966,
+          "rouge2": 0.0873,
+          "rougeL": 0.081,
+          "bleu": 0,
+          "bert_score": 0.557557,
+          "compression_rate": 9.41
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4118,
+            "scores": {
+              "rouge1": 0.1392,
+              "rouge2": 0.1195,
+              "rougeL": 0.1127,
+              "bleu": 0.0005,
+              "bert_score": 0.57993,
+              "compression_rate": 12.92
+            },
+            "estimated_cost_usd": 0.00046769999999999993
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4662,
+            "scores": {
+              "rouge1": 0.1377,
+              "rouge2": 0.119,
+              "rougeL": 0.0997,
+              "bleu": 0.0008,
+              "bert_score": 0.549801,
+              "compression_rate": 13.03
+            },
+            "estimated_cost_usd": 0.001252
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 10946,
+            "scores": {
+              "rouge1": 0.1922,
+              "rouge2": 0.1689,
+              "rougeL": 0.1382,
+              "bleu": 0.0057,
+              "bert_score": 0.567771,
+              "compression_rate": 19.29
+            },
+            "estimated_cost_usd": 0.006829900000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "url": "https://tienphong.vn/ong-tran-sy-thanh-cam-ket-gi-voi-cu-tri-lang-son-post1823987.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13488,
+        "total_cost_usd": 0.0142532,
+        "total_tokens": 8227,
+        "fused_summary": "Ngày 1/3, tại xã Lộc Bình, tỉnh Lạng Sơn, ông Trần Sỹ Thanh - Chủ nhiệm Ủy ban Kiểm tra Trung ương và các ứng cử viên ĐBQH khóa XVI đã tiếp xúc cử tri. Ông Thanh cam kết giữ liên hệ chặt chẽ với cử tri, lắng nghe và phản ánh ý kiến của nhân dân đến Quốc hội. Ông nhấn mạnh mục tiêu phát triển kinh tế - xã hội của tỉnh Lạng Sơn, hướng tới trở thành cực tăng trưởng vùng trung du và miền núi phía Bắc vào năm 2030. Buổi tiếp xúc diễn ra dân chủ, cử tri đánh giá cao chương trình hành động của các ứng viên. Trước đó, tỉnh đã công bố danh sách 13 ứng cử viên cho 3 đơn vị bầu cử, chọn ra 7 đại biểu Quốc hội.",
+        "fused_scores": {
+          "rouge1": 0.1851,
+          "rouge2": 0.1745,
+          "rougeL": 0.15,
+          "bleu": 0.0092,
+          "bert_score": 0.634492,
+          "compression_rate": 18.83
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4801,
+            "scores": {
+              "rouge1": 0.2147,
+              "rouge2": 0.1924,
+              "rougeL": 0.1743,
+              "bleu": 0.0105,
+              "bert_score": 0.614902,
+              "compression_rate": 19.64
+            },
+            "estimated_cost_usd": 0.000345
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4658,
+            "scores": {
+              "rouge1": 0.2704,
+              "rouge2": 0.25,
+              "rougeL": 0.2174,
+              "bleu": 0.0516,
+              "bert_score": 0.656712,
+              "compression_rate": 27.79
+            },
+            "estimated_cost_usd": 0.0010512
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7292,
+            "scores": {
+              "rouge1": 0.363,
+              "rouge2": 0.3264,
+              "rougeL": 0.2803,
+              "bleu": 0.0923,
+              "bert_score": 0.661717,
+              "compression_rate": 36.66
+            },
+            "estimated_cost_usd": 0.004504500000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "url": "https://tienphong.vn/thong-tin-moi-vu-2-nu-sinh-lop-8-bi-bat-ve-lam-vo-o-nghe-an-post1823985.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13782,
+        "total_cost_usd": 0.0109414,
+        "total_tokens": 6438,
+        "fused_summary": "Hai nữ sinh lớp 8 tại Trường Phổ thông Dân tộc Bán trú Trung học Cơ sở Na Loi, Nghệ An, đã bị bắt về làm vợ theo tập tục địa phương. Sau quá trình vận động, một trong hai em, L.H.D., đã đồng ý quay lại trường học vào ngày 3/3. Nhà trường đang nỗ lực thuyết phục nữ sinh còn lại. Sở Giáo dục và Đào tạo Nghệ An đã yêu cầu báo cáo chi tiết để có biện pháp ngăn chặn tình trạng tảo hôn. Dù đã có nhiều nỗ lực tuyên truyền, hiện tượng tảo hôn vẫn tồn tại cục bộ ở một số địa phương.",
+        "fused_scores": {
+          "rouge1": 0.2111,
+          "rouge2": 0.1651,
+          "rougeL": 0.1675,
+          "bleu": 0.0114,
+          "bert_score": 0.594486,
+          "compression_rate": 21.34
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2508,
+            "scores": {
+              "rouge1": 0.1926,
+              "rouge2": 0.1664,
+              "rougeL": 0.1544,
+              "bleu": 0.0083,
+              "bert_score": 0.595013,
+              "compression_rate": 18.13
+            },
+            "estimated_cost_usd": 0.0002622
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4127,
+            "scores": {
+              "rouge1": 0.2902,
+              "rouge2": 0.2219,
+              "rougeL": 0.2032,
+              "bleu": 0.0318,
+              "bert_score": 0.592873,
+              "compression_rate": 26.64
+            },
+            "estimated_cost_usd": 0.0007984000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5552,
+            "scores": {
+              "rouge1": 0.3166,
+              "rouge2": 0.2417,
+              "rougeL": 0.2296,
+              "bleu": 0.0366,
+              "bert_score": 0.612468,
+              "compression_rate": 31.8
+            },
+            "estimated_cost_usd": 0.0033033000000000003
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "url": "https://tienphong.vn/vung-2-hai-quan-bo-phieu-bau-cu-som-post1823970.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13325,
+        "total_cost_usd": 0.013033949999999999,
+        "total_tokens": 7546,
+        "fused_summary": "Tổ bầu cử sớm của Vùng 2 Hải quân đã tổ chức bỏ phiếu cho các cử tri trên tàu Hải An 68, Nhà giàn DK1/9 và 4 tàu thuộc Hải đoàn 128, 129. Ngày 1/3, tại Cụm Ba Kè, đoàn công tác do Đại tá Lê Hồng Quang dẫn đầu đã tổ chức lễ tưởng niệm các anh hùng liệt sĩ trước khi tiến hành bầu cử. Các cử tri đã thực hiện quyền bầu cử theo hướng dẫn của Đại tá Quang. Thuyền viên Võ Tá Thanh và Hồ Viết Huy bày tỏ niềm vui khi được bầu cử sớm trên biển. Hoạt động bầu cử diễn ra nghiêm túc, đúng quy định. Trước đó, từ ngày 27/2, tổ bầu cử đã hoàn thành nhiệm vụ với cử tri của 4 tàu tại khu vực mỏ Bạch Hổ.",
+        "fused_scores": {
+          "rouge1": 0.2128,
+          "rouge2": 0.1826,
+          "rougeL": 0.1939,
+          "bleu": 0.0156,
+          "bert_score": 0.68222,
+          "compression_rate": 22.51
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3006,
+            "scores": {
+              "rouge1": 0.1415,
+              "rouge2": 0.1207,
+              "rougeL": 0.1237,
+              "bleu": 0.0015,
+              "bert_score": 0.664909,
+              "compression_rate": 13.69
+            },
+            "estimated_cost_usd": 0.00030225
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 6333,
+            "scores": {
+              "rouge1": 0.1405,
+              "rouge2": 0.1217,
+              "rougeL": 0.1247,
+              "bleu": 0.0013,
+              "bert_score": 0.643401,
+              "compression_rate": 13.38
+            },
+            "estimated_cost_usd": 0.0008012
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6616,
+            "scores": {
+              "rouge1": 0.2883,
+              "rouge2": 0.2308,
+              "rougeL": 0.2222,
+              "bleu": 0.036,
+              "bert_score": 0.670924,
+              "compression_rate": 28.73
+            },
+            "estimated_cost_usd": 0.004103
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "url": "https://tienphong.vn/nhung-la-phieu-dac-biet-tren-them-luc-dia-phia-nam-post1823954.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12647,
+        "total_cost_usd": 0.013373900000000001,
+        "total_tokens": 7780,
+        "fused_summary": "Sáng 1/3, Tổ bầu cử sớm của Vùng 2 Hải quân đã tổ chức bỏ phiếu sớm cho cử tri trên tàu Hải An 68 và Nhà giàn DK1/9 tại Cụm Ba Kè. Sau lễ tưởng niệm các anh hùng liệt sĩ, các thuyền viên đã thực hiện quyền bầu cử trong không khí trang trọng. Thông tin về các ứng viên đại biểu Quốc hội Khóa XVI và đại biểu HĐND TPHCM nhiệm kỳ 2026-2031 được niêm yết đầy đủ. Các cử tri bày tỏ sự phấn khởi và cảm thấy ý nghĩa khi lần đầu tham gia bầu cử trên biển. Công tác bầu cử được tổ chức trang trọng, đảm bảo quyền bầu cử cho cán bộ, chiến sĩ đang làm nhiệm vụ trên biển.",
+        "fused_scores": {
+          "rouge1": 0.1965,
+          "rouge2": 0.1713,
+          "rougeL": 0.1609,
+          "bleu": 0.0087,
+          "bert_score": 0.673043,
+          "compression_rate": 20.02
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2963,
+            "scores": {
+              "rouge1": 0.1833,
+              "rouge2": 0.158,
+              "rougeL": 0.1538,
+              "bleu": 0.0049,
+              "bert_score": 0.67087,
+              "compression_rate": 17.49
+            },
+            "estimated_cost_usd": 0.0003204
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 6875,
+            "scores": {
+              "rouge1": 0.2851,
+              "rouge2": 0.2416,
+              "rougeL": 0.2393,
+              "bleu": 0.0391,
+              "bert_score": 0.673881,
+              "compression_rate": 27.08
+            },
+            "estimated_cost_usd": 0.0010032
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6525,
+            "scores": {
+              "rouge1": 0.2505,
+              "rouge2": 0.2181,
+              "rougeL": 0.1976,
+              "bleu": 0.0188,
+              "bert_score": 0.640236,
+              "compression_rate": 25.82
+            },
+            "estimated_cost_usd": 0.0042053
+          }
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "url": "https://tienphong.vn/dong-bao-dan-toc-giao-dan-dak-lak-gui-tron-niem-tin-vao-la-phieu-bau-post1823827.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12040,
+        "total_cost_usd": 0.012814799999999998,
+        "total_tokens": 7430,
+        "fused_summary": "Đồng bào dân tộc thiểu số và giáo dân tại Đắk Lắk đang chuẩn bị cho cuộc bầu cử đại biểu Quốc hội khóa XVI và HĐND các cấp nhiệm kỳ 2026-2031. Công tác tuyên truyền được triển khai sâu rộng tại các buôn làng và giáo xứ, giúp người dân hiểu rõ quy định và ý nghĩa bầu cử. Linh mục Nguyễn Minh Hảo nhấn mạnh vai trò của giáo dân trong thực hiện quyền và nghĩa vụ công dân. Danh sách cử tri được niêm yết công khai, tạo điều kiện để người dân theo dõi và tham gia bầu cử. Ủy ban bầu cử tỉnh Đắk Lắk cho biết các công tác chuẩn bị bầu cử được tiến hành nghiêm túc và đúng quy định, đảm bảo quyền lợi và trách nhiệm của cử tri trong ngày hội lớn của toàn dân tộc.",
+        "fused_scores": {
+          "rouge1": 0.2399,
+          "rouge2": 0.2153,
+          "rougeL": 0.1861,
+          "bleu": 0.0182,
+          "bert_score": 0.649771,
+          "compression_rate": 22.71
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3102,
+            "scores": {
+              "rouge1": 0.182,
+              "rouge2": 0.1594,
+              "rougeL": 0.1479,
+              "bleu": 0.0056,
+              "bert_score": 0.676768,
+              "compression_rate": 17.06
+            },
+            "estimated_cost_usd": 0.00030179999999999996
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4857,
+            "scores": {
+              "rouge1": 0.3247,
+              "rouge2": 0.2847,
+              "rougeL": 0.2316,
+              "bleu": 0.0455,
+              "bert_score": 0.645228,
+              "compression_rate": 28.36
+            },
+            "estimated_cost_usd": 0.0009679999999999999
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6539,
+            "scores": {
+              "rouge1": 0.3257,
+              "rouge2": 0.2795,
+              "rougeL": 0.2585,
+              "bleu": 0.0576,
+              "bert_score": 0.637768,
+              "compression_rate": 31.3
+            },
+            "estimated_cost_usd": 0.0037124999999999997
+          }
+        ]
+      }
+    },
+    {
+      "index": 7,
+      "url": "https://tienphong.vn/cuu-chien-binh-duoc-chuong-trinh-chu-nhat-do-sua-nha-khang-trang-toi-mung-khong-ngu-duoc-post1823966.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 16534,
+        "total_cost_usd": 0.0154534,
+        "total_tokens": 10074,
+        "fused_summary": "Chương trình Chủ Nhật Đỏ 2026, do Báo Tiền Phong và Vietcombank tổ chức, đã hỗ trợ sửa chữa nhà cho 6 cựu chiến binh có hoàn cảnh khó khăn tại xã Đông Thạnh và Củ Chi, TP.HCM. Những người lính từng cống hiến cho Tổ quốc giờ đây sống trong những căn nhà ẩm thấp, xuống cấp. Nhờ chương trình này, họ không chỉ được cải thiện điều kiện sống mà còn nhận được sự tri ân từ cộng đồng. Đây cũng là biểu tượng của đạo lý \"uống nước nhớ nguồn\" và lan tỏa yêu thương. Chủ Nhật Đỏ còn là ngày hội hiến máu tình nguyện, thu hút sự tham gia của đông đảo sinh viên và nghệ sĩ, diễn ra vào ngày 7-8/3 tại Đại học Văn Hiến.",
+        "fused_scores": {
+          "rouge1": 0.1172,
+          "rouge2": 0.1049,
+          "rougeL": 0.0935,
+          "bleu": 0.0003,
+          "bert_score": 0.552247,
+          "compression_rate": 11.76
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3478,
+            "scores": {
+              "rouge1": 0.0699,
+              "rouge2": 0.0664,
+              "rougeL": 0.0628,
+              "bleu": 0,
+              "bert_score": 0.593975,
+              "compression_rate": 7.37
+            },
+            "estimated_cost_usd": 0.00037890000000000005
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 5383,
+            "scores": {
+              "rouge1": 0.1978,
+              "rouge2": 0.1712,
+              "rougeL": 0.1433,
+              "bleu": 0.0077,
+              "bert_score": 0.576586,
+              "compression_rate": 18.81
+            },
+            "estimated_cost_usd": 0.0012968000000000003
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6576,
+            "scores": {
+              "rouge1": 0.1883,
+              "rouge2": 0.1653,
+              "rougeL": 0.1492,
+              "bleu": 0.0052,
+              "bert_score": 0.56101,
+              "compression_rate": 18.23
+            },
+            "estimated_cost_usd": 0.0044627
+          }
+        ]
+      }
+    },
+    {
+      "index": 8,
+      "url": "https://tienphong.vn/no-tai-benh-vien-tra-vinh-xuat-phat-tu-hop-banh-cua-nguoi-tham-benh-post1823965.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 17701,
+        "total_cost_usd": 0.0131394,
+        "total_tokens": 6762,
+        "fused_summary": "Vào sáng ngày 27/2, tại phòng E609 của Bệnh viện Đa khoa Trà Vinh, một vụ nổ xảy ra khi bà P.T.G, mẹ bệnh nhân L.M.L, nhặt một hộp bánh dưới gầm giường và hộp phát nổ. Vụ nổ khiến bà G. bị thương nhẹ ở tay và chân, không gây thiệt hại nghiêm trọng về người. Công an tỉnh Vĩnh Long đã khám nghiệm hiện trường và đang điều tra nguyên nhân. Bệnh viện đã nhanh chóng dập tắt đám cháy và di dời bệnh nhân để đảm bảo an toàn. Tại hiện trường, một số đồ đạc bị cháy sém, nhưng không có thiệt hại lớn về tài sản.",
+        "fused_scores": {
+          "rouge1": 0.2434,
+          "rouge2": 0.1894,
+          "rougeL": 0.1808,
+          "bleu": 0.0133,
+          "bert_score": 0.582941,
+          "compression_rate": 24
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2593,
+            "scores": {
+              "rouge1": 0.1822,
+              "rouge2": 0.1546,
+              "rougeL": 0.1488,
+              "bleu": 0.0043,
+              "bert_score": 0.571366,
+              "compression_rate": 17.63
+            },
+            "estimated_cost_usd": 0.0002511
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2660,
+            "scores": {
+              "rouge1": 0.2629,
+              "rouge2": 0.2006,
+              "rougeL": 0.1808,
+              "bleu": 0.0211,
+              "bert_score": 0.575465,
+              "compression_rate": 24.15
+            },
+            "estimated_cost_usd": 0.0007416
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 10787,
+            "scores": {
+              "rouge1": 0.3866,
+              "rouge2": 0.3064,
+              "rougeL": 0.2517,
+              "bleu": 0.0657,
+              "bert_score": 0.630485,
+              "compression_rate": 36.44
+            },
+            "estimated_cost_usd": 0.005606700000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 9,
+      "url": "https://tienphong.vn/giai-the-5-trung-tam-y-te-o-ca-mau-post1823962.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 20902,
+        "total_cost_usd": 0.011174900000000001,
+        "total_tokens": 6587,
+        "fused_summary": "UBND tỉnh Cà Mau đã quyết định giải thể 5 Trung tâm Y tế khu vực không có giường bệnh, gồm các trung tâm tại Cà Mau, Đầm Dơi, Năm Căn, Trần Văn Thời và Cái Nước, chuyển chức năng y tế dự phòng về trạm y tế cấp xã. Khoảng 179 nhân sự sẽ chuyển về y tế xã hoặc giải quyết nghỉ việc theo nguyện vọng. Song song đó, 11 trung tâm y tế có chức năng dự phòng và khám chữa bệnh sẽ được tái cơ cấu thành bệnh viện khu vực, chuyển chức năng dự phòng về trạm y tế xã. Tài chính, tài sản và trang thiết bị của các trung tâm sẽ chuyển về y tế cơ sở để cải thiện chất lượng hoạt động.",
+        "fused_scores": {
+          "rouge1": 0.2309,
+          "rouge2": 0.2156,
+          "rougeL": 0.2117,
+          "bleu": 0.0229,
+          "bert_score": 0.660485,
+          "compression_rate": 22.37
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2424,
+            "scores": {
+              "rouge1": 0.177,
+              "rouge2": 0.1629,
+              "rougeL": 0.1603,
+              "bleu": 0.0069,
+              "bert_score": 0.663806,
+              "compression_rate": 18.14
+            },
+            "estimated_cost_usd": 0.0002676
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 5610,
+            "scores": {
+              "rouge1": 0.3565,
+              "rouge2": 0.3222,
+              "rougeL": 0.3062,
+              "bleu": 0.0942,
+              "bert_score": 0.684104,
+              "compression_rate": 32.33
+            },
+            "estimated_cost_usd": 0.0008832
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5350,
+            "scores": {
+              "rouge1": 0.3457,
+              "rouge2": 0.2886,
+              "rougeL": 0.2548,
+              "bleu": 0.0782,
+              "bert_score": 0.667132,
+              "compression_rate": 33.29
+            },
+            "estimated_cost_usd": 0.0031141
+          }
+        ]
+      }
+    },
+    {
+      "index": 10,
+      "url": "https://tienphong.vn/qua-bom-khung-con-nguyen-kip-no-nam-duoi-mong-nha-dan-post1823973.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 28400,
+        "total_cost_usd": 0.01022685,
+        "total_tokens": 5531,
+        "fused_summary": "Trong quá trình đào móng xây nhà tại xã Quỳnh Sơn, Nghệ An, ông Vũ Trọng Cương phát hiện một quả bom MK-82 nặng 350 kg còn nguyên kíp nổ, nằm sâu 1,5 m dưới mặt đất. Ban Chỉ huy Quân sự xã Quỳnh Sơn, phối hợp với Ban Công binh tỉnh Nghệ An, đã phong tỏa khu vực, canh gác 24/24 giờ để đảm bảo an toàn. Sau khi vô hiệu hóa ngòi nổ, quả bom được di chuyển đến khu vực an toàn để tiêu hủy, đảm bảo an toàn tuyệt đối cho người dân và tài sản.",
+        "fused_scores": {
+          "rouge1": 0.2874,
+          "rouge2": 0.2327,
+          "rougeL": 0.2205,
+          "bleu": 0.0343,
+          "bert_score": 0.617396,
+          "compression_rate": 29.67
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2362,
+            "scores": {
+              "rouge1": 0.2343,
+              "rouge2": 0.1992,
+              "rougeL": 0.1988,
+              "bleu": 0.0202,
+              "bert_score": 0.680396,
+              "compression_rate": 23.24
+            },
+            "estimated_cost_usd": 0.00021794999999999996
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3598,
+            "scores": {
+              "rouge1": 0.3937,
+              "rouge2": 0.3176,
+              "rougeL": 0.2756,
+              "bleu": 0.0973,
+              "bert_score": 0.649716,
+              "compression_rate": 38.17
+            },
+            "estimated_cost_usd": 0.0006964
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6211,
+            "scores": {
+              "rouge1": 0.4114,
+              "rouge2": 0.3254,
+              "rougeL": 0.2717,
+              "bleu": 0.1016,
+              "bert_score": 0.662601,
+              "compression_rate": 42.74
+            },
+            "estimated_cost_usd": 0.0035200000000000006
+          }
+        ]
+      }
+    },
+    {
+      "index": 11,
+      "url": "https://tienphong.vn/khoi-to-nhom-doi-tuong-bat-coc-danh-dap-ep-nguoi-phu-nu-chuyen-tien-post1823959.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13432,
+        "total_cost_usd": 0.0129915,
+        "total_tokens": 6926,
+        "fused_summary": "Cơ quan Cảnh sát điều tra Công an tỉnh Tây Ninh đã khởi tố vụ án và khởi tố bị can đối với nhóm đối tượng do Võ Văn Tường cầm đầu về hành vi \"Cướp tài sản\" và \"Bắt giữ người trái pháp luật\". Tối 21/2, nhóm này chặn xe máy của chị L.T.M. trên Quốc lộ 62, dùng dao uy hiếp, cướp tài sản và đưa chị đến nhà nghỉ tại Tân Trụ, Long An. Tại đây, chị bị đánh đập và ép chuyển 157 triệu đồng. Ngày 22/2, khi nhóm dừng ăn, chị M. trốn thoát và trình báo công an. Cảnh sát đã bắt giữ các đối tượng và thu giữ nhiều tang vật liên quan. Vụ án đang được tiếp tục điều tra, xử lý.",
+        "fused_scores": {
+          "rouge1": 0.251,
+          "rouge2": 0.2079,
+          "rougeL": 0.2181,
+          "bleu": 0.0211,
+          "bert_score": 0.596591,
+          "compression_rate": 26.17
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4756,
+            "scores": {
+              "rouge1": 0.2996,
+              "rouge2": 0.2474,
+              "rougeL": 0.23,
+              "bleu": 0.0309,
+              "bert_score": 0.621185,
+              "compression_rate": 26.03
+            },
+            "estimated_cost_usd": 0.00029549999999999997
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3953,
+            "scores": {
+              "rouge1": 0.2786,
+              "rouge2": 0.2276,
+              "rougeL": 0.2378,
+              "bleu": 0.0274,
+              "bert_score": 0.565222,
+              "compression_rate": 26.45
+            },
+            "estimated_cost_usd": 0.0007944
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7728,
+            "scores": {
+              "rouge1": 0.3876,
+              "rouge2": 0.3158,
+              "rougeL": 0.3075,
+              "bleu": 0.0795,
+              "bert_score": 0.644793,
+              "compression_rate": 41.02
+            },
+            "estimated_cost_usd": 0.004709100000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 12,
+      "url": "https://tienphong.vn/con-duong-den-an-tu-cua-ong-trum-ma-tuy-post1823872.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12699,
+        "total_cost_usd": 0.0145214,
+        "total_tokens": 9204,
+        "fused_summary": "Trần Việt Hùng, 49 tuổi, từng hai lần vào tù vì ma túy, tiếp tục phạm tội khi thiết lập đường dây mua bán hơn 5,1 kg ma túy sau khi mãn hạn tù tháng 7/2024. Hùng cùng người tình Bùi Thị Phương và các đồng phạm bị bắt giữ trong một vụ án lớn tại Nghệ An. Phiên tòa xét xử Hùng và bốn đồng phạm diễn ra với cáo buộc mua bán trái phép chất ma túy và tàng trữ, sử dụng vũ khí quân dụng. Do tái phạm với khối lượng ma túy lớn, Hùng bị tuyên án tử hình, các đồng phạm nhận án từ 17 đến hơn 21 năm tù.",
+        "fused_scores": {
+          "rouge1": 0.1268,
+          "rouge2": 0.1159,
+          "rougeL": 0.1089,
+          "bleu": 0.0004,
+          "bert_score": 0.568899,
+          "compression_rate": 11.93
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2687,
+            "scores": {
+              "rouge1": 0.093,
+              "rouge2": 0.0821,
+              "rougeL": 0.0779,
+              "bleu": 0,
+              "bert_score": 0.550366,
+              "compression_rate": 8.8
+            },
+            "estimated_cost_usd": 0.00035039999999999995
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4283,
+            "scores": {
+              "rouge1": 0.1861,
+              "rouge2": 0.1593,
+              "rougeL": 0.1447,
+              "bleu": 0.0049,
+              "bert_score": 0.590204,
+              "compression_rate": 16.93
+            },
+            "estimated_cost_usd": 0.0011104
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7183,
+            "scores": {
+              "rouge1": 0.224,
+              "rouge2": 0.1986,
+              "rougeL": 0.1888,
+              "bleu": 0.0129,
+              "bert_score": 0.577197,
+              "compression_rate": 22.22
+            },
+            "estimated_cost_usd": 0.0045880999999999995
+          }
+        ]
+      }
+    },
+    {
+      "index": 13,
+      "url": "https://tienphong.vn/hai-nguoi-thuong-vong-sau-khi-bi-nhom-doi-tuong-vo-co-tan-cong-post1823982.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11595,
+        "total_cost_usd": 0.0131824,
+        "total_tokens": 7515,
+        "fused_summary": "Một nhóm 14 thanh thiếu niên tại Đà Nẵng đã chuẩn bị hung khí như tuýp sắt, dao tự chế, súng bắn ná và vỏ chai bia để trả thù mâu thuẫn với một nhóm khác. Tuy nhiên, họ đã tấn công hai người đi xe máy không liên quan, khiến một người tử vong và một người bị thương. Ngày 27/10/2025, Công an TP. Đà Nẵng khởi tố vụ án \"Giết người\" và \"Gây rối trật tự công cộng\" đối với 13 đối tượng. Đến tháng 2/2026, Viện KSND phê chuẩn lệnh bắt tạm giam, và vụ án đang được tiếp tục điều tra, xử lý nghiêm.",
+        "fused_scores": {
+          "rouge1": 0.1852,
+          "rouge2": 0.1549,
+          "rougeL": 0.1489,
+          "bleu": 0.0052,
+          "bert_score": 0.634684,
+          "compression_rate": 18.31
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2325,
+            "scores": {
+              "rouge1": 0.1454,
+              "rouge2": 0.1068,
+              "rougeL": 0.1172,
+              "bleu": 0.0006,
+              "bert_score": 0.527512,
+              "compression_rate": 12.46
+            },
+            "estimated_cost_usd": 0.0002859
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2951,
+            "scores": {
+              "rouge1": 0.1934,
+              "rouge2": 0.1631,
+              "rougeL": 0.1524,
+              "bleu": 0.0083,
+              "bert_score": 0.674454,
+              "compression_rate": 16.79
+            },
+            "estimated_cost_usd": 0.000828
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6817,
+            "scores": {
+              "rouge1": 0.2802,
+              "rouge2": 0.2242,
+              "rougeL": 0.2122,
+              "bleu": 0.0296,
+              "bert_score": 0.633545,
+              "compression_rate": 28.6
+            },
+            "estimated_cost_usd": 0.0048235000000000005
+          }
+        ]
+      }
+    },
+    {
+      "index": 14,
+      "url": "https://tienphong.vn/dot-nhap-nha-dan-pha-ket-sat-trom-so-tien-vang-tri-gia-hon-1-ty-dong-post1823934.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12469,
+        "total_cost_usd": 0.0112586,
+        "total_tokens": 6439,
+        "fused_summary": "Ngày 26/2, tại xã Vĩnh Châu, Tây Ninh, Nguyễn Huỳnh Lợi (31 tuổi, quê An Giang) đã đột nhập vào nhà bà V.T.N., cạy mở két sắt và trộm số tài sản trị giá hơn 1 tỷ đồng, gồm tiền mặt và vàng. Công an tỉnh Tây Ninh xác định Lợi đã cắt đứt thanh nhôm cửa sổ để lẻn vào nhà. Nghi phạm bị bắt giữ sau khi tiêu xài số tài sản trộm được để mua xe máy và điện thoại. Tang vật gồm nhiều trang sức vàng và số tiền mặt còn lại đã được thu hồi. Vụ việc đang được điều tra và hoàn thiện hồ sơ khởi tố.",
+        "fused_scores": {
+          "rouge1": 0.226,
+          "rouge2": 0.1843,
+          "rougeL": 0.1678,
+          "bleu": 0.0143,
+          "bert_score": 0.60812,
+          "compression_rate": 22.75
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3008,
+            "scores": {
+              "rouge1": 0.1908,
+              "rouge2": 0.1518,
+              "rougeL": 0.1488,
+              "bleu": 0.0053,
+              "bert_score": 0.585334,
+              "compression_rate": 19.03
+            },
+            "estimated_cost_usd": 0.0002631
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4270,
+            "scores": {
+              "rouge1": 0.2544,
+              "rouge2": 0.2019,
+              "rougeL": 0.1786,
+              "bleu": 0.0163,
+              "bert_score": 0.618722,
+              "compression_rate": 25.18
+            },
+            "estimated_cost_usd": 0.000772
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5483,
+            "scores": {
+              "rouge1": 0.3315,
+              "rouge2": 0.2846,
+              "rougeL": 0.2666,
+              "bleu": 0.0696,
+              "bert_score": 0.588081,
+              "compression_rate": 33.62
+            },
+            "estimated_cost_usd": 0.0036135000000000004
+          }
+        ]
+      }
+    },
+    {
+      "index": 15,
+      "url": "https://tienphong.vn/nu-quai-lua-ban-5-tre-em-sa-luoi-sau-15-nam-tron-truy-na-post1823967.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11696,
+        "total_cost_usd": 0.011840300000000002,
+        "total_tokens": 5865,
+        "fused_summary": "Nguyễn Thị Sâm, sinh năm 1968 tại Nghệ An, đã bị bắt giữ sau 15 năm lẩn trốn và thay đổi nhân thân ở nước ngoài. Năm 2005, Sâm sang Trung Quốc làm ăn, kết hôn và nảy sinh ý định lừa tuyển người giúp việc để bán trẻ em sang Trung Quốc. Từ 2007 đến 2010, Sâm đã lừa bán 5 trẻ em tại Nghệ An, thu lợi 4.800 Nhân dân tệ. Năm 2011, Sâm bị khởi tố về tội \"Mua bán trẻ em\" và bị truy nã. Ngày 24/2/2026, Công an Nghệ An phối hợp với các lực lượng bắt giữ Sâm tại Hà Nội. Hiện Sâm đang bị tạm giữ để điều tra mở rộng.",
+        "fused_scores": {
+          "rouge1": 0.3597,
+          "rouge2": 0.294,
+          "rougeL": 0.2891,
+          "bleu": 0.0628,
+          "bert_score": 0.65951,
+          "compression_rate": 39.74
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3086,
+            "scores": {
+              "rouge1": 0.2869,
+              "rouge2": 0.2124,
+              "rougeL": 0.2056,
+              "bleu": 0.0353,
+              "bert_score": 0.631761,
+              "compression_rate": 28.94
+            },
+            "estimated_cost_usd": 0.00022830000000000002
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3944,
+            "scores": {
+              "rouge1": 0.4861,
+              "rouge2": 0.4013,
+              "rougeL": 0.3555,
+              "bleu": 0.1391,
+              "bert_score": 0.656622,
+              "compression_rate": 46.87
+            },
+            "estimated_cost_usd": 0.0007448
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6594,
+            "scores": {
+              "rouge1": 0.469,
+              "rouge2": 0.3884,
+              "rougeL": 0.364,
+              "bleu": 0.1544,
+              "bert_score": 0.713207,
+              "compression_rate": 51.4
+            },
+            "estimated_cost_usd": 0.0044847
+          }
+        ]
+      }
+    },
+    {
+      "index": 16,
+      "url": "https://tienphong.vn/no-tai-benh-vien-tra-vinh-xuat-phat-tu-hop-banh-cua-nguoi-tham-benh-post1823965.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13750,
+        "total_cost_usd": 0.0125649,
+        "total_tokens": 6644,
+        "fused_summary": "Vào sáng 27/2, tại Bệnh viện Đa khoa Trà Vinh, một vụ nổ xảy ra khi bà P.T.G nhặt một hộp bánh dưới gầm giường bệnh lên và hộp bánh phát nổ. Hộp bánh này do N.T.N mang đến thăm bệnh nhân L.M.L vào tối hôm trước. Vụ nổ khiến bà G. bị thương nhẹ, không gây thiệt hại nghiêm trọng về người. Nhân viên y tế đã kịp thời dập tắt đám cháy, ngăn lửa lan rộng. Các bệnh nhân trong phòng được di dời để đảm bảo an toàn. Công an tỉnh Vĩnh Long đang điều tra nguyên nhân và nguồn gốc của vụ nổ.",
+        "fused_scores": {
+          "rouge1": 0.2406,
+          "rouge2": 0.1908,
+          "rougeL": 0.1655,
+          "bleu": 0.0111,
+          "bert_score": 0.585297,
+          "compression_rate": 23.7
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2496,
+            "scores": {
+              "rouge1": 0.1822,
+              "rouge2": 0.1546,
+              "rougeL": 0.1488,
+              "bleu": 0.0043,
+              "bert_score": 0.571366,
+              "compression_rate": 17.63
+            },
+            "estimated_cost_usd": 0.0002511
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4777,
+            "scores": {
+              "rouge1": 0.2879,
+              "rouge2": 0.2465,
+              "rougeL": 0.2142,
+              "bleu": 0.0304,
+              "bert_score": 0.657192,
+              "compression_rate": 25.78
+            },
+            "estimated_cost_usd": 0.0007592
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 8692,
+            "scores": {
+              "rouge1": 0.3797,
+              "rouge2": 0.2674,
+              "rougeL": 0.235,
+              "bleu": 0.0473,
+              "bert_score": 0.577653,
+              "compression_rate": 35.85
+            },
+            "estimated_cost_usd": 0.0050171
+          }
+        ]
+      }
+    },
+    {
+      "index": 17,
+      "url": "https://tienphong.vn/giam-doc-cong-an-ha-noi-som-su-dung-thiet-bi-bay-khong-nguoi-lai-giam-sat-an-ninh-post1823927.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 10932,
+        "total_cost_usd": 0.014573200000000001,
+        "total_tokens": 8475,
+        "fused_summary": "Công an TP Hà Nội đang thử nghiệm việc sử dụng thiết bị bay không người lái (drone) để giám sát an ninh và truyền hình ảnh trực tiếp về Trung tâm Thông tin chỉ huy. Đây là một phần của dự án phát triển Hệ sinh thái quản trị an ninh trật tự số, bao gồm định vị và điều phối lực lượng tuần tra, cùng với ứng dụng trí tuệ nhân tạo để phân tích hình ảnh từ camera. Hệ sinh thái này nhằm nâng cao hiệu quả quản lý an ninh trong bối cảnh đô thị hóa nhanh và mật độ dân cư cao, đồng thời hướng tới xây dựng một hệ thống dữ liệu mở và bảo mật phục vụ cả cộng đồng và lực lượng công an.",
+        "fused_scores": {
+          "rouge1": 0.145,
+          "rouge2": 0.1193,
+          "rougeL": 0.1192,
+          "bleu": 0.0016,
+          "bert_score": null,
+          "compression_rate": 14.05
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3027,
+            "scores": {
+              "rouge1": 0.12,
+              "rouge2": 0.1079,
+              "rougeL": 0.1093,
+              "bleu": 0.0005,
+              "bert_score": null,
+              "compression_rate": 11.85
+            },
+            "estimated_cost_usd": 0.00031919999999999995
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 6428,
+            "scores": {
+              "rouge1": 0.2285,
+              "rouge2": 0.2021,
+              "rougeL": 0.1815,
+              "bleu": 0.0177,
+              "bert_score": null,
+              "compression_rate": 21.58
+            },
+            "estimated_cost_usd": 0.0010224000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7501,
+            "scores": {
+              "rouge1": 0.2718,
+              "rouge2": 0.2257,
+              "rougeL": 0.1822,
+              "bleu": 0.0296,
+              "bert_score": null,
+              "compression_rate": 26.91
+            },
+            "estimated_cost_usd": 0.0054241
+          }
+        ]
+      }
+    },
+    {
+      "index": 18,
+      "url": "https://tienphong.vn/vu-bv-bach-mai-viet-duc-co-so-2-de-nghi-bo-quoc-phong-dieu-tra-4-doanh-nghiep-post1823923.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13886,
+        "total_cost_usd": 0.015589350000000002,
+        "total_tokens": 8903,
+        "fused_summary": "Cơ quan Cảnh sát điều tra Bộ Công an đã đề nghị Bộ Quốc phòng điều tra 4 doanh nghiệp có vốn quân đội gồm Tổng công ty 36, 319, Thành An và Armephaco liên quan đến hành vi \"lại quả\" trong các gói thầu xây dựng Bệnh viện Bạch Mai và Việt Đức cơ sở 2. Các doanh nghiệp này đã chi hàng chục tỷ đồng cho lãnh đạo Ban Y tế trọng điểm, với tỷ lệ 5% giá trị thanh toán trước thuế. Cựu Bộ trưởng Nguyễn Thị Kim Tiến và hai thuộc cấp Nguyễn Chiến Thắng, Huỳnh Hữu Tuấn bị xác định có liên quan, nhưng bà Tiến không bị truy tố về tội \"Nhận hối lộ\". Vụ án gây thất thoát 803 tỷ đồng và được chuyển sang Cơ quan Điều tra hình sự Bộ Quốc phòng xử lý.",
+        "fused_scores": {
+          "rouge1": 0.1672,
+          "rouge2": 0.1543,
+          "rougeL": 0.1468,
+          "bleu": 0.0054,
+          "bert_score": 0.661039,
+          "compression_rate": 16.72
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3534,
+            "scores": {
+              "rouge1": 0.1599,
+              "rouge2": 0.1429,
+              "rougeL": 0.1436,
+              "bleu": 0.0039,
+              "bert_score": 0.644342,
+              "compression_rate": 14.9
+            },
+            "estimated_cost_usd": 0.00035384999999999995
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 5747,
+            "scores": {
+              "rouge1": 0.2251,
+              "rouge2": 0.2033,
+              "rougeL": 0.1884,
+              "bleu": 0.0216,
+              "bert_score": 0.67449,
+              "compression_rate": 20.21
+            },
+            "estimated_cost_usd": 0.0010412
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 8316,
+            "scores": {
+              "rouge1": 0.2887,
+              "rouge2": 0.2588,
+              "rougeL": 0.2325,
+              "bleu": 0.0475,
+              "bert_score": 0.638966,
+              "compression_rate": 28.66
+            },
+            "estimated_cost_usd": 0.0056518
+          }
+        ]
+      }
+    },
+    {
+      "index": 19,
+      "url": "https://tienphong.vn/bat-18-quai-xe-mang-hung-khi-gay-nao-loan-duong-pho-post1823889.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 14267,
+        "total_cost_usd": 0.012951800000000001,
+        "total_tokens": 6506,
+        "fused_summary": "Ngày 1/3, Công an tỉnh Nghệ An đã bắt giữ 18 đối tượng trẻ tuổi có hành vi gây rối trật tự công cộng tại thành phố Vinh. Nhóm này điều khiển xe mô tô với tốc độ cao, không đội mũ bảo hiểm, lạng lách, đánh võng và mang theo hung khí. Họ còn ném vỏ chai bia vào nhóm thanh niên khác và độ pô xe gây ồn ào. Các đối tượng sinh từ năm 2007 đến 2010, trong đó có một em sinh năm 2012 đang học lớp 8. Hiện 9 đối tượng bị tạm giữ, số còn lại được bàn giao cho gia đình. Trước đó, đầu tháng 2/2026, công an cũng đã xử lý một nhóm tương tự.",
+        "fused_scores": {
+          "rouge1": 0.2673,
+          "rouge2": 0.222,
+          "rougeL": 0.2406,
+          "bleu": 0.0337,
+          "bert_score": 0.626533,
+          "compression_rate": 29.2
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2972,
+            "scores": {
+              "rouge1": 0.2264,
+              "rouge2": 0.1575,
+              "rougeL": 0.1588,
+              "bleu": 0.0136,
+              "bert_score": 0.61106,
+              "compression_rate": 22.41
+            },
+            "estimated_cost_usd": 0.00024599999999999996
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3845,
+            "scores": {
+              "rouge1": 0.3286,
+              "rouge2": 0.2551,
+              "rougeL": 0.2563,
+              "bleu": 0.0567,
+              "bert_score": 0.636642,
+              "compression_rate": 33.11
+            },
+            "estimated_cost_usd": 0.0007584
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 8985,
+            "scores": {
+              "rouge1": 0.4355,
+              "rouge2": 0.3528,
+              "rougeL": 0.3726,
+              "bleu": 0.1244,
+              "bert_score": 0.645929,
+              "compression_rate": 46.18
+            },
+            "estimated_cost_usd": 0.0053449000000000005
+          }
+        ]
+      }
+    },
+    {
+      "index": 20,
+      "url": "https://tienphong.vn/cuc-canh-sat-hinh-su-pha-duong-day-mua-ban-gan-than-tien-ty-post1823846.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 17617,
+        "total_cost_usd": 0.0137642,
+        "total_tokens": 8263,
+        "fused_summary": "Ngày 1/3, Viện Kiểm sát nhân dân TP. Hà Nội đã phê chuẩn quyết định khởi tố Đoàn Văn Hòa, Lê Văn Sơn và Nguyễn Đức Xuân về tội mua bán, chiếm đoạt mô hoặc bộ phận cơ thể người. Nhóm này tổ chức môi giới mua bán thận và gan với giá bán chênh lệch lớn, lợi dụng nhu cầu ghép tạng. Họ sử dụng mạng xã hội và các đầu mối địa phương để tìm người bán, hợp thức hóa hồ sơ dưới dạng hiến tặng. Giá một quả thận dao động từ 800 đến 950 triệu đồng, còn lá gan từ 1,2 đến 1,5 tỷ đồng, trong khi người bán chỉ nhận được vài trăm triệu đồng. Hòa đóng vai trò cầm đầu và hưởng lợi nhuận chính từ hoạt động bất chính này.",
+        "fused_scores": {
+          "rouge1": 0.1715,
+          "rouge2": 0.1476,
+          "rougeL": 0.1474,
+          "bleu": 0.0033,
+          "bert_score": 0.618582,
+          "compression_rate": 17.42
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3707,
+            "scores": {
+              "rouge1": 0.141,
+              "rouge2": 0.1147,
+              "rougeL": 0.109,
+              "bleu": 0.0013,
+              "bert_score": 0.571004,
+              "compression_rate": 13.84
+            },
+            "estimated_cost_usd": 0.00033269999999999996
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4501,
+            "scores": {
+              "rouge1": 0.2123,
+              "rouge2": 0.1724,
+              "rougeL": 0.1731,
+              "bleu": 0.0091,
+              "bert_score": 0.578553,
+              "compression_rate": 20.62
+            },
+            "estimated_cost_usd": 0.0010088
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7020,
+            "scores": {
+              "rouge1": 0.2388,
+              "rouge2": 0.1981,
+              "rougeL": 0.2027,
+              "bleu": 0.0137,
+              "bert_score": 0.623746,
+              "compression_rate": 25.66
+            },
+            "estimated_cost_usd": 0.0042427
+          }
+        ]
+      }
+    },
+    {
+      "index": 21,
+      "url": "https://tienphong.vn/my-va-israel-tan-cong-iran-thi-truong-dau-mo-co-the-doi-mat-noi-lo-so-toi-te-nhat-post1824011.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 16408,
+        "total_cost_usd": 0.0162415,
+        "total_tokens": 11232,
+        "fused_summary": "Tình hình căng thẳng leo thang tại eo biển Hormuz khi Mỹ và Israel không kích Iran, dẫn đến Tehran tuyên bố đóng cửa tuyến hàng hải chiến lược này. Nhiều tập đoàn dầu khí và hãng vận tải biển đã tạm ngừng hoạt động, khiến khoảng 20% nguồn cung dầu thế giới bị gián đoạn. Các chuyên gia cảnh báo giá dầu có thể vượt 100 USD/thùng nếu xung đột kéo dài. Các hãng vận tải như Hapag-Lloyd, Maersk và CMA CGM điều chỉnh kế hoạch vận chuyển, trong khi các cơ quan quốc tế cảnh báo về an toàn hàng hải. Tình trạng này đẩy thị trường năng lượng và tài chính vào trạng thái bất ổn cao.",
+        "fused_scores": {
+          "rouge1": 0.0903,
+          "rouge2": 0.0792,
+          "rougeL": 0.0689,
+          "bleu": 0,
+          "bert_score": 0.631348,
+          "compression_rate": 8.44
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3029,
+            "scores": {
+              "rouge1": 0.0908,
+              "rouge2": 0.0778,
+              "rougeL": 0.0703,
+              "bleu": 0,
+              "bert_score": 0.642632,
+              "compression_rate": 8.22
+            },
+            "estimated_cost_usd": 0.0004542
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3129,
+            "scores": {
+              "rouge1": 0.0959,
+              "rouge2": 0.0866,
+              "rougeL": 0.0861,
+              "bleu": 0,
+              "bert_score": 0.689057,
+              "compression_rate": 8.65
+            },
+            "estimated_cost_usd": 0.001224
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6618,
+            "scores": {
+              "rouge1": 0.156,
+              "rouge2": 0.1276,
+              "rougeL": 0.1182,
+              "bleu": 0.0014,
+              "bert_score": 0.634966,
+              "compression_rate": 15.07
+            },
+            "estimated_cost_usd": 0.004843300000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 22,
+      "url": "https://tienphong.vn/ruoc-bien-dat-bo-ngu-dan-quang-tri-boi-thu-post1823995.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 14805,
+        "total_cost_usd": 0.013086549999999999,
+        "total_tokens": 7110,
+        "fused_summary": "Sau Tết Nguyên đán Bính Ngọ 2026, ngư dân Quảng Trị đã khai thác hiệu quả các loại hải sản như mực, cá và ruốc với sản lượng cao và giá bán ổn định. Trong hai ngày đầu năm, khoảng 50 tàu thuyền ra khơi, thu về hơn 10 tấn hải sản, mang lại thu nhập 5-10 triệu đồng/ngày cho mỗi thuyền. Thời tiết thuận lợi từ mùng 4 đến mùng 6 Tết giúp ngư dân tiếp tục trúng đậm. Trung bình, mỗi ngày ngư dân thu hoạch 1 tấn mực và 20 tấn cá, ruốc, tạo động lực phát triển kinh tế biển địa phương. Giá ruốc tươi từ 10.000 - 12.000 đồng/kg, ruốc khô khoảng 160.000 đồng/kg, giúp nhiều hộ gia đình có thu nhập ổn định.",
+        "fused_scores": {
+          "rouge1": 0.2713,
+          "rouge2": 0.223,
+          "rougeL": 0.2065,
+          "bleu": 0.0204,
+          "bert_score": 0.662303,
+          "compression_rate": 27.76
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3880,
+            "scores": {
+              "rouge1": 0.3171,
+              "rouge2": 0.2581,
+              "rougeL": 0.2308,
+              "bleu": 0.0316,
+              "bert_score": 0.641837,
+              "compression_rate": 29.65
+            },
+            "estimated_cost_usd": 0.00032235
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4462,
+            "scores": {
+              "rouge1": 0.3603,
+              "rouge2": 0.3014,
+              "rougeL": 0.2888,
+              "bleu": 0.0578,
+              "bert_score": 0.655955,
+              "compression_rate": 31.67
+            },
+            "estimated_cost_usd": 0.0008836
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7512,
+            "scores": {
+              "rouge1": 0.3293,
+              "rouge2": 0.2743,
+              "rougeL": 0.2591,
+              "bleu": 0.0485,
+              "bert_score": 0.675473,
+              "compression_rate": 33.96
+            },
+            "estimated_cost_usd": 0.0042856000000000005
+          }
+        ]
+      }
+    },
+    {
+      "index": 23,
+      "url": "https://tienphong.vn/cao-toc-cao-lanh-an-huu-chua-lam-xong-vi-sao-dong-thap-de-xuat-mo-rong-post1823986.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 14686,
+        "total_cost_usd": 0.012292150000000002,
+        "total_tokens": 6897,
+        "fused_summary": "UBND tỉnh Đồng Tháp đã gửi kiến nghị Bộ Xây dựng về việc đầu tư giai đoạn 2 của cao tốc Cao Lãnh - An Hữu theo phương án lập dự án mới thay vì bổ sung vào dự án hiện hữu. Hiện tại, giai đoạn 1 của dự án đang thi công với tổng mức đầu tư 7.496 tỷ đồng, đạt trên 73% khối lượng cho thành phần 1 và gần 70% cho thành phần 2, dự kiến hoàn thành vào ngày 19/5. Phương án lập mới được ưu tiên do phù hợp với dự báo lưu lượng xe và không gián đoạn tiến độ, dù chi phí cao hơn và tiềm ẩn rủi ro an toàn giao thông. UBND tỉnh đề xuất thực hiện từ 2026-2030.",
+        "fused_scores": {
+          "rouge1": 0.2356,
+          "rouge2": 0.1936,
+          "rougeL": 0.1921,
+          "bleu": 0.0171,
+          "bert_score": 0.679383,
+          "compression_rate": 24.02
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5999,
+            "scores": {
+              "rouge1": 0.3163,
+              "rouge2": 0.2615,
+              "rougeL": 0.2497,
+              "bleu": 0.0536,
+              "bert_score": 0.676697,
+              "compression_rate": 30.87
+            },
+            "estimated_cost_usd": 0.00031665
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 7485,
+            "scores": {
+              "rouge1": 0.3367,
+              "rouge2": 0.2564,
+              "rougeL": 0.265,
+              "bleu": 0.0543,
+              "bert_score": 0.656388,
+              "compression_rate": 31.7
+            },
+            "estimated_cost_usd": 0.0008620000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5990,
+            "scores": {
+              "rouge1": 0.3931,
+              "rouge2": 0.3205,
+              "rougeL": 0.3227,
+              "bleu": 0.093,
+              "bert_score": 0.682884,
+              "compression_rate": 39.66
+            },
+            "estimated_cost_usd": 0.0038610000000000003
+          }
+        ]
+      }
+    },
+    {
+      "index": 24,
+      "url": "https://tienphong.vn/hang-hoa-qua-cua-khau-quang-ninh-tang-manh-post1823958.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13437,
+        "total_cost_usd": 0.012081399999999999,
+        "total_tokens": 6796,
+        "fused_summary": "Trong những tháng đầu năm, hoạt động xuất nhập khẩu tại Quảng Ninh tăng trưởng tích cực, đặc biệt tại cửa khẩu Móng Cái, với nhiều xe container chở nông sản và thủy sản tươi sống. Từ ngày 1/1-20/2, hơn 17.000 tờ khai được thực hiện, tăng 38% so với cùng kỳ, kim ngạch đạt gần 874 triệu USD, tăng 30%. Tổng kim ngạch xuất nhập khẩu qua địa bàn đạt gần 3 tỷ USD, với sự tham gia của 1.330 doanh nghiệp. Chi cục Hải quan khu vực VIII đã áp dụng các biện pháp cải cách hành chính và kiểm soát chặt chẽ để đảm bảo thông quan hiệu quả và chống buôn lậu.",
+        "fused_scores": {
+          "rouge1": 0.2202,
+          "rouge2": 0.1859,
+          "rougeL": 0.1845,
+          "bleu": 0.0121,
+          "bert_score": 0.581587,
+          "compression_rate": 22.82
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2694,
+            "scores": {
+              "rouge1": 0.1679,
+              "rouge2": 0.1442,
+              "rougeL": 0.1274,
+              "bleu": 0.0039,
+              "bert_score": 0.55613,
+              "compression_rate": 18.4
+            },
+            "estimated_cost_usd": 0.0002667
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 5057,
+            "scores": {
+              "rouge1": 0.3786,
+              "rouge2": 0.3278,
+              "rougeL": 0.3345,
+              "bleu": 0.1059,
+              "bert_score": 0.675335,
+              "compression_rate": 34.85
+            },
+            "estimated_cost_usd": 0.0009048
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7318,
+            "scores": {
+              "rouge1": 0.369,
+              "rouge2": 0.3063,
+              "rougeL": 0.3226,
+              "bleu": 0.0821,
+              "bert_score": 0.604909,
+              "compression_rate": 39.7
+            },
+            "estimated_cost_usd": 0.0038599000000000003
+          }
+        ]
+      }
+    },
+    {
+      "index": 25,
+      "url": "https://tienphong.vn/chu-tich-tong-giam-doc-nhieu-doanh-nghiep-dua-co-phieu-post1823910.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11187,
+        "total_cost_usd": 0.0166827,
+        "total_tokens": 11124,
+        "fused_summary": "Tuần giao dịch từ 23-27/2, thị trường chứng khoán Việt Nam ghi nhận sự gia tăng mạnh mẽ với VN-Index tăng 56,24 điểm lên 1.880,33 điểm và HNX-Index tăng 5,76 điểm lên 262,82 điểm. Thanh khoản toàn thị trường cải thiện sau kỳ nghỉ Tết, đạt 155.922 tỷ đồng trên HOSE và 8.482 tỷ đồng trên HNX. Ông Nguyễn Gia Long (TNT) và lãnh đạo Searefico (SRF) gia tăng sở hữu cổ phiếu, trong khi con trai Chủ tịch Thép Nam Kim mua 5 triệu cổ phiếu NKG. Ngược lại, thành viên HĐQT Đông Hải Bến Tre bán hết cổ phiếu DHC. Taseco và Geleximco cũng giảm tỷ lệ sở hữu tại TAL và ABW để tái cơ cấu đầu tư.",
+        "fused_scores": {
+          "rouge1": 0.1003,
+          "rouge2": 0.0764,
+          "rougeL": 0.078,
+          "bleu": 0,
+          "bert_score": 0.594249,
+          "compression_rate": 10.63
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2293,
+            "scores": {
+              "rouge1": 0.0841,
+              "rouge2": 0.0697,
+              "rougeL": 0.0669,
+              "bleu": 0,
+              "bert_score": 0.556377,
+              "compression_rate": 6.7
+            },
+            "estimated_cost_usd": 0.0004275
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3335,
+            "scores": {
+              "rouge1": 0.1114,
+              "rouge2": 0.0853,
+              "rougeL": 0.0897,
+              "bleu": 0.0001,
+              "bert_score": 0.532342,
+              "compression_rate": 9.43
+            },
+            "estimated_cost_usd": 0.0012200000000000002
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5710,
+            "scores": {
+              "rouge1": 0.176,
+              "rouge2": 0.1366,
+              "rougeL": 0.1359,
+              "bleu": 0.0028,
+              "bert_score": 0.613912,
+              "compression_rate": 18.15
+            },
+            "estimated_cost_usd": 0.0050127
+          }
+        ]
+      }
+    },
+    {
+      "index": 26,
+      "url": "https://tienphong.vn/thu-tuong-kiem-tra-du-an-duong-bang-san-bay-phu-cat-post1823946.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11289,
+        "total_cost_usd": 0.01239535,
+        "total_tokens": 7155,
+        "fused_summary": "Sáng 1/3, Thủ tướng Phạm Minh Chính kiểm tra dự án đường cất hạ cánh số 2 và các công trình tại sân bay Phù Cát, Gia Lai. Ông biểu dương nỗ lực của địa phương và các nhà thầu, nhấn mạnh cần đảm bảo tiến độ và chất lượng công trình. Dự án dự kiến hoàn thành vào 30/6, sớm hơn 3 tháng so với kế hoạch. Thủ tướng khẳng định phân cấp cho địa phương là đúng, nhưng cần tăng cường giám sát để tránh tiêu cực. Việc nâng cấp sân bay không chỉ phục vụ phát triển kinh tế - xã hội mà còn đảm bảo quốc phòng, an ninh. Trước đó, Thủ tướng cũng kiểm tra dự án cao tốc Bắc - Nam, biểu dương công tác dân vận và thi công của các tỉnh Gia Lai và Quảng Ngãi.",
+        "fused_scores": {
+          "rouge1": 0.2517,
+          "rouge2": 0.2181,
+          "rougeL": 0.2133,
+          "bleu": 0.0216,
+          "bert_score": 0.628339,
+          "compression_rate": 24.25
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3963,
+            "scores": {
+              "rouge1": 0.2652,
+              "rouge2": 0.2237,
+              "rougeL": 0.2077,
+              "bleu": 0.0266,
+              "bert_score": 0.612916,
+              "compression_rate": 26
+            },
+            "estimated_cost_usd": 0.00032565000000000003
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 5912,
+            "scores": {
+              "rouge1": 0.3262,
+              "rouge2": 0.2893,
+              "rougeL": 0.2619,
+              "bleu": 0.066,
+              "bert_score": 0.653217,
+              "compression_rate": 30.72
+            },
+            "estimated_cost_usd": 0.0009276000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6287,
+            "scores": {
+              "rouge1": 0.3115,
+              "rouge2": 0.2723,
+              "rougeL": 0.2551,
+              "bleu": 0.0484,
+              "bert_score": 0.661578,
+              "compression_rate": 31.09
+            },
+            "estimated_cost_usd": 0.0035046
+          }
+        ]
+      }
+    },
+    {
+      "index": 27,
+      "url": "https://tienphong.vn/thu-tuong-thi-sat-du-an-cao-toc-quang-ngai-hoai-nhon-hon-20000-ty-post1823941.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 19771,
+        "total_cost_usd": 0.01702845,
+        "total_tokens": 8713,
+        "fused_summary": "Thủ tướng Phạm Minh Chính đã thị sát dự án cao tốc Quảng Ngãi - Hoài Nhơn, yêu cầu đẩy nhanh tiến độ và đảm bảo an toàn vận hành. Dự án dài 88km, tổng đầu tư hơn 20.000 tỷ đồng, đi qua Quảng Ngãi và Gia Lai, với nhiều hạng mục kỹ thuật phức tạp như 77 cầu, 586 cống và 81 hầm chui. Thủ tướng đánh giá cao nỗ lực của Ban Quản lý dự án 2 và các đơn vị thi công, đồng thời nhấn mạnh cần hoàn thiện phương án ứng phó sự cố giao thông. Dự kiến hoàn thành vào tháng 9/2026, dự án sẽ thúc đẩy phát triển kinh tế khu vực miền Trung và tăng cường kết nối liên vùng.",
+        "fused_scores": {
+          "rouge1": 0.1756,
+          "rouge2": 0.1541,
+          "rougeL": 0.1437,
+          "bleu": 0.0055,
+          "bert_score": 0.624191,
+          "compression_rate": 18.51
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3493,
+            "scores": {
+              "rouge1": 0.2188,
+              "rouge2": 0.1898,
+              "rougeL": 0.1728,
+              "bleu": 0.0148,
+              "bert_score": 0.604,
+              "compression_rate": 21.97
+            },
+            "estimated_cost_usd": 0.00034845000000000004
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4210,
+            "scores": {
+              "rouge1": 0.246,
+              "rouge2": 0.2171,
+              "rougeL": 0.1869,
+              "bleu": 0.0246,
+              "bert_score": 0.620845,
+              "compression_rate": 23.85
+            },
+            "estimated_cost_usd": 0.0009596000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 14782,
+            "scores": {
+              "rouge1": 0.3249,
+              "rouge2": 0.2923,
+              "rougeL": 0.2451,
+              "bleu": 0.0763,
+              "bert_score": 0.67642,
+              "compression_rate": 35.04
+            },
+            "estimated_cost_usd": 0.007715400000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 28,
+      "url": "https://tienphong.vn/lanh-dao-nhieu-doanh-nghiep-ung-cu-dai-bieu-quoc-hoi-post1823909.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12178,
+        "total_cost_usd": 0.0149105,
+        "total_tokens": 8771,
+        "fused_summary": "Danh sách ứng cử viên đại biểu Quốc hội khóa XVI gồm nhiều lãnh đạo tập đoàn kinh tế lớn, doanh nghiệp nhà nước và tư nhân từ các lĩnh vực như năng lượng, viễn thông, ngân hàng và bất động sản. Theo Nghị quyết số 151/2026, cả nước có 864 người ứng cử để bầu 500 đại biểu tại 182 đơn vị bầu cử. Tại TP.HCM, nổi bật có ông Tào Đức Thắng (Viettel), ông Lê Ngọc Sơn (Petrovietnam), và ông Phạm Văn Thanh (Petrolimex). Các tỉnh khác cũng ghi nhận sự tham gia của lãnh đạo từ Dabaco, T&T, Camimex Group. Đây là điểm nhấn quan trọng trong bối cảnh Quốc hội khóa XVI sẽ đối mặt với nhiều thách thức lớn. Các ứng viên đang thực hiện quy trình hiệp thương, tiếp xúc cử tri và vận động bầu cử theo quy định.",
+        "fused_scores": {
+          "rouge1": 0.1882,
+          "rouge2": 0.1661,
+          "rougeL": 0.1728,
+          "bleu": 0.0077,
+          "bert_score": 0.679901,
+          "compression_rate": 17.8
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 6340,
+            "scores": {
+              "rouge1": 0.1309,
+              "rouge2": 0.1156,
+              "rougeL": 0.1146,
+              "bleu": 0.0008,
+              "bert_score": 0.686776,
+              "compression_rate": 12.47
+            },
+            "estimated_cost_usd": 0.00033989999999999997
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 7020,
+            "scores": {
+              "rouge1": 0.2618,
+              "rouge2": 0.226,
+              "rougeL": 0.2275,
+              "bleu": 0.026,
+              "bert_score": 0.651952,
+              "compression_rate": 22.61
+            },
+            "estimated_cost_usd": 0.0010968000000000002
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6792,
+            "scores": {
+              "rouge1": 0.284,
+              "rouge2": 0.2457,
+              "rougeL": 0.2395,
+              "bleu": 0.041,
+              "bert_score": 0.661992,
+              "compression_rate": 27.43
+            },
+            "estimated_cost_usd": 0.0047663
+          }
+        ]
+      }
+    },
+    {
+      "index": 29,
+      "url": "https://tienphong.vn/ly-do-nhieu-doanh-nghiep-thoai-von-bat-thanh-post1823680.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 14347,
+        "total_cost_usd": 0.015647750000000002,
+        "total_tokens": 9681,
+        "fused_summary": "Việc thoái vốn của các doanh nghiệp và ngân hàng tại Việt Nam đang gặp khó khăn do điều kiện thị trường chưa thuận lợi. Tổng Công ty Bảo đảm an toàn Hàng hải Việt Nam (VMSC) và Ngân hàng TMCP Công thương Việt Nam (VietinBank) đều không thể chuyển nhượng toàn bộ số cổ phiếu như mong muốn. Nguyên nhân chính là sự không gặp nhau giữa cung và cầu cùng với mức giá thị trường chưa đạt kỳ vọng. Theo chuyên gia kinh tế, việc thoái vốn bất thành không phản ánh vấn đề nội tại của doanh nghiệp mà chủ yếu do yếu tố thời điểm và thanh khoản thị trường chưa đủ hấp thụ lượng cổ phiếu chào bán.",
+        "fused_scores": {
+          "rouge1": 0.1221,
+          "rouge2": 0.1107,
+          "rougeL": 0.1017,
+          "bleu": 0.0005,
+          "bert_score": 0.598556,
+          "compression_rate": 10.74
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3292,
+            "scores": {
+              "rouge1": 0.1023,
+              "rouge2": 0.0921,
+              "rougeL": 0.087,
+              "bleu": 0.0001,
+              "bert_score": 0.610308,
+              "compression_rate": 9.46
+            },
+            "estimated_cost_usd": 0.00036704999999999995
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4816,
+            "scores": {
+              "rouge1": 0.211,
+              "rouge2": 0.1811,
+              "rougeL": 0.1522,
+              "bleu": 0.008,
+              "bert_score": 0.558297,
+              "compression_rate": 17.55
+            },
+            "estimated_cost_usd": 0.0011627999999999999
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 8850,
+            "scores": {
+              "rouge1": 0.2321,
+              "rouge2": 0.1958,
+              "rougeL": 0.1822,
+              "bleu": 0.0144,
+              "bert_score": 0.589125,
+              "compression_rate": 21.7
+            },
+            "estimated_cost_usd": 0.0055154
+          }
+        ]
+      }
+    },
+    {
+      "index": 30,
+      "url": "https://tienphong.vn/gia-dau-vang-tang-dung-dung-vi-my-khong-kich-iran-post1823885.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11314,
+        "total_cost_usd": 0.0140184,
+        "total_tokens": 9090,
+        "fused_summary": "Ngày 28/2, Mỹ và Israel đã tiến hành không kích vào Iran, đẩy Trung Đông vào vòng xoáy xung đột mới và lo ngại gián đoạn nguồn cung dầu qua eo biển Hormuz, nơi vận chuyển khoảng 20% dầu toàn cầu. Giá dầu Brent tăng lên 73 USD/thùng, có thể đạt 80-100 USD/thùng nếu xung đột kéo dài. Thị trường tài chính toàn cầu biến động mạnh, với vàng và trái phiếu Kho bạc Mỹ trở thành kênh trú ẩn an toàn, trong khi bitcoin giảm giá. Căng thẳng này ảnh hưởng đến các chỉ số chứng khoán, đặc biệt là tại các nước vùng Vịnh.",
+        "fused_scores": {
+          "rouge1": 0.1132,
+          "rouge2": 0.0979,
+          "rougeL": 0.0998,
+          "bleu": 0.0001,
+          "bert_score": 0.597334,
+          "compression_rate": 11.42
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4824,
+            "scores": {
+              "rouge1": 0.2083,
+              "rouge2": 0.1709,
+              "rougeL": 0.1561,
+              "bleu": 0.0073,
+              "bert_score": 0.613687,
+              "compression_rate": 20.08
+            },
+            "estimated_cost_usd": 0.0004326
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2880,
+            "scores": {
+              "rouge1": 0.1179,
+              "rouge2": 0.1012,
+              "rougeL": 0.0971,
+              "bleu": 0.0002,
+              "bert_score": 0.600462,
+              "compression_rate": 11.19
+            },
+            "estimated_cost_usd": 0.0009648
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6489,
+            "scores": {
+              "rouge1": 0.2123,
+              "rouge2": 0.1769,
+              "rougeL": 0.1534,
+              "bleu": 0.0095,
+              "bert_score": 0.616697,
+              "compression_rate": 21.99
+            },
+            "estimated_cost_usd": 0.0042185
+          }
+        ]
+      }
+    },
+    {
+      "index": 31,
+      "url": "https://tienphong.vn/thong-tin-moi-vu-2-nu-sinh-lop-8-bi-bat-ve-lam-vo-o-nghe-an-post1823985.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 15271,
+        "total_cost_usd": 0.012916,
+        "total_tokens": 7038,
+        "fused_summary": "Hai nữ sinh lớp 8 tại Trường PTDTBT THCS Na Loi, Nghệ An, đã bị bắt về làm vợ theo tập tục địa phương. Sau khi được vận động và tuyên truyền, một trong hai em, L.H.D., đã đồng ý quay trở lại trường học vào ngày 3/3. Nhà trường và giáo viên chủ nhiệm tiếp tục nỗ lực để em L.H.A. cũng quay lại học tập. Sở GD&ĐT Nghệ An đã yêu cầu báo cáo chi tiết sự việc để có hướng chỉ đạo phù hợp. Mặc dù đã có nhiều hoạt động tuyên truyền, tình trạng tảo hôn trong học sinh vẫn còn xảy ra, đòi hỏi sự phối hợp chặt chẽ hơn giữa ngành giáo dục và địa phương.",
+        "fused_scores": {
+          "rouge1": 0.2335,
+          "rouge2": 0.1797,
+          "rougeL": 0.1755,
+          "bleu": 0.0191,
+          "bert_score": 0.595919,
+          "compression_rate": 22.87
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4383,
+            "scores": {
+              "rouge1": 0.3496,
+              "rouge2": 0.2867,
+              "rougeL": 0.2493,
+              "bleu": 0.0594,
+              "bert_score": 0.598073,
+              "compression_rate": 31.52
+            },
+            "estimated_cost_usd": 0.000321
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 6971,
+            "scores": {
+              "rouge1": 0.3061,
+              "rouge2": 0.2351,
+              "rougeL": 0.2256,
+              "bleu": 0.037,
+              "bert_score": 0.582396,
+              "compression_rate": 28.59
+            },
+            "estimated_cost_usd": 0.0008208
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 9006,
+            "scores": {
+              "rouge1": 0.3997,
+              "rouge2": 0.3052,
+              "rougeL": 0.2916,
+              "bleu": 0.0713,
+              "bert_score": 0.660775,
+              "compression_rate": 39.61
+            },
+            "estimated_cost_usd": 0.004671700000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 32,
+      "url": "https://tienphong.vn/hang-tram-hoc-sinh-da-nang-tranh-tai-robotics-va-drone-post1823977.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 15835,
+        "total_cost_usd": 0.012050000000000002,
+        "total_tokens": 6590,
+        "fused_summary": "Ngày 1/3 tại Đà Nẵng, cuộc thi Robotics & Drone Challenge 2026 diễn ra với sự tham gia của hàng trăm học sinh từ 23 trường Tiểu học và THCS. Cuộc thi gồm hai nội dung: điều khiển robot cho khối tiểu học và drone cho khối THCS, yêu cầu học sinh rèn luyện kỹ năng điều khiển, lập trình và xử lý tình huống. Sự kiện không chỉ thúc đẩy giáo dục STEM mà còn giúp học sinh áp dụng Toán học, Khoa học vào thực tế. Kết thúc cuộc thi, Trường Tiểu học Nguyễn Du và Trường THCS Kim Đồng đạt giải Nhất. Khu vực trải nghiệm STEM cũng thu hút nhiều phụ huynh và học sinh tham quan.",
+        "fused_scores": {
+          "rouge1": 0.2666,
+          "rouge2": 0.2107,
+          "rougeL": 0.2046,
+          "bleu": 0.0216,
+          "bert_score": 0.632296,
+          "compression_rate": 26.56
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5139,
+            "scores": {
+              "rouge1": 0.4193,
+              "rouge2": 0.3333,
+              "rougeL": 0.3199,
+              "bleu": 0.1093,
+              "bert_score": 0.681841,
+              "compression_rate": 38.24
+            },
+            "estimated_cost_usd": 0.0003144
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 10771,
+            "scores": {
+              "rouge1": 0.3732,
+              "rouge2": 0.316,
+              "rougeL": 0.3156,
+              "bleu": 0.0976,
+              "bert_score": 0.694912,
+              "compression_rate": 35.84
+            },
+            "estimated_cost_usd": 0.0008160000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6427,
+            "scores": {
+              "rouge1": 0.4352,
+              "rouge2": 0.3434,
+              "rougeL": 0.3256,
+              "bleu": 0.1083,
+              "bert_score": 0.657821,
+              "compression_rate": 43.84
+            },
+            "estimated_cost_usd": 0.003972100000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 33,
+      "url": "https://tienphong.vn/pgsts-pham-manh-ha-diem-so-khong-la-thuoc-do-kha-nang-thich-nghi-cua-tre-trong-cuoc-song-post1823820.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11265,
+        "total_cost_usd": 0.01640855,
+        "total_tokens": 11771,
+        "fused_summary": "PGS. TS Phạm Mạnh Hà, chuyên gia tâm lý tại Đại học Bách Khoa Hà Nội, cảnh báo về áp lực học tập quá mức đối với học sinh cuối cấp, đặc biệt tại Hà Nội. Ông nhấn mạnh rằng stress vừa đủ có thể là động lực, nhưng stress quá mức gây tổn hại lâu dài đến sức khỏe tinh thần, dẫn đến rối loạn giấc ngủ, lo âu và mất động lực học tập. Ông phản đối văn hóa luyện thi trường chuyên từ sớm, vì điều này có thể làm méo mó động lực học tập và rút ngắn tuổi thơ của trẻ. Ông khuyến nghị cha mẹ nên tạo môi trường an toàn để trẻ được phép sai và phát triển bản thân toàn diện, thay vì chỉ tập trung vào điểm số.",
+        "fused_scores": {
+          "rouge1": 0.0873,
+          "rouge2": 0.0795,
+          "rougeL": 0.0766,
+          "bleu": 0,
+          "bert_score": 0.556758,
+          "compression_rate": 8.45
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4031,
+            "scores": {
+              "rouge1": 0.0919,
+              "rouge2": 0.0787,
+              "rougeL": 0.0733,
+              "bleu": 0,
+              "bert_score": 0.518239,
+              "compression_rate": 8.94
+            },
+            "estimated_cost_usd": 0.0004954499999999999
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 5106,
+            "scores": {
+              "rouge1": 0.1325,
+              "rouge2": 0.1197,
+              "rougeL": 0.1072,
+              "bleu": 0.0004,
+              "bert_score": 0.553071,
+              "compression_rate": 13.09
+            },
+            "estimated_cost_usd": 0.0014412000000000003
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5795,
+            "scores": {
+              "rouge1": 0.0695,
+              "rouge2": 0.0617,
+              "rougeL": 0.0625,
+              "bleu": 0,
+              "bert_score": 0.521482,
+              "compression_rate": 7.02
+            },
+            "estimated_cost_usd": 0.004349400000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 34,
+      "url": "https://tienphong.vn/2-nu-sinh-lop-8-bi-bat-ve-lam-vo-sau-tet-post1823797.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 9557,
+        "total_cost_usd": 0.009670650000000001,
+        "total_tokens": 5602,
+        "fused_summary": "Sau kỳ nghỉ Tết Nguyên đán, hai nữ sinh lớp 8 ở xã Na Loi, Nghệ An, đã bị \"bắt\" về làm vợ theo tập tục địa phương. Hai em L.H.A. và L.Y.D. bị đưa về nhà vào ban đêm, gây khó khăn cho việc ngăn chặn. Nhà trường và chính quyền địa phương đang phối hợp vận động các em quay lại trường học. Dù đã có tuyên truyền về tác hại của tảo hôn, tập tục \"bắt vợ\" vẫn tồn tại trong cộng đồng. Chính quyền xã đã giao các cơ quan chức năng đến gia đình để tuyên truyền, giúp các em hiểu rõ pháp luật và hậu quả của tảo hôn, nhằm ngăn chặn tái diễn sự việc.",
+        "fused_scores": {
+          "rouge1": 0.3019,
+          "rouge2": 0.2337,
+          "rougeL": 0.2196,
+          "bleu": 0.0318,
+          "bert_score": 0.647812,
+          "compression_rate": 29.3
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2737,
+            "scores": {
+              "rouge1": 0.1801,
+              "rouge2": 0.1581,
+              "rougeL": 0.1612,
+              "bleu": 0.0075,
+              "bert_score": 0.701483,
+              "compression_rate": 18.77
+            },
+            "estimated_cost_usd": 0.00022634999999999997
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2679,
+            "scores": {
+              "rouge1": 0.3122,
+              "rouge2": 0.2491,
+              "rougeL": 0.2264,
+              "bleu": 0.0417,
+              "bert_score": 0.655944,
+              "compression_rate": 28.42
+            },
+            "estimated_cost_usd": 0.000698
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5115,
+            "scores": {
+              "rouge1": 0.3276,
+              "rouge2": 0.2749,
+              "rougeL": 0.2487,
+              "bleu": 0.0548,
+              "bert_score": 0.674446,
+              "compression_rate": 31.4
+            },
+            "estimated_cost_usd": 0.0026488
+          }
+        ]
+      }
+    },
+    {
+      "index": 35,
+      "url": "https://tienphong.vn/bao-gio-ha-noi-cong-bo-thoi-gian-thi-tuyen-lop-10-post1823793.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 14293,
+        "total_cost_usd": 0.013286000000000001,
+        "total_tokens": 7121,
+        "fused_summary": "Sở Giáo dục và Đào tạo Hà Nội đã công bố ba môn thi cho Kỳ thi tuyển sinh vào lớp 10, gồm Toán, Ngữ văn và Ngoại ngữ, nhưng chưa xác định thời gian tổ chức thi. Mặc dù trên mạng xã hội lan truyền thông tin về lịch thi cuối tháng 5, lãnh đạo Sở khẳng định chưa có lịch thi chính thức và sẽ công bố sau khi UBND Thành phố phê duyệt phương án tuyển sinh. Dự kiến kỳ thi có thể diễn ra vào cuối tháng 6. Học sinh, phụ huynh và giáo viên mong muốn kỳ thi được tổ chức sớm để thuận tiện cho việc ôn tập và tránh áp lực trong thời tiết nóng bức. Với chỉ tiêu tuyển sinh hạn chế, kỳ thi luôn có tính cạnh tranh cao tại Hà Nội.",
+        "fused_scores": {
+          "rouge1": 0.246,
+          "rouge2": 0.174,
+          "rougeL": 0.1616,
+          "bleu": 0.0144,
+          "bert_score": 0.583319,
+          "compression_rate": 24.15
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4453,
+            "scores": {
+              "rouge1": 0.2925,
+              "rouge2": 0.2414,
+              "rougeL": 0.2179,
+              "bleu": 0.0372,
+              "bert_score": 0.669466,
+              "compression_rate": 28.1
+            },
+            "estimated_cost_usd": 0.00031079999999999997
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4462,
+            "scores": {
+              "rouge1": 0.3097,
+              "rouge2": 0.2304,
+              "rougeL": 0.2081,
+              "bleu": 0.0444,
+              "bert_score": 0.607807,
+              "compression_rate": 30.29
+            },
+            "estimated_cost_usd": 0.000856
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7631,
+            "scores": {
+              "rouge1": 0.2938,
+              "rouge2": 0.2292,
+              "rougeL": 0.2142,
+              "bleu": 0.028,
+              "bert_score": 0.620794,
+              "compression_rate": 30.7
+            },
+            "estimated_cost_usd": 0.0050017
+          }
+        ]
+      }
+    },
+    {
+      "index": 36,
+      "url": "https://tienphong.vn/ong-hoang-minh-son-lam-quyen-bo-truong-bo-giao-duc-va-dao-tao-post1823703.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11047,
+        "total_cost_usd": 0.00965955,
+        "total_tokens": 5299,
+        "fused_summary": "Ông Hoàng Minh Sơn, Ủy viên Trung ương Đảng và Giám đốc Đại học Quốc gia Hà Nội, được Thủ tướng Chính phủ bổ nhiệm làm Quyền Bộ trưởng Giáo dục và Đào tạo từ ngày 27/2. Ông kế nhiệm ông Nguyễn Kim Sơn, người được điều động giữ chức Phó ban Chính sách, chiến lược Trung ương. Sinh năm 1969 tại Hưng Yên, ông Sơn có trình độ Phó Giáo sư, Tiến sĩ Kỹ thuật Tự động hóa và Tiến sĩ Tiếng Đức. Ông từng là Hiệu trưởng Đại học Bách khoa Hà Nội, Thứ trưởng Bộ Giáo dục và Đào tạo, và hiện là Giám đốc Đại học Quốc gia Hà Nội.",
+        "fused_scores": {
+          "rouge1": 0.3818,
+          "rouge2": 0.3485,
+          "rougeL": 0.3341,
+          "bleu": 0.1359,
+          "bert_score": 0.761529,
+          "compression_rate": 38.79
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3316,
+            "scores": {
+              "rouge1": 0.4273,
+              "rouge2": 0.3599,
+              "rougeL": 0.3477,
+              "bleu": 0.1469,
+              "bert_score": 0.752504,
+              "compression_rate": 41.12
+            },
+            "estimated_cost_usd": 0.00024705
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3211,
+            "scores": {
+              "rouge1": 0.4477,
+              "rouge2": 0.4077,
+              "rougeL": 0.4,
+              "bleu": 0.1795,
+              "bert_score": 0.774541,
+              "compression_rate": 43.46
+            },
+            "estimated_cost_usd": 0.0006764000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 4704,
+            "scores": {
+              "rouge1": 0.4864,
+              "rouge2": 0.41,
+              "rougeL": 0.4227,
+              "bleu": 0.1921,
+              "bert_score": 0.746032,
+              "compression_rate": 51.4
+            },
+            "estimated_cost_usd": 0.0026686
+          }
+        ]
+      }
+    },
+    {
+      "index": 37,
+      "url": "https://tienphong.vn/hoc-sinh-se-duoc-day-khoi-nghiep-tu-tieu-hoc-post1823526.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13705,
+        "total_cost_usd": 0.014631950000000001,
+        "total_tokens": 8180,
+        "fused_summary": "Chính phủ Việt Nam đã phê duyệt Chương trình \"Hỗ trợ học sinh, sinh viên khởi nghiệp giai đoạn 2026 – 2035\" nhằm phát triển văn hóa khởi nghiệp từ bậc tiểu học đến đại học. Chương trình đặt mục tiêu định hướng khởi nghiệp cho 50% học sinh THPT, 25% THCS, và 15% tiểu học; trang bị kỹ năng cho 35% THPT, 15% THCS và 10% tiểu học. Chính phủ yêu cầu xây dựng nền tảng số, đầu tư ít nhất 40 phòng thí nghiệm chế tạo mở (FabLab), thành lập Quỹ hỗ trợ khởi nghiệp, và khuyến khích quỹ đầu tư mạo hiểm tham gia. Ngân sách nhà nước sẽ hỗ trợ các dự án khởi nghiệp, đảm bảo mỗi năm có 40-70 dự án được đầu tư hoặc kết nối vốn.",
+        "fused_scores": {
+          "rouge1": 0.1859,
+          "rouge2": 0.156,
+          "rougeL": 0.1643,
+          "bleu": 0.0067,
+          "bert_score": 0.624213,
+          "compression_rate": 21.05
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5211,
+            "scores": {
+              "rouge1": 0.2657,
+              "rouge2": 0.2387,
+              "rougeL": 0.2066,
+              "bleu": 0.0304,
+              "bert_score": 0.647609,
+              "compression_rate": 25.79
+            },
+            "estimated_cost_usd": 0.00036675
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4180,
+            "scores": {
+              "rouge1": 0.2667,
+              "rouge2": 0.2246,
+              "rougeL": 0.2131,
+              "bleu": 0.0257,
+              "bert_score": 0.666804,
+              "compression_rate": 24.63
+            },
+            "estimated_cost_usd": 0.000962
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7762,
+            "scores": {
+              "rouge1": 0.3362,
+              "rouge2": 0.2829,
+              "rougeL": 0.262,
+              "bleu": 0.0578,
+              "bert_score": 0.681089,
+              "compression_rate": 37.26
+            },
+            "estimated_cost_usd": 0.004963200000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 38,
+      "url": "https://tienphong.vn/dao-tao-y-khoa-khong-the-chi-trong-giang-duong-post1823547.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11263,
+        "total_cost_usd": 0.0133588,
+        "total_tokens": 7945,
+        "fused_summary": "Nhân kỷ niệm 71 năm Ngày Thầy thuốc Việt Nam, Trường Đại học Quốc tế Hồng Bàng đã tổ chức các đoàn thăm 24 bệnh viện nơi sinh viên thực hành lâm sàng. Hoạt động này không chỉ tri ân mà còn nhấn mạnh vai trò của môi trường bệnh viện trong đào tạo nhân lực y tế. Sinh viên được tham gia chăm sóc bệnh nhân, làm quen với quy trình y tế và phối hợp đa chuyên khoa. Nhà trường cũng đầu tư vào phòng thực hành tiền lâm sàng và mô hình mô phỏng nhằm chuẩn hóa kỹ năng. Mối quan hệ hợp tác giữa trường và bệnh viện còn được thể hiện qua việc các bác sĩ tham gia giảng dạy và nhiều cựu sinh viên hiện làm việc tại các bệnh viện đối tác.",
+        "fused_scores": {
+          "rouge1": 0.1791,
+          "rouge2": 0.1642,
+          "rougeL": 0.1624,
+          "bleu": 0.0054,
+          "bert_score": 0.631417,
+          "compression_rate": 16.82
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2778,
+            "scores": {
+              "rouge1": 0.122,
+              "rouge2": 0.111,
+              "rougeL": 0.1109,
+              "bleu": 0.0005,
+              "bert_score": 0.645986,
+              "compression_rate": 11.97
+            },
+            "estimated_cost_usd": 0.0003009
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4214,
+            "scores": {
+              "rouge1": 0.2876,
+              "rouge2": 0.2569,
+              "rougeL": 0.2361,
+              "bleu": 0.0389,
+              "bert_score": 0.637409,
+              "compression_rate": 26.21
+            },
+            "estimated_cost_usd": 0.0010392
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6816,
+            "scores": {
+              "rouge1": 0.2504,
+              "rouge2": 0.2205,
+              "rougeL": 0.2013,
+              "bleu": 0.0225,
+              "bert_score": 0.607469,
+              "compression_rate": 25.12
+            },
+            "estimated_cost_usd": 0.0043087
+          }
+        ]
+      }
+    },
+    {
+      "index": 39,
+      "url": "https://tienphong.vn/ha-noi-du-chi-300-ty-ho-tro-dao-tao-1000-tien-si-post1823517.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12650,
+        "total_cost_usd": 0.013851600000000002,
+        "total_tokens": 8075,
+        "fused_summary": "Hà Nội đang xây dựng chính sách hỗ trợ đào tạo 1.000 nghiên cứu sinh từ 2026-2030 nhằm phát triển nguồn nhân lực tinh hoa. Nghiên cứu sinh sẽ nhận học bổng 15 triệu đồng/tháng và hỗ trợ kinh phí công bố khoa học, hội thảo quốc tế. Đặc biệt, người có bằng sáng chế được hỗ trợ từ 80 đến 159 triệu đồng tùy nơi cấp bằng. Ứng viên cần đạt trình độ ngoại ngữ tương đương IELTS 6.5 và nghiên cứu gắn với các \"bài toán lớn\" của thành phố. Dự kiến tuyển 200 nghiên cứu sinh mỗi năm với tổng kinh phí 300 tỷ đồng trong 5 năm, nhằm nâng cao nhân lực cho các lĩnh vực ưu tiên như công nghệ cao và kinh tế xanh.",
+        "fused_scores": {
+          "rouge1": 0.1708,
+          "rouge2": 0.1454,
+          "rougeL": 0.1487,
+          "bleu": 0.0034,
+          "bert_score": 0.578053,
+          "compression_rate": 17.46
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4297,
+            "scores": {
+              "rouge1": 0.215,
+              "rouge2": 0.176,
+              "rougeL": 0.1674,
+              "bleu": 0.0086,
+              "bert_score": 0.583221,
+              "compression_rate": 19.88
+            },
+            "estimated_cost_usd": 0.00034409999999999996
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3785,
+            "scores": {
+              "rouge1": 0.2659,
+              "rouge2": 0.2389,
+              "rougeL": 0.2294,
+              "bleu": 0.0335,
+              "bert_score": 0.603019,
+              "compression_rate": 24.62
+            },
+            "estimated_cost_usd": 0.0009944
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7715,
+            "scores": {
+              "rouge1": 0.2574,
+              "rouge2": 0.227,
+              "rougeL": 0.2268,
+              "bleu": 0.03,
+              "bert_score": 0.639467,
+              "compression_rate": 27.35
+            },
+            "estimated_cost_usd": 0.004643100000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 40,
+      "url": "https://tienphong.vn/tuong-trinh-cua-giao-vien-bi-to-bat-35-hoc-sinh-liem-dat-post1823464.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12512,
+        "total_cost_usd": 0.0116746,
+        "total_tokens": 6446,
+        "fused_summary": "Cô giáo Nguyễn Thị Sinh tại Trường Tiểu học Trưng Nhị, Phú Thọ, bị tố cáo vì không ngăn chặn kịp thời hành vi phản cảm của học sinh trong giờ học. Ngày 24/2, trong tiết học Đạo đức, cô yêu cầu học sinh nhặt rác và đề xuất biện pháp giữ vệ sinh. Một số học sinh đã thực hiện hành vi \"liếm đất\" theo ý kiến đề xuất. Cô Sinh thừa nhận không trực tiếp yêu cầu nhưng có lời nói chưa phù hợp, gửi lời xin lỗi phụ huynh và học sinh. Nhà trường đã yêu cầu cô tạm dừng đứng lớp và chuyển sang công tác khác. UBND phường Phúc Yên và các cơ quan chức năng đang xác minh, xử lý vụ việc.",
+        "fused_scores": {
+          "rouge1": 0.2642,
+          "rouge2": 0.2252,
+          "rougeL": 0.2073,
+          "bleu": 0.0263,
+          "bert_score": 0.65027,
+          "compression_rate": 26.24
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3434,
+            "scores": {
+              "rouge1": 0.3035,
+              "rouge2": 0.2483,
+              "rougeL": 0.2263,
+              "bleu": 0.0366,
+              "bert_score": 0.653949,
+              "compression_rate": 30.17
+            },
+            "estimated_cost_usd": 0.0002973
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2449,
+            "scores": {
+              "rouge1": 0.2141,
+              "rouge2": 0.1859,
+              "rougeL": 0.1572,
+              "bleu": 0.0102,
+              "bert_score": 0.662698,
+              "compression_rate": 21.57
+            },
+            "estimated_cost_usd": 0.0006984000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6264,
+            "scores": {
+              "rouge1": 0.3049,
+              "rouge2": 0.251,
+              "rougeL": 0.2195,
+              "bleu": 0.0382,
+              "bert_score": 0.613394,
+              "compression_rate": 31.98
+            },
+            "estimated_cost_usd": 0.004013900000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 41,
+      "url": "https://tienphong.vn/cac-nguoi-dep-hoa-hau-viet-nam-check-in-tai-ngoi-chua-2000-nam-tuoi-o-bac-ninh-post1824000.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 19900,
+        "total_cost_usd": 0.01416355,
+        "total_tokens": 6852,
+        "fused_summary": "Hoa hậu Hà Trúc Linh và các người đẹp Hoa hậu Việt Nam đã có chuyến trải nghiệm văn hóa tại Bắc Ninh, tham quan các di sản nổi tiếng như đền Bà Chúa Then, chùa Dâu, và lăng Kinh Dương Vương. Họ tìm hiểu về lịch sử, tín ngưỡng bản địa và thưởng thức các món ăn truyền thống như nem bùi và bánh phu thê. Chùa Dâu, với lịch sử gần 2.000 năm, là điểm nhấn trong hành trình. Chuyến đi mang lại cho các người đẹp cơ hội cảm nhận sâu sắc về văn hóa và con người Bắc Ninh, thể hiện sự yêu thích và trân trọng vùng đất này.",
+        "fused_scores": {
+          "rouge1": 0.2812,
+          "rouge2": 0.212,
+          "rougeL": 0.1785,
+          "bleu": 0.0145,
+          "bert_score": 0.609235,
+          "compression_rate": 25.89
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 6830,
+            "scores": {
+              "rouge1": 0.376,
+              "rouge2": 0.2991,
+              "rougeL": 0.2338,
+              "bleu": 0.0463,
+              "bert_score": 0.610479,
+              "compression_rate": 34.35
+            },
+            "estimated_cost_usd": 0.00028965
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3523,
+            "scores": {
+              "rouge1": 0.3002,
+              "rouge2": 0.2484,
+              "rougeL": 0.1943,
+              "bleu": 0.0289,
+              "bert_score": 0.621227,
+              "compression_rate": 28.26
+            },
+            "estimated_cost_usd": 0.0007132000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 13699,
+            "scores": {
+              "rouge1": 0.3776,
+              "rouge2": 0.2896,
+              "rougeL": 0.2338,
+              "bleu": 0.0649,
+              "bert_score": 0.650142,
+              "compression_rate": 36.38
+            },
+            "estimated_cost_usd": 0.006778200000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 42,
+      "url": "https://tienphong.vn/bien-nguoi-do-ve-song-day-xem-cac-do-vat-post1823974.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13772,
+        "total_cost_usd": 0.012159700000000002,
+        "total_tokens": 6345,
+        "fused_summary": "Giải Vật dân tộc truyền thống xã Dương Hòa, Hà Nội, diễn ra từ 11 đến 13 tháng Giêng Âm lịch tại sới vật Cát Quế, thu hút hàng nghìn người tham dự. Đây là địa phương duy nhất thờ ông Tổ môn vật, thể hiện nét đẹp văn hóa gắn bó với đời sống nhân dân. Giải đấu chia thành hai nhóm phong trào và nâng cao. Để thi đấu, vận động viên cần đạt \"giải Lèo\" và phải thắng ba keo liên tiếp để giành giải cao. Nhiều vận động viên tiêu biểu của xã đã đạt thành tích quốc tế. Các đô vật nữ cũng thể hiện kỹ thuật và tinh thần thượng võ, tạo không khí sôi động với tiếng vỗ tay từ khán giả sau mỗi pha vật đẹp mắt.",
+        "fused_scores": {
+          "rouge1": 0.3306,
+          "rouge2": 0.263,
+          "rougeL": 0.2431,
+          "bleu": 0.0392,
+          "bert_score": 0.613541,
+          "compression_rate": 30.8
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4301,
+            "scores": {
+              "rouge1": 0.41,
+              "rouge2": 0.3182,
+              "rougeL": 0.2431,
+              "bleu": 0.0683,
+              "bert_score": 0.630989,
+              "compression_rate": 36.16
+            },
+            "estimated_cost_usd": 0.0002913
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2895,
+            "scores": {
+              "rouge1": 0.3079,
+              "rouge2": 0.2516,
+              "rougeL": 0.2301,
+              "bleu": 0.0271,
+              "bert_score": 0.610014,
+              "compression_rate": 27.16
+            },
+            "estimated_cost_usd": 0.0006920000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 8321,
+            "scores": {
+              "rouge1": 0.4781,
+              "rouge2": 0.3766,
+              "rougeL": 0.3193,
+              "bleu": 0.0999,
+              "bert_score": 0.627446,
+              "compression_rate": 46.37
+            },
+            "estimated_cost_usd": 0.004453900000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 43,
+      "url": "https://tienphong.vn/hieu-dung-ve-cau-cung-quanh-nam-khong-bang-ram-thang-gieng-post1823919.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12947,
+        "total_cost_usd": 0.0073029,
+        "total_tokens": 3615,
+        "fused_summary": "Rằm tháng Giêng là một ngày lễ lớn trong đạo Phật, được người Việt coi là thời khắc quan trọng khởi đầu viên mãn dưới ánh trăng tròn đầu tiên của năm mới. Ngày này mang ý nghĩa tâm linh sâu sắc khi ánh sáng từ bi được tin rằng sẽ lan tỏa, mang lại bình an, may mắn và phúc lành cho nhân gian. Đây là dịp để mọi người cầu nguyện cho một năm mới an lành và thịnh vượng.",
+        "fused_scores": {
+          "rouge1": 0.8738,
+          "rouge2": 0.6765,
+          "rougeL": 0.4854,
+          "bleu": 0.3101,
+          "bert_score": 0.718973,
+          "compression_rate": 104.95
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 8168,
+            "scores": {
+              "rouge1": 0.8447,
+              "rouge2": 0.6275,
+              "rougeL": 0.5922,
+              "bleu": 0.2579,
+              "bert_score": 0.702152,
+              "compression_rate": 96.04
+            },
+            "estimated_cost_usd": 0.0001518
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2120,
+            "scores": {
+              "rouge1": 0.8544,
+              "rouge2": 0.6667,
+              "rougeL": 0.5728,
+              "bleu": 0.3632,
+              "bert_score": 0.748069,
+              "compression_rate": 94.06
+            },
+            "estimated_cost_usd": 0.0004016
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5862,
+            "scores": {
+              "rouge1": 0.8835,
+              "rouge2": 0.6176,
+              "rougeL": 0.6117,
+              "bleu": 0.1625,
+              "bert_score": 0.652185,
+              "compression_rate": 162.38
+            },
+            "estimated_cost_usd": 0.0026345000000000006
+          }
+        ]
+      }
+    },
+    {
+      "index": 44,
+      "url": "https://tienphong.vn/ha-truc-linh-va-cac-nguoi-dep-hoa-hau-viet-nam-du-xuan-mien-di-san-bac-ninh-post1823938.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13795,
+        "total_cost_usd": 0.017353550000000002,
+        "total_tokens": 11024,
+        "fused_summary": "Ngày 28/2, Hoa hậu Hà Trúc Linh và các thí sinh Hoa hậu Việt Nam đã có chuyến du xuân về miền di sản Bắc Ninh. Họ thăm đền Bà Chúa Then với lễ hội văn hóa Tày, Nùng, tham gia Hội Lim với dân ca Quan họ, và trải nghiệm làm tranh tại làng Đông Hồ. Chuyến đi còn đưa họ đến lăng Kinh Dương Vương và chùa Dâu, khám phá cội nguồn và lịch sử văn hóa vùng Kinh Bắc. Qua hành trình này, các người đẹp cảm nhận sâu sắc sự giao thoa văn hóa truyền thống và hiện đại, đồng thời truyền tải thông điệp bảo tồn di sản văn hóa.",
+        "fused_scores": {
+          "rouge1": 0.0958,
+          "rouge2": 0.0852,
+          "rougeL": 0.082,
+          "bleu": 0,
+          "bert_score": 0.578041,
+          "compression_rate": 9.02
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3552,
+            "scores": {
+              "rouge1": 0.1129,
+              "rouge2": 0.0996,
+              "rougeL": 0.0948,
+              "bleu": 0.0001,
+              "bert_score": 0.554289,
+              "compression_rate": 10.36
+            },
+            "estimated_cost_usd": 0.00044085
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4310,
+            "scores": {
+              "rouge1": 0.1384,
+              "rouge2": 0.1129,
+              "rougeL": 0.107,
+              "bleu": 0.0006,
+              "bert_score": 0.574448,
+              "compression_rate": 12.18
+            },
+            "estimated_cost_usd": 0.0012284
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 9060,
+            "scores": {
+              "rouge1": 0.1576,
+              "rouge2": 0.1337,
+              "rougeL": 0.1209,
+              "bleu": 0.0017,
+              "bert_score": 0.585382,
+              "compression_rate": 16.1
+            },
+            "estimated_cost_usd": 0.006311800000000001
+          }
+        ]
+      }
+    },
+    {
+      "index": 45,
+      "url": "https://tienphong.vn/nghe-nhac-trinh-ben-dong-song-huong-post1823845.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 15544,
+        "total_cost_usd": 0.014217549999999999,
+        "total_tokens": 7390,
+        "fused_summary": "Chương trình nghệ thuật \"Chiều trên quê hương tôi\" được tổ chức bên dòng sông Hương nhằm kỷ niệm sinh nhật cố nhạc sĩ Trịnh Công Sơn, thu hút hàng ngàn người yêu nhạc. Sự kiện diễn ra tại công viên Trịnh Công Sơn, mang ý nghĩa tưởng niệm và thể hiện tình yêu với Huế. Chương trình kéo dài gần 90 phút, với các ca khúc nổi tiếng như \"Hãy yêu nhau đi\", \"Để gió cuốn đi\", \"Diễm xưa\"... do các nghệ sĩ Đức Tuấn, Cẩm Vân, Tấn Sơn... trình bày. Phần đồng ca \"Nối vòng tay lớn\" giữa nghệ sĩ và khán giả tạo không khí ấm áp, xúc động. Sự kiện miễn phí này khẳng định quyền thụ hưởng văn hóa của người dân và biến di sản âm nhạc Trịnh Công Sơn thành nguồn lực phát triển văn hóa đô thị.",
+        "fused_scores": {
+          "rouge1": 0.2611,
+          "rouge2": 0.2214,
+          "rougeL": 0.2033,
+          "bleu": 0.0183,
+          "bert_score": 0.597637,
+          "compression_rate": 26.61
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3678,
+            "scores": {
+              "rouge1": 0.1856,
+              "rouge2": 0.1524,
+              "rougeL": 0.1422,
+              "bleu": 0.003,
+              "bert_score": 0.622754,
+              "compression_rate": 17.18
+            },
+            "estimated_cost_usd": 0.00027435000000000003
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4619,
+            "scores": {
+              "rouge1": 0.3222,
+              "rouge2": 0.2836,
+              "rougeL": 0.2567,
+              "bleu": 0.0461,
+              "bert_score": 0.617711,
+              "compression_rate": 29.84
+            },
+            "estimated_cost_usd": 0.0008916
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 9601,
+            "scores": {
+              "rouge1": 0.4289,
+              "rouge2": 0.3726,
+              "rougeL": 0.3189,
+              "bleu": 0.1206,
+              "bert_score": 0.618451,
+              "compression_rate": 45.61
+            },
+            "estimated_cost_usd": 0.0053416
+          }
+        ]
+      }
+    },
+    {
+      "index": 46,
+      "url": "https://tienphong.vn/nsnd-trinh-thuy-mui-ung-cu-dai-bieu-quoc-hoi-khoa-xiv-post1823930.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12791,
+        "total_cost_usd": 0.0143949,
+        "total_tokens": 8626,
+        "fused_summary": "Hội đồng bầu cử quốc gia đã công bố danh sách chính thức những người ứng cử Đại biểu Quốc hội khóa XVI, trong đó có NSND Trịnh Thúy Mùi. Bà sẽ ứng cử tại đơn vị bầu cử số 1 tỉnh Đồng Tháp và đã nhận được sự thống nhất cao từ các đại biểu trong việc giới thiệu. NSND Trịnh Thúy Mùi bày tỏ niềm tự hào và trách nhiệm khi được giới thiệu, cam kết sẽ đại diện tiếng nói của cử tri và giới văn nghệ sĩ tại nghị trường Quốc hội, đồng thời tham gia xây dựng chính sách văn hóa, nghệ thuật. Bà có kinh nghiệm phong phú trong lĩnh vực sân khấu truyền thống và từng giữ nhiều vị trí lãnh đạo quan trọng.",
+        "fused_scores": {
+          "rouge1": 0.1568,
+          "rouge2": 0.1341,
+          "rougeL": 0.1405,
+          "bleu": 0.0028,
+          "bert_score": 0.583144,
+          "compression_rate": 14.85
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3970,
+            "scores": {
+              "rouge1": 0.2177,
+              "rouge2": 0.1829,
+              "rougeL": 0.1673,
+              "bleu": 0.0143,
+              "bert_score": 0.571123,
+              "compression_rate": 19.89
+            },
+            "estimated_cost_usd": 0.00038369999999999995
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3202,
+            "scores": {
+              "rouge1": 0.1974,
+              "rouge2": 0.1577,
+              "rougeL": 0.1633,
+              "bleu": 0.0075,
+              "bert_score": 0.588601,
+              "compression_rate": 17.6
+            },
+            "estimated_cost_usd": 0.0009832
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7579,
+            "scores": {
+              "rouge1": 0.2624,
+              "rouge2": 0.2252,
+              "rougeL": 0.2291,
+              "bleu": 0.0318,
+              "bert_score": 0.646402,
+              "compression_rate": 24.85
+            },
+            "estimated_cost_usd": 0.0048455
+          }
+        ]
+      }
+    },
+    {
+      "index": 47,
+      "url": "https://tienphong.vn/nhan-sac-chi-hai-quan-ho-don-tim-du-khach-tai-hoi-lim-post1823900.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11883,
+        "total_cost_usd": 0.0089091,
+        "total_tokens": 4076,
+        "fused_summary": "Hội Lim tại xã Tiên Du, tỉnh Bắc Ninh, nổi bật với sắc màu văn hóa truyền thống của miền Bắc Việt Nam. Hình ảnh những chị hai quan họ duyên dáng trong trang phục áo mớ ba mớ bảy và nón quai thao nghiêng vành đã thu hút hàng nghìn du khách. Sự kết hợp giữa nhan sắc nền nã, nụ cười e ấp và giọng hát ngọt ngào đã tạo nên sức hút đặc biệt cho ngày hội xuân, thể hiện nét đẹp văn hóa quan họ độc đáo, góp phần tôn vinh di sản văn hóa dân gian Bắc Ninh.",
+        "fused_scores": {
+          "rouge1": 0.8321,
+          "rouge2": 0.6692,
+          "rougeL": 0.6489,
+          "bleu": 0.292,
+          "bert_score": 0.724521,
+          "compression_rate": 104.55
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2222,
+            "scores": {
+              "rouge1": 0.7405,
+              "rouge2": 0.5231,
+              "rougeL": 0.5649,
+              "bleu": 0.2323,
+              "bert_score": 0.695458,
+              "compression_rate": 88.64
+            },
+            "estimated_cost_usd": 0.0001686
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2108,
+            "scores": {
+              "rouge1": 0.8244,
+              "rouge2": 0.5846,
+              "rougeL": 0.4809,
+              "bleu": 0.1839,
+              "bert_score": 0.72436,
+              "compression_rate": 86.36
+            },
+            "estimated_cost_usd": 0.0004448000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7214,
+            "scores": {
+              "rouge1": 0.8779,
+              "rouge2": 0.6923,
+              "rougeL": 0.5573,
+              "bleu": 0.3481,
+              "bert_score": 0.72503,
+              "compression_rate": 112.12
+            },
+            "estimated_cost_usd": 0.0037257000000000006
+          }
+        ]
+      }
+    },
+    {
+      "index": 48,
+      "url": "https://tienphong.vn/bao-han-kinh-ngac-viet-nam-post1823892.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12239,
+        "total_cost_usd": 0.014062849999999998,
+        "total_tokens": 8232,
+        "fused_summary": "Thị trường tiêu dùng Việt Nam đang chuyển dịch từ \"sở hữu vật chất\" sang \"cảm xúc và trải nghiệm\", với sự bùng nổ trong lĩnh vực nghệ thuật, giải trí và du lịch. Dự báo năm 2025, tổng mức bán lẻ hàng hóa và doanh thu dịch vụ tiêu dùng sẽ tăng 9,2%, vượt 7.008,9 nghìn tỷ đồng. Người tiêu dùng, đặc biệt là giới trẻ đô thị, đang ưu tiên chi tiêu cho các sự kiện văn hóa, như concert và lễ hội, thúc đẩy tăng trưởng ngành giải trí và các ngành liên quan như du lịch. Sự thay đổi này cũng góp phần tăng tỷ trọng công nghiệp văn hóa vào GDP TP HCM, với mục tiêu đạt 7,2% vào năm 2030.",
+        "fused_scores": {
+          "rouge1": 0.1704,
+          "rouge2": 0.1542,
+          "rougeL": 0.1413,
+          "bleu": 0.0028,
+          "bert_score": 0.638756,
+          "compression_rate": 16.22
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2383,
+            "scores": {
+              "rouge1": 0.1533,
+              "rouge2": 0.1311,
+              "rougeL": 0.1164,
+              "bleu": 0.0013,
+              "bert_score": 0.649828,
+              "compression_rate": 13.05
+            },
+            "estimated_cost_usd": 0.00031634999999999996
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3625,
+            "scores": {
+              "rouge1": 0.2851,
+              "rouge2": 0.2322,
+              "rougeL": 0.2166,
+              "bleu": 0.0299,
+              "bert_score": 0.60911,
+              "compression_rate": 25.24
+            },
+            "estimated_cost_usd": 0.00105
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6627,
+            "scores": {
+              "rouge1": 0.2568,
+              "rouge2": 0.2108,
+              "rougeL": 0.2055,
+              "bleu": 0.0228,
+              "bert_score": null,
+              "compression_rate": 27.54
+            },
+            "estimated_cost_usd": 0.0047740000000000005
+          }
+        ]
+      }
+    },
+    {
+      "index": 49,
+      "url": "https://tienphong.vn/hang-nghin-nguoi-do-ve-dinh-van-noi-ruoc-lua-thieng-ve-nha-luc-nua-dem-post1823877.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13985,
+        "total_cost_usd": 0.01309405,
+        "total_tokens": 7138,
+        "fused_summary": "Vào tối 12 tháng Giêng Âm lịch, hàng nghìn người dân đã đổ về đình Văn Nội, phường Phú Lương, Hà Nội, để tham gia lễ hội rước lửa thiêng. Lễ hội diễn ra trong không khí náo nhiệt với người dân dùng sào tre lấy lửa từ \"giếng vàng\" - nơi chứa hàng tấn vàng mã - để mang về nhà thắp hương, giữ gìn nét văn hóa tâm linh. Đình Văn Nội thờ Đức Thành Hoàng làng Cừ Súy Dực Bảo Tướng Quân Chu Bá, vị tướng thời Hai Bà Trưng. Ban tổ chức đã chuẩn bị kỹ lưỡng công tác phòng cháy chữa cháy để đảm bảo an toàn cho người tham gia.",
+        "fused_scores": {
+          "rouge1": 0.238,
+          "rouge2": 0.208,
+          "rougeL": 0.1747,
+          "bleu": 0.0148,
+          "bert_score": 0.622003,
+          "compression_rate": 22.34
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4534,
+            "scores": {
+              "rouge1": 0.3728,
+              "rouge2": 0.2879,
+              "rougeL": 0.2737,
+              "bleu": 0.0489,
+              "bert_score": 0.602038,
+              "compression_rate": 34.32
+            },
+            "estimated_cost_usd": 0.00034425000000000005
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3211,
+            "scores": {
+              "rouge1": 0.2861,
+              "rouge2": 0.2534,
+              "rougeL": 0.2022,
+              "bleu": 0.0226,
+              "bert_score": 0.605766,
+              "compression_rate": 24.63
+            },
+            "estimated_cost_usd": 0.0008028000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 8612,
+            "scores": {
+              "rouge1": 0.293,
+              "rouge2": 0.241,
+              "rougeL": 0.2022,
+              "bleu": 0.0232,
+              "bert_score": 0.587687,
+              "compression_rate": 27.19
+            },
+            "estimated_cost_usd": 0.004917
+          }
+        ]
+      }
+    },
+    {
+      "index": 50,
+      "url": "https://tienphong.vn/le-ruoc-co-ba-cho-duoc-trong-dem-post1823791.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13456,
+        "total_cost_usd": 0.0156814,
+        "total_tokens": 9313,
+        "fused_summary": "Lễ hội Bà Chợ Được diễn ra từ 25-28/2/2026 tại thôn Phước Ấm, Đà Nẵng, nhằm tôn vinh Bà Nguyễn Của, người có công giúp dân buôn bán và chữa bệnh. Sự kiện kết hợp nghi lễ truyền thống như đọc văn tế, dâng lễ, rước sắc Bà, và các bàn cộ tái hiện sự kiện lịch sử như chiến thắng Quang Trung và Điện Biên Phủ. Lễ hội, được công nhận là Di sản phi vật thể quốc gia từ năm 2014, không chỉ thể hiện tín ngưỡng phồn thực mà còn là dịp để người dân cầu nguyện cho quốc thái dân an, buôn bán thuận lợi. Ngoài phần lễ còn có các hoạt động vui chơi như múa lân, đua thuyền và trò chơi dân gian, tạo không khí hào hứng đầu xuân.",
+        "fused_scores": {
+          "rouge1": 0.1692,
+          "rouge2": 0.1487,
+          "rougeL": 0.1344,
+          "bleu": 0.0013,
+          "bert_score": 0.555076,
+          "compression_rate": 15.85
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2959,
+            "scores": {
+              "rouge1": 0.1257,
+              "rouge2": 0.1076,
+              "rougeL": 0.1012,
+              "bleu": 0.0001,
+              "bert_score": 0.575333,
+              "compression_rate": 11.19
+            },
+            "estimated_cost_usd": 0.00035729999999999996
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 5463,
+            "scores": {
+              "rouge1": 0.2316,
+              "rouge2": 0.2041,
+              "rougeL": 0.1881,
+              "bleu": 0.0075,
+              "bert_score": 0.607072,
+              "compression_rate": 20.05
+            },
+            "estimated_cost_usd": 0.0011384
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 7435,
+            "scores": {
+              "rouge1": 0.2656,
+              "rouge2": 0.2278,
+              "rougeL": 0.1905,
+              "bleu": 0.0135,
+              "bert_score": 0.588489,
+              "compression_rate": 25.17
+            },
+            "estimated_cost_usd": 0.0052107
+          }
+        ]
+      }
+    }
+  ]
+}
