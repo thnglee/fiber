@@ -124,7 +124,7 @@ tuoitre.vn, thanhnien.vn, vietnamnet.vn, laodong.vn, tienphong.vn, vtv.vn, nld.c
 
 **Status:** Shipped on `main` (PRs #32, #33, tuning commit `0b00421`). Quality is NOT improving as the paper claims. Experimental branch `fix/moa-aggregator-source-prompt` tried the "inject the original article into the aggregator prompt" hypothesis and **falsified** it — see three-way results below.
 
-**Source of truth:** `fusion.pdf` (Wang et al., 2024, arXiv:2406.04692) and `fusion_PRD.md`.
+**Source of truth:** `fusion.pdf` (Wang et al., 2024, arXiv:2406.04692). The original feature spec (`fusion_PRD.md`) shipped via PR #32 and has been archived out of the root; the live evaluation-redesign direction is captured by the PRDs listed below.
 
 ### Three-way batch comparison (3 OpenAI proposers + gpt-4o aggregator, 50 tienphong.vn articles)
 
@@ -175,7 +175,7 @@ Softening the rules (v2) vs strict rules (v1) made no meaningful difference — 
 - `backend/output-fusion/moa.config.ts` — proposer/aggregator defaults
 - `backend/output-fusion/scripts/collect-metrics.ts` — batch harness (`--skip-forced` for fusion-only)
 - `metrics_reports/results/fusion-batch-50*.{json,md}` — three-way evidence
-- `fusion.pdf` / `fusion_PRD.md` — spec
+- `fusion.pdf` — paper (the only spec; original `fusion_PRD.md` archived after feature shipped)
 
 ## Evaluation Redesign — New Direction (2026-04-24)
 

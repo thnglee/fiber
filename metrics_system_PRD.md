@@ -10,8 +10,10 @@ To defensibly compare summarization approaches (Forced, Auto, Evaluation,
 Fusion, and future approaches) the thesis needs **three complementary
 axes**: content retention, quality & preference, and human validation.
 
-**Companion PRDs:** `llm_judge_PRD.md` (the quality & preference axis),
-`fusion_PRD.md` (the feature being evaluated).
+**Companion PRDs:** `llm_judge_PRD.md` (the quality & preference axis).
+The feature being evaluated (MoA fusion) is already implemented; see
+`fusion.pdf` for the original paper and `CLAUDE.md` for the
+investigation-to-date.
 
 ---
 
