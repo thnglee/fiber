@@ -246,3 +246,45 @@ The defense chapter reframes as:
   `fusion-batch-50-source-v2.{json,md}` batches.
 - `main` — untouched by the evaluation redesign until judge + factuality
   are merged.
+
+### Implementation Checklist (live — update as work progresses)
+
+Source docs: `llm_judge_PRD.md`, `metrics_system_PRD.md`,
+`stats_devplan.md`, `thesis_defense_narratives.md`. Tick boxes as phases
+complete. Order matters — later phases depend on earlier ones.
+
+**Stage 1 — Core judge pipeline**
+- [ ] **J1** `llm-judge.service.ts` (rubric + pairwise), Zod schemas, migration 019, unit tests *(llm_judge_PRD §3.1–3.2, Phase 1)*
+- [ ] **J2** `/api/settings/judge` GET/PATCH route + Supabase persistence *(Phase 2)*
+- [ ] **J3** `/api/summarize` honours `judge_config`; persists judge columns *(Phase 3)*
+- [ ] **J4** `moa.evaluation.ts` pairwise + `llm_judge_pairwise` table write *(Phase 4)*
+
+**Stage 2 — Stats + UI + batch**
+- [ ] **S1** `stats.ts` helper (mean, stdev, sign-test p-value) + unit tests *(stats_devplan §3)*
+- [ ] **S2** `collect-metrics.ts` gains `--stats-only` + Statistical Significance section
+- [ ] **J5** Settings page "Evaluation Judge" card *(Phase 5)*
+- [ ] **J6** Metrics page conditional rendering + `JudgeRubricWidget` + `JudgePairwiseBadge` *(Phase 6)*
+- [ ] **J7** Debug page Judge Verdict subsection *(Phase 7)*
+- [ ] **J8** Batch harness `--judge-mode` / `--judge-model` flags *(Phase 8)*
+
+**Stage 3 — Thesis artefact (first defense-grade numbers)**
+- [ ] **J9** Run 50-article batch in `--judge-mode both`, generate the three-way table *(Phase 9)*
+
+**Stage 4 — Three-axis extensions**
+- [ ] **M-A** `factuality.service.ts` (claim-entailment via gpt-4o-mini) + migration 020 *(metrics_system_PRD Phase A)*
+- [ ] **M-B** Factuality column group on metrics page *(Phase B)*
+- [ ] **M-C** Axis view toggle (Compact / Full) with color-coded strips *(Phase C)*
+
+**Stage 5 — Human validation**
+- [ ] **M-D** Human-eval schema + `/api/human-eval` API + migration 021 *(Phase D)*
+- [ ] **M-E** `backend/app/evaluate/` blind K-way ranking UI + rater flow *(Phase E)*
+- [ ] **M-F** Fleiss' κ + CSV export *(Phase F)*
+
+**Stage 6 — Final deliverable**
+- [ ] **M-G** Unified report generator (all three axes in one Markdown) *(Phase G)*
+- [ ] **M-H** 20-article human peer study + final thesis methodology table *(Phase H)*
+
+**Total:** 17 checkboxes. Stages 1–3 (10 boxes) produce the minimum
+defense-grade artefact. Stages 4–6 (7 boxes) strengthen the three-axis
+contribution. Contingency narratives for whichever scenario J9 lands in
+are pre-committed in `thesis_defense_narratives.md`.
