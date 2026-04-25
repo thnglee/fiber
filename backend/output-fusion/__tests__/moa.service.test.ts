@@ -61,6 +61,7 @@ const emptyScores = (): MoAScores => ({
 
 function makeDeps(overrides?: Partial<MoADependencies>): MoADependencies {
   const stubScore: MoADependencies["scoreSummary"] = async () => emptyScores()
+  const stubPairwise: MoADependencies["runFusionPairwiseJudge"] = async () => null
   const defaultSummarize: MoADependencies["performSummarize"] = async (
     _req: SummarizeRequest,
     model?: ModelConfig,
@@ -87,6 +88,7 @@ function makeDeps(overrides?: Partial<MoADependencies>): MoADependencies {
     }
   }
   return {
+    runFusionPairwiseJudge: stubPairwise,
     performSummarize: defaultSummarize,
     generateJsonCompletion: defaultAggregate,
     scoreSummary: stubScore,

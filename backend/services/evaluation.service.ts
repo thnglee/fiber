@@ -13,6 +13,17 @@ export interface EvaluationMetrics {
   total_tokens?: number | null;
 }
 
+export interface JudgePersistFields {
+  judge_mode?: string | null;
+  judge_model?: string | null;
+  judge_style?: string | null;
+  judge_rubric?: Record<string, number> | null;
+  judge_absolute?: number | null;
+  judge_justification?: string | null;
+  judge_latency_ms?: number | null;
+  judge_cost_usd?: number | null;
+}
+
 export interface EvaluationData {
   summary: string;
   original: string;
@@ -26,6 +37,7 @@ export interface EvaluationData {
   promptTokens?: number;
   completionTokens?: number;
   estimatedCostUsd?: number;
+  judge?: JudgePersistFields | null;
 }
 
 export interface EvaluationResponse {
@@ -102,6 +114,14 @@ export const saveEvaluationMetrics = async (data: EvaluationData) => {
         prompt_tokens: data.promptTokens ?? null,
         completion_tokens: data.completionTokens ?? null,
         estimated_cost_usd: data.estimatedCostUsd ?? null,
+        judge_mode: data.judge?.judge_mode ?? null,
+        judge_model: data.judge?.judge_model ?? null,
+        judge_style: data.judge?.judge_style ?? null,
+        judge_rubric: data.judge?.judge_rubric ?? null,
+        judge_absolute: data.judge?.judge_absolute ?? null,
+        judge_justification: data.judge?.judge_justification ?? null,
+        judge_latency_ms: data.judge?.judge_latency_ms ?? null,
+        judge_cost_usd: data.judge?.judge_cost_usd ?? null,
         metadata: {
           original_preview: data.original.substring(0, 200),
         },

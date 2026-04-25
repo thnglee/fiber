@@ -1,4 +1,5 @@
 import type { ModelConfig } from "@/domain/types"
+import type { JudgeRequest, JudgePairwiseDimensions, JudgeVerdict } from "@/domain/schemas"
 
 export interface MoAConfig {
   proposers: ModelConfig[]
@@ -6,6 +7,33 @@ export interface MoAConfig {
   proposerTimeoutMs: number
   minSuccessfulDrafts: number
   includeEvaluation: boolean
+  /**
+   * Per-request override for the LLM-judge config (read from
+   * `app_settings.judge_config` when not set). When the resolved
+   * `judge_mode` ≠ "metrics_only", `runMoAFusion` runs a pairwise judge of
+   * fused vs best-draft and attaches the verdict to the result.
+   */
+  judgeOverride?: JudgeRequest
+}
+
+/**
+ * Pairwise (AlpacaEval-style) verdict for fused vs best-draft. Caller-side
+ * convention: `summary_a_label` is always the fused output, `summary_b_label`
+ * is the best draft. `winner === "A"` means fused won; the runner has already
+ * un-flipped position-randomization before populating this field.
+ */
+export interface MoAJudgePairwiseResult {
+  summary_a_label: string
+  summary_b_label: string
+  winner: JudgeVerdict
+  winner_label: string
+  per_dimension: JudgePairwiseDimensions
+  justification: string
+  length_note: string
+  judge_model: string
+  judge_cost_usd: number | null
+  judge_latency_ms: number
+  position_swapped: boolean
 }
 
 export interface ModelAvailability {
@@ -72,6 +100,8 @@ export interface MoAFusionResult {
     failed_proposers: string[]
   }
   routing_id?: string
+  /** AlpacaEval-style verdict; `null` when judge is disabled or call fails. */
+  judge_pairwise?: MoAJudgePairwiseResult | null
 }
 
 export class MoAInsufficientDraftsError extends Error {

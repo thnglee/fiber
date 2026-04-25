@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
       model: modelOverride,
       routing_mode: requestRoutingMode,
       fusion_config: fusionConfigOverride,
+      judge_config: judgeConfigOverride,
     } = parseResult.data
 
     // Resolve routing mode
@@ -97,11 +98,12 @@ export async function POST(request: NextRequest) {
       const { buildMoAConfig } = await import('@/output-fusion/moa.config')
       const { runMoAFusion } = await import('@/output-fusion/moa.service')
       const { MoAInsufficientDraftsError } = await import('@/output-fusion/moa.types')
-      const { saveMoAFusionResult } = await import('@/output-fusion/moa.persistence')
+      const { saveMoAFusionResult, saveLLMJudgePairwise } = await import('@/output-fusion/moa.persistence')
 
       let moaConfig
       try {
         moaConfig = await buildMoAConfig(fusionConfigOverride)
+        moaConfig.judgeOverride = judgeConfigOverride
       } catch (configErr) {
         return NextResponse.json(
           {
@@ -142,7 +144,24 @@ export async function POST(request: NextRequest) {
             })
             if (fusionId) fusionResult.routing_id = routingId ?? undefined
 
+            // Persist the pairwise verdict (fused vs best-draft) if the judge ran.
+            if (fusionResult.judge_pairwise) {
+              await saveLLMJudgePairwise({
+                verdict: fusionResult.judge_pairwise,
+                routingId,
+                fusionId,
+              }).catch(err =>
+                console.error('[Summarize Fusion] Failed to save pairwise verdict:', err)
+              )
+            }
+
             const { saveEvaluationMetrics } = await import('@/services/evaluation.service')
+            const { runJudgeForSummary } = await import('@/services/llm-judge.runner')
+            const judgeFields = await runJudgeForSummary(
+              fusionResult.fused.summary,
+              articleText,
+              judgeConfigOverride,
+            )
             await saveEvaluationMetrics({
               summary: fusionResult.fused.summary,
               original: articleText,
@@ -162,6 +181,7 @@ export async function POST(request: NextRequest) {
               promptTokens: fusionResult.aggregator.prompt_tokens ?? undefined,
               completionTokens: fusionResult.aggregator.completion_tokens ?? undefined,
               estimatedCostUsd: fusionResult.pipeline.total_cost_usd ?? undefined,
+              judge: judgeFields,
             }).catch(err =>
               console.error('[Summarize Fusion] Failed to save evaluation metrics:', err)
             )
@@ -346,7 +366,7 @@ export async function POST(request: NextRequest) {
         let usedModel = modelConfig
 
         try {
-          response = await performSummarize({ content, url, debug }, modelConfig)
+          response = await performSummarize({ content, url, debug, judge_config: judgeConfigOverride }, modelConfig)
         } catch (err) {
           // Primary model failed — walk the full fallback chain
           console.error(`[Summarize Auto] ${modelConfig.model_name} failed:`, err)
@@ -358,7 +378,7 @@ export async function POST(request: NextRequest) {
             if (nextConfig) {
               try {
                 console.log(`[Summarize Auto] Falling back to ${nextModelName}`)
-                response = await performSummarize({ content, url, debug }, nextConfig)
+                response = await performSummarize({ content, url, debug, judge_config: judgeConfigOverride }, nextConfig)
                 usedModel = nextConfig
                 fallbackUsed = true
                 fallbackReason = `${modelConfig.model_name} failed, fell back to ${nextModelName}`
@@ -593,10 +613,12 @@ export async function POST(request: NextRequest) {
                 if (originalContent && summaryText) {
                   waitUntil(
                     (async () => {
-                      // Run lexical metrics + BERTScore in parallel
-                      const [metrics, bertScore] = await Promise.all([
+                      const { runJudgeForSummary } = await import('@/services/llm-judge.runner')
+                      // Run lexical metrics + BERTScore + judge in parallel
+                      const [metrics, bertScore, judgeFields] = await Promise.all([
                         Promise.resolve(calculateLexicalMetrics(summaryText, originalContent)),
                         calculateBertScore(originalContent, summaryText),
+                        runJudgeForSummary(summaryText, originalContent, judgeConfigOverride),
                       ])
 
                       // Calculate compression rate (token-based)
@@ -628,6 +650,7 @@ export async function POST(request: NextRequest) {
                           ? ((finalUsage?.prompt_tokens ?? 0) / 1_000_000 * (modelConfig.input_cost_per_1m ?? 0))
                             + ((finalUsage?.completion_tokens ?? 0) / 1_000_000 * (modelConfig.output_cost_per_1m ?? 0))
                           : undefined,
+                        judge: judgeFields,
                       })
                       console.log('[Summarize Stream] ✅ Evaluation metrics saved successfully!')
                     })().catch((err) => {
@@ -668,7 +691,7 @@ export async function POST(request: NextRequest) {
 
       // Delegate to service layer
       // Service will handle validation and extraction
-      const response = await performSummarize({ content, url, debug }, modelConfig)
+      const response = await performSummarize({ content, url, debug, judge_config: judgeConfigOverride }, modelConfig)
 
       // Validate response before sending
       const responseParseResult = SummarizeResponseSchema.safeParse(response)

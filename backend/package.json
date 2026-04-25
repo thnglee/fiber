@@ -9,7 +9,8 @@
     "lint": "next lint",
     "test:streaming": "tsx scripts/streaming-performance-test.ts",
     "test:evaluation": "tsx scripts/evaluation-batch-test.ts",
-    "test:moa": "tsx --test output-fusion/__tests__/moa.service.test.ts output-fusion/__tests__/moa.integration.test.ts",
+    "test:moa": "tsx --test output-fusion/__tests__/moa.service.test.ts output-fusion/__tests__/moa.integration.test.ts output-fusion/__tests__/moa.evaluation.test.ts",
+    "test:judge": "tsx --test services/__tests__/llm-judge.service.test.ts services/__tests__/llm-judge.runner.test.ts",
     "moa:collect-metrics": "tsx output-fusion/scripts/collect-metrics.ts"
   },
   "dependencies": {

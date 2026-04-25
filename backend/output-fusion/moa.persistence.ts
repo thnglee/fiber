@@ -1,6 +1,6 @@
 import { logger } from "@/lib/logger"
 import { getSupabaseAdmin } from "@/lib/supabase"
-import type { MoAFusionResult } from "./moa.types"
+import type { MoAFusionResult, MoAJudgePairwiseResult } from "./moa.types"
 
 export interface SaveMoAFusionInput {
   result: MoAFusionResult
@@ -89,6 +89,58 @@ export async function saveMoAFusionResult(input: SaveMoAFusionInput): Promise<st
     return fusionId
   } catch (err) {
     logger.addLog("moa-persistence", "exception", {
+      error: err instanceof Error ? err.message : String(err),
+    })
+    return null
+  }
+}
+
+export interface SaveLLMJudgePairwiseInput {
+  verdict: MoAJudgePairwiseResult
+  routingId?: string | null
+  fusionId?: string | null
+}
+
+/**
+ * Persist a pairwise verdict to `llm_judge_pairwise`. Returns the inserted id
+ * or `null` on failure (never throws — judge persistence must not block the
+ * MoA pipeline).
+ */
+export async function saveLLMJudgePairwise(
+  input: SaveLLMJudgePairwiseInput,
+): Promise<string | null> {
+  const { verdict, routingId, fusionId } = input
+  try {
+    const supabase = getSupabaseAdmin()
+    const { data, error } = await supabase
+      .from("llm_judge_pairwise")
+      .insert({
+        routing_id: routingId ?? null,
+        fusion_id: fusionId ?? null,
+        summary_a_label: verdict.summary_a_label,
+        summary_b_label: verdict.summary_b_label,
+        winner: verdict.winner,
+        per_dimension: verdict.per_dimension,
+        justification: verdict.justification,
+        length_note: verdict.length_note,
+        judge_model: verdict.judge_model,
+        judge_cost_usd: verdict.judge_cost_usd,
+        judge_latency_ms: verdict.judge_latency_ms,
+        position_swapped: verdict.position_swapped,
+      })
+      .select("id")
+      .single()
+
+    if (error || !data) {
+      logger.addLog("moa-persistence", "judge-pairwise-insert-error", {
+        error: error?.message,
+      })
+      return null
+    }
+
+    return data.id as string
+  } catch (err) {
+    logger.addLog("moa-persistence", "judge-pairwise-exception", {
       error: err instanceof Error ? err.message : String(err),
     })
     return null

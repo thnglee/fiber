@@ -254,10 +254,10 @@ Source docs: `llm_judge_PRD.md`, `metrics_system_PRD.md`,
 complete. Order matters — later phases depend on earlier ones.
 
 **Stage 1 — Core judge pipeline**
-- [ ] **J1** `llm-judge.service.ts` (rubric + pairwise), Zod schemas, migration 019, unit tests *(llm_judge_PRD §3.1–3.2, Phase 1)*
-- [ ] **J2** `/api/settings/judge` GET/PATCH route + Supabase persistence *(Phase 2)*
-- [ ] **J3** `/api/summarize` honours `judge_config`; persists judge columns *(Phase 3)*
-- [ ] **J4** `moa.evaluation.ts` pairwise + `llm_judge_pairwise` table write *(Phase 4)*
+- [x] **J1** `llm-judge.service.ts` (rubric + pairwise), Zod schemas, migration 019, unit tests *(llm_judge_PRD §3.1–3.2, Phase 1)*
+- [x] **J2** `/api/settings/judge` GET/PATCH route + Supabase persistence *(Phase 2)*
+- [x] **J3** `/api/summarize` honours `judge_config`; persists judge columns *(Phase 3)*
+- [x] **J4** `moa.evaluation.ts` pairwise + `llm_judge_pairwise` table write *(Phase 4)*
 
 **Stage 2 — Stats + UI + batch**
 - [ ] **S1** `stats.ts` helper (mean, stdev, sign-test p-value) + unit tests *(stats_devplan §3)*

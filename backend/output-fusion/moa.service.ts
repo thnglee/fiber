@@ -8,12 +8,18 @@ import type {
   SummarizeResponse,
 } from "@/domain/types"
 import { buildAggregatorPrompt } from "./moa.prompt"
-import { scoreSummary as defaultScoreSummary } from "./moa.evaluation"
+import {
+  scoreSummary as defaultScoreSummary,
+  pickBestDraftForJudge,
+  runFusionPairwiseJudge as defaultRunFusionPairwiseJudge,
+  type RunFusionPairwiseArgs,
+} from "./moa.evaluation"
 import {
   MoAInsufficientDraftsError,
   type MoAConfig,
   type MoADraftResult,
   type MoAFusionResult,
+  type MoAJudgePairwiseResult,
   type MoAScoredDraft,
   type MoAScores,
 } from "./moa.types"
@@ -29,12 +35,14 @@ export interface MoADependencies {
   ) => Promise<SummarizeResponse>
   generateJsonCompletion: typeof generateJsonCompletion
   scoreSummary: (summary: string, originalArticle: string) => Promise<MoAScores>
+  runFusionPairwiseJudge: (args: RunFusionPairwiseArgs) => Promise<MoAJudgePairwiseResult | null>
 }
 
 const defaultDeps: MoADependencies = {
   performSummarize,
   generateJsonCompletion,
   scoreSummary: defaultScoreSummary,
+  runFusionPairwiseJudge: args => defaultRunFusionPairwiseJudge(args),
 }
 
 function computeEstimatedCost(
@@ -234,6 +242,21 @@ export async function runMoAFusion(
     scoredDrafts = draftResults.map((d, i) => ({ ...d, scores: perDraftScores[i] }))
   }
 
+  // ── Pairwise judge (fused vs best-draft) ───────────────────────────────
+  // Always run when at least one draft succeeded; the helper returns null
+  // when the resolved judge_mode is `metrics_only`. Errors are swallowed
+  // inside the helper so they cannot break the MoA pipeline.
+  let judgePairwiseResult: MoAJudgePairwiseResult | null = null
+  const bestDraft = pickBestDraftForJudge(scoredDrafts)
+  if (bestDraft) {
+    judgePairwiseResult = await deps.runFusionPairwiseJudge({
+      fusedSummary: aggregatorResult.data.summary,
+      bestDraft,
+      articleText,
+      override: config.judgeOverride,
+    })
+  }
+
   // ── Pipeline totals ────────────────────────────────────────────────────
   const maxProposerLatency = draftResults.reduce(
     (max, d) => (d.latency_ms > max ? d.latency_ms : max),
@@ -292,6 +315,7 @@ export async function runMoAFusion(
       successful_proposers: successfulDrafts.length,
       failed_proposers: failedProposers,
     },
+    judge_pairwise: judgePairwiseResult,
   }
 
   logger.addLog("moa-fusion", "complete", {
