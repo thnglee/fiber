@@ -1,0 +1,2943 @@
+{
+  "started_at": "2026-04-26T16:25:09.617Z",
+  "finished_at": "2026-04-26T16:33:51.096Z",
+  "api_base": "http://localhost:3000",
+  "proposers": [
+    "gpt-4o-mini",
+    "gpt-4.1-mini",
+    "o4-mini"
+  ],
+  "aggregator": "gpt-4o",
+  "records": [
+    {
+      "index": 1,
+      "url": "https://tienphong.vn/chu-nhat-do-2026-gap-nu-sinh-gan-10-lan-hien-mau-post1823998.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 18766,
+        "total_cost_usd": 0.0117671,
+        "total_tokens": 9062,
+        "fused_summary": "Ngày hội hiến máu Chủ Nhật Đỏ diễn ra tại Trường ĐH Văn Hiến, TP.HCM vào ngày 7-8/3/2026, thu hút sự tham gia của hơn 5.000 sinh viên và người trẻ. Sự kiện này không chỉ là dịp để các bạn trẻ như Nguyễn Khánh Huyền, Nguyễn Khánh Duyên và Đoàn Ngọc Toàn thể hiện tinh thần trách nhiệm, mà còn là cơ hội để lan tỏa yêu thương trong cộng đồng. Huyền và Duyên đã nhiều lần hiến máu, xem đây là cách sống tích cực và ý nghĩa. Chương trình còn có sự góp mặt của hơn 20 nghệ sĩ, hoa hậu và nhiều hoạt động nhằm truyền cảm hứng về ý nghĩa của việc hiến máu cứu người.",
+        "fused_scores": {
+          "rouge1": 0.0997,
+          "rouge2": 0.0863,
+          "rougeL": 0.0758,
+          "bleu": 0,
+          "bert_score": 0.538315,
+          "compression_rate": 10.05
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5612,
+            "scores": {
+              "rouge1": 0.1455,
+              "rouge2": 0.1299,
+              "rougeL": 0.1138,
+              "bleu": 0.0009,
+              "bert_score": 0.602021,
+              "compression_rate": 14.2
+            },
+            "estimated_cost_usd": 0.00048149999999999994
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 5173,
+            "scores": {
+              "rouge1": 0.1283,
+              "rouge2": 0.1097,
+              "rougeL": 0.0987,
+              "bleu": 0.0005,
+              "bert_score": 0.548918,
+              "compression_rate": 12.22
+            },
+            "estimated_cost_usd": 0.0012312
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5452,
+            "scores": {
+              "rouge1": 0.1719,
+              "rouge2": 0.1523,
+              "rougeL": 0.1408,
+              "bleu": 0.0025,
+              "bert_score": 0.593139,
+              "compression_rate": 18
+            },
+            "estimated_cost_usd": 0.0047619
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gpt-4o-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp thông tin chi tiết hơn về các nhân vật và trải nghiệm của họ trong ngày hội hiến máu, giúp người đọc hiểu rõ hơn về ý nghĩa của sự kiện.",
+          "length_note": "Bản A ngắn hơn và bỏ sót chi tiết về trải nghiệm cá nhân của các nhân vật, ảnh hưởng đến quyết định.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 2,
+      "url": "https://tienphong.vn/ong-tran-sy-thanh-cam-ket-gi-voi-cu-tri-lang-son-post1823987.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13386,
+        "total_cost_usd": 0.0112285,
+        "total_tokens": 7068,
+        "fused_summary": "Ngày 1/3, tại xã Lộc Bình, tỉnh Lạng Sơn, ông Trần Sỹ Thanh, Chủ nhiệm Ủy ban Kiểm tra Trung ương, cùng các ứng cử viên Quốc hội khóa XVI đã tham gia Hội nghị tiếp xúc cử tri. Ông Thanh cam kết đại diện cho quyền lợi của nhân dân, phản ánh trung thực ý kiến cử tri và thúc đẩy phát triển kinh tế - xã hội của tỉnh. Mục tiêu là đưa Lạng Sơn trở thành cực tăng trưởng của vùng trung du miền núi phía Bắc vào năm 2030. Cử tri đánh giá cao chương trình hành động của các ứng cử viên, thể hiện tinh thần trách nhiệm và quan tâm đến cuộc bầu cử sắp tới. Trước đó, tỉnh đã công bố danh sách 13 ứng cử viên cho 7 vị trí đại biểu Quốc hội.",
+        "fused_scores": {
+          "rouge1": 0.1905,
+          "rouge2": 0.1763,
+          "rougeL": 0.1635,
+          "bleu": 0.0087,
+          "bert_score": 0.606493,
+          "compression_rate": 18.63
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5676,
+            "scores": {
+              "rouge1": 0.2147,
+              "rouge2": 0.1915,
+              "rougeL": 0.1752,
+              "bleu": 0.0104,
+              "bert_score": 0.613958,
+              "compression_rate": 19.64
+            },
+            "estimated_cost_usd": 0.000345
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 5874,
+            "scores": {
+              "rouge1": 0.3118,
+              "rouge2": 0.2896,
+              "rougeL": 0.2516,
+              "bleu": 0.0703,
+              "bert_score": 0.614948,
+              "compression_rate": 29.51
+            },
+            "estimated_cost_usd": 0.0010784000000000002
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 4474,
+            "scores": {
+              "rouge1": 0.3091,
+              "rouge2": 0.2878,
+              "rougeL": 0.239,
+              "bleu": 0.068,
+              "bert_score": 0.671854,
+              "compression_rate": 31.52
+            },
+            "estimated_cost_usd": 0.0042801
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp thông tin chi tiết hơn về hội nghị và các cam kết của ông Trần Sỹ Thanh, giúp người đọc hiểu rõ hơn về bối cảnh và mục tiêu phát triển của tỉnh Lạng Sơn.",
+          "length_note": "Mặc dù dài hơn, bản B không bỏ sót điểm chính nào và cung cấp thông tin toàn diện hơn.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 3,
+      "url": "https://tienphong.vn/thong-tin-moi-vu-2-nu-sinh-lop-8-bi-bat-ve-lam-vo-o-nghe-an-post1823985.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11395,
+        "total_cost_usd": 0.0099739,
+        "total_tokens": 5848,
+        "fused_summary": "Hai nữ sinh lớp 8 của Trường Phổ thông Dân tộc Bán trú Trung học Cơ sở Na Loi, Nghệ An, đã bị bắt về làm vợ theo tập tục địa phương, dẫn đến việc nghỉ học. Sau một thời gian vận động và tuyên truyền, một trong hai em, L.H.D., đã đồng ý quay trở lại trường học từ ngày 3/3. Nhà trường và ngành giáo dục địa phương đang nỗ lực phối hợp với chính quyền và các cơ quan chức năng để tuyên truyền, ngăn chặn tình trạng tảo hôn này. Sở Giáo dục và Đào tạo Nghệ An đã yêu cầu báo cáo cụ thể và cam kết tăng cường bảo vệ quyền lợi học sinh nhằm tránh tái diễn sự việc.",
+        "fused_scores": {
+          "rouge1": 0.2467,
+          "rouge2": 0.2114,
+          "rougeL": 0.1834,
+          "bleu": 0.024,
+          "bert_score": 0.608376,
+          "compression_rate": 22.87
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2785,
+            "scores": {
+              "rouge1": 0.1689,
+              "rouge2": 0.14,
+              "rougeL": 0.1293,
+              "bleu": 0.0056,
+              "bert_score": 0.624605,
+              "compression_rate": 16.18
+            },
+            "estimated_cost_usd": 0.0002538
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2955,
+            "scores": {
+              "rouge1": 0.3391,
+              "rouge2": 0.2787,
+              "rougeL": 0.2256,
+              "bleu": 0.0568,
+              "bert_score": 0.605646,
+              "compression_rate": 30.13
+            },
+            "estimated_cost_usd": 0.00084
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 4967,
+            "scores": {
+              "rouge1": 0.2546,
+              "rouge2": 0.2166,
+              "rougeL": 0.223,
+              "bleu": 0.0271,
+              "bert_score": 0.672072,
+              "compression_rate": 27.2
+            },
+            "estimated_cost_usd": 0.0042801
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp thông tin chi tiết hơn về sự việc và bối cảnh, giúp người đọc hiểu rõ hơn về vấn đề tảo hôn và các biện pháp đang được thực hiện.",
+          "length_note": "Bản B dài hơn nhưng cung cấp thông tin chi tiết và đầy đủ hơn, không bỏ sót các điểm chính.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 4,
+      "url": "https://tienphong.vn/vung-2-hai-quan-bo-phieu-bau-cu-som-post1823970.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13314,
+        "total_cost_usd": 0.01154465,
+        "total_tokens": 6883,
+        "fused_summary": "Tổ bầu cử sớm của Vùng 2 Hải quân đã tổ chức bỏ phiếu cho các cử tri trên tàu Hải An 68, Nhà giàn DK1/9 và các tàu thuộc Hải đoàn 128, 129. Hoạt động này nhằm đảm bảo quyền công dân cho cán bộ, chiến sĩ đang làm nhiệm vụ trên biển trong cuộc bầu cử đại biểu Quốc hội khóa XVI và HĐND Thành phố nhiệm kỳ 2026-2031. Quá trình bỏ phiếu diễn ra nghiêm túc, có sự hướng dẫn cụ thể từ Đại tá Lê Hồng Quang. Trước khi bỏ phiếu, tổ chức lễ tưởng niệm các anh hùng liệt sĩ đã hy sinh trên thềm lục địa phía Nam. Các cử tri được cung cấp thông tin về ứng cử viên và thực hiện bỏ phiếu đúng quy trình, tạo nên không khí trang trọng và ý nghĩa cho sự kiện.",
+        "fused_scores": {
+          "rouge1": 0.2243,
+          "rouge2": 0.1857,
+          "rougeL": 0.1698,
+          "bleu": 0.0168,
+          "bert_score": 0.648547,
+          "compression_rate": 20.85
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3344,
+            "scores": {
+              "rouge1": 0.1415,
+              "rouge2": 0.1207,
+              "rougeL": 0.1237,
+              "bleu": 0.0015,
+              "bert_score": 0.664909,
+              "compression_rate": 13.69
+            },
+            "estimated_cost_usd": 0.00030225
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3483,
+            "scores": {
+              "rouge1": 0.2463,
+              "rouge2": 0.2172,
+              "rougeL": 0.196,
+              "bleu": 0.0264,
+              "bert_score": 0.661349,
+              "compression_rate": 21.99
+            },
+            "estimated_cost_usd": 0.0009372
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6476,
+            "scores": {
+              "rouge1": 0.3291,
+              "rouge2": 0.276,
+              "rougeL": 0.26,
+              "bleu": 0.0632,
+              "bert_score": 0.652396,
+              "compression_rate": 34.54
+            },
+            "estimated_cost_usd": 0.0049302
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản B cung cấp nhiều chi tiết hơn về mục đích và quy trình bầu cử, tạo ra bức tranh toàn diện và trang trọng hơn cho người đọc.",
+          "length_note": "Bản B dài hơn nhưng không bỏ sót các chi tiết quan trọng, do đó độ dài không ảnh hưởng tiêu cực đến chất lượng.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": true
+        }
+      }
+    },
+    {
+      "index": 5,
+      "url": "https://tienphong.vn/nhung-la-phieu-dac-biet-tren-them-luc-dia-phia-nam-post1823954.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12714,
+        "total_cost_usd": 0.010385000000000002,
+        "total_tokens": 6692,
+        "fused_summary": "Sáng 1/3, Tổ bầu cử sớm của Vùng 2 Hải quân đã tổ chức bỏ phiếu sớm cho các cử tri trên tàu Hải An 68 và Nhà giàn DK1/9 tại Cụm Ba Kè sau lễ tưởng niệm các anh hùng liệt sĩ. Các thuyền viên và chiến sĩ đã nghiên cứu kỹ thông tin ứng cử viên trước khi thực hiện quyền bầu cử trong không khí trang trọng, thể hiện trách nhiệm công dân dù đang làm nhiệm vụ xa đất liền. Trước đó, Tổ bầu cử đã tổ chức bỏ phiếu cho các cử tri trên nhiều tàu khác thuộc Hải đoàn 128 và 129 tại khu vực mỏ Bạch Hổ, đảm bảo quy trình bầu cử diễn ra nghiêm túc và ý nghĩa trên biển.",
+        "fused_scores": {
+          "rouge1": 0.1945,
+          "rouge2": 0.156,
+          "rougeL": 0.1589,
+          "bleu": 0.0076,
+          "bert_score": 0.609831,
+          "compression_rate": 19.28
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3287,
+            "scores": {
+              "rouge1": 0.168,
+              "rouge2": 0.1417,
+              "rougeL": 0.1415,
+              "bleu": 0.0037,
+              "bert_score": 0.647783,
+              "compression_rate": 17.39
+            },
+            "estimated_cost_usd": 0.00031979999999999997
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4075,
+            "scores": {
+              "rouge1": 0.3147,
+              "rouge2": 0.264,
+              "rougeL": 0.2281,
+              "bleu": 0.0518,
+              "bert_score": 0.643089,
+              "compression_rate": 29.5
+            },
+            "estimated_cost_usd": 0.0010400000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5123,
+            "scores": {
+              "rouge1": 0.2831,
+              "rouge2": 0.2355,
+              "rougeL": 0.2108,
+              "bleu": 0.0334,
+              "bert_score": 0.633838,
+              "compression_rate": 28.35
+            },
+            "estimated_cost_usd": 0.0037477000000000005
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "tie",
+          "winner_label": "tie",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "tie",
+            "fluency": "tie",
+            "conciseness": "tie"
+          },
+          "justification": "Cả hai bản đều cung cấp thông tin chính xác, đầy đủ và mạch lạc về sự kiện bầu cử sớm trên biển, không bỏ sót điểm quan trọng nào.",
+          "length_note": "Độ dài của hai bản tóm tắt tương đương nhau và không ảnh hưởng đến quyết định.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 6,
+      "url": "https://tienphong.vn/dong-bao-dan-toc-giao-dan-dak-lak-gui-tron-niem-tin-vao-la-phieu-bau-post1823827.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11206,
+        "total_cost_usd": 0.010189700000000001,
+        "total_tokens": 6443,
+        "fused_summary": "Tại tỉnh Đắk Lắk, đồng bào dân tộc thiểu số và bà con có đạo đang tích cực chuẩn bị cho cuộc bầu cử đại biểu Quốc hội khóa XVI và HĐND các cấp nhiệm kỳ 2026-2031. Công tác tuyên truyền về quyền và nghĩa vụ bầu cử được triển khai sâu rộng qua các buổi sinh hoạt tôn giáo và cộng đồng, giúp người dân hiểu rõ hơn về ý nghĩa của sự kiện này. Linh mục Nguyễn Minh Hảo nhấn mạnh việc chọn lựa đại biểu có đức, có tài là trách nhiệm quan trọng. Danh sách cử tri được niêm yết công khai tại các điểm sinh hoạt cộng đồng, đảm bảo minh bạch và thuận lợi cho người dân theo dõi. Ủy ban bầu cử tỉnh khẳng định các công tác chuẩn bị đang diễn ra nghiêm túc, đúng tiến độ và quy định pháp luật.",
+        "fused_scores": {
+          "rouge1": 0.242,
+          "rouge2": 0.2081,
+          "rougeL": 0.1758,
+          "bleu": 0.0182,
+          "bert_score": 0.650111,
+          "compression_rate": 22.49
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3116,
+            "scores": {
+              "rouge1": 0.1768,
+              "rouge2": 0.1584,
+              "rougeL": 0.1427,
+              "bleu": 0.0043,
+              "bert_score": 0.700735,
+              "compression_rate": 16.38
+            },
+            "estimated_cost_usd": 0.0002982
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3983,
+            "scores": {
+              "rouge1": 0.3702,
+              "rouge2": 0.3282,
+              "rougeL": 0.2503,
+              "bleu": 0.0645,
+              "bert_score": 0.651277,
+              "compression_rate": 32.43
+            },
+            "estimated_cost_usd": 0.0010256
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 3883,
+            "scores": {
+              "rouge1": 0.334,
+              "rouge2": 0.293,
+              "rougeL": 0.2337,
+              "bleu": 0.052,
+              "bert_score": 0.642743,
+              "compression_rate": 31.3
+            },
+            "estimated_cost_usd": 0.0034309000000000006
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "tie",
+            "conciseness": "B"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về các khía cạnh của cuộc bầu cử, bao gồm cả việc niêm yết danh sách cử tri, đảm bảo tính minh bạch.",
+          "length_note": "Bản B ngắn hơn nhưng bỏ sót thông tin về danh sách cử tri và đánh giá của Ủy ban bầu cử.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 7,
+      "url": "https://tienphong.vn/cuu-chien-binh-duoc-chuong-trinh-chu-nhat-do-sua-nha-khang-trang-toi-mung-khong-ngu-duoc-post1823966.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11118,
+        "total_cost_usd": 0.010877000000000001,
+        "total_tokens": 8334,
+        "fused_summary": "Chương trình Chủ Nhật Đỏ 2026, do Báo Tiền Phong và Vietcombank tổ chức, đã tiến hành sửa chữa nhà cho các cựu chiến binh khó khăn tại xã Đông Thạnh và Củ Chi, TP.HCM. Các cựu chiến binh từng hy sinh tuổi trẻ cho Tổ quốc giờ đây được sống trong những ngôi nhà kiên cố hơn, thể hiện tình cảm \"uống nước nhớ nguồn\". Ngoài việc hỗ trợ vật chất, chương trình còn tổ chức ngày hội hiến máu tình nguyện với sự tham gia đông đảo của sinh viên và nghệ sĩ, nhằm lan tỏa thông điệp nhân văn và khắc phục tình trạng thiếu máu điều trị.",
+        "fused_scores": {
+          "rouge1": 0.1012,
+          "rouge2": 0.0895,
+          "rougeL": 0.0858,
+          "bleu": 0,
+          "bert_score": 0.531595,
+          "compression_rate": 9.83
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3222,
+            "scores": {
+              "rouge1": 0.1018,
+              "rouge2": 0.0889,
+              "rougeL": 0.0882,
+              "bleu": 0.0001,
+              "bert_score": 0.56597,
+              "compression_rate": 10.47
+            },
+            "estimated_cost_usd": 0.00040770000000000004
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3015,
+            "scores": {
+              "rouge1": 0.1593,
+              "rouge2": 0.1445,
+              "rougeL": 0.1249,
+              "bleu": 0.0026,
+              "bert_score": 0.576181,
+              "compression_rate": 14.67
+            },
+            "estimated_cost_usd": 0.0011944000000000002
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 4351,
+            "scores": {
+              "rouge1": 0.1563,
+              "rouge2": 0.1339,
+              "rougeL": 0.122,
+              "bleu": 0.0018,
+              "bert_score": 0.554581,
+              "compression_rate": 15
+            },
+            "estimated_cost_usd": 0.0045199
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gpt-4.1-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4.1-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp thông tin chi tiết hơn về hoàn cảnh của các cựu chiến binh và ý nghĩa của chương trình. Mặc dù dài hơn, bản B vẫn giữ được sự mạch lạc và đầy đủ thông tin cần thiết.",
+          "length_note": "Bản B dài hơn nhưng không bỏ sót điểm chính nào, điều này ảnh hưởng đến quyết định chọn B.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 8,
+      "url": "https://tienphong.vn/no-tai-benh-vien-tra-vinh-xuat-phat-tu-hop-banh-cua-nguoi-tham-benh-post1823965.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12482,
+        "total_cost_usd": 0.0107114,
+        "total_tokens": 5931,
+        "fused_summary": "Vào sáng 27/2, tại phòng E609 Bệnh viện Đa khoa Trà Vinh, một hộp bánh do N.T.N mang đến cho bệnh nhân L.M.L bất ngờ phát nổ khi bà P.T.G, mẹ bệnh nhân, mở ra. Vụ nổ khiến bà G. bị thương nhẹ và gây hư hại một số tài sản trong phòng. Nhân viên y tế đã kịp thời dùng bình chữa cháy để ngăn ngọn lửa lan rộng. Công an tỉnh Vĩnh Long đã vào cuộc điều tra, hiện chưa có thiệt hại về người nghiêm trọng và đang xác minh nguyên nhân vụ nổ. Các bệnh nhân đã được di chuyển an toàn sang phòng khác để tiếp tục điều trị.",
+        "fused_scores": {
+          "rouge1": 0.242,
+          "rouge2": 0.1797,
+          "rougeL": 0.1669,
+          "bleu": 0.0138,
+          "bert_score": 0.560415,
+          "compression_rate": 23.56
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2786,
+            "scores": {
+              "rouge1": 0.1683,
+              "rouge2": 0.1337,
+              "rougeL": 0.128,
+              "bleu": 0.0022,
+              "bert_score": 0.562579,
+              "compression_rate": 17.63
+            },
+            "estimated_cost_usd": 0.0002511
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2535,
+            "scores": {
+              "rouge1": 0.3032,
+              "rouge2": 0.227,
+              "rougeL": 0.1919,
+              "bleu": 0.0358,
+              "bert_score": 0.572363,
+              "compression_rate": 28.89
+            },
+            "estimated_cost_usd": 0.0007944
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5381,
+            "scores": {
+              "rouge1": 0.4186,
+              "rouge2": 0.3315,
+              "rougeL": 0.2643,
+              "bleu": 0.0749,
+              "bert_score": 0.63297,
+              "compression_rate": 41.63
+            },
+            "estimated_cost_usd": 0.0049159
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về sự việc, bao gồm thời gian cụ thể và các bước xử lý hiện trường, giúp người đọc hiểu rõ hơn về tình huống và phản ứng của các bên liên quan.",
+          "length_note": "Bản B ngắn gọn hơn nhưng thiếu chi tiết quan trọng về diễn biến và phản ứng của cơ quan chức năng.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": true
+        }
+      }
+    },
+    {
+      "index": 9,
+      "url": "https://tienphong.vn/giai-the-5-trung-tam-y-te-o-ca-mau-post1823962.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13442,
+        "total_cost_usd": 0.011567299999999999,
+        "total_tokens": 6408,
+        "fused_summary": "UBND tỉnh Cà Mau đã quyết định giải thể 5 Trung tâm Y tế khu vực không có giường bệnh nhằm tinh gọn bộ máy và nâng cao hiệu quả y tế cơ sở. Các trung tâm này tại Cà Mau, Đầm Dơi, Năm Căn, Trần Văn Thời, và Cái Nước sẽ chuyển giao chức năng y tế dự phòng về các trạm y tế xã. Khoảng 179 nhân sự sẽ được điều chuyển hoặc giải quyết nghỉ việc. Sở Tài chính và Công an tỉnh được giao nhiệm vụ thu hồi con dấu và quản lý tài chính, tài sản. 11 trung tâm còn lại sẽ tổ chức lại thành mô hình bệnh viện khu vực, tách biệt chức năng dự phòng và khám chữa bệnh để cải thiện chất lượng dịch vụ y tế cơ sở.",
+        "fused_scores": {
+          "rouge1": 0.2488,
+          "rouge2": 0.2228,
+          "rougeL": 0.183,
+          "bleu": 0.0235,
+          "bert_score": 0.663135,
+          "compression_rate": 23.19
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4683,
+            "scores": {
+              "rouge1": 0.2919,
+              "rouge2": 0.2455,
+              "rougeL": 0.2356,
+              "bleu": 0.0366,
+              "bert_score": 0.660007,
+              "compression_rate": 27.29
+            },
+            "estimated_cost_usd": 0.0003084
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2825,
+            "scores": {
+              "rouge1": 0.3553,
+              "rouge2": 0.297,
+              "rougeL": 0.2584,
+              "bleu": 0.0735,
+              "bert_score": 0.652102,
+              "compression_rate": 31.79
+            },
+            "estimated_cost_usd": 0.0008752
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6267,
+            "scores": {
+              "rouge1": 0.3971,
+              "rouge2": 0.3473,
+              "rougeL": 0.2978,
+              "bleu": 0.0968,
+              "bert_score": 0.675652,
+              "compression_rate": 37.93
+            },
+            "estimated_cost_usd": 0.0052437000000000004
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "B",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về các biện pháp tổ chức lại y tế và kế hoạch chuyển giao nhân sự cũng như tài sản, giúp độc giả hiểu rõ hơn về bối cảnh và tác động của quyết định.",
+          "length_note": "Bản B ngắn hơn nhưng thiếu một số chi tiết quan trọng về sự phân chia chức năng và kế hoạch chuyển giao tài sản.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": true
+        }
+      }
+    },
+    {
+      "index": 10,
+      "url": "https://tienphong.vn/qua-bom-khung-con-nguyen-kip-no-nam-duoi-mong-nha-dan-post1823973.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 10125,
+        "total_cost_usd": 0.00837595,
+        "total_tokens": 4983,
+        "fused_summary": "Ông Vũ Trọng Cương tại xã Quỳnh Sơn, Nghệ An đã phát hiện một quả bom MK-82 nặng 350 kg trong quá trình đào móng xây nhà. Quả bom còn nguyên kíp nổ và nằm sâu 1,5 m dưới mặt đất. Lực lượng chức năng đã nhanh chóng phong tỏa khu vực và tổ chức canh gác để đảm bảo an toàn cho người dân. Ban Công binh, Bộ Chỉ huy Quân sự tỉnh Nghệ An đã vô hiệu hóa ngòi nổ và di chuyển quả bom đến địa điểm an toàn để tiêu hủy thành công, đảm bảo an toàn tuyệt đối cho người và tài sản.",
+        "fused_scores": {
+          "rouge1": 0.3031,
+          "rouge2": 0.2406,
+          "rougeL": 0.2402,
+          "bleu": 0.0498,
+          "bert_score": 0.622259,
+          "compression_rate": 30.08
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3768,
+            "scores": {
+              "rouge1": 0.4035,
+              "rouge2": 0.3077,
+              "rougeL": 0.3169,
+              "bleu": 0.112,
+              "bert_score": 0.666351,
+              "compression_rate": 39
+            },
+            "estimated_cost_usd": 0.00026475
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3626,
+            "scores": {
+              "rouge1": 0.4744,
+              "rouge2": 0.3649,
+              "rougeL": 0.3051,
+              "bleu": 0.1527,
+              "bert_score": 0.647137,
+              "compression_rate": 45.85
+            },
+            "estimated_cost_usd": 0.0007572
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 3438,
+            "scores": {
+              "rouge1": 0.3445,
+              "rouge2": 0.288,
+              "rougeL": 0.2874,
+              "bleu": 0.0964,
+              "bert_score": 0.634308,
+              "compression_rate": 35.27
+            },
+            "estimated_cost_usd": 0.0027940000000000005
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gpt-4o-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp thông tin chi tiết hơn về loại bom và quy trình xử lý, trong khi vẫn đảm bảo tính chính xác và mạch lạc.",
+          "length_note": "Bản A ngắn gọn nhưng bỏ sót thông tin về loại bom và quy trình xác minh ban đầu.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 11,
+      "url": "https://tienphong.vn/khoi-to-nhom-doi-tuong-bat-coc-danh-dap-ep-nguoi-phu-nu-chuyen-tien-post1823959.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12689,
+        "total_cost_usd": 0.0089563,
+        "total_tokens": 5665,
+        "fused_summary": "Cơ quan Cảnh sát điều tra Công an tỉnh Tây Ninh đã khởi tố vụ án và bắt giữ nhóm đối tượng liên quan đến hành vi bắt giữ người trái pháp luật và cướp tài sản. Nhóm này, do Võ Văn Tường cầm đầu, đã chặn xe của chị L.T.M., dùng dao uy hiếp và đưa nạn nhân vào nhà nghỉ. Tại đây, bọn chúng đánh đập chị M. và ép chuyển 157 triệu đồng. Chúng còn dự định đưa nạn nhân sang Campuchia, nhưng chị M. đã trốn thoát và báo công an. Lực lượng chức năng đã nhanh chóng bắt giữ các đối tượng và thu giữ tang vật liên quan. Vụ việc đang được tiếp tục điều tra, xử lý theo pháp luật.",
+        "fused_scores": {
+          "rouge1": 0.2444,
+          "rouge2": 0.1882,
+          "rougeL": 0.2037,
+          "bleu": 0.0171,
+          "bert_score": 0.569759,
+          "compression_rate": 23.62
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4401,
+            "scores": {
+              "rouge1": 0.3167,
+              "rouge2": 0.2579,
+              "rougeL": 0.2628,
+              "bleu": 0.0475,
+              "bert_score": 0.595874,
+              "compression_rate": 29
+            },
+            "estimated_cost_usd": 0.00030809999999999995
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2254,
+            "scores": {
+              "rouge1": 0.2589,
+              "rouge2": 0.2132,
+              "rougeL": 0.2168,
+              "bleu": 0.0225,
+              "bert_score": 0.584602,
+              "compression_rate": 23.48
+            },
+            "estimated_cost_usd": 0.0007592
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 3788,
+            "scores": {
+              "rouge1": 0.3167,
+              "rouge2": 0.2566,
+              "rougeL": 0.247,
+              "bleu": 0.0471,
+              "bert_score": 0.61924,
+              "compression_rate": 32.67
+            },
+            "estimated_cost_usd": 0.0030415
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "B",
+            "conciseness": "B"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết và rõ ràng hơn về các đối tượng bị bắt và tang vật thu giữ, đồng thời diễn đạt lưu loát và ngắn gọn hơn bản B.",
+          "length_note": "Bản A ngắn hơn nhưng vẫn bao quát đầy đủ các điểm chính của vụ án.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": true
+        }
+      }
+    },
+    {
+      "index": 12,
+      "url": "https://tienphong.vn/con-duong-den-an-tu-cua-ong-trum-ma-tuy-post1823872.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11229,
+        "total_cost_usd": 0.0095652,
+        "total_tokens": 7396,
+        "fused_summary": "Trần Việt Hùng, 49 tuổi, từng hai lần vào tù vì ma túy, sau khi mãn hạn tù đã thiết lập một đường dây mua bán hơn 5,1 kg ma túy. Hùng đã hợp tác với đồng phạm để nhận và phân phối ma túy, đồng thời tàng trữ vũ khí trái phép. Trong một phi vụ lớn tại Nghệ An, Hùng bị bắt cùng tang vật và bị tuyên án tử hình do tái phạm với khối lượng ma túy đặc biệt lớn. Bốn đồng phạm khác cũng bị xét xử và nhận các mức án tù từ 17 đến hơn 21 năm.",
+        "fused_scores": {
+          "rouge1": 0.1096,
+          "rouge2": 0.1007,
+          "rougeL": 0.0965,
+          "bleu": 0.0001,
+          "bert_score": 0.550519,
+          "compression_rate": 10.14
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3699,
+            "scores": {
+              "rouge1": 0.1151,
+              "rouge2": 0.1014,
+              "rougeL": 0.0937,
+              "bleu": 0.0002,
+              "bert_score": 0.589507,
+              "compression_rate": 11.04
+            },
+            "estimated_cost_usd": 0.00036839999999999996
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2108,
+            "scores": {
+              "rouge1": 0.1172,
+              "rouge2": 0.1014,
+              "rougeL": 0.0979,
+              "bleu": 0.0002,
+              "bert_score": 0.557141,
+              "compression_rate": 10.37
+            },
+            "estimated_cost_usd": 0.0009680000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 3605,
+            "scores": {
+              "rouge1": 0.173,
+              "rouge2": 0.1503,
+              "rougeL": 0.1351,
+              "bleu": 0.003,
+              "bert_score": 0.56142,
+              "compression_rate": 16.03
+            },
+            "estimated_cost_usd": 0.0039413
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "A",
+            "fluency": "tie",
+            "conciseness": "B"
+          },
+          "justification": "Bản B cung cấp thông tin chi tiết hơn về các hoạt động của Hùng và đồng phạm, bao gồm hợp tác và tàng trữ vũ khí, trong khi vẫn duy trì độ chính xác và lưu loát.",
+          "length_note": "Dù bản B dài hơn, độ dài không ảnh hưởng tiêu cực vì nó bao quát đầy đủ nội dung cần thiết.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": true
+        }
+      }
+    },
+    {
+      "index": 13,
+      "url": "https://tienphong.vn/hai-nguoi-thuong-vong-sau-khi-bi-nhom-doi-tuong-vo-co-tan-cong-post1823982.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12415,
+        "total_cost_usd": 0.010617400000000003,
+        "total_tokens": 6544,
+        "fused_summary": "Tại Đà Nẵng, một nhóm 14 thanh niên tuổi từ 17-18 đã chuẩn bị hung khí như tuýp sắt, dao tự chế và vỏ chai bia để trả thù nhóm khác. Tuy nhiên, nhóm này nhầm lẫn và tấn công hai người đi xe máy vô tội, gây ra cái chết của một người và làm một người khác bị thương. Công an thành phố Đà Nẵng đã khởi tố và bắt giữ 13 đối tượng liên quan về các tội \"Giết người\" và \"Gây rối trật tự công cộng\". Vụ án hiện đang được điều tra và xử lý nghiêm theo quy định pháp luật.",
+        "fused_scores": {
+          "rouge1": 0.1805,
+          "rouge2": 0.1455,
+          "rougeL": 0.1407,
+          "bleu": 0.0038,
+          "bert_score": 0.62841,
+          "compression_rate": 15.93
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2644,
+            "scores": {
+              "rouge1": 0.1841,
+              "rouge2": 0.1303,
+              "rougeL": 0.1325,
+              "bleu": 0.0025,
+              "bert_score": 0.595046,
+              "compression_rate": 15.49
+            },
+            "estimated_cost_usd": 0.0003039
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2424,
+            "scores": {
+              "rouge1": 0.2063,
+              "rouge2": 0.1761,
+              "rougeL": 0.1665,
+              "bleu": 0.0112,
+              "bert_score": 0.697943,
+              "compression_rate": 18.85
+            },
+            "estimated_cost_usd": 0.0008600000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5637,
+            "scores": {
+              "rouge1": 0.2134,
+              "rouge2": 0.1819,
+              "rougeL": 0.1665,
+              "bleu": 0.0166,
+              "bert_score": 0.680916,
+              "compression_rate": 20.15
+            },
+            "estimated_cost_usd": 0.005043500000000001
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gpt-4.1-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4.1-mini",
+          "per_dimension": {
+            "faithfulness": "B",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về sự kiện, bao gồm việc chuẩn bị hung khí và bối cảnh truy đuổi, đảm bảo tính chính xác và độ phủ sóng tốt hơn.",
+          "length_note": "Bản B ngắn hơn nhưng bỏ sót chi tiết về bối cảnh và quá trình dẫn đến vụ việc.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": true
+        }
+      }
+    },
+    {
+      "index": 14,
+      "url": "https://tienphong.vn/dot-nhap-nha-dan-pha-ket-sat-trom-so-tien-vang-tri-gia-hon-1-ty-dong-post1823934.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13204,
+        "total_cost_usd": 0.0108739,
+        "total_tokens": 6079,
+        "fused_summary": "Ngày 26/2 tại Tây Ninh, Nguyễn Huỳnh Lợi (31 tuổi, quê An Giang) đột nhập vào nhà bà V.T.N., lợi dụng lúc gia đình vắng mặt, cạy két sắt và trộm hơn 1 tỷ đồng gồm tiền mặt và vàng. Lợi đã tạo lỗ hổng ở cửa sổ và tháo hàng rào để tẩu thoát. Camera an ninh ghi lại hình ảnh nghi phạm. Công an tỉnh Tây Ninh đã bắt giữ Lợi, thu hồi nhiều tang vật như trang sức và tiền mặt. Một phần tài sản bị trộm đã được dùng để mua xe máy và điện thoại. Hiện vụ việc đang được điều tra và hoàn thiện hồ sơ khởi tố.",
+        "fused_scores": {
+          "rouge1": 0.2314,
+          "rouge2": 0.1897,
+          "rougeL": 0.1746,
+          "bleu": 0.0114,
+          "bert_score": 0.588857,
+          "compression_rate": 22.75
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3629,
+            "scores": {
+              "rouge1": 0.2517,
+              "rouge2": 0.2033,
+              "rougeL": 0.1786,
+              "bleu": 0.0167,
+              "bert_score": 0.591519,
+              "compression_rate": 25.61
+            },
+            "estimated_cost_usd": 0.0002913
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2809,
+            "scores": {
+              "rouge1": 0.2815,
+              "rouge2": 0.2236,
+              "rougeL": 0.1922,
+              "bleu": 0.0274,
+              "bert_score": 0.611932,
+              "compression_rate": 26.32
+            },
+            "estimated_cost_usd": 0.0007848
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6191,
+            "scores": {
+              "rouge1": 0.3396,
+              "rouge2": 0.2737,
+              "rougeL": 0.2558,
+              "bleu": 0.0508,
+              "bert_score": 0.602221,
+              "compression_rate": 34.19
+            },
+            "estimated_cost_usd": 0.005030300000000001
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "tie",
+          "winner_label": "tie",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4.1-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "tie",
+            "fluency": "tie",
+            "conciseness": "tie"
+          },
+          "justification": "Cả hai bản tóm tắt đều cung cấp thông tin chính xác và đầy đủ về vụ trộm, nghi phạm và quá trình điều tra. Ngôn ngữ rõ ràng và dễ hiểu, không có bản nào vượt trội hơn về chất lượng tổng thể.",
+          "length_note": "Độ dài của hai bản không ảnh hưởng đến quyết định, vì cả hai đều bao quát toàn bộ thông tin cần thiết.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 15,
+      "url": "https://tienphong.vn/nu-quai-lua-ban-5-tre-em-sa-luoi-sau-15-nam-tron-truy-na-post1823967.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 14250,
+        "total_cost_usd": 0.011164499999999999,
+        "total_tokens": 5605,
+        "fused_summary": "Nguyễn Thị Sâm, sinh năm 1968 tại Nghệ An, đã bị bắt giữ sau 15 năm trốn tránh lệnh truy nã đặc biệt nguy hiểm. Từ năm 2007 đến 2010, Sâm đã lừa bán 5 trẻ em từ Nghệ An sang Trung Quốc lấy chồng, thu lợi bất chính 4.800 Nhân dân tệ. Sau khi bị khởi tố năm 2011, Sâm thay đổi danh tính và lẩn trốn tại nhiều nơi ở Trung Quốc. Ngày 24/2/2026, lực lượng Công an Nghệ An đã phối hợp bắt giữ Sâm tại Hà Nội. Hiện, Sâm đang bị tạm giữ để phục vụ điều tra và xử lý theo pháp luật.",
+        "fused_scores": {
+          "rouge1": 0.3319,
+          "rouge2": 0.2639,
+          "rougeL": 0.2463,
+          "bleu": 0.0519,
+          "bert_score": 0.633923,
+          "compression_rate": 35.21
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4281,
+            "scores": {
+              "rouge1": 0.4946,
+              "rouge2": 0.3734,
+              "rougeL": 0.364,
+              "bleu": 0.1207,
+              "bert_score": 0.660849,
+              "compression_rate": 49.89
+            },
+            "estimated_cost_usd": 0.0002877
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 4085,
+            "scores": {
+              "rouge1": 0.4561,
+              "rouge2": 0.3798,
+              "rougeL": 0.3812,
+              "bleu": 0.1272,
+              "bert_score": 0.663528,
+              "compression_rate": 45.36
+            },
+            "estimated_cost_usd": 0.0007336
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6854,
+            "scores": {
+              "rouge1": 0.4197,
+              "rouge2": 0.3519,
+              "rougeL": 0.3512,
+              "bleu": 0.1202,
+              "bert_score": 0.705294,
+              "compression_rate": 45.57
+            },
+            "estimated_cost_usd": 0.0052106999999999995
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "B"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về cách thức lừa đảo và mức lương giả định, giúp người đọc hiểu rõ hơn về hành vi của đối tượng.",
+          "length_note": "Bản A ngắn gọn nhưng vẫn đầy đủ thông tin, không bỏ sót điểm chính nào.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": true
+        }
+      }
+    },
+    {
+      "index": 16,
+      "url": "https://tienphong.vn/no-tai-benh-vien-tra-vinh-xuat-phat-tu-hop-banh-cua-nguoi-tham-benh-post1823965.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11166,
+        "total_cost_usd": 0.0090049,
+        "total_tokens": 5557,
+        "fused_summary": "Sáng 27/2, tại phòng E609, Bệnh viện Đa khoa Trà Vinh, một vụ nổ xảy ra khi bà P.T.G, mẹ bệnh nhân L.M.L, mở hộp bánh đặt dưới giường. Hộp bánh do N.T.N mang đến từ tối 26/2. Vụ nổ chỉ gây thương tích nhẹ cho bà G. và hư hại tài sản trong phòng. Nhân viên bệnh viện đã nhanh chóng dùng bình chữa cháy dập lửa và di chuyển 5 bệnh nhân khác đến nơi an toàn. Công an tỉnh Vĩnh Long đã phong tỏa hiện trường, trích xuất camera và đang điều tra nguyên nhân vụ việc.",
+        "fused_scores": {
+          "rouge1": 0.2156,
+          "rouge2": 0.1574,
+          "rougeL": 0.1488,
+          "bleu": 0.0064,
+          "bert_score": 0.59602,
+          "compression_rate": 21.78
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3985,
+            "scores": {
+              "rouge1": 0.1822,
+              "rouge2": 0.1546,
+              "rougeL": 0.1488,
+              "bleu": 0.0043,
+              "bert_score": 0.571366,
+              "compression_rate": 17.63
+            },
+            "estimated_cost_usd": 0.0002511
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2867,
+            "scores": {
+              "rouge1": 0.3435,
+              "rouge2": 0.2618,
+              "rougeL": 0.2267,
+              "bleu": 0.0464,
+              "bert_score": 0.593717,
+              "compression_rate": 30.67
+            },
+            "estimated_cost_usd": 0.0008136
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 3646,
+            "scores": {
+              "rouge1": 0.37,
+              "rouge2": 0.2953,
+              "rougeL": 0.242,
+              "bleu": 0.0555,
+              "bert_score": 0.648891,
+              "compression_rate": 36.74
+            },
+            "estimated_cost_usd": 0.0033627000000000006
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "tie",
+          "winner_label": "tie",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "A",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về diễn biến và hậu quả của vụ nổ, trong khi bản B trình bày ngắn gọn và dễ hiểu. Cả hai đều chính xác và không thiếu thông tin quan trọng.",
+          "length_note": "Bản B ngắn hơn nhưng vẫn giữ đủ thông tin cần thiết, giúp người đọc nhanh chóng nắm bắt sự kiện.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": true
+        }
+      }
+    },
+    {
+      "index": 17,
+      "url": "https://tienphong.vn/giam-doc-cong-an-ha-noi-som-su-dung-thiet-bi-bay-khong-nguoi-lai-giam-sat-an-ninh-post1823927.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12663,
+        "total_cost_usd": 0.011988100000000002,
+        "total_tokens": 7314,
+        "fused_summary": "Công an TP Hà Nội đang triển khai thử nghiệm thiết bị bay không người lái (drone) để giám sát an ninh và xử lý các tình huống phức tạp như tai nạn, cháy nổ và truy bắt đối tượng ở khu vực thiếu camera. Hệ thống quản trị an ninh trật tự số được phát triển với ba phần chính: định vị và điều phối lực lượng qua bản đồ thời gian thực, sử dụng trí tuệ nhân tạo để phân tích hình ảnh và nhận diện đối tượng, và áp dụng drone để ghi hình toàn cảnh. Mục tiêu là nâng cao hiệu quả phản ứng, đảm bảo an ninh trong bối cảnh đô thị hóa nhanh và dân số đông, đồng thời bảo mật thông tin cho lực lượng công an.",
+        "fused_scores": {
+          "rouge1": 0.1458,
+          "rouge2": 0.1216,
+          "rougeL": 0.1169,
+          "bleu": 0.0017,
+          "bert_score": null,
+          "compression_rate": 14.97
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2425,
+            "scores": {
+              "rouge1": 0.0979,
+              "rouge2": 0.0843,
+              "rougeL": 0.0896,
+              "bleu": 0.0001,
+              "bert_score": null,
+              "compression_rate": 10.1
+            },
+            "estimated_cost_usd": 0.0003078
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2804,
+            "scores": {
+              "rouge1": 0.1982,
+              "rouge2": 0.1733,
+              "rougeL": 0.1686,
+              "bleu": 0.0093,
+              "bert_score": null,
+              "compression_rate": 18.46
+            },
+            "estimated_cost_usd": 0.0009664000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6909,
+            "scores": {
+              "rouge1": 0.2954,
+              "rouge2": 0.2477,
+              "rougeL": 0.2194,
+              "bleu": 0.0435,
+              "bert_score": null,
+              "compression_rate": 29.57
+            },
+            "estimated_cost_usd": 0.005828900000000001
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "B",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp thông tin chi tiết hơn về các thành phần của hệ sinh thái quản trị an ninh và những ứng dụng cụ thể, giúp người đọc hiểu rõ hơn về kế hoạch của Công an TP Hà Nội.",
+          "length_note": "Mặc dù Bản B dài hơn, nhưng độ dài này giúp cung cấp thông tin đầy đủ và chi tiết hơn về các thành phần của hệ thống an ninh.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 18,
+      "url": "https://tienphong.vn/vu-bv-bach-mai-viet-duc-co-so-2-de-nghi-bo-quoc-phong-dieu-tra-4-doanh-nghiep-post1823923.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11790,
+        "total_cost_usd": 0.01165595,
+        "total_tokens": 7510,
+        "fused_summary": "Cơ quan Cảnh sát điều tra Bộ Công an đã đề nghị Bộ Quốc phòng xử lý bốn doanh nghiệp quân đội liên quan đến việc chi \"lại quả\" 5% giá trị thanh toán trong các gói thầu xây dựng Bệnh viện Bạch Mai và Việt Đức cơ sở 2. Các doanh nghiệp này đã chi hàng chục tỷ đồng cho lãnh đạo Bộ Y tế, trong đó cựu Bộ trưởng Nguyễn Thị Kim Tiến được xác định liên quan nhưng không bị truy tố. Vụ án đã gây thất thoát khoảng 803 tỷ đồng tại Bộ Y tế. Hồ sơ liên quan đã được chuyển sang Bộ Quốc phòng để thụ lý, nhấn mạnh nhu cầu quản lý chặt chẽ vốn đầu tư công.",
+        "fused_scores": {
+          "rouge1": 0.1378,
+          "rouge2": 0.1143,
+          "rougeL": 0.1207,
+          "bleu": 0.002,
+          "bert_score": 0.641771,
+          "compression_rate": 13.68
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3620,
+            "scores": {
+              "rouge1": 0.1468,
+              "rouge2": 0.1298,
+              "rougeL": 0.1305,
+              "bleu": 0.0019,
+              "bert_score": 0.675229,
+              "compression_rate": 13.24
+            },
+            "estimated_cost_usd": 0.00034245
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3036,
+            "scores": {
+              "rouge1": 0.2569,
+              "rouge2": 0.2335,
+              "rougeL": 0.2219,
+              "bleu": 0.0323,
+              "bert_score": 0.655237,
+              "compression_rate": 22.65
+            },
+            "estimated_cost_usd": 0.0010892
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5225,
+            "scores": {
+              "rouge1": 0.2602,
+              "rouge2": 0.2327,
+              "rougeL": 0.2121,
+              "bleu": 0.0356,
+              "bert_score": 0.6599,
+              "compression_rate": 25.78
+            },
+            "estimated_cost_usd": 0.005211800000000001
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp thông tin đầy đủ hơn về các khoản tiền và tác động tổng thể của vụ án, trong khi bản B thiếu chi tiết về tổng thất thoát và việc chuyển hồ sơ sang Bộ Quốc phòng.",
+          "length_note": "Bản A dài hơn nhưng cung cấp thông tin quan trọng về tổng thất thoát và quản lý vốn.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 19,
+      "url": "https://tienphong.vn/bat-18-quai-xe-mang-hung-khi-gay-nao-loan-duong-pho-post1823889.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 14903,
+        "total_cost_usd": 0.0101912,
+        "total_tokens": 5587,
+        "fused_summary": "Công an tỉnh Nghệ An đã bắt giữ 18 đối tượng, chủ yếu từ 13 đến 16 tuổi, vì hành vi gây rối trật tự công cộng tại thành phố Vinh. Nhóm này điều khiển xe mô tô với tốc độ cao, không đội mũ bảo hiểm, lạng lách, đánh võng và sử dụng hung khí. Họ còn ném vỏ chai bia vào nhóm thanh niên khác, gây náo loạn đường phố. Trong số 18 đối tượng, 9 người bị tạm giữ hình sự, số còn lại được giao cho gia đình quản lý. Trước đó, công an đã xử lý một nhóm tương tự vào đầu tháng 2. Hành vi này cho thấy sự gia tăng vi phạm pháp luật và trật tự an ninh trong giới trẻ.",
+        "fused_scores": {
+          "rouge1": 0.2814,
+          "rouge2": 0.2126,
+          "rougeL": 0.2217,
+          "bleu": 0.0353,
+          "bert_score": 0.615815,
+          "compression_rate": 29.2
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4639,
+            "scores": {
+              "rouge1": 0.2374,
+              "rouge2": 0.1638,
+              "rougeL": 0.1667,
+              "bleu": 0.0165,
+              "bert_score": 0.611695,
+              "compression_rate": 23.77
+            },
+            "estimated_cost_usd": 0.00025079999999999997
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 7784,
+            "scores": {
+              "rouge1": 0.3506,
+              "rouge2": 0.2898,
+              "rougeL": 0.272,
+              "bleu": 0.077,
+              "bert_score": 0.629679,
+              "compression_rate": 34.8
+            },
+            "estimated_cost_usd": 0.0007744
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5412,
+            "scores": {
+              "rouge1": 0.3711,
+              "rouge2": 0.2976,
+              "rougeL": 0.261,
+              "bleu": 0.0868,
+              "bert_score": 0.673713,
+              "compression_rate": 39.56
+            },
+            "estimated_cost_usd": 0.0043285
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp nhiều chi tiết hơn về sự việc, bao gồm thời điểm và địa điểm cụ thể, giúp người đọc hiểu rõ bối cảnh vụ việc.",
+          "length_note": "Bản A ngắn hơn nhưng bỏ sót một số chi tiết quan trọng như thời điểm và địa điểm cụ thể.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 20,
+      "url": "https://tienphong.vn/cuc-canh-sat-hinh-su-pha-duong-day-mua-ban-gan-than-tien-ty-post1823846.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13120,
+        "total_cost_usd": 0.010227100000000001,
+        "total_tokens": 6897,
+        "fused_summary": "Cơ quan chức năng đã khởi tố Đoàn Văn Hòa cùng hai đồng phạm Lê Văn Sơn và Nguyễn Đức Xuân về tội mua bán, chiếm đoạt bộ phận cơ thể người. Nhóm này tổ chức môi giới mua bán thận và gan với giá cao, lợi dụng hình thức hiến tặng để hợp thức hóa giao dịch. Họ trả cho người bán mức giá thấp hơn nhiều so với giá bán ra, thu lợi bất chính lớn. Đoàn Văn Hòa đóng vai trò cầm đầu, trực tiếp đàm phán giá cả. Vụ việc được phát hiện và điều tra bởi Cục Cảnh sát hình sự Bộ Công an phối hợp với Công an Hà Nội, trong bối cảnh tăng cường an ninh phục vụ các sự kiện lớn.",
+        "fused_scores": {
+          "rouge1": 0.1627,
+          "rouge2": 0.1315,
+          "rougeL": 0.1218,
+          "bleu": 0.002,
+          "bert_score": 0.570117,
+          "compression_rate": 15.31
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3574,
+            "scores": {
+              "rouge1": 0.141,
+              "rouge2": 0.1147,
+              "rougeL": 0.109,
+              "bleu": 0.0013,
+              "bert_score": 0.571004,
+              "compression_rate": 13.84
+            },
+            "estimated_cost_usd": 0.00033269999999999996
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2907,
+            "scores": {
+              "rouge1": 0.133,
+              "rouge2": 0.1163,
+              "rougeL": 0.1106,
+              "bleu": 0.0006,
+              "bert_score": 0.551553,
+              "compression_rate": 12.19
+            },
+            "estimated_cost_usd": 0.0008584
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 4104,
+            "scores": {
+              "rouge1": 0.3053,
+              "rouge2": 0.2638,
+              "rougeL": 0.1995,
+              "bleu": 0.0447,
+              "bert_score": 0.654754,
+              "compression_rate": 30.06
+            },
+            "estimated_cost_usd": 0.0041635000000000005
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp thông tin chi tiết hơn về giá cả và phương thức hoạt động của nhóm tội phạm, giúp người đọc hiểu rõ hơn về vụ việc.",
+          "length_note": "Bản B dài hơn nhưng thông tin chi tiết về giá cả và phương thức hoạt động là cần thiết.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 21,
+      "url": "https://tienphong.vn/my-va-israel-tan-cong-iran-thi-truong-dau-mo-co-the-doi-mat-noi-lo-so-toi-te-nhat-post1824011.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12448,
+        "total_cost_usd": 0.0129313,
+        "total_tokens": 9714,
+        "fused_summary": "Bài viết đề cập đến căng thẳng gia tăng tại eo biển Hormuz sau các cuộc không kích của Mỹ và Israel vào Iran, khiến Tehran tuyên bố đóng cửa tuyến hàng hải quan trọng này. Điều này gây lo ngại về gián đoạn nguồn cung dầu toàn cầu, khi eo biển Hormuz chiếm khoảng 20% sản lượng dầu thế giới. Các tập đoàn dầu khí và công ty vận tải biển đã tạm ngừng hoạt động, dẫn đến khả năng giá dầu có thể vượt 100 USD/thùng nếu xung đột tiếp diễn. Giới phân tích cảnh báo rủi ro cho thị trường tài chính, với vàng và các tài sản trú ẩn khác có thể tăng giá trong bối cảnh biến động mạnh.",
+        "fused_scores": {
+          "rouge1": 0.0936,
+          "rouge2": 0.0801,
+          "rougeL": 0.0731,
+          "bleu": 0,
+          "bert_score": 0.61947,
+          "compression_rate": 8.28
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3156,
+            "scores": {
+              "rouge1": 0.0973,
+              "rouge2": 0.0829,
+              "rougeL": 0.0759,
+              "bleu": 0,
+              "bert_score": 0.637341,
+              "compression_rate": 8.65
+            },
+            "estimated_cost_usd": 0.000459
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3524,
+            "scores": {
+              "rouge1": 0.1429,
+              "rouge2": 0.1258,
+              "rougeL": 0.1108,
+              "bleu": 0.0008,
+              "bert_score": 0.646389,
+              "compression_rate": 12.57
+            },
+            "estimated_cost_usd": 0.0013456000000000002
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5685,
+            "scores": {
+              "rouge1": 0.155,
+              "rouge2": 0.1374,
+              "rougeL": 0.1271,
+              "bleu": 0.0016,
+              "bert_score": 0.615581,
+              "compression_rate": 14.48
+            },
+            "estimated_cost_usd": 0.0062117000000000006
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gpt-4.1-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4.1-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "B",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về tác động đến thị trường tài chính và các động thái của các hãng vận tải lớn, giúp người đọc hiểu rõ hơn về bối cảnh toàn cầu.",
+          "length_note": "Bản B ngắn hơn nhưng không bỏ sót điểm chính. Tuy nhiên, bản A chi tiết hơn về tác động toàn cầu, điều này ảnh hưởng đến quyết định.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": true
+        }
+      }
+    },
+    {
+      "index": 22,
+      "url": "https://tienphong.vn/ruoc-bien-dat-bo-ngu-dan-quang-tri-boi-thu-post1823995.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12681,
+        "total_cost_usd": 0.01180105,
+        "total_tokens": 6524,
+        "fused_summary": "Sau Tết Nguyên đán Bính Ngọ 2026, ngư dân Quảng Trị khởi động mùa khai thác hải sản với nhiều tín hiệu tích cực. Trong hai ngày đầu năm, khoảng 50 tàu thuyền đã ra khơi và thu về hơn 10 tấn hải sản, chủ yếu là mực, cá và ruốc. Thu nhập hàng ngày của mỗi thuyền đạt từ 5-10 triệu đồng. Giá ruốc tươi dao động từ 10.000 - 12.000 đồng/kg, trong khi ruốc khô đạt 160.000 đồng/kg. Sản lượng khai thác duy trì ở mức cao trong 12 ngày đầu năm, tạo động lực cho ngư dân và góp phần thúc đẩy kinh tế biển địa phương.",
+        "fused_scores": {
+          "rouge1": 0.2213,
+          "rouge2": 0.1797,
+          "rougeL": 0.1511,
+          "bleu": 0.0126,
+          "bert_score": 0.618463,
+          "compression_rate": 22.78
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4614,
+            "scores": {
+              "rouge1": 0.3171,
+              "rouge2": 0.2581,
+              "rougeL": 0.2308,
+              "bleu": 0.0316,
+              "bert_score": 0.641837,
+              "compression_rate": 29.65
+            },
+            "estimated_cost_usd": 0.00032235
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3667,
+            "scores": {
+              "rouge1": 0.336,
+              "rouge2": 0.3,
+              "rougeL": 0.2632,
+              "bleu": 0.0745,
+              "bert_score": 0.671167,
+              "compression_rate": 31.81
+            },
+            "estimated_cost_usd": 0.0008852
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5776,
+            "scores": {
+              "rouge1": 0.4224,
+              "rouge2": 0.3365,
+              "rougeL": 0.3036,
+              "bleu": 0.0817,
+              "bert_score": 0.646721,
+              "compression_rate": 40.16
+            },
+            "estimated_cost_usd": 0.005346000000000001
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gpt-4.1-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4.1-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về sản lượng khai thác và tác động kinh tế, trong khi vẫn đảm bảo tính chính xác và dễ đọc.",
+          "length_note": "Bản B ngắn gọn hơn, nhưng bỏ sót một số chi tiết quan trọng về sản lượng và lợi ích kinh tế.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": true
+        }
+      }
+    },
+    {
+      "index": 23,
+      "url": "https://tienphong.vn/cao-toc-cao-lanh-an-huu-chua-lam-xong-vi-sao-dong-thap-de-xuat-mo-rong-post1823986.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11974,
+        "total_cost_usd": 0.01041965,
+        "total_tokens": 6009,
+        "fused_summary": "UBND tỉnh Đồng Tháp đã đề xuất Bộ Xây dựng đầu tư giai đoạn 2 cao tốc Cao Lãnh - An Hữu theo phương án lập dự án mới, thay vì bổ sung vào dự án hiện tại. Giai đoạn 1 dự kiến hoàn thành vào ngày 19/5, với tiến độ đạt trên 73%. Phương án lập dự án mới giúp mở rộng quy mô phù hợp với dự báo lưu lượng xe và đảm bảo tiến độ thi công giai đoạn 1, dù chi phí cao hơn và tiềm ẩn rủi ro an toàn giao thông. Tỉnh Đồng Tháp đề xuất thực hiện giai đoạn 2 từ 2026 đến 2030 và chờ Bộ Xây dựng xem xét.",
+        "fused_scores": {
+          "rouge1": 0.2074,
+          "rouge2": 0.1679,
+          "rougeL": 0.1716,
+          "bleu": 0.0121,
+          "bert_score": 0.64298,
+          "compression_rate": 21.79
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4215,
+            "scores": {
+              "rouge1": 0.1818,
+              "rouge2": 0.1513,
+              "rougeL": 0.1562,
+              "bleu": 0.0064,
+              "bert_score": 0.661132,
+              "compression_rate": 18.02
+            },
+            "estimated_cost_usd": 0.00026084999999999997
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3162,
+            "scores": {
+              "rouge1": 0.3355,
+              "rouge2": 0.2487,
+              "rougeL": 0.2433,
+              "bleu": 0.0516,
+              "bert_score": 0.66321,
+              "compression_rate": 31.98
+            },
+            "estimated_cost_usd": 0.0008652
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 4922,
+            "scores": {
+              "rouge1": 0.3457,
+              "rouge2": 0.2692,
+              "rougeL": 0.2586,
+              "bleu": 0.0594,
+              "bert_score": 0.675054,
+              "compression_rate": 35.06
+            },
+            "estimated_cost_usd": 0.0045386
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản A bao quát cả hai phương án đầu tư, cung cấp thông tin chi tiết hơn về ưu và nhược điểm của mỗi phương án, giúp người đọc hiểu rõ bối cảnh và quyết định của tỉnh Đồng Tháp.",
+          "length_note": "Bản B ngắn hơn nhưng bỏ sót thông tin về phương án bổ sung vào giai đoạn 1, ảnh hưởng đến độ bao quát.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": true
+        }
+      }
+    },
+    {
+      "index": 24,
+      "url": "https://tienphong.vn/hang-hoa-qua-cua-khau-quang-ninh-tang-manh-post1823958.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11989,
+        "total_cost_usd": 0.010719900000000001,
+        "total_tokens": 6183,
+        "fused_summary": "Trong những tháng đầu năm, hoạt động xuất nhập khẩu qua các cửa khẩu tỉnh Quảng Ninh tăng trưởng mạnh mẽ, với tổng kim ngạch đạt gần 3 tỷ USD, tăng 30% so với cùng kỳ năm ngoái. Từ ngày 1/1 đến 20/2, Chi cục Hải quan khu vực VIII xử lý hơn 17.000 tờ khai, tăng 38%, và thu ngân sách 458,6 tỷ đồng, đạt 13,8% chỉ tiêu năm. Các biện pháp cải cách thủ tục hành chính, dịch vụ công trực tuyến, nộp thuế điện tử và thông quan 24/7 đã được triển khai để đạt mục tiêu thu ngân sách 18.300 tỷ đồng. Công tác kiểm tra, giám sát hàng hóa cũng được tăng cường để ngăn chặn buôn lậu và gian lận thương mại.",
+        "fused_scores": {
+          "rouge1": 0.2417,
+          "rouge2": 0.2086,
+          "rougeL": 0.1905,
+          "bleu": 0.0205,
+          "bert_score": 0.55409,
+          "compression_rate": 25.86
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2821,
+            "scores": {
+              "rouge1": 0.1679,
+              "rouge2": 0.1442,
+              "rougeL": 0.1274,
+              "bleu": 0.0039,
+              "bert_score": 0.55613,
+              "compression_rate": 18.4
+            },
+            "estimated_cost_usd": 0.0002667
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 5553,
+            "scores": {
+              "rouge1": 0.475,
+              "rouge2": 0.4303,
+              "rougeL": 0.419,
+              "bleu": 0.1918,
+              "bert_score": 0.675296,
+              "compression_rate": 46.2
+            },
+            "estimated_cost_usd": 0.001036
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 4466,
+            "scores": {
+              "rouge1": 0.331,
+              "rouge2": 0.2646,
+              "rougeL": 0.2798,
+              "bleu": 0.0583,
+              "bert_score": 0.578609,
+              "compression_rate": 36.65
+            },
+            "estimated_cost_usd": 0.0040447
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gpt-4.1-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4.1-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp nhiều chi tiết hơn về hoạt động thông quan cụ thể và các biện pháp triển khai, giúp người đọc hiểu rõ hơn về tình hình thực tế.",
+          "length_note": "Mặc dù dài hơn, Bản B không bỏ sót điểm chính và cung cấp thông tin chi tiết hơn.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 25,
+      "url": "https://tienphong.vn/chu-tich-tong-giam-doc-nhieu-doanh-nghiep-dua-co-phieu-post1823910.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11730,
+        "total_cost_usd": 0.012262200000000001,
+        "total_tokens": 9284,
+        "fused_summary": "Trong tuần giao dịch từ 23-27/2, thị trường chứng khoán Việt Nam ghi nhận sự tăng trưởng mạnh mẽ của VN-Index và HNX-Index, với thanh khoản tăng sau kỳ nghỉ Tết Nguyên đán. VN-Index tăng 56,24 điểm lên 1.880,33 điểm và HNX-Index tăng 5,76 điểm lên 262,82 điểm. Tuy nhiên, nhà đầu tư nước ngoài bán ròng hơn 6.235 tỷ đồng trên cả ba sàn. Nhiều lãnh đạo doanh nghiệp như ông Nguyễn Gia Long của Tập đoàn TNT và các lãnh đạo Searefico đã mua thêm cổ phiếu để tăng tỷ lệ sở hữu. Ngược lại, thành viên HĐQT Công ty CP Đông Hải Bến Tre đăng ký bán toàn bộ cổ phiếu. Các doanh nghiệp như Taseco và Geleximco thực hiện giao dịch bán cổ phiếu lớn để cơ cấu đầu tư, trong khi Công ty Thép Việt không thể bán ra cổ phiếu POM do giá không đạt kỳ vọng.",
+        "fused_scores": {
+          "rouge1": 0.1253,
+          "rouge2": 0.0987,
+          "rougeL": 0.0981,
+          "bleu": 0.0004,
+          "bert_score": 0.592868,
+          "compression_rate": 12.26
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2621,
+            "scores": {
+              "rouge1": 0.0674,
+              "rouge2": 0.0546,
+              "rougeL": 0.0552,
+              "bleu": 0,
+              "bert_score": 0.546049,
+              "compression_rate": 5.78
+            },
+            "estimated_cost_usd": 0.0004173
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3913,
+            "scores": {
+              "rouge1": 0.1493,
+              "rouge2": 0.1254,
+              "rougeL": 0.1203,
+              "bleu": 0.0015,
+              "bert_score": 0.531785,
+              "compression_rate": 12.64
+            },
+            "estimated_cost_usd": 0.0013144
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 4305,
+            "scores": {
+              "rouge1": 0.1749,
+              "rouge2": 0.1416,
+              "rougeL": 0.1304,
+              "bleu": 0.0025,
+              "bert_score": 0.632784,
+              "compression_rate": 17.6
+            },
+            "estimated_cost_usd": 0.0049555
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp thông tin chi tiết hơn về giá trị giao dịch và số lượng cổ phiếu cụ thể, giúp người đọc nắm rõ hơn tình hình thị trường.",
+          "length_note": "Bản B dài hơn, nhưng không bỏ sót thông tin quan trọng, do đó không bị phạt.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 26,
+      "url": "https://tienphong.vn/thu-tuong-kiem-tra-du-an-duong-bang-san-bay-phu-cat-post1823946.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12444,
+        "total_cost_usd": 0.01169015,
+        "total_tokens": 6651,
+        "fused_summary": "Ngày 1/3, Thủ tướng Phạm Minh Chính kiểm tra dự án đường cất hạ cánh số 2 tại Cảng hàng không Phù Cát, tỉnh Gia Lai. Ông biểu dương nỗ lực của địa phương và nhà thầu trong việc đảm bảo tiến độ và chất lượng công trình, dự kiến hoàn thành vào ngày 30/6, sớm hơn kế hoạch ban đầu 3 tháng. Thủ tướng nhấn mạnh tầm quan trọng của việc tăng cường kiểm tra, giám sát để ngăn ngừa tiêu cực trong các dự án phân cấp địa phương. Việc hoàn thiện sân bay Phù Cát không chỉ thúc đẩy phát triển kinh tế - xã hội mà còn đảm bảo quốc phòng, an ninh. Ngoài ra, Thủ tướng cũng thị sát dự án cao tốc Bắc - Nam đoạn Quảng Ngãi – Gia Lai, đánh giá cao công tác bồi thường, giải phóng mặt bằng.",
+        "fused_scores": {
+          "rouge1": 0.2562,
+          "rouge2": 0.2136,
+          "rougeL": 0.2099,
+          "bleu": 0.0237,
+          "bert_score": 0.619672,
+          "compression_rate": 25.37
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5898,
+            "scores": {
+              "rouge1": 0.2777,
+              "rouge2": 0.2294,
+              "rougeL": 0.2144,
+              "bleu": 0.0286,
+              "bert_score": 0.61139,
+              "compression_rate": 26.74
+            },
+            "estimated_cost_usd": 0.00032925
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3831,
+            "scores": {
+              "rouge1": 0.3679,
+              "rouge2": 0.3198,
+              "rougeL": 0.3104,
+              "bleu": 0.1016,
+              "bert_score": 0.655611,
+              "compression_rate": 35.2
+            },
+            "estimated_cost_usd": 0.0009868000000000001
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 5265,
+            "scores": {
+              "rouge1": 0.3284,
+              "rouge2": 0.2859,
+              "rougeL": 0.2833,
+              "bleu": 0.0567,
+              "bert_score": 0.668618,
+              "compression_rate": 33.83
+            },
+            "estimated_cost_usd": 0.0047366000000000005
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:o4-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:o4-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp thông tin chi tiết hơn về tinh thần làm việc và các ý kiến từ Thủ tướng, giúp người đọc hiểu rõ hơn về bối cảnh và tầm quan trọng của dự án.",
+          "length_note": "Bản A ngắn hơn nhưng bỏ sót một số chi tiết quan trọng về tinh thần làm việc và ý kiến của Thủ tướng.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 27,
+      "url": "https://tienphong.vn/thu-tuong-thi-sat-du-an-cao-toc-quang-ngai-hoai-nhon-hon-20000-ty-post1823941.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12284,
+        "total_cost_usd": 0.011424050000000002,
+        "total_tokens": 7041,
+        "fused_summary": "Thủ tướng Chính phủ Phạm Minh Chính đã thị sát dự án cao tốc Quảng Ngãi - Hoài Nhơn, nhấn mạnh việc đẩy nhanh tiến độ thi công và đảm bảo an toàn vận hành. Dự án có tổng chiều dài 88km, đi qua tỉnh Quảng Ngãi và Gia Lai, với tổng mức đầu tư hơn 20.000 tỷ đồng, bắt đầu từ 1/1/2023 và dự kiến hoàn thành vào tháng 9/2026. Đây là đoạn tuyến phức tạp với nhiều cầu, cống và ba hầm xuyên núi, trong đó hầm số 3 dài 3.200m. Khi hoàn thành, dự án sẽ tăng cường kết nối liên vùng và thúc đẩy phát triển kinh tế khu vực duyên hải miền Trung.",
+        "fused_scores": {
+          "rouge1": 0.1709,
+          "rouge2": 0.1476,
+          "rougeL": 0.1465,
+          "bleu": 0.0037,
+          "bert_score": 0.58891,
+          "compression_rate": 17.89
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5125,
+            "scores": {
+              "rouge1": 0.2451,
+              "rouge2": 0.2124,
+              "rougeL": 0.2103,
+              "bleu": 0.0244,
+              "bert_score": 0.647627,
+              "compression_rate": 22.38
+            },
+            "estimated_cost_usd": 0.00035085
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 3127,
+            "scores": {
+              "rouge1": 0.2479,
+              "rouge2": 0.2246,
+              "rougeL": 0.2207,
+              "bleu": 0.0289,
+              "bert_score": 0.602511,
+              "compression_rate": 25.84
+            },
+            "estimated_cost_usd": 0.00099
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 4917,
+            "scores": {
+              "rouge1": 0.3915,
+              "rouge2": 0.3477,
+              "rougeL": 0.3455,
+              "bleu": 0.1205,
+              "bert_score": 0.663711,
+              "compression_rate": 40.59
+            },
+            "estimated_cost_usd": 0.0045782
+          }
+        ],
+        "judge_pairwise": null
+      }
+    },
+    {
+      "index": 28,
+      "url": "https://tienphong.vn/lanh-dao-nhieu-doanh-nghiep-ung-cu-dai-bieu-quoc-hoi-post1823909.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 6208,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 29,
+      "url": "https://tienphong.vn/ly-do-nhieu-doanh-nghiep-thoai-von-bat-thanh-post1823680.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 12791,
+        "total_cost_usd": 0.011980850000000001,
+        "total_tokens": 8171,
+        "fused_summary": "Việc thoái vốn của các doanh nghiệp tại Việt Nam đang gặp khó khăn do điều kiện thị trường chưa thuận lợi và sự lệch pha giữa cung và cầu. Tổng Công ty Bảo đảm an toàn Hàng hải Việt Nam (VMSC) không thể bán toàn bộ cổ phiếu MSB, trong khi Ngân hàng TMCP Công thương Việt Nam (VietinBank) chỉ bán được một phần nhỏ cổ phiếu SGP. Nguyên nhân chính là giá cổ phiếu và thanh khoản chưa đáp ứng kỳ vọng. Chuyên gia cho rằng thất bại trong thoái vốn không phản ánh tiêu cực về chất lượng doanh nghiệp, mà do yếu tố thời điểm và kỳ vọng giá. Trong trung và dài hạn, khả năng tăng trưởng và tạo dòng tiền mới là yếu tố quyết định.",
+        "fused_scores": {
+          "rouge1": 0.1311,
+          "rouge2": 0.1152,
+          "rougeL": 0.1093,
+          "bleu": 0.0006,
+          "bert_score": 0.571247,
+          "compression_rate": 11.82
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3635,
+            "scores": {
+              "rouge1": 0.1029,
+              "rouge2": 0.0928,
+              "rougeL": 0.0876,
+              "bleu": 0.0001,
+              "bert_score": 0.612552,
+              "compression_rate": 9.46
+            },
+            "estimated_cost_usd": 0.00036704999999999995
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2777,
+            "scores": {
+              "rouge1": 0.1777,
+              "rouge2": 0.1548,
+              "rougeL": 0.1375,
+              "bleu": 0.0043,
+              "bert_score": 0.572938,
+              "compression_rate": 15.4
+            },
+            "estimated_cost_usd": 0.0011132
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "success",
+            "latency_ms": 6080,
+            "scores": {
+              "rouge1": 0.2621,
+              "rouge2": 0.2233,
+              "rougeL": 0.1995,
+              "bleu": 0.0269,
+              "bert_score": 0.607456,
+              "compression_rate": 24.93
+            },
+            "estimated_cost_usd": 0.0054406
+          }
+        ],
+        "judge_pairwise": null
+      }
+    },
+    {
+      "index": 30,
+      "url": "https://tienphong.vn/gia-dau-vang-tang-dung-dung-vi-my-khong-kich-iran-post1823885.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 9533,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 31,
+      "url": "https://tienphong.vn/thong-tin-moi-vu-2-nu-sinh-lop-8-bi-bat-ve-lam-vo-o-nghe-an-post1823985.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 5115,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 32,
+      "url": "https://tienphong.vn/hang-tram-hoc-sinh-da-nang-tranh-tai-robotics-va-drone-post1823977.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 5137,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 33,
+      "url": "https://tienphong.vn/pgsts-pham-manh-ha-diem-so-khong-la-thuoc-do-kha-nang-thich-nghi-cua-tre-trong-cuoc-song-post1823820.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 8316,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 34,
+      "url": "https://tienphong.vn/2-nu-sinh-lop-8-bi-bat-ve-lam-vo-sau-tet-post1823797.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 6465,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 35,
+      "url": "https://tienphong.vn/bao-gio-ha-noi-cong-bo-thoi-gian-thi-tuyen-lop-10-post1823793.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 7440,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 36,
+      "url": "https://tienphong.vn/ong-hoang-minh-son-lam-quyen-bo-truong-bo-giao-duc-va-dao-tao-post1823703.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 8582,
+        "error": "Response missing `fusion` payload"
+      }
+    },
+    {
+      "index": 37,
+      "url": "https://tienphong.vn/hoc-sinh-se-duoc-day-khoi-nghiep-tu-tieu-hoc-post1823526.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 6722,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 38,
+      "url": "https://tienphong.vn/dao-tao-y-khoa-khong-the-chi-trong-giang-duong-post1823547.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 5841,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 39,
+      "url": "https://tienphong.vn/ha-noi-du-chi-300-ty-ho-tro-dao-tao-1000-tien-si-post1823517.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 5979,
+        "error": "Response missing `fusion` payload"
+      }
+    },
+    {
+      "index": 40,
+      "url": "https://tienphong.vn/tuong-trinh-cua-giao-vien-bi-to-bat-35-hoc-sinh-liem-dat-post1823464.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 10200,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 41,
+      "url": "https://tienphong.vn/cac-nguoi-dep-hoa-hau-viet-nam-check-in-tai-ngoi-chua-2000-nam-tuoi-o-bac-ninh-post1824000.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 5066,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 42,
+      "url": "https://tienphong.vn/bien-nguoi-do-ve-song-day-xem-cac-do-vat-post1823974.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 8130,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 43,
+      "url": "https://tienphong.vn/hieu-dung-ve-cau-cung-quanh-nam-khong-bang-ram-thang-gieng-post1823919.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 4974,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 44,
+      "url": "https://tienphong.vn/ha-truc-linh-va-cac-nguoi-dep-hoa-hau-viet-nam-du-xuan-mien-di-san-bac-ninh-post1823938.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 11417,
+        "total_cost_usd": 0.005855149999999999,
+        "total_tokens": 5954,
+        "fused_summary": "Vào ngày 28/2, các người đẹp tham dự cuộc thi Hoa hậu Việt Nam đã có chuyến trải nghiệm văn hóa tại Bắc Ninh, vùng đất truyền thống Kinh Bắc. Họ tham gia các hoạt động tại đền Bà Chúa Then, Hội Lim, và làng tranh Đông Hồ, nơi họ được nghe hát Quan họ và tự tay in tranh trên giấy dó. Hành trình còn đưa đoàn đến lăng Kinh Dương Vương và chùa Dâu, di tích lịch sử quan trọng. Chuyến đi không chỉ mang lại những trải nghiệm đáng nhớ mà còn thể hiện sự trân trọng và quyết tâm bảo tồn văn hóa truyền thống của người trẻ trong thời đại mới.",
+        "fused_scores": {
+          "rouge1": 0.0937,
+          "rouge2": 0.0799,
+          "rougeL": 0.082,
+          "bleu": 0,
+          "bert_score": 0.543902,
+          "compression_rate": 8.61
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4948,
+            "scores": {
+              "rouge1": 0.1491,
+              "rouge2": 0.1215,
+              "rougeL": 0.1081,
+              "bleu": 0.0009,
+              "bert_score": 0.57501,
+              "compression_rate": 13.17
+            },
+            "estimated_cost_usd": 0.00047024999999999996
+          },
+          {
+            "model_name": "gpt-4.1-mini",
+            "status": "success",
+            "latency_ms": 2591,
+            "scores": {
+              "rouge1": 0.1273,
+              "rouge2": 0.1113,
+              "rougeL": 0.1044,
+              "bleu": 0.0004,
+              "bert_score": 0.567378,
+              "compression_rate": 11.65
+            },
+            "estimated_cost_usd": 0.0012124
+          },
+          {
+            "model_name": "o4-mini",
+            "status": "failed",
+            "latency_ms": 2105,
+            "scores": {
+              "rouge1": null,
+              "rouge2": null,
+              "rougeL": null,
+              "bleu": null,
+              "bert_score": null,
+              "compression_rate": null
+            },
+            "estimated_cost_usd": null
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gpt-4o-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "tie",
+            "conciseness": "A"
+          },
+          "justification": "Bản B chi tiết hơn, cung cấp nhiều thông tin về cảm xúc và hoạt động của các người đẹp, giúp người đọc hiểu rõ hơn về chuyến đi.",
+          "length_note": "Bản A ngắn gọn nhưng bỏ sót một số chi tiết cảm xúc quan trọng, ảnh hưởng đến độ phủ sóng thông tin.",
+          "judge_model": "gpt-4o-2024-08-06",
+          "cost_usd": null,
+          "latency_ms": null,
+          "position_swapped": false
+        }
+      }
+    },
+    {
+      "index": 45,
+      "url": "https://tienphong.vn/nghe-nhac-trinh-ben-dong-song-huong-post1823845.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 13352,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 46,
+      "url": "https://tienphong.vn/nsnd-trinh-thuy-mui-ung-cu-dai-bieu-quoc-hoi-khoa-xiv-post1823930.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 9956,
+        "error": "Response missing `fusion` payload"
+      }
+    },
+    {
+      "index": 47,
+      "url": "https://tienphong.vn/nhan-sac-chi-hai-quan-ho-don-tim-du-khach-tai-hoi-lim-post1823900.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 6312,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 48,
+      "url": "https://tienphong.vn/bao-han-kinh-ngac-viet-nam-post1823892.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 8574,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 49,
+      "url": "https://tienphong.vn/hang-nghin-nguoi-do-ve-dinh-van-noi-ruoc-lua-thieng-ve-nha-luc-nua-dem-post1823877.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 5282,
+        "error": "HTTP 500: {\"error\":\"429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-er"
+      }
+    },
+    {
+      "index": 50,
+      "url": "https://tienphong.vn/le-ruoc-co-ba-cho-duoc-trong-dem-post1823791.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gpt-4.1-mini",
+          "o4-mini"
+        ],
+        "latency_ms": 9116,
+        "error": "Response missing `fusion` payload"
+      }
+    }
+  ],
+  "statistics": {
+    "per_metric": {
+      "bert_score": {
+        "n": 28,
+        "fused_mean": 0.599495357142857,
+        "fused_stdev": 0.03709884437574671,
+        "best_mean": 0.6502718571428571,
+        "best_stdev": 0.035978106479228264,
+        "delta_mean": -0.0507765,
+        "delta_stdev": 0.022900991565949786,
+        "wins": 0,
+        "losses": 28,
+        "ties": 0,
+        "sign_test_p": 7.450580596923836e-9
+      },
+      "rouge1": {
+        "n": 29,
+        "fused_mean": 0.19569310344827584,
+        "fused_stdev": 0.06597875703065605,
+        "best_mean": 0.3161758620689656,
+        "best_stdev": 0.10118584971361366,
+        "delta_mean": -0.12048275862068963,
+        "delta_stdev": 0.05173836700833972,
+        "wins": 0,
+        "losses": 29,
+        "ties": 0,
+        "sign_test_p": 3.725290298461911e-9
+      },
+      "rouge2": {
+        "n": 29,
+        "fused_mean": 0.16114137931034478,
+        "fused_stdev": 0.05170045259018104,
+        "best_mean": 0.2650275862068966,
+        "best_stdev": 0.08152203863527477,
+        "delta_mean": -0.10388620689655173,
+        "delta_stdev": 0.04505908600412456,
+        "wins": 0,
+        "losses": 29,
+        "ties": 0,
+        "sign_test_p": 3.725290298461911e-9
+      },
+      "rougeL": {
+        "n": 29,
+        "fused_mean": 0.15265172413793102,
+        "fused_stdev": 0.04839113422850494,
+        "best_mean": 0.23857586206896556,
+        "best_stdev": 0.07808250057824559,
+        "delta_mean": -0.08592413793103446,
+        "delta_stdev": 0.047120882959017625,
+        "wins": 0,
+        "losses": 29,
+        "ties": 0,
+        "sign_test_p": 3.725290298461911e-9
+      },
+      "bleu": {
+        "n": 29,
+        "fused_mean": 0.012679310344827586,
+        "fused_stdev": 0.014158752449843898,
+        "best_mean": 0.059799999999999985,
+        "best_stdev": 0.04752873566891627,
+        "delta_mean": -0.04712068965517242,
+        "delta_stdev": 0.03839880373239273,
+        "wins": 0,
+        "losses": 29,
+        "ties": 0,
+        "sign_test_p": 3.725290298461911e-9
+      }
+    },
+    "pairwise_judge": {
+      "n": 27,
+      "wins_fused": 4,
+      "wins_best": 20,
+      "ties": 3,
+      "sign_test_p": 0.0015438795089721853
+    }
+  }
+}

@@ -61,6 +61,27 @@ interface FusionDraft {
   }
 }
 
+type JudgeDimensionVerdict = "A" | "B" | "tie"
+
+interface JudgePairwiseVerdict {
+  summary_a_label: string
+  summary_b_label: string
+  winner: JudgeDimensionVerdict
+  winner_label: string
+  per_dimension: {
+    faithfulness: JudgeDimensionVerdict
+    coverage: JudgeDimensionVerdict
+    fluency: JudgeDimensionVerdict
+    conciseness: JudgeDimensionVerdict
+  }
+  justification: string
+  length_note: string
+  judge_model: string
+  judge_cost_usd: number | null
+  judge_latency_ms: number
+  position_swapped: boolean
+}
+
 interface FusionResult {
   fused: {
     summary: string
@@ -85,6 +106,7 @@ interface FusionResult {
     successful_proposers: number
     failed_proposers: string[]
   }
+  judge_pairwise?: JudgePairwiseVerdict | null
 }
 
 export default function DebugPage() {
@@ -733,6 +755,84 @@ export default function DebugPage() {
                               Failed proposers: {fusion.pipeline.failed_proposers.join(", ")}
                             </div>
                           )}
+
+                          {/* Judge Verdict — rendered only when judge ran (judge_mode != metrics_only) */}
+                          {fusion.judge_pairwise && (() => {
+                            const v = fusion.judge_pairwise
+                            const aLabel = v.summary_a_label || "Fused"
+                            const bLabel = v.summary_b_label || "Best-draft"
+                            const labelFor = (verdict: JudgeDimensionVerdict): string =>
+                              verdict === "A" ? aLabel : verdict === "B" ? bLabel : "Tie"
+                            const overallPill =
+                              v.winner === "A"
+                                ? "bg-green-50 text-green-700 border-green-200"
+                                : v.winner === "B"
+                                ? "bg-amber-50 text-amber-700 border-amber-200"
+                                : "bg-gray-100 text-gray-700 border-gray-200"
+                            const overallText =
+                              v.winner === "A"
+                                ? `${aLabel} wins`
+                                : v.winner === "B"
+                                ? `${bLabel} wins`
+                                : "Tie"
+                            const dims: Array<["faithfulness" | "coverage" | "fluency" | "conciseness", string]> = [
+                              ["faithfulness", "Faithfulness"],
+                              ["coverage", "Coverage"],
+                              ["fluency", "Fluency"],
+                              ["conciseness", "Conciseness"],
+                            ]
+                            const cost =
+                              v.judge_cost_usd === null || v.judge_cost_usd === 0
+                                ? "Free"
+                                : `$${v.judge_cost_usd.toFixed(5)}`
+                            return (
+                              <div className="border border-gray-200 rounded-lg p-3 space-y-3">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                    Judge Verdict
+                                  </span>
+                                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${overallPill}`}>
+                                    {overallText}
+                                  </span>
+                                  <span className="text-xs text-gray-400">
+                                    ({aLabel} = A · {bLabel} = B)
+                                  </span>
+                                </div>
+
+                                <table className="w-full text-xs border border-gray-100 rounded">
+                                  <thead>
+                                    <tr className="bg-gray-50 border-b border-gray-200">
+                                      <th className="px-3 py-1.5 text-left font-semibold text-gray-600">Dimension</th>
+                                      <th className="px-3 py-1.5 text-left font-semibold text-gray-600">Winner</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {dims.map(([key, label]) => (
+                                      <tr key={`judge-dim-${key}`} className="border-t border-gray-100">
+                                        <td className="px-3 py-1.5 text-gray-700">{label}</td>
+                                        <td className="px-3 py-1.5 text-gray-900 font-medium">
+                                          {labelFor(v.per_dimension[key])}
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+
+                                <div className="border border-gray-200 rounded-md p-2 bg-gray-50 max-h-40 overflow-y-auto text-xs text-gray-800 space-y-1">
+                                  <div className="whitespace-pre-wrap">{v.justification}</div>
+                                  {v.length_note && (
+                                    <div className="text-gray-500 italic whitespace-pre-wrap pt-1 border-t border-gray-200">
+                                      Length: {v.length_note}
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div className="text-xs text-gray-400">
+                                  {v.judge_model} · {cost} · {v.judge_latency_ms}ms
+                                </div>
+                              </div>
+                            )
+                          })()}
                         </div>
                       )
                     })()}

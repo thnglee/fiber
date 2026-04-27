@@ -24,6 +24,9 @@ out/
 # Claude Code
 .claude/worktrees/
 
+# Playwright MCP debug artifacts
+.playwright-mcp/
+
 # OS
 .DS_Store
 Thumbs.db
