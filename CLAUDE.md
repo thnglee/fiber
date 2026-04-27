@@ -260,20 +260,20 @@ complete. Order matters — later phases depend on earlier ones.
 - [x] **J4** `moa.evaluation.ts` pairwise + `llm_judge_pairwise` table write *(Phase 4)*
 
 **Stage 2 — Stats + UI + batch**
-- [ ] **S1** `stats.ts` helper (mean, stdev, sign-test p-value) + unit tests *(stats_devplan §3)*
-- [ ] **S2** `collect-metrics.ts` gains `--stats-only` + Statistical Significance section
-- [ ] **J5** Settings page "Evaluation Judge" card *(Phase 5)*
-- [ ] **J6** Metrics page conditional rendering + `JudgeRubricWidget` + `JudgePairwiseBadge` *(Phase 6)*
-- [ ] **J7** Debug page Judge Verdict subsection *(Phase 7)*
-- [ ] **J8** Batch harness `--judge-mode` / `--judge-model` flags *(Phase 8)*
+- [x] **S1** `stats.ts` helper (mean, stdev, sign-test p-value) + unit tests *(stats_devplan §3)*
+- [x] **S2** `collect-metrics.ts` gains `--stats-only` + Statistical Significance section
+- [x] **J5** Settings page "Evaluation Judge" card *(Phase 5)*
+- [x] **J6** Metrics page conditional rendering + `JudgeRubricWidget` + `JudgePairwiseBadge` *(Phase 6)*
+- [x] **J7** Debug page Judge Verdict subsection *(Phase 7)*
+- [x] **J8** Batch harness `--judge-mode` / `--judge-model` flags *(Phase 8)*
 
 **Stage 3 — Thesis artefact (first defense-grade numbers)**
-- [ ] **J9** Run 50-article batch in `--judge-mode both`, generate the three-way table *(Phase 9)*
+- [x] **J9** Run 50-article batch in `--judge-mode both`, generate the three-way table *(Phase 9)*
 
 **Stage 4 — Three-axis extensions**
-- [ ] **M-A** `factuality.service.ts` (claim-entailment via gpt-4o-mini) + migration 020 *(metrics_system_PRD Phase A)*
-- [ ] **M-B** Factuality column group on metrics page *(Phase B)*
-- [ ] **M-C** Axis view toggle (Compact / Full) with color-coded strips *(Phase C)*
+- [x] **M-A** `factuality.service.ts` (claim-entailment via gpt-4o-mini) + migration 020 *(metrics_system_PRD Phase A)*
+- [x] **M-B** Factuality column group on metrics page *(Phase B)*
+- [x] **M-C** Axis view toggle (Compact / Full) with color-coded strips *(Phase C)*
 
 **Stage 5 — Human validation**
 - [ ] **M-D** Human-eval schema + `/api/human-eval` API + migration 021 *(Phase D)*

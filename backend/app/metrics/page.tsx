@@ -3,6 +3,11 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Search, Filter, Download, Trophy, Clock, DollarSign, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 
+import { JudgeRubricWidget, JudgeAbsoluteBadge } from './components/JudgeRubricWidget';
+import { JudgePairwiseBadge, JudgePairwiseDimensionTable } from './components/JudgePairwiseBadge';
+import { JudgeJustificationPanel } from './components/JudgeJustificationPanel';
+import { FactualityBadge } from './components/FactualityBadge';
+
 // ── Types ───────────────────────────────────────────────────────────
 
 interface EvaluationMetrics {
@@ -15,6 +20,50 @@ interface EvaluationMetrics {
   total_tokens?: number | null;
 }
 
+interface JudgePersist {
+  judge_mode?: string | null;
+  judge_model?: string | null;
+  judge_style?: string | null;
+  judge_rubric?: Record<string, number> | null;
+  judge_absolute?: number | null;
+  judge_justification?: string | null;
+  judge_latency_ms?: number | null;
+  judge_cost_usd?: number | null;
+}
+
+interface FactualityProblem {
+  claim: string;
+  reason: string;
+}
+
+interface FactualityPersist {
+  factuality_total_claims?: number | null;
+  factuality_entailed_claims?: number | null;
+  factuality_entailed_ratio?: number | null;
+  factuality_hallucinations?: FactualityProblem[] | null;
+  factuality_not_mentioned?: FactualityProblem[] | null;
+  factuality_model?: string | null;
+  factuality_cost_usd?: number | null;
+  factuality_latency_ms?: number | null;
+}
+
+interface LLMJudgePairwiseRow {
+  id: string;
+  fusion_id: string | null;
+  routing_id: string | null;
+  summary_a_label: string;
+  summary_b_label: string;
+  winner: 'A' | 'B' | 'tie' | string;
+  per_dimension: Record<string, string> | null;
+  justification: string | null;
+  length_note: string | null;
+  judge_model: string | null;
+  judge_cost_usd: number | null;
+  judge_latency_ms: number | null;
+  position_swapped: boolean | null;
+  created_at: string;
+}
+
 interface EvaluationData {
   summary: string;
   original: string;
@@ -25,6 +74,8 @@ interface EvaluationData {
   mode?: string | null;
   model?: string;
   estimatedCostUsd?: number;
+  judge?: JudgePersist | null;
+  factuality?: FactualityPersist | null;
 }
 
 interface RoutingDecision {
@@ -439,6 +490,7 @@ function EvalModeGroupedResults({
 function FusionResults({
   fusions,
   drafts,
+  pairwiseJudgements,
   total,
   loadingMore,
   onShowMore,
@@ -446,6 +498,7 @@ function FusionResults({
 }: {
   fusions: FusionRow[];
   drafts: FusionDraft[];
+  pairwiseJudgements: LLMJudgePairwiseRow[];
   total: number;
   loadingMore: boolean;
   onShowMore: () => void;
@@ -469,6 +522,17 @@ function FusionResults({
     }
     return map;
   }, [drafts]);
+
+  // Latest pairwise verdict per fusion run (rows already arrive ordered desc by created_at).
+  const judgeByFusion = useMemo(() => {
+    const map = new Map<string, LLMJudgePairwiseRow>();
+    for (const row of pairwiseJudgements) {
+      if (row.fusion_id && !map.has(row.fusion_id)) {
+        map.set(row.fusion_id, row);
+      }
+    }
+    return map;
+  }, [pairwiseJudgements]);
 
   const toggleExpanded = (id: string) => {
     setExpandedCards(prev => {
@@ -499,6 +563,7 @@ function FusionResults({
 
       {fusions.map(fusion => {
         const fusionDrafts = draftsByFusion.get(fusion.id) || [];
+        const judgePair = judgeByFusion.get(fusion.id) ?? null;
         const isExpanded = expandedCards.has(fusion.id);
         const aggColor = getModelColor(fusion.aggregator_model);
 
@@ -533,6 +598,9 @@ function FusionResults({
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${aggColor.bg} ${aggColor.text}`} title={`Aggregator: ${fusion.aggregator_model}`}>
                       agg: {fusion.aggregator_model}
                     </span>
+                    {judgePair && (
+                      <JudgePairwiseBadge pairwise={judgePair} preferredSideLabel="fused" />
+                    )}
                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                       allSucceeded ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
                     }`}>
@@ -643,6 +711,26 @@ function FusionResults({
                     )}
                   </div>
                 </div>
+
+                {/* Judge Verdict (LLM-as-Judge pairwise, fused vs best draft) */}
+                {judgePair && (
+                  <div className="rounded-lg border-2 border-emerald-100 bg-emerald-50/40 p-4 space-y-3">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 uppercase tracking-wider">
+                        Judge Verdict
+                      </span>
+                      <JudgePairwiseBadge pairwise={judgePair} preferredSideLabel="fused" />
+                    </div>
+                    <JudgePairwiseDimensionTable pairwise={judgePair} />
+                    <JudgeJustificationPanel
+                      justification={judgePair.justification}
+                      lengthNote={judgePair.length_note}
+                      judgeModel={judgePair.judge_model}
+                      costUsd={judgePair.judge_cost_usd != null ? Number(judgePair.judge_cost_usd) : null}
+                      latencyMs={judgePair.judge_latency_ms}
+                    />
+                  </div>
+                )}
 
                 {/* Proposer drafts */}
                 <div>
@@ -773,6 +861,24 @@ export default function EvaluationDashboard() {
   });
   const LIMIT = 50;
 
+  // Axis view: 'compact' = scores only, 'full' = three colored axis strips
+  // (A retention / B quality / C human). Persists across reloads.
+  const [axisView, setAxisView] = useState<'compact' | 'full'>('compact');
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const saved = window.localStorage.getItem('metrics:axisView');
+    if (saved === 'full' || saved === 'compact') setAxisView(saved);
+  }, []);
+  const toggleAxisView = useCallback(() => {
+    setAxisView(prev => {
+      const next = prev === 'compact' ? 'full' : 'compact';
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('metrics:axisView', next);
+      }
+      return next;
+    });
+  }, []);
+
   // ── Routing state ─────────────────────────────────────────────────
   const [routingDecisions, setRoutingDecisions] = useState<RoutingDecision[]>([]);
   const [, setRoutingComparisons] = useState<ModelComparison[]>([]);
@@ -793,6 +899,7 @@ export default function EvaluationDashboard() {
   // ── Fusion state ──────────────────────────────────────────────────
   const [fusions, setFusions] = useState<FusionRow[]>([]);
   const [fusionDrafts, setFusionDrafts] = useState<FusionDraft[]>([]);
+  const [pairwiseJudgements, setPairwiseJudgements] = useState<LLMJudgePairwiseRow[]>([]);
   const [fusionTotal, setFusionTotal] = useState(0);
   const [fusionOffset, setFusionOffset] = useState(0);
   const [fusionStats, setFusionStats] = useState<FusionStats | null>(null);
@@ -917,9 +1024,11 @@ export default function EvaluationDashboard() {
       if (isInitial) {
         setFusions(result.data || []);
         setFusionDrafts(result.drafts || []);
+        setPairwiseJudgements(result.pairwise_judgements || []);
       } else {
         setFusions(prev => [...prev, ...(result.data || [])]);
         setFusionDrafts(prev => [...prev, ...(result.drafts || [])]);
+        setPairwiseJudgements(prev => [...prev, ...(result.pairwise_judgements || [])]);
       }
 
       setFusionTotal(result.count || 0);
@@ -1341,12 +1450,45 @@ export default function EvaluationDashboard() {
               </div>
             ) : (
               <div className="space-y-3">
-                {/* Results count */}
-                <div className="flex items-center justify-between">
+                {/* Results count + axis-view toggle */}
+                <div className="flex items-center justify-between gap-3 flex-wrap">
                   <p className="text-sm text-gray-500">
                     Showing {filteredMetrics.length} of {total} results
                   </p>
+                  <div className="inline-flex items-center gap-1 bg-gray-100 rounded-lg p-1" title="Toggle axis-view layout">
+                    <button
+                      type="button"
+                      onClick={() => axisView !== 'compact' && toggleAxisView()}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${axisView === 'compact' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                      Compact
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => axisView !== 'full' && toggleAxisView()}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${axisView === 'full' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                      Full (3 axes)
+                    </button>
+                  </div>
                 </div>
+
+                {axisView === 'full' && (
+                  <div className="flex items-center gap-3 text-[10px] text-gray-500 px-1">
+                    <span className="inline-flex items-center gap-1">
+                      <span className="inline-block w-2 h-2 rounded-sm bg-emerald-500"></span>
+                      Axis A — Content Retention
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <span className="inline-block w-2 h-2 rounded-sm bg-blue-500"></span>
+                      Axis B — Quality &amp; Preference
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <span className="inline-block w-2 h-2 rounded-sm bg-orange-500"></span>
+                      Axis C — Human Validation
+                    </span>
+                  </div>
+                )}
 
                 {filteredMetrics.map((item, index) => {
                   const modelColor = item.model ? getModelColor(item.model) : DEFAULT_MODEL_COLOR;
@@ -1404,8 +1546,14 @@ export default function EvaluationDashboard() {
                           {item.summary}
                         </p>
 
-                        {/* Scores grid */}
-                        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3 mt-3 pt-3 border-t border-gray-100">
+                        {/* Axis A — Content Retention (scores grid) */}
+                        <div className={`mt-3 pt-3 ${axisView === 'full' ? 'border-l-4 border-emerald-400 pl-3 -ml-1' : 'border-t border-gray-100'}`}>
+                          {axisView === 'full' && (
+                            <p className="text-[10px] uppercase tracking-wider text-emerald-700 font-semibold mb-2">
+                              Axis A · Content Retention
+                            </p>
+                          )}
+                          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3">
                           <div>
                             <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-0.5">ROUGE-1</p>
                             <p className="text-sm font-semibold text-gray-800">{item.metrics.rouge1?.toFixed(4) ?? 'N/A'}</p>
@@ -1442,7 +1590,95 @@ export default function EvaluationDashboard() {
                               {item.metrics.total_tokens != null ? item.metrics.total_tokens.toLocaleString() : 'N/A'}
                             </p>
                           </div>
-                        </div>
+                          </div> {/* end grid */}
+                        </div> {/* end Axis A */}
+
+                        {/* Axis B — Quality & Preference (judge + factuality) */}
+                        {(
+                          (item.judge && item.judge.judge_mode && item.judge.judge_mode !== 'metrics_only') ||
+                          (item.factuality && item.factuality.factuality_total_claims != null) ||
+                          axisView === 'full'
+                        ) && (
+                          <div className={`mt-3 pt-3 ${axisView === 'full' ? 'border-l-4 border-blue-400 pl-3 -ml-1' : 'border-t border-gray-100'}`}>
+                            {axisView === 'full' && (
+                              <p className="text-[10px] uppercase tracking-wider text-blue-700 font-semibold mb-2">
+                                Axis B · Quality &amp; Preference
+                              </p>
+                            )}
+
+                            {item.judge && item.judge.judge_mode && item.judge.judge_mode !== 'metrics_only' && (
+                              <div>
+                                <div className="flex items-center justify-between gap-3 mb-2">
+                                  <span className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
+                                    LLM-Judge ({item.judge.judge_style ?? 'rubric'} · {item.judge.judge_model ?? '?'})
+                                  </span>
+                                  {item.judge.judge_cost_usd != null && (
+                                    <span className="text-[10px] text-gray-400">
+                                      ${Number(item.judge.judge_cost_usd).toFixed(4)} · {item.judge.judge_latency_ms ?? '?'}ms
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex items-start gap-3 flex-wrap">
+                                  {item.judge.judge_style === 'absolute' ? (
+                                    <JudgeAbsoluteBadge score={item.judge.judge_absolute ?? null} />
+                                  ) : (
+                                    <JudgeRubricWidget rubric={item.judge.judge_rubric} compact />
+                                  )}
+                                </div>
+                                {item.judge.judge_justification && (
+                                  <div className="mt-2">
+                                    <JudgeJustificationPanel
+                                      justification={item.judge.judge_justification}
+                                      judgeModel={item.judge.judge_model}
+                                      costUsd={item.judge.judge_cost_usd != null ? Number(item.judge.judge_cost_usd) : null}
+                                      latencyMs={item.judge.judge_latency_ms}
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            {item.factuality && item.factuality.factuality_total_claims != null && (
+                              <div className={item.judge && item.judge.judge_mode && item.judge.judge_mode !== 'metrics_only' ? 'mt-3' : ''}>
+                                <div className="flex items-center justify-between gap-3 mb-2">
+                                  <span className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
+                                    Factuality ({item.factuality.factuality_model ?? '?'})
+                                  </span>
+                                </div>
+                                <FactualityBadge
+                                  totalClaims={item.factuality.factuality_total_claims}
+                                  entailedClaims={item.factuality.factuality_entailed_claims ?? null}
+                                  entailedRatio={item.factuality.factuality_entailed_ratio ?? null}
+                                  hallucinations={item.factuality.factuality_hallucinations ?? null}
+                                  notMentioned={item.factuality.factuality_not_mentioned ?? null}
+                                  factualityModel={item.factuality.factuality_model ?? null}
+                                  costUsd={item.factuality.factuality_cost_usd != null ? Number(item.factuality.factuality_cost_usd) : null}
+                                  latencyMs={item.factuality.factuality_latency_ms ?? null}
+                                />
+                              </div>
+                            )}
+
+                            {axisView === 'full' &&
+                              !(item.judge && item.judge.judge_mode && item.judge.judge_mode !== 'metrics_only') &&
+                              !(item.factuality && item.factuality.factuality_total_claims != null) && (
+                                <p className="text-xs text-gray-400 italic">
+                                  No judge or factuality data on this row. Enable in Settings → Evaluation Judge.
+                                </p>
+                              )}
+                          </div>
+                        )}
+
+                        {/* Axis C — Human Validation (placeholder until M-D/E/F land) */}
+                        {axisView === 'full' && (
+                          <div className="mt-3 pt-3 border-l-4 border-orange-400 pl-3 -ml-1">
+                            <p className="text-[10px] uppercase tracking-wider text-orange-700 font-semibold mb-2">
+                              Axis C · Human Validation
+                            </p>
+                            <p className="text-xs text-gray-400 italic">
+                              Pending — connect via the human-eval study (M-D / M-E / M-F).
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
@@ -1759,6 +1995,7 @@ export default function EvaluationDashboard() {
                   <FusionResults
                     fusions={fusions}
                     drafts={fusionDrafts}
+                    pairwiseJudgements={pairwiseJudgements}
                     total={fusionTotal}
                     loadingMore={fusionLoadingMore}
                     onShowMore={handleFusionShowMore}

@@ -208,6 +208,49 @@ export const JudgeConfigSchema = z.object({
   judge_mode: JudgeModeSchema.default("metrics_only"),
   default_judge_model: z.string().default("gpt-4o"),
   default_judge_style: JudgeStyleSchema.default("rubric"),
+  factuality_enabled: z.boolean().default(false),
+  factuality_model: z.string().default("gpt-4o-mini"),
+})
+
+// ============================================================================
+// Factuality (claim-entailment) Schemas
+// ============================================================================
+
+export const FactualityClaimSchema = z.object({
+  claim: z.string(),
+})
+
+export const FactualityClaimListSchema = z.object({
+  claims: z.array(FactualityClaimSchema).min(0).max(20),
+})
+
+export const FactualityVerdictSchema = z.enum([
+  "entailed",
+  "contradicted",
+  "not_mentioned",
+])
+
+export const FactualityClaimVerdictSchema = z.object({
+  claim: z.string(),
+  verdict: FactualityVerdictSchema,
+  reason: z.string(),
+})
+
+export const FactualityVerdictListSchema = z.object({
+  verdicts: z.array(FactualityClaimVerdictSchema),
+})
+
+export const FactualityProblemSchema = z.object({
+  claim: z.string(),
+  reason: z.string(),
+})
+
+export const FactualityResultSchema = z.object({
+  total_claims: z.number().int().min(0),
+  entailed_claims: z.number().int().min(0),
+  entailed_ratio: z.number().min(0).max(1),
+  hallucinations: z.array(FactualityProblemSchema),
+  not_mentioned: z.array(FactualityProblemSchema),
 })
 
 // ============================================================================
@@ -307,3 +350,8 @@ export type JudgePairwiseDimensions = z.infer<typeof JudgePairwiseDimensionsSche
 export type JudgePairwiseResult = z.infer<typeof JudgePairwiseResultSchema>
 export type JudgeRankerResult = z.infer<typeof JudgeRankerResultSchema>
 export type JudgeConfig = z.infer<typeof JudgeConfigSchema>
+
+export type FactualityVerdict = z.infer<typeof FactualityVerdictSchema>
+export type FactualityClaimVerdict = z.infer<typeof FactualityClaimVerdictSchema>
+export type FactualityProblem = z.infer<typeof FactualityProblemSchema>
+export type FactualityResult = z.infer<typeof FactualityResultSchema>

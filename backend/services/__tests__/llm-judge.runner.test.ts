@@ -34,9 +34,15 @@ function model(name = "gpt-4o"): ModelConfig {
   }
 }
 
-function deps(over: Partial<RunnerDeps> & { stored: JudgeConfig }): RunnerDeps {
+const FACTUALITY_DEFAULTS: Pick<JudgeConfig, "factuality_enabled" | "factuality_model"> = {
+  factuality_enabled: false,
+  factuality_model: "gpt-4o-mini",
+}
+
+function deps(over: Partial<RunnerDeps> & { stored: Omit<JudgeConfig, "factuality_enabled" | "factuality_model"> & Partial<Pick<JudgeConfig, "factuality_enabled" | "factuality_model">> }): RunnerDeps {
+  const stored: JudgeConfig = { ...FACTUALITY_DEFAULTS, ...over.stored }
   return {
-    getStoredConfig: async () => over.stored,
+    getStoredConfig: async () => stored,
     getModelByName: async (name: string) => (name === "gpt-4o" ? model("gpt-4o") : null),
     judgeRubric: async (_s, _src, opts) => ({
       scores: { faithfulness: 5, coverage: 4, fluency: 5, conciseness: 4, overall: 5 },

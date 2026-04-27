@@ -13,6 +13,8 @@ const UpdateJudgeSchema = z
     judge_mode: JudgeModeSchema.optional(),
     default_judge_model: z.string().min(1).optional(),
     default_judge_style: JudgeStyleSchema.optional(),
+    factuality_enabled: z.boolean().optional(),
+    factuality_model: z.string().min(1).optional(),
   })
   .strict()
 
@@ -20,6 +22,8 @@ const DEFAULT_JUDGE_CONFIG: JudgeConfig = {
   judge_mode: "metrics_only",
   default_judge_model: "gpt-4o",
   default_judge_style: "rubric",
+  factuality_enabled: false,
+  factuality_model: "gpt-4o-mini",
 }
 
 function mergeConfig(
@@ -36,6 +40,14 @@ function mergeConfig(
       updates.default_judge_style ??
       current?.default_judge_style ??
       DEFAULT_JUDGE_CONFIG.default_judge_style,
+    factuality_enabled:
+      updates.factuality_enabled ??
+      current?.factuality_enabled ??
+      DEFAULT_JUDGE_CONFIG.factuality_enabled,
+    factuality_model:
+      updates.factuality_model ??
+      current?.factuality_model ??
+      DEFAULT_JUDGE_CONFIG.factuality_model,
   }
 }
 

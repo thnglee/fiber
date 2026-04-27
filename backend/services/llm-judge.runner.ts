@@ -23,6 +23,8 @@ const HARD_DEFAULTS: JudgeConfig = {
   judge_mode: "metrics_only",
   default_judge_model: "gpt-4o",
   default_judge_style: "rubric",
+  factuality_enabled: false,
+  factuality_model: "gpt-4o-mini",
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -60,6 +62,10 @@ async function defaultGetStoredConfig(): Promise<JudgeConfig> {
         value.default_judge_model ?? HARD_DEFAULTS.default_judge_model,
       default_judge_style:
         value.default_judge_style ?? HARD_DEFAULTS.default_judge_style,
+      factuality_enabled:
+        value.factuality_enabled ?? HARD_DEFAULTS.factuality_enabled,
+      factuality_model:
+        value.factuality_model ?? HARD_DEFAULTS.factuality_model,
     }
   } catch {
     return HARD_DEFAULTS

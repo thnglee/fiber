@@ -181,14 +181,16 @@ export async function performSummarize(request: SummarizeRequest, modelConfig?: 
 
   // Calculate and save evaluation metrics asynchronously
   // Fire and forget — never blocks the main response.
-  // BERTScore, lexical metrics, and (optional) LLM-judge run in parallel.
+  // BERTScore, lexical metrics, LLM-judge, and factuality run in parallel.
   void (async () => {
     try {
       const { runJudgeForSummary } = await import('./llm-judge.runner')
-      const [metrics, bertScore, judgeFields] = await Promise.all([
+      const { runFactualityForSummary } = await import('./factuality.runner')
+      const [metrics, bertScore, judgeFields, factualityFields] = await Promise.all([
         Promise.resolve(calculateLexicalMetrics(response.summary, extractedContent)),
         calculateBertScore(extractedContent, response.summary),
         runJudgeForSummary(response.summary, extractedContent, judgeConfigOverride),
+        runFactualityForSummary(response.summary, extractedContent),
       ]);
 
       // Calculate compression rate (token-based)
@@ -220,6 +222,7 @@ export async function performSummarize(request: SummarizeRequest, modelConfig?: 
             + ((llmResult.usage?.completion_tokens ?? 0) / 1_000_000 * (modelConfig.output_cost_per_1m ?? 0))
           : undefined,
         judge: judgeFields,
+        factuality: factualityFields,
       });
     } catch (err) {
       logger.addLog('summarize', 'evaluation-error', {
