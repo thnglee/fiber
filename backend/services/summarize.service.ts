@@ -24,7 +24,7 @@ import { calculateCompressionRate } from "./compression.service"
  * @returns Summary response with summary text, key points, and reading time
  */
 export async function performSummarize(request: SummarizeRequest, modelConfig?: ModelConfig): Promise<SummarizeResponse> {
-  const { content, url, debug } = request
+  const { content, url, debug, judge_config: judgeConfigOverride } = request
 
   const debugInfo: SummarizeDebugInfo = {}
   let extractedContent = ""
@@ -181,12 +181,16 @@ export async function performSummarize(request: SummarizeRequest, modelConfig?: 
 
   // Calculate and save evaluation metrics asynchronously
   // Fire and forget — never blocks the main response.
-  // BERTScore and lexical metrics run in parallel to minimise wall-clock time.
+  // BERTScore, lexical metrics, LLM-judge, and factuality run in parallel.
   void (async () => {
     try {
-      const [metrics, bertScore] = await Promise.all([
+      const { runJudgeForSummary } = await import('./llm-judge.runner')
+      const { runFactualityForSummary } = await import('./factuality.runner')
+      const [metrics, bertScore, judgeFields, factualityFields] = await Promise.all([
         Promise.resolve(calculateLexicalMetrics(response.summary, extractedContent)),
         calculateBertScore(extractedContent, response.summary),
+        runJudgeForSummary(response.summary, extractedContent, judgeConfigOverride),
+        runFactualityForSummary(response.summary, extractedContent),
       ]);
 
       // Calculate compression rate (token-based)
@@ -217,10 +221,12 @@ export async function performSummarize(request: SummarizeRequest, modelConfig?: 
           ? ((llmResult.usage?.prompt_tokens ?? 0) / 1_000_000 * (modelConfig.input_cost_per_1m ?? 0))
             + ((llmResult.usage?.completion_tokens ?? 0) / 1_000_000 * (modelConfig.output_cost_per_1m ?? 0))
           : undefined,
+        judge: judgeFields,
+        factuality: factualityFields,
       });
     } catch (err) {
-      logger.addLog('summarize', 'evaluation-error', { 
-        error: err instanceof Error ? err.message : String(err) 
+      logger.addLog('summarize', 'evaluation-error', {
+        error: err instanceof Error ? err.message : String(err)
       });
     }
   })();

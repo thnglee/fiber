@@ -42,3 +42,15 @@
 | 18 | tienphong.vn | — | — | 0.6244 | — |
 | 19 | tienphong.vn | — | — | 0.6268 | — |
 | 20 | tienphong.vn | — | — | 0.5634 | — |
+
+## Statistical Significance (fused vs best single draft)
+
+| Metric  | n  | Δ mean   | Δ stdev | Wins / Losses (Ties) | Sign-test p | Verdict        |
+|---------|----|----------|---------|----------------------|-------------|----------------|
+| BERT    | 19 | -0.0500 | 0.0323 | 0 / 19               | 0.0000      | fused worse *  |
+| ROUGE-1 | 20 | -0.1215 | 0.0519 | 0 / 20               | 0.0000      | fused worse *  |
+| ROUGE-2 | 20 | -0.1064 | 0.0468 | 0 / 20               | 0.0000      | fused worse *  |
+| ROUGE-L | 20 | -0.0854 | 0.0431 | 0 / 20               | 0.0000      | fused worse *  |
+| BLEU    | 20 | -0.0516 | 0.0483 | 0 / 20               | 0.0000      | fused worse *  |
+
+`*` significant at p < 0.05.

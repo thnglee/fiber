@@ -1,0 +1,222 @@
+{
+  "generated_at": "2026-04-27T16:39:43.183Z",
+  "window": {
+    "since": null,
+    "until": null
+  },
+  "coverage": {
+    "evaluation_metrics": 2051,
+    "llm_judge_pairwise": 28,
+    "human_eval_tasks": 0,
+    "human_eval_responses": 0
+  },
+  "axis_a": [
+    {
+      "approach": "fusion | moa:gpt-4.1",
+      "n": 1,
+      "rouge1": 0.9808,
+      "rougeL": 0.9423,
+      "bleu": 0.5361,
+      "bert": 0.854283,
+      "compression": 121.74
+    },
+    {
+      "approach": "sync | VietAI/vit5-large-vietnews-summarization",
+      "n": 124,
+      "rouge1": 0.2478798387096774,
+      "rougeL": 0.2478798387096774,
+      "bleu": 0.11735967741935485,
+      "bert": 0.8513546694214877,
+      "compression": 25.593548387096774
+    },
+    {
+      "approach": "sync | gpt-4.1-2025-04-14",
+      "n": 1,
+      "rouge1": 0.9519,
+      "rougeL": 0.8654,
+      "bleu": 0.3842,
+      "bert": 0.797987,
+      "compression": 122.83
+    },
+    {
+      "approach": "sync | claude-haiku-4-5-20251001",
+      "n": 6,
+      "rouge1": 0.9801333333333333,
+      "rougeL": 0.9017500000000002,
+      "bleu": 0.30591666666666667,
+      "bert": 0.7787198333333335,
+      "compression": 149.5533333333333
+    },
+    {
+      "approach": "fusion | moa:gpt-4o-mini",
+      "n": 2,
+      "rouge1": 0.9712,
+      "rougeL": 0.8846,
+      "bleu": 0.36615,
+      "bert": 0.7602715,
+      "compression": 148.37
+    },
+    {
+      "approach": "sync | claude-sonnet-4-5-20250929",
+      "n": 16,
+      "rouge1": 0.32951875,
+      "rougeL": 0.26496875000000003,
+      "bleu": 0.085175,
+      "bert": 0.6643833124999999,
+      "compression": 32.370625
+    },
+    {
+      "approach": "stream | gpt-4o-mini-2024-07-18",
+      "n": 313,
+      "rouge1": 0.24843290734824272,
+      "rougeL": 0.18886038338658143,
+      "bleu": 0.03297507987220447,
+      "bert": 0.6425761503267975,
+      "compression": 23.30603833865815
+    },
+    {
+      "approach": "sync | o4-mini-2025-04-16",
+      "n": 203,
+      "rouge1": 0.32496699507389143,
+      "rougeL": 0.24703891625615745,
+      "bleu": 0.0591566502463054,
+      "bert": 0.6364130306122449,
+      "compression": 33.78399014778326
+    },
+    {
+      "approach": "sync | gpt-4.1-mini-2025-04-14",
+      "n": 212,
+      "rouge1": 0.2980584905660378,
+      "rougeL": 0.22675377358490562,
+      "bleu": 0.04915943396226417,
+      "bert": 0.6288061262135921,
+      "compression": 29.015330188679258
+    },
+    {
+      "approach": "sync | gpt-4o-mini-2024-07-18",
+      "n": 653,
+      "rouge1": 0.2533509954058194,
+      "rougeL": 0.19734977029096484,
+      "bleu": 0.03335589586523736,
+      "bert": 0.6264538685446016,
+      "compression": 27.723078101071973
+    },
+    {
+      "approach": "sync | gpt-4o-2024-08-06",
+      "n": 257,
+      "rouge1": 0.34476498054474697,
+      "rougeL": 0.2479377431906615,
+      "bleu": 0.06737431906614785,
+      "bert": 0.6257639959999999,
+      "compression": 51.99774319066147
+    },
+    {
+      "approach": "fusion | moa:gpt-4o",
+      "n": 208,
+      "rouge1": 0.27182451923076917,
+      "rougeL": 0.21121249999999991,
+      "bleu": 0.03527019230769232,
+      "bert": 0.6192046287128714,
+      "compression": 31.148605769230773
+    },
+    {
+      "approach": "stream | gpt-4o",
+      "n": 52,
+      "rouge1": 0.2846365384615384,
+      "rougeL": 0.20465192307692304,
+      "bleu": 0.0211,
+      "bert": 0.5999188260869566,
+      "compression": 25.375961538461546
+    },
+    {
+      "approach": "sync | o3-mini-2025-01-31",
+      "n": 3,
+      "rouge1": 0.14013333333333333,
+      "rougeL": 0.1044,
+      "bleu": 0.0008,
+      "bert": 0.5834799999999999,
+      "compression": 12.803333333333333
+    }
+  ],
+  "axis_b1": [
+    {
+      "approach": "sync | claude-haiku-4-5-20251001",
+      "n": 5,
+      "faithfulness": 5,
+      "coverage": 4.8,
+      "fluency": 5,
+      "conciseness": 4.8,
+      "overall": 4.8
+    },
+    {
+      "approach": "fusion | moa:gpt-4o",
+      "n": 31,
+      "faithfulness": 4.935483870967742,
+      "coverage": 4.129032258064516,
+      "fluency": 5,
+      "conciseness": 4.774193548387097,
+      "overall": 4.741935483870968
+    },
+    {
+      "approach": "sync | gpt-4o-mini-2024-07-18",
+      "n": 7,
+      "faithfulness": 4.857142857142857,
+      "coverage": 4.714285714285714,
+      "fluency": 5,
+      "conciseness": 4.571428571428571,
+      "overall": 4.714285714285714
+    }
+  ],
+  "axis_b2": [
+    {
+      "pair": "fused vs best_draft:o4-mini",
+      "n": 13,
+      "a_wins": 0,
+      "b_wins": 12,
+      "ties": 1,
+      "winner": "B (best_draft:o4-mini)",
+      "judge_models": [
+        "gpt-4o-2024-08-06"
+      ]
+    },
+    {
+      "pair": "fused vs best_draft:gpt-4o-mini",
+      "n": 8,
+      "a_wins": 4,
+      "b_wins": 3,
+      "ties": 1,
+      "winner": "A (fused)",
+      "judge_models": [
+        "gpt-4o-2024-08-06"
+      ]
+    },
+    {
+      "pair": "fused vs best_draft:gpt-4.1-mini",
+      "n": 6,
+      "a_wins": 0,
+      "b_wins": 5,
+      "ties": 1,
+      "winner": "B (best_draft:gpt-4.1-mini)",
+      "judge_models": [
+        "gpt-4o-2024-08-06"
+      ]
+    },
+    {
+      "pair": "fused vs best_draft:claude-haiku-4-5",
+      "n": 1,
+      "a_wins": 1,
+      "b_wins": 0,
+      "ties": 0,
+      "winner": "A (fused)",
+      "judge_models": [
+        "gpt-4o-2024-08-06"
+      ]
+    }
+  ],
+  "axis_b3": [],
+  "axis_c": {
+    "per_approach": [],
+    "per_task": [],
+    "pooled_kappa": null
+  }
+}
