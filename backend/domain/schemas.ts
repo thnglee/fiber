@@ -254,6 +254,53 @@ export const FactualityResultSchema = z.object({
 })
 
 // ============================================================================
+// Human-eval (blind K-way ranking) Schemas — Stage 5 (M-D)
+// ============================================================================
+
+// Each candidate summary in a blind-ranking task. `label` is the visible tag
+// shown to the rater (A/B/C/...); `hidden_*` fields stay server-side until the
+// admin report / CSV export reveals them.
+export const HumanEvalSummarySchema = z.object({
+  label: z.string().min(1).max(4),
+  text: z.string().min(1),
+  hidden_model: z.string().optional(),
+  hidden_mode: z.string().optional(),
+  evaluation_metric_id: z.string().uuid().optional(),
+})
+
+export const HumanEvalTaskSchema = z.object({
+  id: z.string().uuid(),
+  article_url: z.string(),
+  article_text: z.string(),
+  summaries: z.array(HumanEvalSummarySchema).min(2).max(10),
+  notes: z.string().nullable().optional(),
+  created_at: z.string().optional(),
+})
+
+// Public-facing task (rater view) hides the `hidden_*` fields.
+export const HumanEvalTaskPublicSchema = HumanEvalTaskSchema.extend({
+  summaries: z.array(
+    HumanEvalSummarySchema.pick({ label: true, text: true }),
+  ),
+})
+
+export const CreateHumanEvalTaskSchema = z.object({
+  article_url: z.string().min(1),
+  article_text: z.string().min(1),
+  summaries: z.array(HumanEvalSummarySchema).min(2).max(10),
+  notes: z.string().optional(),
+})
+
+export const HumanEvalResponseSchema = z.object({
+  task_id: z.string().uuid(),
+  rater_id: z.string().min(1).max(200),
+  // Best→worst ordering of labels. Must be a permutation of the task's labels.
+  ranking: z.array(z.string().min(1).max(4)).min(2).max(10),
+  // { label: "one-sentence rationale" }
+  rationale: z.record(z.string()),
+})
+
+// ============================================================================
 // Log Entry Schema
 // ============================================================================
 
@@ -355,3 +402,9 @@ export type FactualityVerdict = z.infer<typeof FactualityVerdictSchema>
 export type FactualityClaimVerdict = z.infer<typeof FactualityClaimVerdictSchema>
 export type FactualityProblem = z.infer<typeof FactualityProblemSchema>
 export type FactualityResult = z.infer<typeof FactualityResultSchema>
+
+export type HumanEvalSummary = z.infer<typeof HumanEvalSummarySchema>
+export type HumanEvalTask = z.infer<typeof HumanEvalTaskSchema>
+export type HumanEvalTaskPublic = z.infer<typeof HumanEvalTaskPublicSchema>
+export type CreateHumanEvalTask = z.infer<typeof CreateHumanEvalTaskSchema>
+export type HumanEvalResponse = z.infer<typeof HumanEvalResponseSchema>

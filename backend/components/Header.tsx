@@ -9,8 +9,8 @@ export function Header() {
   const pathname = usePathname();
   useRealtime();
 
-  // Hide header on login page
-  if (pathname === '/admin/login') {
+  // Hide header on login page + public rater page (no admin nav for external raters)
+  if (pathname === '/admin/login' || pathname === '/evaluate') {
       return null;
   }
 

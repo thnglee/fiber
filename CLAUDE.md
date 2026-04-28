@@ -22,10 +22,14 @@ metrics_reports/  # Evaluation datasets and test results
 ### Backend (`cd backend`)
 ```bash
 npm install
-npm run dev        # http://localhost:3000
+npm run dev               # http://localhost:3000
 npm run build
 npm run lint
 npm run test:streaming
+npm run test:judge        # LLM-judge service + runner tests
+npm run test:moa          # MoA fusion tests
+npm run moa:collect-metrics -- --input <urls.json>   # batch harness
+npm run report:unified    # three-axis thesis report → metrics_reports/results/
 ```
 
 ### Extension (`cd extension`)
@@ -64,6 +68,10 @@ Backend (Next.js API routes)
     fact-check.service.ts       search → LLM pipeline
     evaluation.service.ts       ROUGE, BLEU computation + Supabase persistence
     bert.service.ts             calls BERTScore microservice (truncates to 256 tokens)
+    llm-judge.service.ts        LLM-as-judge: rubric / absolute / pairwise scoring
+    llm-judge.runner.ts         glue: reads judge_config, runs judge, swallows errors
+    factuality.service.ts       claim-entailment + hallucination counting (gpt-4o-mini)
+    factuality.runner.ts        glue: mirrors llm-judge.runner.ts shape
     content-extraction.service.ts  @mozilla/readability + JSDOM
     search.service.ts           Tavily wrapper
     compression.service.ts      compression rate calculation
@@ -105,9 +113,15 @@ PLASMO_PUBLIC_API_URL=http://localhost:3000/api
 
 ## Database (Supabase)
 
-Two main tables:
-- `evaluation_metrics` — ROUGE/BLEU/BERTScore/compression/latency per summarization
-- `dashboard_actions` — Extension user action log (summarize, fact-check events)
+Core tables:
+- `evaluation_metrics` — one row per summary. Holds ROUGE/BLEU/BERTScore/compression/latency (Axis A) plus `judge_*` columns (rubric JSONB, absolute, justification, cost, latency) and `factuality_*` columns (entailed ratio, claim counts, hallucinations JSONB) for Axis B.
+- `dashboard_actions` — extension user-action log (summarize, fact-check events).
+- `llm_judge_pairwise` — one row per fused-vs-best-draft verdict produced during fusion runs. Linked to `moa_fusion_results` and `routing_decisions`.
+- `human_eval_tasks` — admin-created bundles of (article + K labelled candidate summaries with hidden model/mode). Axis C.
+- `human_eval_responses` — per-rater ranking + rationale. Unique on `(task_id, rater_id)`.
+- `app_settings` — singleton config rows. `judge_config` controls the judge feature (`judge_mode`, default model, default style, `factuality_enabled`).
+- `moa_fusion_results` / `moa_draft_results` — per-fusion-run records (aggregator + each proposer draft).
+- `routing_decisions`, `model_configurations` — routing infrastructure.
 
 ## Supported News Sites
 
@@ -177,114 +191,139 @@ Softening the rules (v2) vs strict rules (v1) made no meaningful difference — 
 - `metrics_reports/results/fusion-batch-50*.{json,md}` — three-way evidence
 - `fusion.pdf` — paper (the only spec; original `fusion_PRD.md` archived after feature shipped)
 
-## Evaluation Redesign — New Direction (2026-04-24)
+## Three-Axis Evaluation System (the thesis contribution)
 
-The MoA investigation converted from "fix the feature" to "fix the
-measurement." The thesis contribution reframes as: *"Why overlap metrics
-cannot evaluate Mixture-of-Agents summarization: a three-axis empirical
-analysis."*
+The MoA investigation above showed overlap metrics structurally punish editorial-synthesis. So we built a multi-axis evaluation system. The thesis question reframes as: *"Why overlap metrics cannot evaluate Mixture-of-Agents summarization: a three-axis empirical analysis."*
 
-**Two new PRDs ship on branch `feature/llm-judge-evaluation`:**
+Branch: `feature/llm-judge-evaluation`. All code work is shipped; only the human study itself (running rater sessions) remains.
 
-### `llm_judge_PRD.md` — LLM-as-Judge module
+### The three axes
 
-Paper-aligned (Wang et al. 2024, fusion.pdf Appendix Table 5 + §3.1)
-evaluation pathway with four judge styles:
+**Axis A — Content Retention** (already-existing overlap metrics)
+ROUGE-1/2/L, BLEU, BERTScore (PhoBERT), compression rate. Computed against the source article (not a human reference summary) — caveat documented in the methodology chapter.
 
-- **Rubric** (FLASK-derived, 5 dims × 1–5) — per-summary display
-- **Absolute** (MT-Bench-style, 1–10 holistic) — single-number compare
-- **Pairwise** (AlpacaEval-style, length-controlled) — fused vs best-draft; the defense-critical number
-- **N-way ranker** (paper Appendix Table 5 prompt) — optional
+**Axis B — Quality & Preference** (LLM-as-judge + factuality)
+- **Rubric** — FLASK-derived 5 dimensions × 1–5 (faithfulness, coverage, fluency, conciseness, overall) + Vietnamese justification.
+- **Absolute** — MT-Bench-style 1–10 holistic.
+- **Pairwise** — AlpacaEval-style A vs B with **position randomization** (controls for known LLM position bias). The defense-critical number: fused vs best-draft.
+- **N-way ranker** — built but currently unused.
+- **Factuality** — splits a summary into atomic claims, classifies each as entailed / contradicted / not-mentioned via `gpt-4o-mini`. Surfaces hallucinations as a hard count.
 
-Settings persistence follows the existing `/api/settings/routing` pattern
-(server-side via Supabase, NOT `chrome.storage.local`). UI lives in the
-Next.js backend (`backend/app/settings`, `backend/app/metrics`,
-`backend/app/debug`), not the Plasmo extension. Judge mode is
-`metrics_only` / `judge_only` / `both`, **orthogonal** to routing mode.
+**Axis C — Human Validation** (blind K-way ranking)
+Admin builds tasks at `/evaluate/admin` (model names hidden — raters see Bản A / Bản B / …). Raters drag-rank at `/evaluate?task=<uuid>` and write a one-sentence rationale per summary. Aggregate computes per-approach avg-rank + win-rate + **Fleiss' κ** inter-rater agreement (κ > 0.4 is the publishable threshold).
 
-Plan: 9 phases, ~5 days. See `llm_judge_PRD.md`.
+`judge_mode` (`metrics_only` / `judge_only` / `both`) is **orthogonal** to `routing_mode` — they compose freely.
 
-### `metrics_system_PRD.md` — Three-axis evaluation framework
+### Key files
 
-Wraps the LLM-judge module and the existing overlap metrics into a single
-coherent system:
+```
+backend/services/
+  llm-judge.service.ts         judgeRubric, judgeAbsolute, judgePairwise, judgeNWayRanker
+  llm-judge.runner.ts          resolveJudgeConfig + runJudgeForSummary (error-swallowing)
+  factuality.service.ts        scoreFactuality (claim split → entailment classification)
+  factuality.runner.ts         glue, mirrors llm-judge.runner.ts
 
-- **Axis A — Content Retention**: ROUGE / BLEU / BERTScore / compression
-  (existing, kept; document the "vs source not human reference" caveat).
-- **Axis B — Quality & Preference**: LLM-judge (from judge PRD) + new
-  `factuality.service.ts` (claim-entailment + hallucination counting via
-  `gpt-4o-mini`).
-- **Axis C — Human Validation**: new `backend/app/evaluate/` page with
-  blind K-way ranking UI, 20-article peer study, Fleiss' κ reported, CSV
-  export.
+backend/output-fusion/
+  moa.evaluation.ts            pickBestDraftForJudge + runFusionPairwiseJudge
+  moa.persistence.ts           saveLLMJudgePairwise
+  scripts/stats.ts             mean, stdev, signTestPValue, pairedMetricStats,
+                               fleissKappa, fleissKappaFromRankings, aggregateRankings
+  scripts/collect-metrics.ts   batch harness — --judge-mode/--judge-style/--judge-model/--stats-only
+  scripts/unified-report.ts    pulls all 3 axes from Supabase → one Markdown report
 
-Metrics page gains a `Compact / Full` axis-view toggle with color-coded
-axis strips (green=A, blue=B, orange=C). Unified report generator emits a
-single thesis-ready Markdown with all three axes.
+backend/app/
+  api/settings/judge/route.ts  GET/PATCH judge_config (mirrors /api/settings/routing pattern)
+  api/human-eval/route.ts      POST = create task; GET[?id&reveal=1] = rater view or admin list
+  api/human-eval/respond/      POST ranking + rationale (validates permutation; 409 on duplicate rater)
+  api/human-eval/report/       GET aggregate (avg-rank, win-rate, κ)
+  api/human-eval/export/       GET CSV (one row per rater × label, hidden_model revealed)
+  evaluate/page.tsx            rater UI (Vietnamese, drag-drop + ▲▼ buttons; header hidden)
+  evaluate/admin/page.tsx      admin: Create tab + Review tab with κ band labels
+  metrics/page.tsx             axisView toggle (compact/full), localStorage-persisted
+  metrics/components/
+    JudgeRubricWidget.tsx      radar chart of 5 dimensions
+    JudgePairwiseBadge.tsx     fused-wins / best-draft-wins / tie pill
+    FactualityBadge.tsx        entailment % with click-to-expand contradictions
+    JudgeJustificationPanel.tsx  LLM's one-sentence reasoning
 
-Plan: 8 phases, ~6 days on top of the judge PRD (total ≈ 11 days).
+backend/supabase/migrations/
+  019_add_llm_judge.sql        judge_* columns + llm_judge_pairwise table + judge_config seed
+  020_add_factuality.sql       factuality_* columns + factuality defaults merged into judge_config
+  021_add_human_eval.sql       human_eval_tasks + human_eval_responses with RLS
+```
 
-### Thesis narrative (what this unlocks)
+### How to use
 
-The defense chapter reframes as:
-1. Methodology (introduce the three axes + overlap caveat)
-2. Axis A results (MoA loses on overlap — expected, documented)
-3. Axis B results (MoA wins on judge + factuality — the paper's story)
-4. Axis C results (20-article human peer study with κ)
-5. Cross-axis analysis (when do axes agree/disagree — the novel
-   methodological contribution)
-6. Recommendation (which approach to ship)
+```bash
+# 1. Turn the judge on at /settings (Evaluation Judge card)
+#    or PATCH /api/settings/judge with { judge_mode: "both", factuality_enabled: true }
+
+# 2. Run a batch with judge enabled:
+cd backend
+npx tsx output-fusion/scripts/collect-metrics.ts \
+  --input output-fusion/scripts/sample-urls-tienphong-50.json \
+  --judge-mode both --judge-style rubric --judge-model gpt-4o
+
+# 3. (For Axis C) Build human-eval tasks at /evaluate/admin,
+#    share /evaluate?task=<uuid> URLs to raters, collect responses.
+
+# 4. Generate the unified thesis-ready report (all three axes):
+npm run report:unified
+# Optional: scope by date or human-eval tasks, also write JSON sidecar
+npm run report:unified -- --since 2026-04-01 --task-ids <uuid1>,<uuid2> --json
+```
+
+### Where to find each number in the DB
+
+- **Rubric scores** → `evaluation_metrics.judge_rubric` (JSONB, 5 dimensions)
+- **Pairwise verdicts (fused vs best-draft)** → `llm_judge_pairwise`
+- **Factuality** → `evaluation_metrics.factuality_*` columns (`factuality_enabled` must be on)
+- **Human rankings** → `human_eval_responses.ranking` (one row per rater × task)
+
+### `judge_config` shape (in `app_settings`)
+
+```json
+{
+  "judge_mode": "metrics_only" | "judge_only" | "both",
+  "default_judge_model": "gpt-4o",
+  "default_judge_style": "rubric" | "absolute",
+  "factuality_enabled": false,
+  "factuality_model": "gpt-4o-mini"
+}
+```
+
+### Test commands
+
+```bash
+npm run test:judge      # llm-judge.service + runner tests
+npm run test:moa        # MoA fusion tests (1 known-pre-existing failure on prompt literal)
+npx tsx --test output-fusion/__tests__/stats.test.ts \
+  services/__tests__/factuality.service.test.ts
+```
+
+### Thesis narrative (what the system unlocks)
+
+1. Methodology — introduce the three axes + the overlap-vs-source caveat
+2. Axis A results — MoA loses on overlap (expected, documented)
+3. Axis B results — MoA wins on judge + factuality (the paper's story)
+4. Axis C results — 20-article human peer study with κ
+5. Cross-axis analysis — when do the three axes agree / disagree (the novel methodological contribution)
+6. Recommendation — which approach to ship
+
+### Background docs
+
+- `overall_devplan.md` — original 17-phase plan (all code work shipped)
+- `llm_judge_PRD.md` — judge service spec
+- `metrics_system_PRD.md` — three-axis framework spec
+- `stats_devplan.md` — sign-test + κ math notes
+- `thesis_defense_narratives.md` — pre-committed contingency stories
+
+### Status
+
+All code shipped. Live counts in Supabase: ~2050 evaluation rows, 28 pairwise verdicts (J9 thesis batch), 0 human-eval responses. Only remaining work is the **20-article peer study** itself — sit down with 2 raters and use `/evaluate/admin` to mint share URLs, then re-run `npm run report:unified` to refresh Axis C in the report. No more code required.
 
 ### Branch hygiene
 
-- `feature/llm-judge-evaluation` — contains the two PRDs. Implementation
-  work (phases 1–9 of judge + A–H of metrics system) happens on this
-  branch.
-- `fix/moa-aggregator-source-prompt` — experimental artefact (v1 strict
-  article-in-prompt). Do NOT merge to main. Preserves the falsification
-  evidence + the `fusion-batch-50-with-source.{json,md}` and
-  `fusion-batch-50-source-v2.{json,md}` batches.
-- `main` — untouched by the evaluation redesign until judge + factuality
-  are merged.
-
-### Implementation Checklist (live — update as work progresses)
-
-Source docs: `llm_judge_PRD.md`, `metrics_system_PRD.md`,
-`stats_devplan.md`, `thesis_defense_narratives.md`. Tick boxes as phases
-complete. Order matters — later phases depend on earlier ones.
-
-**Stage 1 — Core judge pipeline**
-- [x] **J1** `llm-judge.service.ts` (rubric + pairwise), Zod schemas, migration 019, unit tests *(llm_judge_PRD §3.1–3.2, Phase 1)*
-- [x] **J2** `/api/settings/judge` GET/PATCH route + Supabase persistence *(Phase 2)*
-- [x] **J3** `/api/summarize` honours `judge_config`; persists judge columns *(Phase 3)*
-- [x] **J4** `moa.evaluation.ts` pairwise + `llm_judge_pairwise` table write *(Phase 4)*
-
-**Stage 2 — Stats + UI + batch**
-- [x] **S1** `stats.ts` helper (mean, stdev, sign-test p-value) + unit tests *(stats_devplan §3)*
-- [x] **S2** `collect-metrics.ts` gains `--stats-only` + Statistical Significance section
-- [x] **J5** Settings page "Evaluation Judge" card *(Phase 5)*
-- [x] **J6** Metrics page conditional rendering + `JudgeRubricWidget` + `JudgePairwiseBadge` *(Phase 6)*
-- [x] **J7** Debug page Judge Verdict subsection *(Phase 7)*
-- [x] **J8** Batch harness `--judge-mode` / `--judge-model` flags *(Phase 8)*
-
-**Stage 3 — Thesis artefact (first defense-grade numbers)**
-- [x] **J9** Run 50-article batch in `--judge-mode both`, generate the three-way table *(Phase 9)*
-
-**Stage 4 — Three-axis extensions**
-- [x] **M-A** `factuality.service.ts` (claim-entailment via gpt-4o-mini) + migration 020 *(metrics_system_PRD Phase A)*
-- [x] **M-B** Factuality column group on metrics page *(Phase B)*
-- [x] **M-C** Axis view toggle (Compact / Full) with color-coded strips *(Phase C)*
-
-**Stage 5 — Human validation**
-- [ ] **M-D** Human-eval schema + `/api/human-eval` API + migration 021 *(Phase D)*
-- [ ] **M-E** `backend/app/evaluate/` blind K-way ranking UI + rater flow *(Phase E)*
-- [ ] **M-F** Fleiss' κ + CSV export *(Phase F)*
-
-**Stage 6 — Final deliverable**
-- [ ] **M-G** Unified report generator (all three axes in one Markdown) *(Phase G)*
-- [ ] **M-H** 20-article human peer study + final thesis methodology table *(Phase H)*
-
-**Total:** 17 checkboxes. Stages 1–3 (10 boxes) produce the minimum
-defense-grade artefact. Stages 4–6 (7 boxes) strengthen the three-axis
-contribution. Contingency narratives for whichever scenario J9 lands in
-are pre-committed in `thesis_defense_narratives.md`.
+- `feature/llm-judge-evaluation` — the three-axis system. Active.
+- `fix/moa-aggregator-source-prompt` — experimental artefact (v1 strict article-in-prompt). **Do NOT merge to main** — preserves the falsification evidence + the `fusion-batch-50-with-source.{json,md}` and `fusion-batch-50-source-v2.{json,md}` batches.
+- `main` — untouched by the evaluation redesign.

@@ -6,6 +6,9 @@ import {
   stdev,
   signTestPValue,
   pairedMetricStats,
+  fleissKappa,
+  fleissKappaFromRankings,
+  aggregateRankings,
 } from "../scripts/stats"
 
 function approx(actual: number, expected: number, eps = 1e-3): void {
@@ -95,5 +98,110 @@ describe("pairedMetricStats", () => {
     const out = pairedMetricStats([null, NaN], [undefined, null])
     assert.equal(out.n, 0)
     assert.equal(out.sign_test_p, 1)
+  })
+})
+
+describe("fleissKappa (raw matrix form)", () => {
+  it("perfect agreement (everyone picks the same category) → κ = 1", () => {
+    // 3 items, 2 categories, 4 raters. Each row puts all raters in one column.
+    const matrix = [
+      [4, 0],
+      [0, 4],
+      [4, 0],
+    ]
+    approx(fleissKappa(matrix), 1, 1e-9)
+  })
+
+  it("Wikipedia worked example (4 categories, 14 items, 10 raters) → κ ≈ 0.21", () => {
+    // Source: https://en.wikipedia.org/wiki/Fleiss%27_kappa worked example.
+    const matrix = [
+      [0, 0, 0, 0, 14],
+      [0, 2, 6, 4, 2],
+      [0, 0, 3, 5, 6],
+      [0, 3, 9, 2, 0],
+      [2, 2, 8, 1, 1],
+      [7, 7, 0, 0, 0],
+      [3, 2, 6, 3, 0],
+      [2, 5, 3, 2, 2],
+      [6, 5, 2, 1, 0],
+      [0, 2, 2, 3, 7],
+    ]
+    // Wikipedia reports κ ≈ 0.21 (slight-to-fair agreement).
+    const k = fleissKappa(matrix)
+    approx(k, 0.21, 0.02)
+  })
+
+  it("returns NaN for fewer than 2 raters per row", () => {
+    assert.ok(Number.isNaN(fleissKappa([[1, 0], [0, 1]])))
+  })
+
+  it("returns NaN when row sums are inconsistent", () => {
+    // Row 0 has 3 raters; row 1 has 2 raters → mismatch.
+    assert.ok(Number.isNaN(fleissKappa([[2, 1], [2, 0]])))
+  })
+
+  it("returns NaN when every rater picks the same category (degenerate)", () => {
+    // P̄_e = 1 → division by zero.
+    assert.ok(Number.isNaN(fleissKappa([[3, 0], [3, 0]])))
+  })
+})
+
+describe("fleissKappaFromRankings", () => {
+  it("identical rankings from 3 raters → κ = 1", () => {
+    const k = fleissKappaFromRankings([
+      ["A", "B", "C"],
+      ["A", "B", "C"],
+      ["A", "B", "C"],
+    ])
+    approx(k, 1, 1e-9)
+  })
+
+  it("returns NaN with only one rater", () => {
+    assert.ok(Number.isNaN(fleissKappaFromRankings([["A", "B", "C"]])))
+  })
+
+  it("returns NaN when rankings disagree on the label set", () => {
+    const k = fleissKappaFromRankings([
+      ["A", "B", "C"],
+      ["A", "B", "D"],
+    ])
+    assert.ok(Number.isNaN(k))
+  })
+
+  it("real-world fixture: partial agreement falls between 0 and 1", () => {
+    // 3 raters, K=3. Two rank A>B>C, one ranks B>A>C.
+    const k = fleissKappaFromRankings([
+      ["A", "B", "C"],
+      ["A", "B", "C"],
+      ["B", "A", "C"],
+    ])
+    assert.ok(k > 0 && k < 1, `expected 0 < κ < 1, got ${k}`)
+  })
+})
+
+describe("aggregateRankings", () => {
+  it("3-rater unanimous A>B>C — A wins every pair, avg ranks 1/2/3", () => {
+    const agg = aggregateRankings([
+      ["A", "B", "C"],
+      ["A", "B", "C"],
+      ["A", "B", "C"],
+    ])
+    const byLabel = Object.fromEntries(agg.map((r) => [r.label, r]))
+    approx(byLabel.A.avg_rank, 1, 1e-9)
+    approx(byLabel.B.avg_rank, 2, 1e-9)
+    approx(byLabel.C.avg_rank, 3, 1e-9)
+    approx(byLabel.A.win_rate, 1, 1e-9)
+    approx(byLabel.B.win_rate, 0.5, 1e-9)
+    approx(byLabel.C.win_rate, 0, 1e-9)
+  })
+
+  it("merges hidden_model lookup into the output rows", () => {
+    const agg = aggregateRankings(
+      [["A", "B"]],
+      { A: { hidden_model: "gpt-4o", hidden_mode: "fusion" } },
+    )
+    const a = agg.find((r) => r.label === "A")!
+    assert.equal(a.hidden_model, "gpt-4o")
+    assert.equal(a.hidden_mode, "fusion")
   })
 })
