@@ -157,11 +157,15 @@ export async function POST(request: NextRequest) {
 
             const { saveEvaluationMetrics } = await import('@/services/evaluation.service')
             const { runJudgeForSummary } = await import('@/services/llm-judge.runner')
-            const judgeFields = await runJudgeForSummary(
-              fusionResult.fused.summary,
-              articleText,
-              judgeConfigOverride,
-            )
+            const { runFactualityForSummary } = await import('@/services/factuality.runner')
+            const [judgeFields, factualityFields] = await Promise.all([
+              runJudgeForSummary(
+                fusionResult.fused.summary,
+                articleText,
+                judgeConfigOverride,
+              ),
+              runFactualityForSummary(fusionResult.fused.summary, articleText),
+            ])
             await saveEvaluationMetrics({
               summary: fusionResult.fused.summary,
               original: articleText,
@@ -182,6 +186,7 @@ export async function POST(request: NextRequest) {
               completionTokens: fusionResult.aggregator.completion_tokens ?? undefined,
               estimatedCostUsd: fusionResult.pipeline.total_cost_usd ?? undefined,
               judge: judgeFields,
+              factuality: factualityFields,
             }).catch(err =>
               console.error('[Summarize Fusion] Failed to save evaluation metrics:', err)
             )
