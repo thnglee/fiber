@@ -76,3 +76,16 @@
 ## Errors
 
 - https://tienphong.vn/con-duong-den-an-tu-cua-ong-trum-ma-tuy-post1823872.tpo [fusion]: HTTP 404: <!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="/_next/static/css/app/layout.css?v=1776618
+
+## Statistical Significance (fused vs best single draft)
+
+| Metric  | n  | Δ mean   | Δ stdev | Wins / Losses (Ties) | Sign-test p | Verdict        |
+|---------|----|----------|---------|----------------------|-------------|----------------|
+| BERT    | 47 | -0.0116 | 0.0227 | 17 / 30              | 0.0789      | inconclusive   |
+| ROUGE-1 | 49 | +0.0032 | 0.0457 | 25 / 24              | 1.0000      | inconclusive   |
+| ROUGE-2 | 49 | +0.0060 | 0.0406 | 28 / 20 (1)          | 0.3123      | inconclusive   |
+| ROUGE-L | 49 | -0.0012 | 0.0423 | 21 / 27 (1)          | 0.4709      | inconclusive   |
+| BLEU    | 49 | +0.0041 | 0.0393 | 28 / 21              | 0.3916      | inconclusive   |
+
+`*` significant at p < 0.05.
+

@@ -36,6 +36,43 @@ const PROVIDER_LABELS: Record<ProviderKey, string> = {
 
 type RoutingMode = "auto" | "evaluation" | "forced" | "fusion"
 
+type JudgeMode = "metrics_only" | "judge_only" | "both"
+type JudgeStyle = "rubric" | "absolute"
+
+interface JudgeConfig {
+  judge_mode: JudgeMode
+  default_judge_model: string
+  default_judge_style: JudgeStyle
+  factuality_enabled: boolean
+  factuality_model: string
+}
+
+const JUDGE_MODE_INFO: Record<JudgeMode, { label: string; description: string }> = {
+  metrics_only: {
+    label: "Metrics only",
+    description: "Default. Use ROUGE / BLEU / BERTScore against the source. No judge calls.",
+  },
+  judge_only: {
+    label: "LLM-Judge only",
+    description: "Skip overlap metrics. Score each summary with the judge (rubric or absolute) and run pairwise verdicts on fusion.",
+  },
+  both: {
+    label: "Both (thesis configuration)",
+    description: "Run overlap metrics and the judge in parallel — the cross-methodology comparison the defense chapter relies on.",
+  },
+}
+
+const JUDGE_STYLE_INFO: Record<JudgeStyle, { label: string; description: string }> = {
+  rubric: {
+    label: "Rubric (FLASK-style)",
+    description: "Five 1–5 scores: faithfulness, coverage, fluency, conciseness, overall, plus a justification.",
+  },
+  absolute: {
+    label: "Absolute (MT-Bench-style)",
+    description: "Single 1–10 holistic score. Cheaper, but less informative than the rubric.",
+  },
+}
+
 interface FusionConfigPersist {
   proposerModels?: string[]
   aggregatorModel?: string
@@ -128,6 +165,17 @@ export default function SettingsPage() {
   const [fusionProposerDraft, setFusionProposerDraft] = useState<string[]>([])
   const [fusionAggregatorDraft, setFusionAggregatorDraft] = useState<string>("")
 
+  // Evaluation Judge state
+  const [judgeConfig, setJudgeConfig] = useState<JudgeConfig>({
+    judge_mode: "metrics_only",
+    default_judge_model: "gpt-4o",
+    default_judge_style: "rubric",
+    factuality_enabled: false,
+    factuality_model: "gpt-4o-mini",
+  })
+  const [judgeLoading, setJudgeLoading] = useState(true)
+  const [judgeSaving, setJudgeSaving] = useState(false)
+
   const loadParamsFromModel = useCallback((model: ModelConfig) => {
     setTemperature(model.temperature)
     setTopP(model.top_p !== null ? String(model.top_p) : "")
@@ -174,6 +222,54 @@ export default function SettingsPage() {
       setRoutingLoading(false)
     }
   }, [])
+
+  const fetchJudgeConfig = useCallback(async () => {
+    try {
+      const res = await fetch("/api/settings/judge")
+      if (!res.ok) throw new Error("Failed to fetch judge config")
+      const data: JudgeConfig = await res.json()
+      setJudgeConfig(data)
+    } catch {
+      // Use defaults on error
+    } finally {
+      setJudgeLoading(false)
+    }
+  }, [])
+
+  const handleSaveJudgeConfig = async (updates: Partial<JudgeConfig>) => {
+    setJudgeSaving(true)
+    setSaveSuccess(null)
+    setSaveError(null)
+    // Optimistic update so the radio reflects the click immediately.
+    const prev = judgeConfig
+    setJudgeConfig({ ...prev, ...updates })
+
+    try {
+      const res = await fetch("/api/settings/judge", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || "Failed to save judge config")
+      }
+      const data = await res.json()
+      setJudgeConfig({
+        judge_mode: data.judge_mode,
+        default_judge_model: data.default_judge_model,
+        default_judge_style: data.default_judge_style,
+        factuality_enabled: data.factuality_enabled,
+        factuality_model: data.factuality_model,
+      })
+      setSaveSuccess("Judge configuration saved")
+    } catch (err) {
+      setJudgeConfig(prev)
+      setSaveError(err instanceof Error ? err.message : "Failed to save judge config")
+    } finally {
+      setJudgeSaving(false)
+    }
+  }
 
   const fetchFusionAvailability = useCallback(async () => {
     setFusionAvailabilityLoading(true)
@@ -225,7 +321,8 @@ export default function SettingsPage() {
   useEffect(() => {
     fetchSettings()
     fetchRoutingConfig()
-  }, [fetchSettings, fetchRoutingConfig])
+    fetchJudgeConfig()
+  }, [fetchSettings, fetchRoutingConfig, fetchJudgeConfig])
 
   useEffect(() => {
     if (routingConfig.routing_mode === "fusion" && fusionAvailability.length === 0 && !fusionAvailabilityLoading) {
@@ -727,6 +824,224 @@ export default function SettingsPage() {
                   </p>
                 </div>
               )}
+            </div>
+          )}
+        </div>
+
+        {/* Section — Evaluation Judge */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="flex items-baseline justify-between mb-1">
+            <h2 className="text-xl font-semibold text-gray-900">
+              Evaluation Judge
+            </h2>
+            <span className="text-xs text-gray-400">
+              orthogonal to routing mode
+            </span>
+          </div>
+          <p className="text-sm text-gray-500 mb-4">
+            Add a paper-aligned LLM-as-judge axis (FLASK rubric / MT-Bench absolute / AlpacaEval pairwise on fusion).
+            Configures `/api/settings/judge`; honoured by `/api/summarize` and the batch harness.
+          </p>
+
+          {judgeLoading ? (
+            <div className="animate-pulse space-y-3">
+              <div className="h-4 bg-gray-200 rounded w-48" />
+              <div className="h-10 bg-gray-200 rounded" />
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Judge Mode */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Judge Mode
+                </label>
+                <div className="space-y-2">
+                  {(["metrics_only", "judge_only", "both"] as JudgeMode[]).map(mode => (
+                    <label
+                      key={mode}
+                      className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                        judgeConfig.judge_mode === mode
+                          ? "border-black bg-gray-50 ring-1 ring-black"
+                          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="judge_mode"
+                        value={mode}
+                        checked={judgeConfig.judge_mode === mode}
+                        onChange={() => handleSaveJudgeConfig({ judge_mode: mode })}
+                        disabled={judgeSaving}
+                        className="mt-0.5"
+                      />
+                      <div>
+                        <span className="text-sm font-medium text-gray-900">
+                          {JUDGE_MODE_INFO[mode].label}
+                        </span>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          {JUDGE_MODE_INFO[mode].description}
+                        </p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {judgeConfig.judge_mode !== "metrics_only" && (
+                <>
+                  {/* Judge Style */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Default Judge Style
+                      <span className="ml-2 text-xs text-gray-400 font-normal">
+                        per-summary scoring; pairwise is always on for fusion
+                      </span>
+                    </label>
+                    <div className="space-y-2">
+                      {(["rubric", "absolute"] as JudgeStyle[]).map(style => (
+                        <label
+                          key={style}
+                          className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                            judgeConfig.default_judge_style === style
+                              ? "border-black bg-gray-50 ring-1 ring-black"
+                              : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="judge_style"
+                            value={style}
+                            checked={judgeConfig.default_judge_style === style}
+                            onChange={() => handleSaveJudgeConfig({ default_judge_style: style })}
+                            disabled={judgeSaving}
+                            className="mt-0.5"
+                          />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">
+                              {JUDGE_STYLE_INFO[style].label}
+                            </span>
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              {JUDGE_STYLE_INFO[style].description}
+                            </p>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Judge Model */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Judge Model
+                    </label>
+                    <select
+                      value={judgeConfig.default_judge_model}
+                      onChange={e => handleSaveJudgeConfig({ default_judge_model: e.target.value })}
+                      disabled={judgeSaving}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                    >
+                      {(() => {
+                        const eligible = models.filter(m => m.supports_structured_output)
+                        const known = new Set(eligible.map(m => m.model_name))
+                        // If the persisted model isn't in the eligible list, surface it so the user
+                        // can see what's saved (e.g. a model that was recently disabled).
+                        const orphan = !known.has(judgeConfig.default_judge_model)
+                          ? judgeConfig.default_judge_model
+                          : null
+                        return (
+                          <>
+                            {orphan && (
+                              <option value={orphan}>
+                                {orphan} (not in model_configurations)
+                              </option>
+                            )}
+                            {eligible.map(m => (
+                              <option key={m.model_name} value={m.model_name}>
+                                {m.display_name} ({PROVIDER_LABELS[m.provider]})
+                              </option>
+                            ))}
+                          </>
+                        )
+                      })()}
+                    </select>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Filtered to models with structured-output support. Default: gpt-4o (matches the MoA paper).
+                    </p>
+                  </div>
+
+                  {/* Cost banner */}
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-xs text-blue-900">
+                      <span className="font-semibold">Estimated added cost (GPT-4o judge, ~1.5K-token Vietnamese article):</span>{" "}
+                      ~$0.006 per rubric, ~$0.005 per absolute, ~$0.008 per pairwise verdict (fusion only).
+                      A 50-article batch in <code className="font-mono bg-blue-100 px-1 rounded">both</code> mode adds roughly $1.10.
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {/* Factuality toggle — orthogonal to judge_mode: hallucination
+                  counting can run with metrics_only too (it's a different axis). */}
+              <div className="border-t border-gray-200 pt-5 mt-5 space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900">Factuality (hallucination check)</h3>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      Splits each summary into atomic claims and asks a cheap model whether each
+                      one is entailed by the source. Independent of the judge mode above.
+                    </p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={judgeConfig.factuality_enabled}
+                      onChange={e => handleSaveJudgeConfig({ factuality_enabled: e.target.checked })}
+                      disabled={judgeSaving}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 peer-disabled:opacity-50"></div>
+                  </label>
+                </div>
+
+                {judgeConfig.factuality_enabled && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Factuality Model
+                    </label>
+                    <select
+                      value={judgeConfig.factuality_model}
+                      onChange={e => handleSaveJudgeConfig({ factuality_model: e.target.value })}
+                      disabled={judgeSaving}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                    >
+                      {(() => {
+                        const eligible = models.filter(m => m.supports_structured_output)
+                        const known = new Set(eligible.map(m => m.model_name))
+                        const orphan = !known.has(judgeConfig.factuality_model)
+                          ? judgeConfig.factuality_model
+                          : null
+                        return (
+                          <>
+                            {orphan && (
+                              <option value={orphan}>
+                                {orphan} (not in model_configurations)
+                              </option>
+                            )}
+                            {eligible.map(m => (
+                              <option key={m.model_name} value={m.model_name}>
+                                {m.display_name} ({PROVIDER_LABELS[m.provider]})
+                              </option>
+                            ))}
+                          </>
+                        )
+                      })()}
+                    </select>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Cheap default: gpt-4o-mini. Adds ~$0.002 per summary (two short calls — claim split + entailment).
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>

@@ -2,6 +2,7 @@ import { rougeN, rougeL as calcRougeL } from "@/utils/rouge-custom";
 import { bleu } from "bleu-score";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
+import type { FactualityPersistFields } from "@/services/factuality.runner";
 
 export interface EvaluationMetrics {
   rouge1: number;
@@ -12,6 +13,19 @@ export interface EvaluationMetrics {
   compression_rate?: number | null;
   total_tokens?: number | null;
 }
+
+export interface JudgePersistFields {
+  judge_mode?: string | null;
+  judge_model?: string | null;
+  judge_style?: string | null;
+  judge_rubric?: Record<string, number> | null;
+  judge_absolute?: number | null;
+  judge_justification?: string | null;
+  judge_latency_ms?: number | null;
+  judge_cost_usd?: number | null;
+}
+
+export type { FactualityPersistFields };
 
 export interface EvaluationData {
   summary: string;
@@ -26,6 +40,8 @@ export interface EvaluationData {
   promptTokens?: number;
   completionTokens?: number;
   estimatedCostUsd?: number;
+  judge?: JudgePersistFields | null;
+  factuality?: FactualityPersistFields | null;
 }
 
 export interface EvaluationResponse {
@@ -102,6 +118,22 @@ export const saveEvaluationMetrics = async (data: EvaluationData) => {
         prompt_tokens: data.promptTokens ?? null,
         completion_tokens: data.completionTokens ?? null,
         estimated_cost_usd: data.estimatedCostUsd ?? null,
+        judge_mode: data.judge?.judge_mode ?? null,
+        judge_model: data.judge?.judge_model ?? null,
+        judge_style: data.judge?.judge_style ?? null,
+        judge_rubric: data.judge?.judge_rubric ?? null,
+        judge_absolute: data.judge?.judge_absolute ?? null,
+        judge_justification: data.judge?.judge_justification ?? null,
+        judge_latency_ms: data.judge?.judge_latency_ms ?? null,
+        judge_cost_usd: data.judge?.judge_cost_usd ?? null,
+        factuality_total_claims: data.factuality?.factuality_total_claims ?? null,
+        factuality_entailed_claims: data.factuality?.factuality_entailed_claims ?? null,
+        factuality_entailed_ratio: data.factuality?.factuality_entailed_ratio ?? null,
+        factuality_hallucinations: data.factuality?.factuality_hallucinations ?? null,
+        factuality_not_mentioned: data.factuality?.factuality_not_mentioned ?? null,
+        factuality_model: data.factuality?.factuality_model ?? null,
+        factuality_cost_usd: data.factuality?.factuality_cost_usd ?? null,
+        factuality_latency_ms: data.factuality?.factuality_latency_ms ?? null,
         metadata: {
           original_preview: data.original.substring(0, 200),
         },
@@ -208,27 +240,69 @@ export const getEvaluationMetrics = async (
       totalCount: count,
     });
 
-    const metricsData: EvaluationData[] = (data || []).map((row) => ({
-      summary: row.summary_text,
-      original: "", // Not fetching full original text to save bandwidth
-      url: row.url,
-      created_at: row.created_at,
-      metrics: {
-        rouge1: row.rouge_1,
-        rouge2: row.rouge_2,
-        rougeL: row.rouge_l,
-        bleu: row.bleu,
-        bert_score: row.bert_score ?? null,
-        compression_rate: row.compression_rate ?? null,
-        total_tokens: row.total_tokens ?? null,
-      },
-      latency: row.latency,
-      mode: row.mode ?? null,
-      model: row.model ?? undefined,
-      promptTokens: row.prompt_tokens ?? undefined,
-      completionTokens: row.completion_tokens ?? undefined,
-      estimatedCostUsd: row.estimated_cost_usd ?? undefined,
-    }));
+    const metricsData: EvaluationData[] = (data || []).map((row) => {
+      const judgeMode = row.judge_mode ?? null
+      const judge: JudgePersistFields | null =
+        judgeMode && judgeMode !== "metrics_only"
+          ? {
+              judge_mode: judgeMode,
+              judge_model: row.judge_model ?? null,
+              judge_style: row.judge_style ?? null,
+              judge_rubric: row.judge_rubric ?? null,
+              judge_absolute: row.judge_absolute ?? null,
+              judge_justification: row.judge_justification ?? null,
+              judge_latency_ms: row.judge_latency_ms ?? null,
+              judge_cost_usd: row.judge_cost_usd ?? null,
+            }
+          : null
+
+      // Surface factuality only when at least one of the columns was populated
+      // — otherwise the metrics page treats this row as "no factuality run".
+      const factuality: FactualityPersistFields | null =
+        row.factuality_total_claims != null ||
+        row.factuality_entailed_ratio != null
+          ? {
+              factuality_total_claims: row.factuality_total_claims ?? null,
+              factuality_entailed_claims: row.factuality_entailed_claims ?? null,
+              factuality_entailed_ratio:
+                row.factuality_entailed_ratio != null
+                  ? Number(row.factuality_entailed_ratio)
+                  : null,
+              factuality_hallucinations: row.factuality_hallucinations ?? null,
+              factuality_not_mentioned: row.factuality_not_mentioned ?? null,
+              factuality_model: row.factuality_model ?? null,
+              factuality_cost_usd:
+                row.factuality_cost_usd != null
+                  ? Number(row.factuality_cost_usd)
+                  : null,
+              factuality_latency_ms: row.factuality_latency_ms ?? null,
+            }
+          : null
+
+      return {
+        summary: row.summary_text,
+        original: "", // Not fetching full original text to save bandwidth
+        url: row.url,
+        created_at: row.created_at,
+        metrics: {
+          rouge1: row.rouge_1,
+          rouge2: row.rouge_2,
+          rougeL: row.rouge_l,
+          bleu: row.bleu,
+          bert_score: row.bert_score ?? null,
+          compression_rate: row.compression_rate ?? null,
+          total_tokens: row.total_tokens ?? null,
+        },
+        latency: row.latency,
+        mode: row.mode ?? null,
+        model: row.model ?? undefined,
+        promptTokens: row.prompt_tokens ?? undefined,
+        completionTokens: row.completion_tokens ?? undefined,
+        estimatedCostUsd: row.estimated_cost_usd ?? undefined,
+        judge,
+        factuality,
+      }
+    });
 
     return {
       data: metricsData,

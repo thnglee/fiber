@@ -210,6 +210,7 @@ export async function GET(request: Request) {
       const fusionIds = fusions.map((f: { id: string }) => f.id);
 
       let drafts: unknown[] = [];
+      let pairwiseJudgements: unknown[] = [];
       if (fusionIds.length > 0) {
         const { data: draftsData } = await supabase
           .from('moa_draft_results')
@@ -217,6 +218,13 @@ export async function GET(request: Request) {
           .in('fusion_id', fusionIds)
           .order('created_at', { ascending: true });
         drafts = draftsData || [];
+
+        const { data: judgeRows } = await supabase
+          .from('llm_judge_pairwise')
+          .select('*')
+          .in('fusion_id', fusionIds)
+          .order('created_at', { ascending: false });
+        pairwiseJudgements = judgeRows || [];
       }
 
       // Summary stats: paginate over all fusion rows to bypass 1000-row cap
@@ -276,6 +284,7 @@ export async function GET(request: Request) {
         {
           data: fusions,
           drafts,
+          pairwise_judgements: pairwiseJudgements,
           count: count || 0,
           stats: {
             total_runs: totalRuns,

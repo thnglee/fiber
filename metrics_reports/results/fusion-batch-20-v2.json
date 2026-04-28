@@ -1409,5 +1409,74 @@
         ]
       }
     }
-  ]
+  ],
+  "statistics": {
+    "per_metric": {
+      "bert_score": {
+        "n": 19,
+        "fused_mean": 0.6001374210526316,
+        "fused_stdev": 0.03943268894417957,
+        "best_mean": 0.6501384736842105,
+        "best_stdev": 0.04752024915802669,
+        "delta_mean": -0.05000105263157896,
+        "delta_stdev": 0.032276851255063924,
+        "wins": 0,
+        "losses": 19,
+        "ties": 0,
+        "sign_test_p": 0.000003814697265625
+      },
+      "rouge1": {
+        "n": 20,
+        "fused_mean": 0.20593500000000003,
+        "fused_stdev": 0.0631621828478502,
+        "best_mean": 0.327465,
+        "best_stdev": 0.09966862080757519,
+        "delta_mean": -0.12153,
+        "delta_stdev": 0.05194612695151735,
+        "wins": 0,
+        "losses": 20,
+        "ties": 0,
+        "sign_test_p": 0.0000019073486328125
+      },
+      "rouge2": {
+        "n": 20,
+        "fused_mean": 0.167835,
+        "fused_stdev": 0.04472026827666446,
+        "best_mean": 0.27422,
+        "best_stdev": 0.07917818412988052,
+        "delta_mean": -0.106385,
+        "delta_stdev": 0.04677773058782746,
+        "wins": 0,
+        "losses": 20,
+        "ties": 0,
+        "sign_test_p": 0.0000019073486328125
+      },
+      "rougeL": {
+        "n": 20,
+        "fused_mean": 0.15975,
+        "fused_stdev": 0.0451480197152713,
+        "best_mean": 0.24511500000000003,
+        "best_stdev": 0.07949054412484013,
+        "delta_mean": -0.08536500000000001,
+        "delta_stdev": 0.04311608901070396,
+        "wins": 0,
+        "losses": 20,
+        "ties": 0,
+        "sign_test_p": 0.0000019073486328125
+      },
+      "bleu": {
+        "n": 20,
+        "fused_mean": 0.012210000000000002,
+        "fused_stdev": 0.012695954598134586,
+        "best_mean": 0.06385,
+        "best_stdev": 0.05950330817870991,
+        "delta_mean": -0.05164,
+        "delta_stdev": 0.04833300495956208,
+        "wins": 0,
+        "losses": 20,
+        "ties": 0,
+        "sign_test_p": 0.0000019073486328125
+      }
+    }
+  }
 }
