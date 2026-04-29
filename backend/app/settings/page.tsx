@@ -78,10 +78,15 @@ interface FusionConfigPersist {
   aggregatorModel?: string
 }
 
+interface EvaluationConfigPersist {
+  models?: string[]
+}
+
 interface RoutingConfig {
   routing_mode: RoutingMode
   complexity_thresholds: { short: number; medium: number }
   fusion_config: FusionConfigPersist | null
+  evaluation_config: EvaluationConfigPersist | null
   hf_available: boolean
 }
 
@@ -151,6 +156,7 @@ export default function SettingsPage() {
     routing_mode: "forced",
     complexity_thresholds: { short: 400, medium: 1500 },
     fusion_config: null,
+    evaluation_config: null,
     hf_available: false,
   })
   const [routingLoading, setRoutingLoading] = useState(true)
@@ -164,6 +170,9 @@ export default function SettingsPage() {
   const [fusionAvailabilityLoading, setFusionAvailabilityLoading] = useState(false)
   const [fusionProposerDraft, setFusionProposerDraft] = useState<string[]>([])
   const [fusionAggregatorDraft, setFusionAggregatorDraft] = useState<string>("")
+
+  // Evaluation Mode model selection (mirrors fusion picker — re-uses fusionAvailability since the model list is the same)
+  const [evaluationModelsDraft, setEvaluationModelsDraft] = useState<string[]>([])
 
   // Evaluation Judge state
   const [judgeConfig, setJudgeConfig] = useState<JudgeConfig>({
@@ -216,6 +225,7 @@ export default function SettingsPage() {
       setMediumThreshold(String(data.complexity_thresholds.medium))
       setFusionProposerDraft(data.fusion_config?.proposerModels ?? [])
       setFusionAggregatorDraft(data.fusion_config?.aggregatorModel ?? "")
+      setEvaluationModelsDraft(data.evaluation_config?.models ?? [])
     } catch {
       // Use defaults on error
     } finally {
@@ -285,7 +295,7 @@ export default function SettingsPage() {
     }
   }, [])
 
-  const handleSaveRoutingConfig = async (updates: Partial<Pick<RoutingConfig, "routing_mode" | "complexity_thresholds" | "fusion_config">>) => {
+  const handleSaveRoutingConfig = async (updates: Partial<Pick<RoutingConfig, "routing_mode" | "complexity_thresholds" | "fusion_config" | "evaluation_config">>) => {
     setRoutingSaving(true)
     setSaveSuccess(null)
     setSaveError(null)
@@ -310,6 +320,7 @@ export default function SettingsPage() {
       }
       setFusionProposerDraft(data.fusion_config?.proposerModels ?? [])
       setFusionAggregatorDraft(data.fusion_config?.aggregatorModel ?? "")
+      setEvaluationModelsDraft(data.evaluation_config?.models ?? [])
       setSaveSuccess("Routing configuration saved")
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : "Failed to save routing config")
@@ -337,7 +348,9 @@ export default function SettingsPage() {
   }, [saveError])
 
   useEffect(() => {
-    if (routingConfig.routing_mode === "fusion" && fusionAvailability.length === 0 && !fusionAvailabilityLoading) {
+    const needsAvailability =
+      routingConfig.routing_mode === "fusion" || routingConfig.routing_mode === "evaluation"
+    if (needsAvailability && fusionAvailability.length === 0 && !fusionAvailabilityLoading) {
       fetchFusionAvailability()
     }
   }, [routingConfig.routing_mode, fusionAvailability.length, fusionAvailabilityLoading, fetchFusionAvailability])
@@ -724,6 +737,106 @@ export default function SettingsPage() {
                   </div>
                 )}
               </div>
+
+              {/* Evaluation Mode model selection — visible when routing_mode === "evaluation" */}
+              {routingConfig.routing_mode === "evaluation" && (
+                <div className="border border-gray-200 rounded-lg p-4 space-y-4 bg-gray-50/50">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-700">
+                      Evaluation Mode — Models
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Pick 2–8 models. Each request runs all of them in parallel and the BERTScore winner is returned. Leave empty to use the defaults (ViT5 + GPT-4o).
+                    </p>
+                  </div>
+
+                  {fusionAvailabilityLoading ? (
+                    <div className="text-xs text-gray-400">Loading available models…</div>
+                  ) : fusionAvailability.length === 0 ? (
+                    <div className="text-xs text-gray-400">No models available.</div>
+                  ) : (
+                    <>
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                          Models
+                        </label>
+                        <div className="space-y-1.5 max-h-56 overflow-y-auto border border-gray-200 rounded-lg bg-white p-2">
+                          {fusionAvailability.map(m => {
+                            const checked = evaluationModelsDraft.includes(m.model_name)
+                            const disabled = !m.can_be_proposer
+                            return (
+                              <label
+                                key={`eval-${m.model_name}`}
+                                className={`flex items-start gap-2 p-1.5 rounded text-xs ${
+                                  disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-gray-50"
+                                }`}
+                                title={disabled ? m.unavailable_reason ?? "Not available" : undefined}
+                              >
+                                <input
+                                  type="checkbox"
+                                  disabled={disabled}
+                                  checked={checked}
+                                  onChange={e => {
+                                    setEvaluationModelsDraft(prev => {
+                                      if (e.target.checked) {
+                                        if (prev.includes(m.model_name)) return prev
+                                        if (prev.length >= 8) return prev
+                                        return [...prev, m.model_name]
+                                      }
+                                      return prev.filter(name => name !== m.model_name)
+                                    })
+                                  }}
+                                  className="mt-0.5"
+                                />
+                                <div className="flex-1">
+                                  <span className="font-medium text-gray-900">{m.display_name}</span>
+                                  <span className="ml-1.5 text-gray-400">({m.provider})</span>
+                                  {disabled && (
+                                    <span className="ml-1.5 text-red-500">• {m.unavailable_reason}</span>
+                                  )}
+                                </div>
+                              </label>
+                            )
+                          })}
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Selected: {evaluationModelsDraft.length} / 8 (min 2)
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 pt-2">
+                        <button
+                          onClick={() => {
+                            const models = evaluationModelsDraft
+                            if (models.length > 0 && models.length < 2) {
+                              setSaveError("Evaluation mode requires at least 2 models (or none for defaults).")
+                              return
+                            }
+                            handleSaveRoutingConfig({
+                              evaluation_config:
+                                models.length === 0 ? null : { models },
+                            })
+                          }}
+                          disabled={routingSaving}
+                          className="px-4 py-2 bg-black text-white rounded-lg text-sm font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          {routingSaving ? "Saving..." : "Save Evaluation Models"}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEvaluationModelsDraft([])
+                            handleSaveRoutingConfig({ evaluation_config: null })
+                          }}
+                          disabled={routingSaving}
+                          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          Reset to defaults
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
 
               {/* Fusion (MoA) Configuration — visible when routing_mode === "fusion" */}
               {routingConfig.routing_mode === "fusion" && (

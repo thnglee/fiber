@@ -8,6 +8,11 @@ const FusionConfigPersistSchema = z.object({
   aggregatorModel: z.string().optional(),
 })
 
+const EvaluationConfigPersistSchema = z.object({
+  // 2 models min — running 1 model for "best of one" makes no sense.
+  models: z.array(z.string()).min(2).max(8).optional(),
+})
+
 const UpdateRoutingSchema = z.object({
   routing_mode: z.enum(["auto", "evaluation", "forced", "fusion"]).optional(),
   complexity_thresholds: z
@@ -17,12 +22,14 @@ const UpdateRoutingSchema = z.object({
     })
     .optional(),
   fusion_config: FusionConfigPersistSchema.nullable().optional(),
+  evaluation_config: EvaluationConfigPersistSchema.nullable().optional(),
 })
 
 const DEFAULT_ROUTING_CONFIG = {
   routing_mode: "forced",
   complexity_thresholds: { short: 400, medium: 1500 },
   fusion_config: null as null | { proposerModels?: string[]; aggregatorModel?: string },
+  evaluation_config: null as null | { models?: string[] },
 }
 
 export async function OPTIONS() {
@@ -51,6 +58,7 @@ export async function GET() {
         complexity_thresholds:
           config.complexity_thresholds ?? DEFAULT_ROUTING_CONFIG.complexity_thresholds,
         fusion_config: config.fusion_config ?? DEFAULT_ROUTING_CONFIG.fusion_config,
+        evaluation_config: config.evaluation_config ?? DEFAULT_ROUTING_CONFIG.evaluation_config,
         hf_available: !!process.env.HF_API_KEY,
       },
       { headers: getCorsHeaders() }
@@ -91,11 +99,16 @@ export async function POST(request: NextRequest) {
 
     const currentConfig = existing?.value ?? DEFAULT_ROUTING_CONFIG
 
-    // Merge updates. fusion_config: `null` clears the stored selection, `undefined` leaves it untouched.
+    // Merge updates. `null` clears the stored selection, `undefined` leaves it untouched.
     const fusionConfigNext =
       parseResult.data.fusion_config === undefined
         ? currentConfig.fusion_config ?? null
         : parseResult.data.fusion_config
+
+    const evaluationConfigNext =
+      parseResult.data.evaluation_config === undefined
+        ? currentConfig.evaluation_config ?? null
+        : parseResult.data.evaluation_config
 
     const updatedConfig = {
       ...currentConfig,
@@ -104,6 +117,7 @@ export async function POST(request: NextRequest) {
         ? parseResult.data.complexity_thresholds
         : currentConfig.complexity_thresholds,
       fusion_config: fusionConfigNext,
+      evaluation_config: evaluationConfigNext,
     }
 
     const { error } = await supabase.from("app_settings").upsert(
@@ -125,6 +139,7 @@ export async function POST(request: NextRequest) {
         routing_mode: updatedConfig.routing_mode,
         complexity_thresholds: updatedConfig.complexity_thresholds,
         fusion_config: updatedConfig.fusion_config ?? null,
+        evaluation_config: updatedConfig.evaluation_config ?? null,
         hf_available: !!process.env.HF_API_KEY,
       },
       { headers: getCorsHeaders() }

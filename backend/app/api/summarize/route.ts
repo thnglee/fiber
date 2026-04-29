@@ -7,6 +7,7 @@ import { SummarizeRequestSchema, SummarizeResponseSchema } from "@/domain/schema
 import { zodErrorResponse } from "@/utils/zod-helpers"
 import { getEnvVar } from "@/config/env"
 import { waitUntil } from "@vercel/functions"
+import type { ModelConfig } from "@/domain/types"
 // Handle CORS preflight requests
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -271,7 +272,30 @@ export async function POST(request: NextRequest) {
 
       const { runFusedSummarization } = await import('@/services/fusion.service')
       const { getRoutingCandidateConfigs, classifyComplexity } = await import('@/services/routing.service')
-      const candidateConfigs = await getRoutingCandidateConfigs()
+
+      // Allow user-configured evaluation model picks via /api/settings/routing.
+      // Falls back to the original ViT5+GPT-4o pair when no selection is persisted.
+      let candidateConfigs: ModelConfig[] = []
+      try {
+        const { getSupabaseAdmin } = await import('@/lib/supabase')
+        const { data: row } = await getSupabaseAdmin()
+          .from('app_settings')
+          .select('value')
+          .eq('key', 'routing_config')
+          .single()
+        const selected: string[] | undefined = row?.value?.evaluation_config?.models
+        if (selected && selected.length > 0) {
+          const { getAllModelConfigs } = await import('@/services/model-config.service')
+          const all = await getAllModelConfigs()
+          candidateConfigs = all.filter(c => selected.includes(c.model_name))
+        }
+      } catch (err) {
+        console.error('[Summarize Evaluation] Failed to load evaluation_config, falling back to defaults:', err)
+      }
+
+      if (candidateConfigs.length === 0) {
+        candidateConfigs = await getRoutingCandidateConfigs()
+      }
 
       if (candidateConfigs.length === 0) {
         return NextResponse.json(
