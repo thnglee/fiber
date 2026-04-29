@@ -91,7 +91,7 @@ const SUMMARY_PATH = OUTPUT_PATH.replace(/\.json$/, ".md")
 
 const DEFAULT_PROPOSERS = [
   "gpt-4o-mini",
-  "gemini-2.0-flash",
+  "gemini-2.5-flash",
   "claude-haiku-4-5",
 ]
 const PROPOSERS = getArg("models", DEFAULT_PROPOSERS.join(","))

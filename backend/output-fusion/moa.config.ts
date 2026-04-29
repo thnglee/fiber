@@ -18,7 +18,7 @@ export const MOA_DEFAULTS = {
 // Three providers, all affordable-tier — keeps Layer 1 cheap.
 const AUTO_PROPOSER_PREFERENCE = [
   "gpt-4o-mini",
-  "gemini-2.0-flash",
+  "gemini-2.5-flash",
   "claude-haiku-4-5",
 ]
 
