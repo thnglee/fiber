@@ -18,8 +18,10 @@ export const MOA_DEFAULTS = {
 // Three providers, all affordable-tier — keeps Layer 1 cheap.
 const AUTO_PROPOSER_PREFERENCE = [
   "gpt-4o-mini",
-  "gemini-2.5-flash",
+  "gemini-3.1-flash-lite-preview",
+  "gemini-flash-latest",
   "claude-haiku-4-5",
+  "gemini-2.5-flash",
 ]
 
 // gpt-4o is reserved for the aggregator role only (see model-tiers.ts).
@@ -205,7 +207,7 @@ export async function buildMoAConfig(userSelection?: BuildMoAConfigInput): Promi
       allModels,
       AUTO_PROPOSER_PREFERENCE,
       m => isAvailable(m) && isAffordableModel(m.model_name),
-      3,
+      4,
     )
   }
 

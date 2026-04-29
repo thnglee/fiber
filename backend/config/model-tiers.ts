@@ -15,9 +15,12 @@ export const AFFORDABLE_MODEL_NAMES: ReadonlySet<string> = new Set([
   // OpenAI mini-tier
   "gpt-4o-mini",
   "gpt-4.1-mini",
-  // Gemini flash family (gemini-2.0-flash retired by Google for new users — removed)
-  "gemini-2.0-flash-lite",
+  // Gemini flash family
+  "gemini-3.1-flash-lite-preview",
+  "gemini-flash-latest",
+  "gemini-3-flash-preview",
   "gemini-2.5-flash",
+  "gemini-2.0-flash-lite",
   // Anthropic haiku
   "claude-haiku-4-5",
   // Free local Vietnamese-tuned models
