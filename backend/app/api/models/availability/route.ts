@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { getCorsHeaders } from "@/middleware/cors"
 import { getModelAvailability } from "@/output-fusion/moa.config"
 
+export const dynamic = 'force-dynamic'
+
 export async function OPTIONS() {
   return new NextResponse(null, { status: 200, headers: getCorsHeaders() })
 }
