@@ -325,6 +325,18 @@ export default function SettingsPage() {
   }, [fetchSettings, fetchRoutingConfig, fetchJudgeConfig])
 
   useEffect(() => {
+    if (!saveSuccess) return
+    const id = window.setTimeout(() => setSaveSuccess(null), 2500)
+    return () => window.clearTimeout(id)
+  }, [saveSuccess])
+
+  useEffect(() => {
+    if (!saveError) return
+    const id = window.setTimeout(() => setSaveError(null), 5000)
+    return () => window.clearTimeout(id)
+  }, [saveError])
+
+  useEffect(() => {
     if (routingConfig.routing_mode === "fusion" && fusionAvailability.length === 0 && !fusionAvailabilityLoading) {
       fetchFusionAvailability()
     }
@@ -474,15 +486,43 @@ export default function SettingsPage() {
           Pick the active LLM, tune its generation parameters, and choose how incoming summarization requests get routed (forced, auto, evaluation, or fusion).
         </p>
 
-        {/* Feedback messages */}
-        {saveSuccess && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-700">{saveSuccess}</p>
-          </div>
-        )}
-        {saveError && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-700">{saveError}</p>
+        {/* Feedback toasts — pinned to viewport so they're visible regardless of scroll position. */}
+        {(saveSuccess || saveError) && (
+          <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm">
+            {saveSuccess && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="flex items-start gap-3 p-3 bg-green-50 border border-green-200 rounded-lg shadow-lg"
+              >
+                <p className="text-sm text-green-700 flex-1">{saveSuccess}</p>
+                <button
+                  type="button"
+                  onClick={() => setSaveSuccess(null)}
+                  className="text-green-600 hover:text-green-800 text-sm leading-none"
+                  aria-label="Dismiss"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+            {saveError && (
+              <div
+                role="alert"
+                aria-live="assertive"
+                className="flex items-start gap-3 p-3 bg-red-50 border border-red-200 rounded-lg shadow-lg"
+              >
+                <p className="text-sm text-red-700 flex-1">{saveError}</p>
+                <button
+                  type="button"
+                  onClick={() => setSaveError(null)}
+                  className="text-red-600 hover:text-red-800 text-sm leading-none"
+                  aria-label="Dismiss"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
           </div>
         )}
 
