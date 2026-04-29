@@ -1,5 +1,10 @@
 import { getAllModelConfigs } from "@/services/model-config.service"
 import { getEnvVar } from "@/config/env"
+import {
+  isAffordableModel,
+  isAggregatorOnlyModel,
+  isVisibleModel,
+} from "@/config/model-tiers"
 import type { ModelConfig } from "@/domain/types"
 import type { MoAConfig, ModelAvailability } from "./moa.types"
 
@@ -10,16 +15,16 @@ export const MOA_DEFAULTS = {
   INCLUDE_EVALUATION: true,
 } as const
 
+// Three providers, all affordable-tier — keeps Layer 1 cheap.
 const AUTO_PROPOSER_PREFERENCE = [
   "gpt-4o-mini",
-  "gemini-2.0-flash-001",
-  "claude-3-5-haiku-latest",
+  "gemini-2.0-flash",
+  "claude-haiku-4-5",
 ]
 
+// gpt-4o is reserved for the aggregator role only (see model-tiers.ts).
 const AUTO_AGGREGATOR_PREFERENCE = [
   "gpt-4o",
-  "claude-3-5-sonnet-latest",
-  "gemini-2.0-flash-001",
 ]
 
 // Planned-but-not-yet-deployed models that should still show up in the UI so
@@ -93,20 +98,25 @@ function evaluateAvailability(model: ModelConfig): {
 
 function toAvailability(model: ModelConfig): ModelAvailability {
   const { is_available, unavailable_reason } = evaluateAvailability(model)
+  // Aggregator-only tier (e.g. gpt-4o) stays selectable in the aggregator dropdown
+  // but is hidden from proposer / evaluation pickers — see backend/config/model-tiers.ts.
+  const aggregatorOnly = isAggregatorOnlyModel(model.model_name)
   return {
     model_name: model.model_name,
     display_name: model.display_name,
     provider: model.provider,
     is_available,
     unavailable_reason,
-    can_be_proposer: is_available,
+    can_be_proposer: is_available && !aggregatorOnly,
     can_be_aggregator: is_available && model.supports_structured_output,
   }
 }
 
 export async function getModelAvailability(): Promise<ModelAvailability[]> {
   const models = await getAllModelConfigs()
-  const available = models.map(toAvailability)
+  // Drop expensive models entirely so they never appear in any selector.
+  const visibleModels = models.filter(m => isVisibleModel(m.model_name))
+  const available = visibleModels.map(toAvailability)
 
   const presentNames = new Set(available.map(m => m.model_name))
   const placeholders = PLACEHOLDER_MODELS.filter(p => !presentNames.has(p.model_name))
@@ -177,6 +187,11 @@ export async function buildMoAConfig(userSelection?: BuildMoAConfigInput): Promi
       if (!match) {
         throw new Error(`Proposer model "${name}" not found in model_configurations.`)
       }
+      if (!isAffordableModel(name)) {
+        throw new Error(
+          `Proposer model "${name}" is not in the affordable tier — see backend/config/model-tiers.ts.`,
+        )
+      }
       if (!isAvailable(match)) {
         const { unavailable_reason } = evaluateAvailability(match)
         throw new Error(
@@ -189,7 +204,7 @@ export async function buildMoAConfig(userSelection?: BuildMoAConfigInput): Promi
     proposers = pickByPreference(
       allModels,
       AUTO_PROPOSER_PREFERENCE,
-      isAvailable,
+      m => isAvailable(m) && isAffordableModel(m.model_name),
       3,
     )
   }

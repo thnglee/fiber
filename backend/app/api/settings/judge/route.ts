@@ -20,7 +20,7 @@ const UpdateJudgeSchema = z
 
 const DEFAULT_JUDGE_CONFIG: JudgeConfig = {
   judge_mode: "metrics_only",
-  default_judge_model: "gpt-4o",
+  default_judge_model: "gpt-4o-mini",
   default_judge_style: "rubric",
   factuality_enabled: false,
   factuality_model: "gpt-4o-mini",

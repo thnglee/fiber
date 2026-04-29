@@ -21,21 +21,26 @@ const DEFAULT_THRESHOLDS: ComplexityThresholds = {
   medium: 1500,
 }
 
-// Model names matching `model_configurations.model_name`
+// Model names matching `model_configurations.model_name`.
+// Auto routing uses gpt-4o-mini (not gpt-4o) — gpt-4o is reserved for the
+// MoA aggregator role, see backend/config/model-tiers.ts.
 const MODEL_VIT5 = 'VietAI/vit5-large-vietnews-summarization'
-const MODEL_GPT4O = 'gpt-4o'
+const MODEL_GPT4O_MINI = 'gpt-4o-mini'
 
-// Fallback chain: ViT5 → GPT-4o
+// Backwards-compatible export name; the value now points to the cheap mini variant.
+const MODEL_GPT4O = MODEL_GPT4O_MINI
+
+// Fallback chain: ViT5 → GPT-4o-mini
 const FALLBACK_MAP: Record<string, string | null> = {
-  [MODEL_VIT5]: MODEL_GPT4O,
-  [MODEL_GPT4O]: null,
+  [MODEL_VIT5]: MODEL_GPT4O_MINI,
+  [MODEL_GPT4O_MINI]: null,
 }
 
 // Complexity → preferred model mapping
 const COMPLEXITY_MODEL_MAP: Record<ArticleComplexity, string> = {
   short: MODEL_VIT5,
-  medium: MODEL_GPT4O,
-  long: MODEL_GPT4O,
+  medium: MODEL_GPT4O_MINI,
+  long: MODEL_GPT4O_MINI,
 }
 
 // ============================================================================

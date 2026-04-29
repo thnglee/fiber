@@ -91,8 +91,8 @@ const SUMMARY_PATH = OUTPUT_PATH.replace(/\.json$/, ".md")
 
 const DEFAULT_PROPOSERS = [
   "gpt-4o-mini",
-  "gemini-2.0-flash-001",
-  "claude-3-5-haiku-latest",
+  "gemini-2.0-flash",
+  "claude-haiku-4-5",
 ]
 const PROPOSERS = getArg("models", DEFAULT_PROPOSERS.join(","))
   .split(",")
@@ -121,7 +121,7 @@ const JUDGE_STYLE = (() => {
   console.error(`Invalid --judge-style: ${raw} (expected rubric|absolute)`)
   process.exit(1)
 })() as JudgeStyle
-const JUDGE_MODEL = getArg("judge-model", "gpt-4o")
+const JUDGE_MODEL = getArg("judge-model", "gpt-4o-mini")
 const JUDGE_ENABLED = JUDGE_MODE !== "metrics_only"
 
 const JUDGE_CONFIG_BODY = JUDGE_ENABLED

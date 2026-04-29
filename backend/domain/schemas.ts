@@ -206,7 +206,7 @@ export const JudgeRankerResultSchema = z.object({
 
 export const JudgeConfigSchema = z.object({
   judge_mode: JudgeModeSchema.default("metrics_only"),
-  default_judge_model: z.string().default("gpt-4o"),
+  default_judge_model: z.string().default("gpt-4o-mini"),
   default_judge_style: JudgeStyleSchema.default("rubric"),
   factuality_enabled: z.boolean().default(false),
   factuality_model: z.string().default("gpt-4o-mini"),

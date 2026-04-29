@@ -177,7 +177,7 @@ export default function SettingsPage() {
   // Evaluation Judge state
   const [judgeConfig, setJudgeConfig] = useState<JudgeConfig>({
     judge_mode: "metrics_only",
-    default_judge_model: "gpt-4o",
+    default_judge_model: "gpt-4o-mini",
     default_judge_style: "rubric",
     factuality_enabled: false,
     factuality_model: "gpt-4o-mini",
