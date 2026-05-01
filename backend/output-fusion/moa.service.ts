@@ -10,7 +10,7 @@ import type {
 import { buildAggregatorPrompt } from "./moa.prompt"
 import {
   scoreSummary as defaultScoreSummary,
-  pickBestDraftForJudge,
+  pickBestDraftByJudge,
   runFusionPairwiseJudge as defaultRunFusionPairwiseJudge,
   type RunFusionPairwiseArgs,
 } from "./moa.evaluation"
@@ -242,12 +242,21 @@ export async function runMoAFusion(
     scoredDrafts = draftResults.map((d, i) => ({ ...d, scores: perDraftScores[i] }))
   }
 
+  // ── Pick best draft via LLM judge (AlpacaEval-aligned) ─────────────────
+  // Uses an N-way ranker judge to select the strongest draft by GPT-4
+  // preference, matching the paper's methodology. Falls back to metric-based
+  // selection (BERTScore/ROUGE) if the judge is unavailable.
+  const bestDraft = await pickBestDraftByJudge(
+    scoredDrafts,
+    articleText,
+    config.judgeOverride,
+  )
+
   // ── Pairwise judge (fused vs best-draft) ───────────────────────────────
   // Always run when at least one draft succeeded; the helper returns null
   // when the resolved judge_mode is `metrics_only`. Errors are swallowed
   // inside the helper so they cannot break the MoA pipeline.
   let judgePairwiseResult: MoAJudgePairwiseResult | null = null
-  const bestDraft = pickBestDraftForJudge(scoredDrafts)
   if (bestDraft) {
     judgePairwiseResult = await deps.runFusionPairwiseJudge({
       fusedSummary: aggregatorResult.data.summary,

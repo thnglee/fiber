@@ -7,7 +7,10 @@ import {
 } from "@/services/compression.service"
 import {
   judgePairwise as defaultJudgePairwise,
+  judgeNWayRanker as defaultJudgeNWayRanker,
   type JudgePairwiseServiceResult,
+  type JudgeRankerServiceResult,
+  type JudgeOptions,
 } from "@/services/llm-judge.service"
 import {
   resolveJudgeConfig as defaultResolveJudgeConfig,
@@ -136,19 +139,14 @@ export function compareFusedVsDrafts(
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Pairwise judge (fused vs best-draft) — Phase J4
+// Best-draft selection for pairwise comparison
 // ────────────────────────────────────────────────────────────────────────────
 
 /**
- * Pick the best-quality draft for pairwise comparison against the fused
- * summary. Preference order: BERTScore → ROUGE-L → ROUGE-1 → first
- * successful draft. Falls back to `null` if no draft succeeded.
- *
- * The choice is metric-driven so that pairwise reflects "fused vs the
- * strongest draft the proposer pool produced", which is the exact framing
- * the MoA paper uses for AlpacaEval.
+ * Metric-based fallback: pick the best draft by BERTScore → ROUGE-L →
+ * ROUGE-1. Used when the LLM judge ranker is unavailable or fails.
  */
-export function pickBestDraftForJudge(
+export function pickBestDraftByMetrics(
   drafts: MoAScoredDraft[],
 ): MoAScoredDraft | null {
   const successful = drafts.filter(d => d.status === "success" && d.summary)
@@ -168,6 +166,109 @@ export function pickBestDraftForJudge(
 
   return successful[0]
 }
+
+/** @deprecated Use {@link pickBestDraftByJudge} instead. Kept for backward compat. */
+export const pickBestDraftForJudge = pickBestDraftByMetrics
+
+// ────────────────────────────────────────────────────────────────────────────
+// Judge-based best-draft selection (AlpacaEval-aligned)
+// ────────────────────────────────────────────────────────────────────────────
+
+export interface PickBestDraftByJudgeDeps {
+  resolveJudgeConfig: (override?: JudgeRequest) => Promise<EffectiveJudgeConfig>
+  getModelByName: (name: string) => Promise<ModelConfig | null>
+  judgeNWayRanker: (
+    candidates: Array<{ label: string; text: string }>,
+    sourceArticle: string,
+    opts: JudgeOptions,
+  ) => Promise<JudgeRankerServiceResult>
+}
+
+const defaultPickDeps: PickBestDraftByJudgeDeps = {
+  resolveJudgeConfig: defaultResolveJudgeConfig,
+  getModelByName: defaultGetModelByName,
+  judgeNWayRanker: defaultJudgeNWayRanker,
+}
+
+/**
+ * Pick the best-quality draft using an LLM judge (N-way ranker), matching
+ * the MoA paper's AlpacaEval methodology where GPT-4 preference determines
+ * which proposer output is strongest.
+ *
+ * Falls back to metric-based selection ({@link pickBestDraftByMetrics}) when:
+ *   • judge_mode is "metrics_only" (judge disabled)
+ *   • the judge model is not found
+ *   • the judge call throws
+ */
+export async function pickBestDraftByJudge(
+  drafts: MoAScoredDraft[],
+  articleText: string,
+  override?: JudgeRequest,
+  deps?: Partial<PickBestDraftByJudgeDeps>,
+): Promise<MoAScoredDraft | null> {
+  const successful = drafts.filter(d => d.status === "success" && d.summary)
+  if (successful.length === 0) return null
+  if (successful.length === 1) return successful[0]
+
+  const merged: PickBestDraftByJudgeDeps = { ...defaultPickDeps, ...deps }
+
+  try {
+    const effective = await merged.resolveJudgeConfig(override)
+    if (effective.judge_mode === "metrics_only") {
+      logger.addLog("moa-evaluation", "pick-best-draft-fallback", {
+        reason: "judge_mode is metrics_only",
+      })
+      return pickBestDraftByMetrics(drafts)
+    }
+
+    const model = await merged.getModelByName(effective.judge_model)
+    if (!model) {
+      logger.addLog("moa-evaluation", "pick-best-draft-fallback", {
+        reason: `judge model "${effective.judge_model}" not found`,
+      })
+      return pickBestDraftByMetrics(drafts)
+    }
+
+    const candidates = successful.map(d => ({
+      label: d.model_name,
+      text: d.summary,
+    }))
+
+    const result = await merged.judgeNWayRanker(candidates, articleText, {
+      model,
+      logContext: "moa-pick-best-draft",
+    })
+
+    if (result.ranking.length > 0) {
+      const topLabel = result.ranking[0]
+      const topDraft = successful.find(d => d.model_name === topLabel)
+      if (topDraft) {
+        logger.addLog("moa-evaluation", "pick-best-draft-by-judge", {
+          winner: topLabel,
+          ranking: result.ranking,
+          justification: result.justification,
+          judge_model: result.judge_model,
+          cost_usd: result.cost_usd,
+        })
+        return topDraft
+      }
+    }
+
+    logger.addLog("moa-evaluation", "pick-best-draft-fallback", {
+      reason: "ranker returned empty or unmatched ranking",
+    })
+    return pickBestDraftByMetrics(drafts)
+  } catch (err) {
+    logger.addLog("moa-evaluation", "pick-best-draft-judge-error", {
+      error: err instanceof Error ? err.message : String(err),
+    })
+    return pickBestDraftByMetrics(drafts)
+  }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Pairwise judge (fused vs best-draft) — Phase J4
+// ────────────────────────────────────────────────────────────────────────────
 
 export interface RunFusionPairwiseDeps {
   resolveJudgeConfig: (override?: JudgeRequest) => Promise<EffectiveJudgeConfig>
