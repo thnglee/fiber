@@ -42,6 +42,10 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import {
   aggregateRankings,
   fleissKappaFromRankings,
+  lengthBucketedWinRate,
+  signTestPValue,
+  type LengthBucketedResult,
+  type LengthBucketedVerdict,
 } from "./stats"
 
 // ─── Bootstrap env ─────────────────────────────────────────────────────────
@@ -143,6 +147,19 @@ interface PairwiseRow {
   summary_b_label: string
   winner: "A" | "B" | "tie" | string
   judge_model: string | null
+  comparison_type: string | null
+  fusion_id: string | null
+}
+
+interface FusionLengthRow {
+  id: string
+  fused_summary: string | null
+}
+
+interface DraftLengthRow {
+  fusion_id: string
+  model_name: string
+  summary: string | null
 }
 
 interface HumanEvalSummaryEntry {
@@ -221,7 +238,7 @@ async function fetchPairwiseRows(): Promise<PairwiseRow[]> {
   let q = supabase
     .from("llm_judge_pairwise")
     .select(
-      "id, created_at, summary_a_label, summary_b_label, winner, judge_model",
+      "id, created_at, summary_a_label, summary_b_label, winner, judge_model, comparison_type, fusion_id",
     )
     .order("created_at", { ascending: true })
   if (SINCE) q = q.gte("created_at", SINCE)
@@ -229,6 +246,78 @@ async function fetchPairwiseRows(): Promise<PairwiseRow[]> {
   const { data, error } = await q
   if (error) throw new Error(`llm_judge_pairwise: ${error.message}`)
   return (data ?? []) as unknown as PairwiseRow[]
+}
+
+/**
+ * Fetch summary text needed to compute summary-length per pairwise verdict.
+ * Returns lookup tables keyed by fusion_id for fast bucket-stat assembly.
+ */
+async function fetchSummaryLengths(
+  fusionIds: string[],
+): Promise<{
+  fusedByFusionId: Map<string, number>
+  draftByFusionAndModel: Map<string, number>
+}> {
+  const fusedByFusionId = new Map<string, number>()
+  const draftByFusionAndModel = new Map<string, number>()
+  if (fusionIds.length === 0) return { fusedByFusionId, draftByFusionAndModel }
+
+  // Supabase `in` filter handles a few thousand UUIDs comfortably.
+  const { data: fusionRows, error: fErr } = await supabase
+    .from("moa_fusion_results")
+    .select("id, fused_summary")
+    .in("id", fusionIds)
+  if (fErr) throw new Error(`moa_fusion_results: ${fErr.message}`)
+  for (const r of (fusionRows ?? []) as FusionLengthRow[]) {
+    fusedByFusionId.set(r.id, r.fused_summary?.length ?? 0)
+  }
+
+  const { data: draftRows, error: dErr } = await supabase
+    .from("moa_draft_results")
+    .select("fusion_id, model_name, summary")
+    .in("fusion_id", fusionIds)
+  if (dErr) throw new Error(`moa_draft_results: ${dErr.message}`)
+  for (const r of (draftRows ?? []) as DraftLengthRow[]) {
+    draftByFusionAndModel.set(
+      `${r.fusion_id}::${r.model_name}`,
+      r.summary?.length ?? 0,
+    )
+  }
+
+  return { fusedByFusionId, draftByFusionAndModel }
+}
+
+/**
+ * For verdicts where summary_a_label === "fused", look up fused length and
+ * extract the draft model from `summary_b_label` to look up draft length.
+ * Verdicts that can't be matched (missing fusion_id, unknown label shape,
+ * zero length) are dropped — `lengthBucketedWinRate` already tolerates that.
+ */
+function pairwiseToLengthVerdicts(
+  rows: PairwiseRow[],
+  fusedByFusionId: Map<string, number>,
+  draftByFusionAndModel: Map<string, number>,
+): LengthBucketedVerdict[] {
+  const out: LengthBucketedVerdict[] = []
+  for (const r of rows) {
+    if (!r.fusion_id) continue
+    if (r.summary_a_label !== "fused") continue
+    const lenA = fusedByFusionId.get(r.fusion_id)
+    if (lenA == null || lenA === 0) continue
+
+    let draftModel: string | null = null
+    if (r.summary_b_label.startsWith("best_draft:")) {
+      draftModel = r.summary_b_label.slice("best_draft:".length)
+    } else if (r.summary_b_label.startsWith("individual_draft:")) {
+      draftModel = r.summary_b_label.slice("individual_draft:".length)
+    }
+    if (!draftModel) continue
+    const lenB = draftByFusionAndModel.get(`${r.fusion_id}::${draftModel}`)
+    if (lenB == null || lenB === 0) continue
+
+    out.push({ winner: r.winner, lenA, lenB })
+  }
+  return out
 }
 
 async function fetchHumanEval(): Promise<{
@@ -356,11 +445,27 @@ interface AxisB2Entry {
   ties: number
   winner: string
   judge_models: string[]
+  // Two-sided sign test on (a_wins, b_wins), excluding ties.
+  // Null hypothesis: P(A > B) = 0.5. Reportable for n_decisive ≥ 1.
+  sign_test_p: number | null
+  n_decisive: number
+  // Length-bucketed view for length-bias control. Null when length data is
+  // unavailable for every verdict in the pair (e.g., missing fusion_id).
+  length_stats: LengthBucketedResult | null
 }
 
-function buildAxisB2(rows: PairwiseRow[]): AxisB2Entry[] {
+function buildAxisB2(
+  rows: PairwiseRow[],
+  fusedByFusionId: Map<string, number>,
+  draftByFusionAndModel: Map<string, number>,
+): AxisB2Entry[] {
+  // Headline pair table: only vs_best_draft. Per-individual-draft verdicts
+  // get their own breakdown so they don't drown out the main signal.
+  const filtered = rows.filter(
+    r => (r.comparison_type ?? "vs_best_draft") === "vs_best_draft",
+  )
   const groups = new Map<string, PairwiseRow[]>()
-  for (const r of rows) {
+  for (const r of filtered) {
     const pair = `${r.summary_a_label} vs ${r.summary_b_label}`
     if (!groups.has(pair)) groups.set(pair, [])
     groups.get(pair)!.push(r)
@@ -382,9 +487,107 @@ function buildAxisB2(rows: PairwiseRow[]): AxisB2Entry[] {
           ? `A (${rs[0].summary_a_label})`
           : `B (${rs[0].summary_b_label})`
     const models = Array.from(new Set(rs.map((r) => r.judge_model).filter(Boolean))) as string[]
-    entries.push({ pair, n: rs.length, a_wins: a, b_wins: b, ties: t, winner, judge_models: models })
+    const decisive = a + b
+    const wins = Math.max(a, b)
+    const sign_test_p = decisive > 0 ? signTestPValue(wins, decisive) : null
+    const lengthVerdicts = pairwiseToLengthVerdicts(
+      rs,
+      fusedByFusionId,
+      draftByFusionAndModel,
+    )
+    const length_stats =
+      lengthVerdicts.length > 0 ? lengthBucketedWinRate(lengthVerdicts) : null
+    entries.push({
+      pair,
+      n: rs.length,
+      a_wins: a,
+      b_wins: b,
+      ties: t,
+      winner,
+      judge_models: models,
+      sign_test_p,
+      n_decisive: decisive,
+      length_stats,
+    })
   }
   entries.sort((a, b) => b.n - a.n)
+  return entries
+}
+
+// ─── Axis B.2b — fused vs each individual proposer draft ───────────────────
+
+interface AxisB2DraftEntry {
+  draft_model: string
+  n: number
+  fused_wins: number
+  draft_wins: number
+  ties: number
+  fused_win_rate: number  // wins / decisive (ties excluded)
+  sign_test_p: number | null
+  judge_models: string[]
+  length_stats: LengthBucketedResult | null
+}
+
+const INDIVIDUAL_DRAFT_PREFIX = "individual_draft:"
+
+function buildAxisB2Drafts(
+  rows: PairwiseRow[],
+  fusedByFusionId: Map<string, number>,
+  draftByFusionAndModel: Map<string, number>,
+): AxisB2DraftEntry[] {
+  const filtered = rows.filter(
+    r => r.comparison_type === "vs_individual_draft",
+  )
+  const groups = new Map<string, PairwiseRow[]>()
+  for (const r of filtered) {
+    // summary_a_label is always "fused"; the proposer model lives on
+    // summary_b_label, prefixed `individual_draft:`.
+    if (!r.summary_b_label.startsWith(INDIVIDUAL_DRAFT_PREFIX)) continue
+    const draftModel = r.summary_b_label.slice(INDIVIDUAL_DRAFT_PREFIX.length)
+    if (!groups.has(draftModel)) groups.set(draftModel, [])
+    groups.get(draftModel)!.push(r)
+  }
+  const entries: AxisB2DraftEntry[] = []
+  for (const [draftModel, rs] of groups) {
+    let fused_wins = 0
+    let draft_wins = 0
+    let ties = 0
+    for (const r of rs) {
+      // A=fused, B=individual draft. winner='A' means fused won.
+      if (r.winner === "A") fused_wins++
+      else if (r.winner === "B") draft_wins++
+      else ties++
+    }
+    const decisive = fused_wins + draft_wins
+    const fused_win_rate = decisive > 0 ? fused_wins / decisive : 0
+    const sign_test_p =
+      decisive > 0
+        ? signTestPValue(Math.max(fused_wins, draft_wins), decisive)
+        : null
+    const judge_models = Array.from(
+      new Set(rs.map(r => r.judge_model).filter(Boolean)),
+    ) as string[]
+    const lengthVerdicts = pairwiseToLengthVerdicts(
+      rs,
+      fusedByFusionId,
+      draftByFusionAndModel,
+    )
+    const length_stats =
+      lengthVerdicts.length > 0 ? lengthBucketedWinRate(lengthVerdicts) : null
+    entries.push({
+      draft_model: draftModel,
+      n: rs.length,
+      fused_wins,
+      draft_wins,
+      ties,
+      fused_win_rate,
+      sign_test_p,
+      judge_models,
+      length_stats,
+    })
+  }
+  // Sort by fused win rate descending; weakest proposers (where fused wins most) first.
+  entries.sort((a, b) => b.fused_win_rate - a.fused_win_rate)
   return entries
 }
 
@@ -536,11 +739,20 @@ function buildAxisC(
 
 function renderAxisA(entries: AxisAEntry[]): string {
   const lines: string[] = []
-  lines.push("## Axis A — Content Retention")
+  lines.push("## Axis A — Content Retention (supplementary)")
   lines.push("")
   lines.push(
-    "Overlap metrics computed against the source article (not a human reference summary). " +
-      "Higher = more grounded in the source. See methodology caveat in `metrics_system_PRD.md` §2.1.",
+    "> **Methodology caveat.** ROUGE / BLEU / BERTScore are computed against the " +
+      "source article (not a human-written reference summary). They measure " +
+      "content retention from the source, not summary quality. Wang et al. " +
+      "(2024) — the MoA paper — does **not** use these metrics; it relies on " +
+      "GPT-4 LC win rate (AlpacaEval). Treat Axis B as the primary signal and " +
+      "read Axis A only as supplementary evidence about how closely outputs " +
+      "track source phrasing. See `metrics_system_PRD.md` §2.1.",
+  )
+  lines.push("")
+  lines.push(
+    "Overlap metrics against the source article. Higher = more grounded in source phrasing.",
   )
   lines.push("")
   if (entries.length === 0) {
@@ -587,6 +799,28 @@ function renderAxisB1(entries: AxisBRubricEntry[]): string {
   return lines.join("\n")
 }
 
+function fmtPctSigned(n: number, digits = 1): string {
+  if (!Number.isFinite(n)) return "—"
+  const pct = n * 100
+  return pct.toFixed(digits) + "%"
+}
+
+function renderLengthRow(label: string, ls: LengthBucketedResult | null): string[] {
+  if (!ls || ls.n_decisive === 0) {
+    return [`- ${label}: length control not available (no length data on verdicts)`]
+  }
+  const dist = ls.buckets
+    .map(b => `${b.range}: ${b.n}`)
+    .join(", ")
+  const bucketNote = ls.bucketed
+    ? `bucketed ${fmtPctSigned(ls.bucketed_win_rate_a)}`
+    : `bucketed=raw (no bucket reached MIN_BUCKET_N=5)`
+  return [
+    `- **${label}**: raw fused-win-rate ${fmtPctSigned(ls.raw_win_rate_a)}; ${bucketNote}; ` +
+      `avg lenA/lenB=${ls.avg_len_ratio.toFixed(2)}; bucket counts [${dist}]`,
+  ]
+}
+
 function renderAxisB2(entries: AxisB2Entry[]): string {
   const lines: string[] = []
   lines.push("### B.2 LLM-Judge pairwise (fusion runs)")
@@ -596,16 +830,92 @@ function renderAxisB2(entries: AxisB2Entry[]): string {
     lines.push("")
     return lines.join("\n")
   }
-  lines.push("| Pair | n | A-wins | B-wins | Ties | Winner | Judge model(s) |")
-  lines.push("|---|---|---|---|---|---|---|")
+  lines.push(
+    "Sign test: two-sided, ties excluded, H₀ = P(A wins) = 0.5. " +
+      "p < 0.05 means the win rate is unlikely to be chance.",
+  )
+  lines.push("")
+  lines.push(
+    "| Pair | n | A-wins | B-wins | Ties | Winner | Sign-test p | Judge model(s) |",
+  )
+  lines.push("|---|---|---|---|---|---|---|---|")
   for (const e of entries) {
+    const pCell =
+      e.sign_test_p == null
+        ? "—"
+        : `${e.sign_test_p.toFixed(4)}${e.n_decisive < 5 ? " ⚠" : ""}`
     lines.push(
-      `| ${e.pair} | ${e.n} | ${e.a_wins} | ${e.b_wins} | ${e.ties} | ${e.winner} | ${
+      `| ${e.pair} | ${e.n} | ${e.a_wins} | ${e.b_wins} | ${e.ties} | ${e.winner} | ${pCell} | ${
         e.judge_models.join(", ") || "—"
       } |`,
     )
   }
   lines.push("")
+  lines.push("⚠ = fewer than 5 decisive verdicts; sign-test power is too low to interpret.")
+  lines.push("")
+  // Length-bucketed rollup. Implements a simplified version of Dubois et al.
+  // (2024) Length-Controlled Win Rate — see `lengthBucketedWinRate` in stats.ts.
+  // Reports raw + bucketed + length-ratio distribution per pair.
+  const anyLength = entries.some(e => e.length_stats && e.length_stats.n_decisive > 0)
+  if (anyLength) {
+    lines.push("**Length-controlled view** (simplified bucket method, see `stats.ts`):")
+    lines.push("")
+    for (const e of entries) {
+      for (const row of renderLengthRow(e.pair, e.length_stats)) lines.push(row)
+    }
+    lines.push("")
+  }
+  return lines.join("\n")
+}
+
+function renderAxisB2Drafts(entries: AxisB2DraftEntry[]): string {
+  const lines: string[] = []
+  lines.push("### B.2b LLM-Judge pairwise — fused vs each proposer draft")
+  lines.push("")
+  if (entries.length === 0) {
+    lines.push(
+      "_(no `vs_individual_draft` verdicts in window — run `collect-metrics --judge-vs-all` to populate)_",
+    )
+    lines.push("")
+    return lines.join("\n")
+  }
+  lines.push(
+    "Per-proposer breakdown: fused win rate against each individual draft. " +
+      "Mirrors Wang et al. (2024) Figure 4a / Table 4. " +
+      "Sign test: two-sided, ties excluded, H₀ = P(fused wins) = 0.5.",
+  )
+  lines.push("")
+  lines.push(
+    "| Proposer model | n | Fused wins | Draft wins | Ties | Fused win rate | Sign-test p | Judge model(s) |",
+  )
+  lines.push("|---|---|---|---|---|---|---|---|")
+  for (const e of entries) {
+    const winRate = `${(e.fused_win_rate * 100).toFixed(1)}%`
+    const decisive = e.fused_wins + e.draft_wins
+    const pCell =
+      e.sign_test_p == null
+        ? "—"
+        : `${e.sign_test_p.toFixed(4)}${decisive < 5 ? " ⚠" : ""}`
+    lines.push(
+      `| ${e.draft_model} | ${e.n} | ${e.fused_wins} | ${e.draft_wins} | ${e.ties} | ${winRate} | ${pCell} | ${
+        e.judge_models.join(", ") || "—"
+      } |`,
+    )
+  }
+  lines.push("")
+  lines.push("⚠ = fewer than 5 decisive verdicts; sign-test power too low.")
+  lines.push("")
+  const anyLength = entries.some(e => e.length_stats && e.length_stats.n_decisive > 0)
+  if (anyLength) {
+    lines.push("**Length-controlled view per proposer:**")
+    lines.push("")
+    for (const e of entries) {
+      for (const row of renderLengthRow(e.draft_model, e.length_stats)) {
+        lines.push(row)
+      }
+    }
+    lines.push("")
+  }
   return lines.join("\n")
 }
 
@@ -703,9 +1013,25 @@ async function main() {
   console.log(`human_eval_tasks    rows: ${humanEval.tasks.length}`)
   console.log(`human_eval_responses rows: ${humanEval.responses.length}`)
 
+  // Length lookup: needed by lengthBucketedWinRate in B.2 / B.2b. We compute
+  // summary length on-the-fly from stored summary text (no schema migration
+  // required; verdicts persisted before fusion_id was tracked are ignored).
+  const fusionIds = Array.from(
+    new Set(pairwiseRows.map(r => r.fusion_id).filter((x): x is string => !!x)),
+  )
+  const { fusedByFusionId, draftByFusionAndModel } = await fetchSummaryLengths(fusionIds)
+  console.log(
+    `summary lengths     fusion=${fusedByFusionId.size} drafts=${draftByFusionAndModel.size}`,
+  )
+
   const axisA = buildAxisA(evalRows)
   const axisB1 = buildAxisB1(evalRows)
-  const axisB2 = buildAxisB2(pairwiseRows)
+  const axisB2 = buildAxisB2(pairwiseRows, fusedByFusionId, draftByFusionAndModel)
+  const axisB2Drafts = buildAxisB2Drafts(
+    pairwiseRows,
+    fusedByFusionId,
+    draftByFusionAndModel,
+  )
   const axisB3 = buildAxisB3(evalRows)
   const axisC = buildAxisC(humanEval.tasks, humanEval.responses)
 
@@ -721,13 +1047,21 @@ async function main() {
     `- **Coverage:** ${evalRows.length} eval rows · ${pairwiseRows.length} pairwise verdicts · ${humanEval.tasks.length} human-eval task(s) · ${humanEval.responses.length} human ranking(s)`,
   )
   md.push("")
-  md.push(renderAxisA(axisA))
-  md.push("## Axis B — Quality & Preference")
+  // Primary axis: B (judge + factuality) — aligned with the MoA paper's
+  // GPT-4 LC win rate methodology. Axis A renders after as supplementary.
+  md.push("## Axis B — Quality & Preference (primary)")
+  md.push("")
+  md.push(
+    "This is the headline axis for the thesis. Aligned with Wang et al. (2024), " +
+      "which judges fusion via GPT-4 preference rather than n-gram overlap.",
+  )
   md.push("")
   md.push(renderAxisB1(axisB1))
   md.push(renderAxisB2(axisB2))
+  md.push(renderAxisB2Drafts(axisB2Drafts))
   md.push(renderAxisB3(axisB3))
   md.push(renderAxisC(axisC))
+  md.push(renderAxisA(axisA))
 
   fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true })
   fs.writeFileSync(OUTPUT_PATH, md.join("\n"))
@@ -749,6 +1083,7 @@ async function main() {
           axis_a: axisA,
           axis_b1: axisB1,
           axis_b2: axisB2,
+          axis_b2_drafts: axisB2Drafts,
           axis_b3: axisB3,
           axis_c: axisC,
         },

@@ -357,6 +357,7 @@ export async function runFusionPairwiseJudge(
       judge_cost_usd: verdict.cost_usd,
       judge_latency_ms: verdict.latency_ms,
       position_swapped: verdict.position_swapped,
+      comparison_type: "vs_best_draft",
     }
   } catch (err) {
     logger.addLog("moa-evaluation", "judge-pairwise-error", {
@@ -364,4 +365,82 @@ export async function runFusionPairwiseJudge(
     })
     return null
   }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Pairwise judge — fused vs every individual draft (Wang 2024 Figure 4a / Table 4)
+// ────────────────────────────────────────────────────────────────────────────
+
+export interface RunFusionVsAllDraftsArgs {
+  fusedSummary: string
+  drafts: MoAScoredDraft[]
+  articleText: string
+  override?: JudgeRequest
+}
+
+/**
+ * Run one pairwise judge per successful proposer draft. The N-way ranker's
+ * top draft is the *headline* opponent (`runFusionPairwiseJudge`); this
+ * function complements it by emitting per-draft verdicts so the unified
+ * report can compute "fused win rate vs gpt-4o-mini", "vs gemini-2.5-flash",
+ * etc. — the per-proposer breakdown the paper reports in Figure 4a.
+ *
+ * Returns an empty array (not null) when the judge is disabled or the model
+ * is missing, so callers can persist `[]` cleanly. Per-verdict errors are
+ * logged and skipped — one bad call never sinks the rest.
+ */
+export async function runFusionVsAllDraftsJudge(
+  args: RunFusionVsAllDraftsArgs,
+  deps?: Partial<RunFusionPairwiseDeps>,
+): Promise<MoAJudgePairwiseResult[]> {
+  const merged: RunFusionPairwiseDeps = { ...defaultDeps, ...deps }
+  const effective = await merged.resolveJudgeConfig(args.override)
+  if (effective.judge_mode === "metrics_only") return []
+
+  const model = await merged.getModelByName(effective.judge_model)
+  if (!model) {
+    logger.addLog("moa-evaluation", "judge-vs-all-model-missing", {
+      requested_model: effective.judge_model,
+    })
+    return []
+  }
+
+  const successful = args.drafts.filter(
+    d => d.status === "success" && d.summary,
+  )
+  if (successful.length === 0) return []
+
+  const aLabel = "fused"
+  const verdicts: MoAJudgePairwiseResult[] = []
+  for (const draft of successful) {
+    const bLabel = `individual_draft:${draft.model_name}`
+    try {
+      const verdict = await merged.judgePairwise(
+        { label: aLabel, text: args.fusedSummary },
+        { label: bLabel, text: draft.summary },
+        args.articleText,
+        { model, logContext: "moa-pairwise-vs-individual" },
+      )
+      verdicts.push({
+        summary_a_label: aLabel,
+        summary_b_label: bLabel,
+        winner: verdict.winner,
+        winner_label: verdict.winner_label,
+        per_dimension: verdict.per_dimension,
+        justification: verdict.justification,
+        length_note: verdict.length_note,
+        judge_model: verdict.judge_model,
+        judge_cost_usd: verdict.cost_usd,
+        judge_latency_ms: verdict.latency_ms,
+        position_swapped: verdict.position_swapped,
+        comparison_type: "vs_individual_draft",
+      })
+    } catch (err) {
+      logger.addLog("moa-evaluation", "judge-vs-individual-error", {
+        draft_model: draft.model_name,
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
+  }
+  return verdicts
 }

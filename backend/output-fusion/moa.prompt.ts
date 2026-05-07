@@ -1,3 +1,30 @@
+/**
+ * MoA Aggregator Prompt — translated from Wang et al. (2024), "Mixture-of-Agents
+ * Enhances Large Language Model Capabilities" (arXiv:2406.04692), Table 1
+ * (Aggregate-and-Synthesize prompt, p. 4).
+ *
+ * Two intentional domain adaptations from the paper's English instruction-following
+ * prompt to Vietnamese news summarization:
+ *
+ *   (1) Vietnamese journalism style — added clause "trung lập theo phong cách
+ *       báo chí Việt Nam" so the aggregator produces neutral, news-register Vietnamese
+ *       rather than literal-translation prose.
+ *
+ *   (2) Source article as residual connection — the original article is injected
+ *       alongside proposer drafts (Equation 1 in the paper). The paper's prompt
+ *       has no source material because AlpacaEval / MT-Bench / FLASK are
+ *       open-ended instruction-following, not grounded summarization. For news
+ *       summarization the source is the ground truth and must be available for
+ *       fact-checking; the falsification batch on branch `fix/moa-aggregator-source-prompt`
+ *       confirmed source presence is required for factuality even though it
+ *       depresses overlap metrics.
+ *
+ * All other Table 1 keywords (synthesize / critically evaluate / not simply
+ * replicate / refined-accurate-comprehensive / well-structured-coherent /
+ * highest standards) are translated directly. The alignment test
+ * `__tests__/moa.prompt.alignment.test.ts` enforces this.
+ */
+
 const DRAFT_CHAR_LIMIT = 3_000
 const ARTICLE_CHAR_LIMIT = 5_000
 
@@ -33,7 +60,7 @@ export function buildAggregatorPrompt(
 
 Hãy đối chiếu các bản tóm tắt với bài viết gốc bên dưới để đảm bảo tính chính xác về sự kiện.
 
-Yêu cầu về độ dài: cô đọng, tối đa 150 từ.
+Yêu cầu về độ dài: cô đọng, đủ ý, không bịa thông tin.
 
 Bài viết gốc (để đối chiếu):
 """
@@ -46,7 +73,7 @@ ${draftBlocks}
 Sau khi tổng hợp, hãy phân loại bài viết và ước tính thời gian đọc.
 
 Yêu cầu đầu ra (JSON có cấu trúc, đúng schema):
-- summary: Bản tóm tắt tổng hợp cuối cùng (tiếng Việt, tối đa 150 từ).
+- summary: Bản tóm tắt tổng hợp cuối cùng (tiếng Việt, cô đọng, đủ ý).
 - category: Thể loại chính của bài viết. Nếu phù hợp, dùng một trong các giá trị sau:
   * Chính trị - Xã hội
   * Kinh tế - Tài chính

@@ -22,6 +22,7 @@ export async function saveMoAFusionResult(input: SaveMoAFusionInput): Promise<st
       .from("moa_fusion_results")
       .insert({
         routing_id: routingId ?? null,
+        pipeline_mode: result.pipeline_mode ?? "moa_synthesis",
         fused_summary: result.fused.summary,
         fused_category: result.fused.category,
         fused_reading_time: result.fused.readingTime,
@@ -127,6 +128,7 @@ export async function saveLLMJudgePairwise(
         judge_cost_usd: verdict.judge_cost_usd,
         judge_latency_ms: verdict.judge_latency_ms,
         position_swapped: verdict.position_swapped,
+        comparison_type: verdict.comparison_type,
       })
       .select("id")
       .single()

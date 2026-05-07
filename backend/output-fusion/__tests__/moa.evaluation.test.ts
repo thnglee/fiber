@@ -5,6 +5,7 @@ import type { ModelConfig } from "@/domain/types"
 import {
   pickBestDraftForJudge,
   runFusionPairwiseJudge,
+  runFusionVsAllDraftsJudge,
   type RunFusionPairwiseDeps,
 } from "../moa.evaluation"
 import type { MoAScoredDraft, MoAScores } from "../moa.types"
@@ -190,6 +191,7 @@ describe("runFusionPairwiseJudge", () => {
     assert.equal(result!.judge_cost_usd, 0.008)
     assert.equal(result!.judge_latency_ms, 1500)
     assert.equal(result!.position_swapped, false)
+    assert.equal(result!.comparison_type, "vs_best_draft")
   })
 
   it("swallows judge errors and returns null", async () => {
@@ -202,5 +204,87 @@ describe("runFusionPairwiseJudge", () => {
       }),
     )
     assert.equal(result, null)
+  })
+})
+
+// ─── runFusionVsAllDraftsJudge ─────────────────────────────────────────────
+
+describe("runFusionVsAllDraftsJudge", () => {
+  const draftsFixture = [
+    draft("gpt-4o-mini"),
+    draft("gemini-2.5-flash"),
+    draft("claude-haiku-4-5"),
+  ]
+
+  it("returns [] when judge_mode is metrics_only", async () => {
+    const result = await runFusionVsAllDraftsJudge(
+      { fusedSummary: FUSED, drafts: draftsFixture, articleText: ARTICLE },
+      makeDeps({
+        resolveJudgeConfig: async () => ({
+          judge_mode: "metrics_only",
+          judge_model: "gpt-4o",
+          judge_style: "rubric",
+        }),
+      }),
+    )
+    assert.deepEqual(result, [])
+  })
+
+  it("emits one verdict per successful draft, labeled individual_draft:<model>", async () => {
+    const result = await runFusionVsAllDraftsJudge(
+      { fusedSummary: FUSED, drafts: draftsFixture, articleText: ARTICLE },
+      makeDeps({}),
+    )
+    assert.equal(result.length, 3)
+    const labels = result.map(v => v.summary_b_label).sort()
+    assert.deepEqual(labels, [
+      "individual_draft:claude-haiku-4-5",
+      "individual_draft:gemini-2.5-flash",
+      "individual_draft:gpt-4o-mini",
+    ])
+    for (const v of result) {
+      assert.equal(v.summary_a_label, "fused")
+      assert.equal(v.comparison_type, "vs_individual_draft")
+    }
+  })
+
+  it("skips failed/timeout drafts", async () => {
+    const drafts = [
+      draft("gpt-4o-mini"),
+      draft("broken", {}, "failed"),
+      draft("slow", {}, "timeout"),
+    ]
+    const result = await runFusionVsAllDraftsJudge(
+      { fusedSummary: FUSED, drafts, articleText: ARTICLE },
+      makeDeps({}),
+    )
+    assert.equal(result.length, 1)
+    assert.equal(result[0].summary_b_label, "individual_draft:gpt-4o-mini")
+  })
+
+  it("logs and skips per-verdict errors instead of throwing", async () => {
+    let callCount = 0
+    const result = await runFusionVsAllDraftsJudge(
+      { fusedSummary: FUSED, drafts: draftsFixture, articleText: ARTICLE },
+      makeDeps({
+        judgePairwise: async (a, _b, _src, opts) => {
+          callCount++
+          if (callCount === 2) throw new Error("transient API blip")
+          return {
+            winner: "A",
+            winner_label: a.label,
+            per_dimension: { faithfulness: "A", coverage: "A", fluency: "A", conciseness: "A" },
+            justification: "ok",
+            length_note: "ok",
+            judge_model: opts.model.model_name,
+            cost_usd: 0.001,
+            latency_ms: 100,
+            position_swapped: false,
+          }
+        },
+      }),
+    )
+    // 3 drafts, 1 throws → 2 verdicts persisted, no exception bubbled.
+    assert.equal(result.length, 2)
   })
 })

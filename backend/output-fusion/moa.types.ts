@@ -14,7 +14,23 @@ export interface MoAConfig {
    * fused vs best-draft and attaches the verdict to the result.
    */
   judgeOverride?: JudgeRequest
+  /**
+   * When true and the judge is enabled, additionally run a pairwise judge of
+   * fused vs each successful proposer draft (one verdict per draft). Used for
+   * the Wang et al. (2024) Figure 4a / Table 4-style per-proposer breakdown.
+   * Verdicts surface on `MoAFusionResult.judge_vs_drafts`.
+   */
+  judgeVsAllDrafts?: boolean
 }
+
+/**
+ * Kind of pairwise verdict, used by persistence and the unified report to
+ * group rows. See `023_add_comparison_type.sql` for the source of truth.
+ */
+export type PairwiseComparisonType =
+  | "vs_best_draft"
+  | "vs_individual_draft"
+  | "synthesis_vs_ranker"
 
 /**
  * Pairwise (AlpacaEval-style) verdict for fused vs best-draft. Caller-side
@@ -34,6 +50,7 @@ export interface MoAJudgePairwiseResult {
   judge_cost_usd: number | null
   judge_latency_ms: number
   position_swapped: boolean
+  comparison_type: PairwiseComparisonType
 }
 
 export interface ModelAvailability {
@@ -75,7 +92,12 @@ export interface MoAScoredDraft extends MoADraftResult {
   scores: MoAScores
 }
 
+/** Distinguishes the full MoA pipeline from the LLM-ranker baseline. */
+export type PipelineMode = "moa_synthesis" | "llm_ranker"
+
 export interface MoAFusionResult {
+  /** How the fused output was produced. Defaults to "moa_synthesis". */
+  pipeline_mode?: PipelineMode
   fused: {
     summary: string
     category: string
@@ -102,6 +124,12 @@ export interface MoAFusionResult {
   routing_id?: string
   /** AlpacaEval-style verdict; `null` when judge is disabled or call fails. */
   judge_pairwise?: MoAJudgePairwiseResult | null
+  /**
+   * One pairwise verdict per successful proposer draft, populated when
+   * `MoAConfig.judgeVsAllDrafts === true`. Empty array when the option is off
+   * or the judge is disabled.
+   */
+  judge_vs_drafts?: MoAJudgePairwiseResult[]
 }
 
 export class MoAInsufficientDraftsError extends Error {

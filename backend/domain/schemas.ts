@@ -74,6 +74,10 @@ export const JudgeRequestSchema = z.object({
   judge_mode: z.enum(["metrics_only", "judge_only", "both"]).optional(),
   judge_model: z.string().min(1).optional(),
   judge_style: z.enum(["rubric", "absolute"]).optional(),
+  // Fusion-only: when true, the orchestrator runs an extra pairwise judge for
+  // every successful proposer draft. Each verdict is persisted with
+  // `comparison_type='vs_individual_draft'`. K extra judge calls per fusion.
+  judge_vs_all_drafts: z.boolean().optional(),
 })
 
 export const SummarizeRequestSchema = z.object({
@@ -82,7 +86,7 @@ export const SummarizeRequestSchema = z.object({
   debug: z.boolean().optional(),
   website: z.string().optional(), // Website where the action was taken
   model: z.string().optional(),   // Optional model override
-  routing_mode: z.enum(['auto', 'evaluation', 'forced', 'fusion']).optional(), // Routing mode for model selection
+  routing_mode: z.enum(['auto', 'evaluation', 'forced', 'fusion', 'fusion_ranker_only']).optional(), // Routing mode for model selection
   fusion_config: FusionConfigSchema.optional(),
   judge_config: JudgeRequestSchema.optional(),  // Per-request override of stored judge config
 }).refine(

@@ -11,8 +11,11 @@ import { buildAggregatorPrompt } from "./moa.prompt"
 import {
   scoreSummary as defaultScoreSummary,
   pickBestDraftByJudge,
+  pickBestDraftByMetrics,
   runFusionPairwiseJudge as defaultRunFusionPairwiseJudge,
+  runFusionVsAllDraftsJudge as defaultRunFusionVsAllDraftsJudge,
   type RunFusionPairwiseArgs,
+  type RunFusionVsAllDraftsArgs,
 } from "./moa.evaluation"
 import {
   MoAInsufficientDraftsError,
@@ -36,6 +39,9 @@ export interface MoADependencies {
   generateJsonCompletion: typeof generateJsonCompletion
   scoreSummary: (summary: string, originalArticle: string) => Promise<MoAScores>
   runFusionPairwiseJudge: (args: RunFusionPairwiseArgs) => Promise<MoAJudgePairwiseResult | null>
+  runFusionVsAllDraftsJudge: (
+    args: RunFusionVsAllDraftsArgs,
+  ) => Promise<MoAJudgePairwiseResult[]>
 }
 
 const defaultDeps: MoADependencies = {
@@ -43,6 +49,7 @@ const defaultDeps: MoADependencies = {
   generateJsonCompletion,
   scoreSummary: defaultScoreSummary,
   runFusionPairwiseJudge: args => defaultRunFusionPairwiseJudge(args),
+  runFusionVsAllDraftsJudge: args => defaultRunFusionVsAllDraftsJudge(args),
 }
 
 function computeEstimatedCost(
@@ -266,6 +273,20 @@ export async function runMoAFusion(
     })
   }
 
+  // ── Pairwise judge — fused vs each individual draft (optional) ─────────
+  // Wang et al. (2024) Figure 4a / Table 4 style. K verdicts where K is the
+  // number of successful proposers; lets the unified report compute
+  // per-proposer win rates. Skipped unless explicitly opted into.
+  let judgeVsDrafts: MoAJudgePairwiseResult[] = []
+  if (config.judgeVsAllDrafts && successfulDrafts.length > 0) {
+    judgeVsDrafts = await deps.runFusionVsAllDraftsJudge({
+      fusedSummary: aggregatorResult.data.summary,
+      drafts: scoredDrafts,
+      articleText,
+      override: config.judgeOverride,
+    })
+  }
+
   // ── Pipeline totals ────────────────────────────────────────────────────
   const maxProposerLatency = draftResults.reduce(
     (max, d) => (d.latency_ms > max ? d.latency_ms : max),
@@ -325,6 +346,8 @@ export async function runMoAFusion(
       failed_proposers: failedProposers,
     },
     judge_pairwise: judgePairwiseResult,
+    judge_vs_drafts: judgeVsDrafts,
+    pipeline_mode: "moa_synthesis",
   }
 
   logger.addLog("moa-fusion", "complete", {
@@ -335,6 +358,145 @@ export async function runMoAFusion(
   })
 
   return result
+}
+
+/**
+ * LLM-Ranker baseline (Wang et al. 2024 Figure 4a equivalent).
+ *
+ * Runs the same proposer set as the full MoA pipeline, then uses the N-way
+ * judge ranker to pick the strongest draft and emits it directly as the
+ * "fused" output. There is no aggregator call — the pipeline tests whether
+ * MoA's value comes from synthesis (`runMoAFusion`) or merely from selection
+ * (this function). If `synthesis_vs_ranker` pairwise verdicts later show the
+ * synthesis output winning, MoA aggregates; if they tie, MoA reduces to
+ * expensive selection.
+ *
+ * The result reuses `MoAFusionResult` so persistence and the unified report
+ * don't need branching code paths. Aggregator metadata is filled with the
+ * winning draft's model name and zero cost / latency to keep the row shape
+ * intact (the `pipeline_mode='llm_ranker'` flag tells consumers to ignore
+ * those columns).
+ */
+export async function runLLMRankerBaseline(
+  articleText: string,
+  website: string | undefined,
+  config: MoAConfig,
+  deps: MoADependencies = defaultDeps,
+): Promise<MoAFusionResult> {
+  logger.addLog("moa-fusion", "ranker-baseline-start", {
+    proposers: config.proposers.map(p => p.model_name),
+    articleLength: articleText.length,
+  })
+
+  // Proposers — same parallel call as runMoAFusion.
+  const draftResults = await Promise.all(
+    config.proposers.map(model =>
+      runProposer(articleText, website, model, config.proposerTimeoutMs, deps),
+    ),
+  )
+  const successfulDrafts = draftResults.filter(d => d.status === "success")
+  const failedProposers = draftResults
+    .filter(d => d.status !== "success")
+    .map(d => d.model_name)
+
+  if (successfulDrafts.length < config.minSuccessfulDrafts) {
+    throw new MoAInsufficientDraftsError(
+      successfulDrafts.length,
+      config.minSuccessfulDrafts,
+      failedProposers,
+    )
+  }
+
+  // Score drafts so we can fall back to metric-based selection if the judge
+  // is disabled or fails. Same evaluation toggle as runMoAFusion.
+  let scoredDrafts: MoAScoredDraft[] = draftResults.map(d => ({
+    ...d,
+    scores: emptyScores(),
+  }))
+  if (config.includeEvaluation) {
+    const perDraftScores = await Promise.all(
+      draftResults.map(async draft =>
+        draft.status === "success"
+          ? await deps.scoreSummary(draft.summary, articleText)
+          : emptyScores(),
+      ),
+    )
+    scoredDrafts = draftResults.map((d, i) => ({ ...d, scores: perDraftScores[i] }))
+  }
+
+  // Pick the winning draft. pickBestDraftByJudge already wraps the N-way
+  // ranker with a metric-based fallback — exactly the behavior we want.
+  const winner =
+    (await pickBestDraftByJudge(scoredDrafts, articleText, config.judgeOverride)) ??
+    pickBestDraftByMetrics(scoredDrafts) ??
+    successfulDrafts[0]
+  const winnerScored =
+    scoredDrafts.find(d => d.model_name === winner.model_name) ?? scoredDrafts[0]
+
+  logger.addLog("moa-fusion", "ranker-baseline-pick", {
+    winner: winner.model_name,
+  })
+
+  // Score the winner against the source so the row carries the same overlap
+  // metrics as a synthesis row (for apples-to-apples Axis A comparison).
+  const fusedScores: MoAScores = config.includeEvaluation
+    ? winnerScored.scores
+    : emptyScores()
+
+  const maxProposerLatency = draftResults.reduce(
+    (m, d) => (d.latency_ms > m ? d.latency_ms : m),
+    0,
+  )
+  const proposerCostKnown = draftResults.every(d =>
+    d.status !== "success" ? true : d.estimated_cost_usd !== null,
+  )
+  const totalCostUsd = proposerCostKnown
+    ? draftResults.reduce((sum, d) => sum + (d.estimated_cost_usd ?? 0), 0)
+    : null
+  const proposerTokensKnown = draftResults.every(d =>
+    d.status !== "success"
+      ? true
+      : d.prompt_tokens !== null && d.completion_tokens !== null,
+  )
+  const totalTokens = proposerTokensKnown
+    ? draftResults.reduce(
+        (s, d) => s + (d.prompt_tokens ?? 0) + (d.completion_tokens ?? 0),
+        0,
+      )
+    : null
+
+  return {
+    pipeline_mode: "llm_ranker",
+    fused: {
+      summary: winner.summary,
+      category: winner.category || "Khác",
+      readingTime: winner.readingTime || 1,
+      scores: fusedScores,
+    },
+    drafts: scoredDrafts,
+    aggregator: {
+      // No aggregator; surface the winning model so persistence + UI know
+      // which draft the ranker chose.
+      model_name: `ranker:${winner.model_name}`,
+      provider: winner.provider,
+      latency_ms: 0,
+      prompt_tokens: 0,
+      completion_tokens: 0,
+      estimated_cost_usd: 0,
+    },
+    pipeline: {
+      total_latency_ms: maxProposerLatency,
+      total_cost_usd: totalCostUsd,
+      total_tokens: totalTokens,
+      proposer_count: config.proposers.length,
+      successful_proposers: successfulDrafts.length,
+      failed_proposers: failedProposers,
+    },
+    // Pairwise judging vs best-draft is meaningless here (the "fused" output
+    // IS the best draft), so leave these null.
+    judge_pairwise: null,
+    judge_vs_drafts: [],
+  }
 }
 
 function emptyScores(): MoAScores {

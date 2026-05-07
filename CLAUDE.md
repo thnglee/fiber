@@ -116,11 +116,11 @@ PLASMO_PUBLIC_API_URL=http://localhost:3000/api
 Core tables:
 - `evaluation_metrics` — one row per summary. Holds ROUGE/BLEU/BERTScore/compression/latency (Axis A) plus `judge_*` columns (rubric JSONB, absolute, justification, cost, latency) and `factuality_*` columns (entailed ratio, claim counts, hallucinations JSONB) for Axis B.
 - `dashboard_actions` — extension user-action log (summarize, fact-check events).
-- `llm_judge_pairwise` — one row per fused-vs-best-draft verdict produced during fusion runs. Linked to `moa_fusion_results` and `routing_decisions`.
+- `llm_judge_pairwise` — one row per pairwise verdict produced during fusion runs. `comparison_type` discriminates `vs_best_draft` / `vs_individual_draft` / `synthesis_vs_ranker`. Linked to `moa_fusion_results` and `routing_decisions`.
 - `human_eval_tasks` — admin-created bundles of (article + K labelled candidate summaries with hidden model/mode). Axis C.
 - `human_eval_responses` — per-rater ranking + rationale. Unique on `(task_id, rater_id)`.
 - `app_settings` — singleton config rows. `judge_config` controls the judge feature (`judge_mode`, default model, default style, `factuality_enabled`).
-- `moa_fusion_results` / `moa_draft_results` — per-fusion-run records (aggregator + each proposer draft).
+- `moa_fusion_results` / `moa_draft_results` — per-fusion-run records (aggregator + each proposer draft). `pipeline_mode` discriminates `moa_synthesis` (aggregator path) vs `llm_ranker` (P0-5 baseline, top-1 ranker draft).
 - `routing_decisions`, `model_configurations` — routing infrastructure.
 
 ## Supported News Sites
@@ -134,11 +134,11 @@ tuoitre.vn, thanhnien.vn, vietnamnet.vn, laodong.vn, tienphong.vn, vtv.vn, nld.c
 - Supabase service role key is server-side only via `getSupabaseAdmin()`
 - Evaluation datasets stored in `metrics_reports/` across 5 topic categories: thoi_su, phap_luat, kinh_te, giao_duc, van_hoa
 
-## Output Fusion (MoA) — Open Investigation
+## Output Fusion (MoA) — Wang et al. 2024 alignment
 
-**Status:** Shipped on `main` (PRs #32, #33, tuning commit `0b00421`). Quality is NOT improving as the paper claims. Experimental branch `fix/moa-aggregator-source-prompt` tried the "inject the original article into the aggregator prompt" hypothesis and **falsified** it — see three-way results below.
+**Status:** MoA is shipped on `main`. Source article is now intentionally injected into the aggregator prompt as a residual connection (Equation 1 in the paper) — this depresses overlap metrics but is required for grounded news summarization. Phase 0 paper-alignment work happens on branch `fusion-refactor` (see `fix_plan.md`); P0-1 to P0-5 + P1-1 are code-complete, P0-6 (data-collection batch) is the next blocker.
 
-**Source of truth:** `fusion.pdf` (Wang et al., 2024, arXiv:2406.04692). The original feature spec (`fusion_PRD.md`) shipped via PR #32 and has been archived out of the root; the live evaluation-redesign direction is captured by the PRDs listed below.
+**Source of truth:** `fusion.pdf` (Wang et al., 2024, arXiv:2406.04692). Deltas + replication strategy: `fix_plan.md` (D1–D10 table, P0/P1/P2 phases, acceptance criteria per task).
 
 ### Three-way batch comparison (3 OpenAI proposers + gpt-4o aggregator, 50 tienphong.vn articles)
 
@@ -176,26 +176,41 @@ Softening the rules (v2) vs strict rules (v1) made no meaningful difference — 
 3. **Document the methodology caveat explicitly** (PRD §7 already flags this): ROUGE/BLEU are computed against the original article, not a human-written reference summary — so they measure content-retention, not summary quality.
 4. **Diverse proposers (Gemini + Anthropic + OpenAI) remains untested** — still worth trying with the LLM-judge metric once that's in place, but overlap metrics are no longer a useful signal here.
 
-### What to try next
+### Phase 0 paper-alignment additions (branch `fusion-refactor`)
 
-- Add an LLM-judge comparator (priority — unblocks the thesis).
-- Re-run the diverse-proposer configuration with LLM-judge (not with overlap metrics alone).
-- Keep `main`'s aggregator prompt as-is (baseline is the best overlap-metric configuration the system is capable of, even though it's not "correctly" implemented per the PRD).
+| Task | What shipped | Where |
+|------|--------------|-------|
+| P0-1 | 150-word cap removed from aggregator | `moa.prompt.ts` |
+| P0-2 | Unified report headlines Axis B; Axis A rendered with caveat box; sign-test p-value column | `scripts/unified-report.ts` |
+| P0-3 | `runFusionVsAllDraftsJudge` + `comparison_type` column (`vs_best_draft` / `vs_individual_draft` / `synthesis_vs_ranker`) + `--judge-vs-all` flag | `moa.evaluation.ts`, migration 023 |
+| P0-4 | `lengthBucketedWinRate` (Dubois 2024, simplified bucket method, MIN_BUCKET_N=5); on-the-fly length lookup from `moa_fusion_results.fused_summary` + `moa_draft_results.summary` | `scripts/stats.ts`, `scripts/unified-report.ts` |
+| P0-5 | `runLLMRankerBaseline` (top-1 ranker draft, no aggregator call); `pipeline_mode` column; `routing_mode='fusion_ranker_only'` | `moa.service.ts`, migration 024, `app/api/summarize/route.ts` |
+| P1-1 | Wang Table 1 alignment test + cite-paper comment block | `moa.prompt.ts`, `__tests__/moa.prompt.alignment.test.ts` |
+
+### What's still open (current todos before thesis)
+
+- **P0-6 — multi-source 50-article execution batch** (synthesis × ranker_only paired runs + synthesis-vs-ranker pairwise comparison; ~250 new verdicts; cost ≤$10). Blocker for thesis Axis B.
+- **`compare-synthesis-vs-ranker.ts` script** — pairs same-article synthesis vs ranker_only outputs and runs `judgePairwise`. Not yet written; needed for P0-6.
+- **20-article human peer study** (Axis C). Build tasks at `/evaluate/admin`, get ≥2 raters, target Fleiss κ ≥ 0.4.
+- After data lands: re-run `npm run report:unified`, walk the decision tree in `fix_plan.md`, write thesis chapters T-1 (methodology alignment) + T-2 (results).
 
 ### Key files
 
-- `backend/output-fusion/moa.service.ts` — orchestration
-- `backend/output-fusion/moa.prompt.ts` — aggregator prompt (main = no source; branch `fix/moa-aggregator-source-prompt` = source injected, falsified)
+- `backend/output-fusion/moa.service.ts` — orchestration; exports `runMoAFusion` + `runLLMRankerBaseline`
+- `backend/output-fusion/moa.prompt.ts` — aggregator prompt; source article injected as residual connection; Wang Table 1 alignment enforced by `__tests__/moa.prompt.alignment.test.ts`
+- `backend/output-fusion/moa.evaluation.ts` — `runFusionPairwiseJudge` (vs best-draft) + `runFusionVsAllDraftsJudge` (vs each draft)
 - `backend/output-fusion/moa.config.ts` — proposer/aggregator defaults
-- `backend/output-fusion/scripts/collect-metrics.ts` — batch harness (`--skip-forced` for fusion-only)
-- `metrics_reports/results/fusion-batch-50*.{json,md}` — three-way evidence
-- `fusion.pdf` — paper (the only spec; original `fusion_PRD.md` archived after feature shipped)
+- `backend/output-fusion/scripts/collect-metrics.ts` — batch harness; `--judge-vs-all` + `--routing-mode fusion_ranker_only`
+- `backend/output-fusion/scripts/stats.ts` — sign test + Fleiss κ + `lengthBucketedWinRate`
+- `metrics_reports/results/fusion-batch-50*.{json,md}` — historical three-way evidence (preserved on `fix/moa-aggregator-source-prompt`)
+- `fix_plan.md` — Phase 0/1/2 paper-alignment plan
+- `fusion.pdf` — paper (the only spec)
 
 ## Three-Axis Evaluation System (the thesis contribution)
 
 The MoA investigation above showed overlap metrics structurally punish editorial-synthesis. So we built a multi-axis evaluation system. The thesis question reframes as: *"Why overlap metrics cannot evaluate Mixture-of-Agents summarization: a three-axis empirical analysis."*
 
-Branch: `feature/llm-judge-evaluation`. All code work is shipped; only the human study itself (running rater sessions) remains.
+Branch: `feature/llm-judge-evaluation` (three-axis foundations) → `fusion-refactor` (Phase 0 paper-alignment add-ons). All code work is shipped; remaining work is data collection (P0-6 batch + human study).
 
 ### The three axes
 
@@ -224,12 +239,17 @@ backend/services/
   factuality.runner.ts         glue, mirrors llm-judge.runner.ts
 
 backend/output-fusion/
-  moa.evaluation.ts            pickBestDraftForJudge + runFusionPairwiseJudge
-  moa.persistence.ts           saveLLMJudgePairwise
+  moa.service.ts               runMoAFusion (synthesis) + runLLMRankerBaseline (ranker_only, P0-5)
+  moa.evaluation.ts            pickBestDraftByJudge + runFusionPairwiseJudge (vs_best_draft) +
+                               runFusionVsAllDraftsJudge (vs_individual_draft, P0-3)
+  moa.persistence.ts           saveLLMJudgePairwise (writes comparison_type + pipeline_mode)
   scripts/stats.ts             mean, stdev, signTestPValue, pairedMetricStats,
-                               fleissKappa, fleissKappaFromRankings, aggregateRankings
-  scripts/collect-metrics.ts   batch harness — --judge-mode/--judge-style/--judge-model/--stats-only
-  scripts/unified-report.ts    pulls all 3 axes from Supabase → one Markdown report
+                               fleissKappa, fleissKappaFromRankings, aggregateRankings,
+                               lengthBucketedWinRate (P0-4, simplified Dubois bucket method)
+  scripts/collect-metrics.ts   batch harness — --judge-mode/--judge-style/--judge-model/
+                               --stats-only/--judge-vs-all/--routing-mode
+  scripts/unified-report.ts    pulls all 3 axes from Supabase → Markdown; Axis B headlined,
+                               raw + length-bucketed win rate, sign-test p-value, B.2b per-draft table
 
 backend/app/
   api/settings/judge/route.ts  GET/PATCH judge_config (mirrors /api/settings/routing pattern)
@@ -250,6 +270,9 @@ backend/supabase/migrations/
   019_add_llm_judge.sql        judge_* columns + llm_judge_pairwise table + judge_config seed
   020_add_factuality.sql       factuality_* columns + factuality defaults merged into judge_config
   021_add_human_eval.sql       human_eval_tasks + human_eval_responses with RLS
+  023_add_comparison_type.sql  llm_judge_pairwise.comparison_type
+                               (vs_best_draft | vs_individual_draft | synthesis_vs_ranker)
+  024_add_pipeline_mode.sql    moa_fusion_results.pipeline_mode (moa_synthesis | llm_ranker)
 ```
 
 ### How to use
@@ -296,8 +319,9 @@ npm run report:unified -- --since 2026-04-01 --task-ids <uuid1>,<uuid2> --json
 
 ```bash
 npm run test:judge      # llm-judge.service + runner tests
-npm run test:moa        # MoA fusion tests (1 known-pre-existing failure on prompt literal)
+npm run test:moa        # MoA fusion tests (currently 31/31 pass, includes runLLMRankerBaseline + vs-all-drafts)
 npx tsx --test output-fusion/__tests__/stats.test.ts \
+  output-fusion/__tests__/moa.prompt.alignment.test.ts \
   services/__tests__/factuality.service.test.ts
 ```
 
@@ -320,10 +344,14 @@ npx tsx --test output-fusion/__tests__/stats.test.ts \
 
 ### Status
 
-All code shipped. Live counts in Supabase: ~2050 evaluation rows, 28 pairwise verdicts (J9 thesis batch), 0 human-eval responses. Only remaining work is the **20-article peer study** itself — sit down with 2 raters and use `/evaluate/admin` to mint share URLs, then re-run `npm run report:unified` to refresh Axis C in the report. No more code required.
+All three-axis code shipped + Phase 0 paper-alignment code shipped on `fusion-refactor`. Live Supabase counts (as of 2026-05-07): ~2050 evaluation rows, 29 pairwise verdicts (`vs_best_draft` only), 0 human-eval responses. Two remaining data-collection blockers before thesis writing:
+
+1. **P0-6 batch** (~250 new pairwise verdicts; 50 multi-source articles × 2 pipeline modes × judge-vs-all + paired synthesis-vs-ranker comparison). Requires `compare-synthesis-vs-ranker.ts` to be written. Cost ≤$10.
+2. **20-article human peer study** (Axis C) with ≥2 raters. Use `/evaluate/admin` → share `/evaluate?task=<uuid>` → aggregate via `/api/human-eval/report`. Target Fleiss κ ≥ 0.4.
 
 ### Branch hygiene
 
-- `feature/llm-judge-evaluation` — the three-axis system. Active.
-- `fix/moa-aggregator-source-prompt` — experimental artefact (v1 strict article-in-prompt). **Do NOT merge to main** — preserves the falsification evidence + the `fusion-batch-50-with-source.{json,md}` and `fusion-batch-50-source-v2.{json,md}` batches.
-- `main` — untouched by the evaluation redesign.
+- `main` — three-axis foundations + source-article-in-aggregator (intentional residual connection).
+- `fusion-refactor` — Phase 0 paper-alignment (P0-1..P0-5 + P1-1). Pending merge after P0-6 data lands.
+- `fix/moa-aggregator-source-prompt` — historical falsification artefact. **Do NOT merge** — preserves `fusion-batch-50-with-source.{json,md}` and `fusion-batch-50-source-v2.{json,md}`.
+- `feature/llm-judge-evaluation` — origin of the three-axis system; folded into `main`.
