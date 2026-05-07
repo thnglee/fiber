@@ -172,6 +172,7 @@ function makeDeps(): MoADependencies {
     generateJsonCompletion,
     scoreSummary: makeScoreStub(),
     runFusionPairwiseJudge: async () => null,
+    runFusionVsAllDraftsJudge: async () => [],
   }
 }
 
