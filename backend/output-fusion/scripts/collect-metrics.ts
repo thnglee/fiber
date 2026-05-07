@@ -123,9 +123,21 @@ const JUDGE_STYLE = (() => {
 })() as JudgeStyle
 const JUDGE_MODEL = getArg("judge-model", "gpt-4o-mini")
 const JUDGE_ENABLED = JUDGE_MODE !== "metrics_only"
+const JUDGE_VS_ALL = args.includes("--judge-vs-all")
+if (JUDGE_VS_ALL && !JUDGE_ENABLED) {
+  console.error(
+    "--judge-vs-all requires --judge-mode=judge_only|both (judge must be enabled).",
+  )
+  process.exit(1)
+}
 
 const JUDGE_CONFIG_BODY = JUDGE_ENABLED
-  ? { judge_mode: JUDGE_MODE, judge_style: JUDGE_STYLE, judge_model: JUDGE_MODEL }
+  ? {
+      judge_mode: JUDGE_MODE,
+      judge_style: JUDGE_STYLE,
+      judge_model: JUDGE_MODEL,
+      ...(JUDGE_VS_ALL ? { judge_vs_all_drafts: true } : {}),
+    }
   : null
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -170,6 +182,7 @@ interface JudgePairwiseBlock {
   cost_usd?: number | null
   latency_ms?: number | null
   position_swapped?: boolean | null
+  comparison_type?: string | null
 }
 
 interface ForcedRun {
@@ -204,6 +217,7 @@ interface FusionRun {
     estimated_cost_usd?: number | null
   }>
   judge_pairwise?: JudgePairwiseBlock | null
+  judge_vs_drafts?: JudgePairwiseBlock[]
   error?: string
 }
 
@@ -358,33 +372,40 @@ async function runFusion(url: string): Promise<FusionRun> {
         error: "Response missing `fusion` payload",
       }
     }
-    const judgePairwise = fusion.judge_pairwise as
-      | Record<string, unknown>
-      | null
-      | undefined
-    const judge_pairwise: JudgePairwiseBlock | null = judgePairwise
-      ? {
-          winner: judgePairwise.winner as string,
-          winner_label: (judgePairwise.winner_label as string | null) ?? null,
-          summary_a_label:
-            (judgePairwise.summary_a_label as string) ?? "fused",
-          summary_b_label:
-            (judgePairwise.summary_b_label as string) ?? "best_draft",
-          per_dimension:
-            (judgePairwise.per_dimension as Record<string, string>) ?? {},
-          justification:
-            (judgePairwise.justification as string | null) ?? null,
-          length_note: (judgePairwise.length_note as string | null) ?? null,
-          judge_model:
-            (judgePairwise.judge_model as string) ?? JUDGE_MODEL,
-          cost_usd:
-            (judgePairwise.cost_usd as number | null | undefined) ?? null,
-          latency_ms:
-            (judgePairwise.latency_ms as number | null | undefined) ?? null,
-          position_swapped:
-            (judgePairwise.position_swapped as boolean | null | undefined) ?? null,
-        }
-      : null
+    const mapVerdict = (raw: Record<string, unknown> | null | undefined): JudgePairwiseBlock | null => {
+      if (!raw) return null
+      return {
+        winner: raw.winner as string,
+        winner_label: (raw.winner_label as string | null) ?? null,
+        summary_a_label: (raw.summary_a_label as string) ?? "fused",
+        summary_b_label: (raw.summary_b_label as string) ?? "best_draft",
+        per_dimension: (raw.per_dimension as Record<string, string>) ?? {},
+        justification: (raw.justification as string | null) ?? null,
+        length_note: (raw.length_note as string | null) ?? null,
+        judge_model: (raw.judge_model as string) ?? JUDGE_MODEL,
+        // Backend uses both `cost_usd` (legacy) and `judge_cost_usd` (verdict
+        // shape on `judge_vs_drafts`). Try both.
+        cost_usd:
+          (raw.cost_usd as number | null | undefined) ??
+          (raw.judge_cost_usd as number | null | undefined) ??
+          null,
+        latency_ms:
+          (raw.latency_ms as number | null | undefined) ??
+          (raw.judge_latency_ms as number | null | undefined) ??
+          null,
+        position_swapped:
+          (raw.position_swapped as boolean | null | undefined) ?? null,
+        comparison_type: (raw.comparison_type as string | null | undefined) ?? null,
+      }
+    }
+    const judge_pairwise = mapVerdict(
+      fusion.judge_pairwise as Record<string, unknown> | null | undefined,
+    )
+    const judge_vs_drafts: JudgePairwiseBlock[] = Array.isArray(fusion.judge_vs_drafts)
+      ? (fusion.judge_vs_drafts as Array<Record<string, unknown>>)
+          .map(v => mapVerdict(v))
+          .filter((v): v is JudgePairwiseBlock => v !== null)
+      : []
 
     return {
       mode: "fusion",
@@ -404,6 +425,7 @@ async function runFusion(url: string): Promise<FusionRun> {
           (d.estimated_cost_usd as number | null | undefined) ?? null,
       })),
       judge_pairwise,
+      judge_vs_drafts,
     }
   } catch (err) {
     return {

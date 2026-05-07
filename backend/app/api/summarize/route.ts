@@ -72,8 +72,10 @@ export async function POST(request: NextRequest) {
 
     // ============================================================================
     // FUSION MODE — MoA pipeline (N proposers → aggregator)
+    //   • routing_mode='fusion'             → full synthesis (runMoAFusion)
+    //   • routing_mode='fusion_ranker_only' → LLM-ranker baseline (no aggregator)
     // ============================================================================
-    if (routingMode === 'fusion') {
+    if (routingMode === 'fusion' || routingMode === 'fusion_ranker_only') {
       if (isStreaming) {
         return NextResponse.json(
           { error: 'Streaming is not supported in fusion mode' },
@@ -97,14 +99,16 @@ export async function POST(request: NextRequest) {
       }
 
       const { buildMoAConfig } = await import('@/output-fusion/moa.config')
-      const { runMoAFusion } = await import('@/output-fusion/moa.service')
+      const { runMoAFusion, runLLMRankerBaseline } = await import('@/output-fusion/moa.service')
       const { MoAInsufficientDraftsError } = await import('@/output-fusion/moa.types')
       const { saveMoAFusionResult, saveLLMJudgePairwise } = await import('@/output-fusion/moa.persistence')
+      const isRankerBaseline = routingMode === 'fusion_ranker_only'
 
       let moaConfig
       try {
         moaConfig = await buildMoAConfig(fusionConfigOverride)
         moaConfig.judgeOverride = judgeConfigOverride
+        moaConfig.judgeVsAllDrafts = judgeConfigOverride?.judge_vs_all_drafts === true
       } catch (configErr) {
         return NextResponse.json(
           {
@@ -117,7 +121,16 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        const fusionResult = await runMoAFusion(articleText, website, moaConfig)
+        const fusionResult = isRankerBaseline
+          ? await runLLMRankerBaseline(articleText, website, moaConfig)
+          : await runMoAFusion(articleText, website, moaConfig)
+
+        // Tag downstream rows so reports can split synthesis vs ranker.
+        // (`runLLMRankerBaseline` already prefixes aggregator.model_name with
+        // "ranker:", so we strip and re-add to keep the format stable.)
+        const modelTag = isRankerBaseline
+          ? `ranker:${fusionResult.aggregator.model_name.replace(/^ranker:/, '')}`
+          : `moa:${fusionResult.aggregator.model_name}`
 
         // Save routing decision + persist fusion detail + evaluation row (fire-and-forget)
         const { saveRoutingDecision, estimateTokenCount, classifyComplexity } = await import('@/services/routing.service')
@@ -130,8 +143,8 @@ export async function POST(request: NextRequest) {
               article_tokens: estimateTokenCount(articleText),
               category: fusionResult.fused.category,
               complexity,
-              routing_mode: 'fusion',
-              selected_model: `moa:${fusionResult.aggregator.model_name}`,
+              routing_mode: isRankerBaseline ? 'fusion_ranker_only' : 'fusion',
+              selected_model: modelTag,
               fallback_used: fusionResult.pipeline.failed_proposers.length > 0,
               fallback_reason: fusionResult.pipeline.failed_proposers.length > 0
                 ? `Proposers failed: ${fusionResult.pipeline.failed_proposers.join(', ')}`
@@ -156,6 +169,21 @@ export async function POST(request: NextRequest) {
               )
             }
 
+            // Persist per-draft verdicts (judge_vs_all_drafts mode). Each row
+            // gets comparison_type='vs_individual_draft' via the verdict shape.
+            if (fusionResult.judge_vs_drafts && fusionResult.judge_vs_drafts.length > 0) {
+              await Promise.all(
+                fusionResult.judge_vs_drafts.map(verdict =>
+                  saveLLMJudgePairwise({ verdict, routingId, fusionId }).catch(err =>
+                    console.error(
+                      '[Summarize Fusion] Failed to save vs-draft verdict:',
+                      err,
+                    ),
+                  ),
+                ),
+              )
+            }
+
             const { saveEvaluationMetrics } = await import('@/services/evaluation.service')
             const { runJudgeForSummary } = await import('@/services/llm-judge.runner')
             const judgeFields = await runJudgeForSummary(
@@ -177,8 +205,8 @@ export async function POST(request: NextRequest) {
                 total_tokens: fusionResult.pipeline.total_tokens,
               },
               latency: fusionResult.pipeline.total_latency_ms,
-              mode: 'fusion',
-              model: `moa:${fusionResult.aggregator.model_name}`,
+              mode: isRankerBaseline ? 'fusion_ranker_only' : 'fusion',
+              model: modelTag,
               promptTokens: fusionResult.aggregator.prompt_tokens ?? undefined,
               completionTokens: fusionResult.aggregator.completion_tokens ?? undefined,
               estimatedCostUsd: fusionResult.pipeline.total_cost_usd ?? undefined,
@@ -214,7 +242,7 @@ export async function POST(request: NextRequest) {
             },
             category: fusionResult.fused.category,
             tokenUsage,
-            model: `moa:${fusionResult.aggregator.model_name}`,
+            model: modelTag,
             userIp: getClientIP(request.headers),
             website: website || 'unknown',
             userAgent: request.headers.get('user-agent') || 'unknown',
@@ -226,7 +254,7 @@ export async function POST(request: NextRequest) {
           summary: fusionResult.fused.summary,
           category: fusionResult.fused.category,
           readingTime: fusionResult.fused.readingTime,
-          model: `moa:${fusionResult.aggregator.model_name}`,
+          model: modelTag,
           usage: {
             prompt_tokens: fusionResult.aggregator.prompt_tokens ?? undefined,
             completion_tokens: fusionResult.aggregator.completion_tokens ?? undefined,

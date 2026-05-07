@@ -334,3 +334,130 @@ export function aggregateRankings(
     }
   })
 }
+
+// ─── Length-bucketed win rate (simplified length control) ─────────────────
+//
+// Wang et al. (2024) report Length-Controlled (LC) win rate per Dubois et al.
+// (2024, https://arxiv.org/abs/2404.04475), which fits a logistic regression
+// to neutralize judge length bias. With n < 200 per fusion run, full logistic
+// regression is overkill — we instead bucket verdicts by length-ratio (A/B)
+// and report the mean win rate across buckets that have enough data. This
+// removes most of the length confound without overfitting on tiny samples.
+//
+// Buckets:
+//   - "A shorter"      : ratio < 0.85
+//   - "length matched" : 0.85 ≤ ratio ≤ 1.15
+//   - "A longer"       : ratio > 1.15
+//
+// `bucketedWinRate` is the unweighted mean of per-bucket win rates over
+// buckets with ≥ MIN_BUCKET_N decisive verdicts. If no bucket qualifies, it
+// falls back to the raw win rate.
+
+export interface LengthBucketedVerdict {
+  /** "A" / "B" / "tie" — convention matches MoAJudgePairwiseResult.winner. */
+  winner: "A" | "B" | "tie" | string
+  /** Character (or token) length of summary A. */
+  lenA: number
+  /** Character (or token) length of summary B. */
+  lenB: number
+}
+
+export interface LengthBucket {
+  range: string
+  n: number
+  decisive: number
+  a_wins: number
+  b_wins: number
+  ties: number
+  win_rate_a: number
+}
+
+export interface LengthBucketedResult {
+  /** Total decisive verdicts (ties excluded). */
+  n_decisive: number
+  /** Raw fraction of decisive verdicts where A won. */
+  raw_win_rate_a: number
+  /** Mean of per-bucket win rates for buckets with ≥ MIN_BUCKET_N decisive verdicts. */
+  bucketed_win_rate_a: number
+  /** Whether bucketing was applied (false = fell back to raw). */
+  bucketed: boolean
+  /** Mean of (lenA / lenB) across all input verdicts (including ties). */
+  avg_len_ratio: number
+  /** Per-bucket detail; useful for the length-distribution table. */
+  buckets: LengthBucket[]
+}
+
+const MIN_BUCKET_N = 5
+
+export function lengthBucketedWinRate(
+  verdicts: LengthBucketedVerdict[],
+): LengthBucketedResult {
+  // Skip rows where we cannot compute a ratio. Zero-length B would divide-by-zero;
+  // treat as missing.
+  const usable = verdicts.filter(
+    v => Number.isFinite(v.lenA) && Number.isFinite(v.lenB) && v.lenB > 0,
+  )
+
+  const buckets: Record<string, LengthBucket> = {
+    "A shorter (<0.85)": { range: "<0.85", n: 0, decisive: 0, a_wins: 0, b_wins: 0, ties: 0, win_rate_a: 0 },
+    "matched (0.85–1.15)": { range: "0.85–1.15", n: 0, decisive: 0, a_wins: 0, b_wins: 0, ties: 0, win_rate_a: 0 },
+    "A longer (>1.15)": { range: ">1.15", n: 0, decisive: 0, a_wins: 0, b_wins: 0, ties: 0, win_rate_a: 0 },
+  }
+  const bucketKeys = Object.keys(buckets)
+
+  let ratioSum = 0
+  let aWins = 0
+  let bWins = 0
+  let ties = 0
+
+  for (const v of usable) {
+    const ratio = v.lenA / v.lenB
+    ratioSum += ratio
+    const key =
+      ratio < 0.85
+        ? bucketKeys[0]
+        : ratio > 1.15
+          ? bucketKeys[2]
+          : bucketKeys[1]
+    const b = buckets[key]
+    b.n += 1
+    if (v.winner === "A") {
+      b.a_wins += 1
+      b.decisive += 1
+      aWins += 1
+    } else if (v.winner === "B") {
+      b.b_wins += 1
+      b.decisive += 1
+      bWins += 1
+    } else {
+      b.ties += 1
+      ties += 1
+    }
+  }
+
+  for (const key of bucketKeys) {
+    const b = buckets[key]
+    b.win_rate_a = b.decisive > 0 ? b.a_wins / b.decisive : 0
+  }
+
+  const decisive = aWins + bWins
+  const raw = decisive > 0 ? aWins / decisive : 0
+
+  const qualifyingBuckets = bucketKeys
+    .map(k => buckets[k])
+    .filter(b => b.decisive >= MIN_BUCKET_N)
+  const bucketed =
+    qualifyingBuckets.length > 0
+      ? qualifyingBuckets.reduce((s, b) => s + b.win_rate_a, 0) /
+        qualifyingBuckets.length
+      : raw
+
+  return {
+    n_decisive: decisive,
+    raw_win_rate_a: raw,
+    bucketed_win_rate_a: bucketed,
+    bucketed: qualifyingBuckets.length > 0,
+    avg_len_ratio: usable.length > 0 ? ratioSum / usable.length : 0,
+    buckets: bucketKeys.map(k => buckets[k]),
+  }
+}
