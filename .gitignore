@@ -38,3 +38,15 @@ Thumbs.db
 *.log
 npm-debug.log*
 yarn-debug.log*
+
+# LaTeX build artefacts (regenerated on every PDF build)
+*.aux
+*.toc
+*.out
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg

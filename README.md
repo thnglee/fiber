@@ -41,8 +41,7 @@ Fiber injects a sidebar into supported Vietnamese news sites, generates LLM-powe
 ├── bert/               # BERTScore microservice (FastAPI + Python + PhoBERT)
 ├── shared/             # Shared TypeScript types
 ├── metrics_reports/    # Original eval-metrics CSV pipeline (5 topic categories)
-├── fusion_reports/     # MoA fusion + LLM-judge batch outputs
-└── docs/               # Documentation
+└── fusion_reports/     # MoA fusion + LLM-judge batch outputs
 ```
 
 ## Tech Stack
