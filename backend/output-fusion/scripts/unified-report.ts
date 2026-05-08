@@ -514,6 +514,138 @@ function buildAxisB2(
   return entries
 }
 
+// ─── Axis B.2c — synthesis vs ranker (paired pipelines) ───────────────────
+
+interface AxisB2CEntry {
+  n: number
+  synthesis_wins: number
+  ranker_wins: number
+  ties: number
+  synthesis_win_rate: number
+  sign_test_p: number | null
+  judge_models: string[]
+  length_stats: LengthBucketedResult | null
+}
+
+/**
+ * For `synthesis_vs_ranker` verdicts, only the synthesis fusion_id is persisted
+ * in `llm_judge_pairwise.fusion_id` (see compare-synthesis-vs-ranker.ts). To
+ * compute lenA/lenB we join: verdict.fusion_id → synthesis row's
+ * fused_summary + article_url, then look up the most recent
+ * pipeline_mode='llm_ranker' row for that article_url. Mirrors the pairing
+ * heuristic used by the compare script.
+ */
+async function fetchSynthesisRankerLengths(
+  rows: PairwiseRow[],
+): Promise<Map<string, { lenA: number; lenB: number }>> {
+  const out = new Map<string, { lenA: number; lenB: number }>()
+  const candidates = rows.filter(
+    r => r.comparison_type === "synthesis_vs_ranker" && !!r.fusion_id,
+  )
+  if (candidates.length === 0) return out
+
+  const fusionIds = Array.from(new Set(candidates.map(r => r.fusion_id!)))
+  const { data: synthRows, error: sErr } = await supabase
+    .from("moa_fusion_results")
+    .select("id, article_url, fused_summary")
+    .in("id", fusionIds)
+  if (sErr) throw new Error(`moa_fusion_results synthesis: ${sErr.message}`)
+
+  const synthByFusionId = new Map<string, { article_url: string; len: number }>()
+  for (const r of (synthRows ?? []) as Array<{
+    id: string
+    article_url: string | null
+    fused_summary: string | null
+  }>) {
+    if (!r.article_url) continue
+    synthByFusionId.set(r.id, {
+      article_url: r.article_url,
+      len: r.fused_summary?.length ?? 0,
+    })
+  }
+
+  const articleUrls = Array.from(
+    new Set(Array.from(synthByFusionId.values()).map(v => v.article_url)),
+  )
+  if (articleUrls.length === 0) return out
+
+  const { data: rankerRows, error: rErr } = await supabase
+    .from("moa_fusion_results")
+    .select("article_url, fused_summary, created_at")
+    .eq("pipeline_mode", "llm_ranker")
+    .in("article_url", articleUrls)
+    .order("created_at", { ascending: false })
+  if (rErr) throw new Error(`moa_fusion_results ranker: ${rErr.message}`)
+
+  // Latest ranker per article_url — matches compare-synthesis-vs-ranker.ts.
+  const rankerLenByUrl = new Map<string, number>()
+  for (const r of (rankerRows ?? []) as Array<{
+    article_url: string | null
+    fused_summary: string | null
+  }>) {
+    if (!r.article_url) continue
+    if (!rankerLenByUrl.has(r.article_url)) {
+      rankerLenByUrl.set(r.article_url, r.fused_summary?.length ?? 0)
+    }
+  }
+
+  for (const r of candidates) {
+    const synth = synthByFusionId.get(r.fusion_id!)
+    if (!synth || synth.len === 0) continue
+    const lenB = rankerLenByUrl.get(synth.article_url)
+    if (lenB == null || lenB === 0) continue
+    out.set(r.id, { lenA: synth.len, lenB })
+  }
+  return out
+}
+
+function buildAxisB2C(
+  rows: PairwiseRow[],
+  lengthByVerdictId: Map<string, { lenA: number; lenB: number }>,
+): AxisB2CEntry | null {
+  const filtered = rows.filter(r => r.comparison_type === "synthesis_vs_ranker")
+  if (filtered.length === 0) return null
+
+  // Convention from compare-synthesis-vs-ranker.ts: A=synthesis, B=ranker.
+  let synthesis_wins = 0
+  let ranker_wins = 0
+  let ties = 0
+  for (const r of filtered) {
+    if (r.winner === "A") synthesis_wins++
+    else if (r.winner === "B") ranker_wins++
+    else ties++
+  }
+  const decisive = synthesis_wins + ranker_wins
+  const synthesis_win_rate = decisive > 0 ? synthesis_wins / decisive : 0
+  const sign_test_p =
+    decisive > 0
+      ? signTestPValue(Math.max(synthesis_wins, ranker_wins), decisive)
+      : null
+  const judge_models = Array.from(
+    new Set(filtered.map(r => r.judge_model).filter(Boolean)),
+  ) as string[]
+
+  const lengthVerdicts: LengthBucketedVerdict[] = []
+  for (const r of filtered) {
+    const lens = lengthByVerdictId.get(r.id)
+    if (!lens) continue
+    lengthVerdicts.push({ winner: r.winner, lenA: lens.lenA, lenB: lens.lenB })
+  }
+  const length_stats =
+    lengthVerdicts.length > 0 ? lengthBucketedWinRate(lengthVerdicts) : null
+
+  return {
+    n: filtered.length,
+    synthesis_wins,
+    ranker_wins,
+    ties,
+    synthesis_win_rate,
+    sign_test_p,
+    judge_models,
+    length_stats,
+  }
+}
+
 // ─── Axis B.2b — fused vs each individual proposer draft ───────────────────
 
 interface AxisB2DraftEntry {
@@ -919,6 +1051,53 @@ function renderAxisB2Drafts(entries: AxisB2DraftEntry[]): string {
   return lines.join("\n")
 }
 
+function renderAxisB2C(entry: AxisB2CEntry | null): string {
+  const lines: string[] = []
+  lines.push("### B.2c LLM-Judge pairwise — synthesis vs ranker")
+  lines.push("")
+  if (!entry) {
+    lines.push(
+      "_(no `synthesis_vs_ranker` verdicts in window — run `compare-synthesis-vs-ranker.ts` after paired synthesis + ranker_only batches)_",
+    )
+    lines.push("")
+    return lines.join("\n")
+  }
+  lines.push(
+    "Wang et al. (2024) Figure 4a applied to our domain: does MoA actually " +
+      "*aggregate* (synthesis wins) or merely *select* (synthesis ties / loses)? " +
+      "Sign test: two-sided, ties excluded, H₀ = P(synthesis wins) = 0.5.",
+  )
+  lines.push("")
+  lines.push(
+    "| n | Synthesis wins | Ranker wins | Ties | Synthesis win rate | Sign-test p | Judge model(s) |",
+  )
+  lines.push("|---|---|---|---|---|---|---|")
+  const decisive = entry.synthesis_wins + entry.ranker_wins
+  const winRate = `${(entry.synthesis_win_rate * 100).toFixed(1)}%`
+  const pCell =
+    entry.sign_test_p == null
+      ? "—"
+      : `${entry.sign_test_p.toFixed(4)}${decisive < 5 ? " ⚠" : ""}`
+  lines.push(
+    `| ${entry.n} | ${entry.synthesis_wins} | ${entry.ranker_wins} | ${entry.ties} | ${winRate} | ${pCell} | ${entry.judge_models.join(", ") || "—"} |`,
+  )
+  lines.push("")
+  lines.push("⚠ = fewer than 5 decisive verdicts; sign-test power too low.")
+  lines.push("")
+  if (entry.length_stats && entry.length_stats.n_decisive > 0) {
+    lines.push("**Length-controlled view:**")
+    lines.push("")
+    for (const row of renderLengthRow(
+      "synthesis vs ranker",
+      entry.length_stats,
+    )) {
+      lines.push(row)
+    }
+    lines.push("")
+  }
+  return lines.join("\n")
+}
+
 function renderAxisB3(entries: AxisB3Entry[]): string {
   const lines: string[] = []
   lines.push("### B.3 Factuality (claim-entailment via gpt-4o-mini)")
@@ -1024,6 +1203,9 @@ async function main() {
     `summary lengths     fusion=${fusedByFusionId.size} drafts=${draftByFusionAndModel.size}`,
   )
 
+  const synthRankerLengths = await fetchSynthesisRankerLengths(pairwiseRows)
+  console.log(`synthesis-vs-ranker length pairs: ${synthRankerLengths.size}`)
+
   const axisA = buildAxisA(evalRows)
   const axisB1 = buildAxisB1(evalRows)
   const axisB2 = buildAxisB2(pairwiseRows, fusedByFusionId, draftByFusionAndModel)
@@ -1032,6 +1214,7 @@ async function main() {
     fusedByFusionId,
     draftByFusionAndModel,
   )
+  const axisB2C = buildAxisB2C(pairwiseRows, synthRankerLengths)
   const axisB3 = buildAxisB3(evalRows)
   const axisC = buildAxisC(humanEval.tasks, humanEval.responses)
 
@@ -1059,6 +1242,7 @@ async function main() {
   md.push(renderAxisB1(axisB1))
   md.push(renderAxisB2(axisB2))
   md.push(renderAxisB2Drafts(axisB2Drafts))
+  md.push(renderAxisB2C(axisB2C))
   md.push(renderAxisB3(axisB3))
   md.push(renderAxisC(axisC))
   md.push(renderAxisA(axisA))
@@ -1084,6 +1268,7 @@ async function main() {
           axis_b1: axisB1,
           axis_b2: axisB2,
           axis_b2_drafts: axisB2Drafts,
+          axis_b2c: axisB2C,
           axis_b3: axisB3,
           axis_c: axisC,
         },
