@@ -58,9 +58,7 @@ export function buildAggregatorPrompt(
 
 Điều quan trọng là phải đánh giá có phản biện những thông tin trong các bản tóm tắt được đề xuất, nhận thức rằng một số thông tin có thể bị thiên lệch hoặc sai lệch. Bản tóm tắt của bạn KHÔNG nên chỉ sao chép nguyên văn các bản tóm tắt được đưa ra; thay vào đó hãy đưa ra một câu trả lời đã được tinh chỉnh, chính xác và toàn diện. Đảm bảo bản tóm tắt có cấu trúc tốt, mạch lạc, trung lập theo phong cách báo chí Việt Nam, và tuân thủ tiêu chuẩn cao nhất về độ chính xác và độ tin cậy.
 
-Hãy đối chiếu các bản tóm tắt với bài viết gốc bên dưới để đảm bảo tính chính xác về sự kiện.
-
-Yêu cầu về độ dài: cô đọng, đủ ý, không bịa thông tin.
+Hãy đối chiếu các bản tóm tắt với bài viết gốc bên dưới để đảm bảo tính chính xác về sự kiện. Không bịa thông tin không có trong bài gốc; còn lại hãy viết đầy đủ ý, không bị cắt ngắn.
 
 Bài viết gốc (để đối chiếu):
 """
@@ -73,7 +71,7 @@ ${draftBlocks}
 Sau khi tổng hợp, hãy phân loại bài viết và ước tính thời gian đọc.
 
 Yêu cầu đầu ra (JSON có cấu trúc, đúng schema):
-- summary: Bản tóm tắt tổng hợp cuối cùng (tiếng Việt, cô đọng, đủ ý).
+- summary: Bản tóm tắt tổng hợp cuối cùng (tiếng Việt). Viết đầy đủ ý từ bài gốc, không tự cắt ngắn.
 - category: Thể loại chính của bài viết. Nếu phù hợp, dùng một trong các giá trị sau:
   * Chính trị - Xã hội
   * Kinh tế - Tài chính

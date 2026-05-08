@@ -1,0 +1,989 @@
+{
+  "started_at": "2026-05-08T04:40:58.062Z",
+  "finished_at": "2026-05-08T04:44:34.084Z",
+  "api_base": "http://localhost:3000",
+  "proposers": [
+    "gpt-4o-mini",
+    "gemini-2.5-flash",
+    "claude-haiku-4-5"
+  ],
+  "aggregator": "gpt-4o",
+  "records": [
+    {
+      "index": 1,
+      "url": "https://tienphong.vn/tim-thay-thi-the-nguoi-me-tre-dang-mang-thai-va-con-gai-duoi-ho-nuoc-o-dak-lak-post1823800.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 21942,
+        "total_cost_usd": 0.009726849999999999,
+        "total_tokens": 5637,
+        "fused_summary": "Ngày 27/2, tại xã Ea Tul, tỉnh Đắk Lắk, một vụ việc thương tâm xảy ra khi chị H.B.K. (sinh năm 2007) cùng con gái nhỏ sinh năm 2022 được phát hiện tử vong dưới hồ nước gần nhà. Thời điểm xảy ra sự việc, chị H.B.K. đang mang thai 21 tuần. Trong ngày, khi người thân đi làm rẫy, chị ở nhà cùng con gái. Đến tối, gia đình không thấy hai mẹ con nên tổ chức tìm kiếm và phát hiện các vật dụng của chị, bao gồm hai đôi dép và áo khoác, trên bờ hồ cách nhà mẹ đẻ khoảng 1km. Thi thể của chị H.B.K. được tìm thấy vào khoảng 23h cùng ngày, còn thi thể cháu nhỏ được phát hiện vào khoảng 2 giờ sáng 28/2. Gia đình chị thuộc diện khó khăn, và sau sự việc, Ban tự quản buôn Kdoh đã báo cáo các đơn vị chức năng xã để hỗ trợ gia đình. Hiện nguyên nhân dẫn đến cái chết của mẹ con chị đang được cơ quan chức năng điều tra làm rõ.",
+        "fused_scores": {
+          "rouge1": 0.6786,
+          "rouge2": 0.555,
+          "rougeL": 0.5128,
+          "bleu": 0.3349,
+          "bert_score": 0.740604,
+          "compression_rate": 65
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4193,
+            "scores": {
+              "rouge1": 0.2806,
+              "rouge2": 0.2276,
+              "rougeL": 0.2296,
+              "bleu": 0.0499,
+              "bert_score": 0.690552,
+              "compression_rate": 28.16
+            },
+            "estimated_cost_usd": 0.00019965
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 5741,
+            "scores": {
+              "rouge1": 0.4923,
+              "rouge2": 0.3478,
+              "rougeL": 0.3571,
+              "bleu": 0.1469,
+              "bert_score": 0.632813,
+              "compression_rate": 45.79
+            },
+            "estimated_cost_usd": 0.0002451
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 3347,
+            "scores": {
+              "rouge1": 0.5434,
+              "rouge2": 0.4348,
+              "rougeL": 0.4464,
+              "bleu": 0.218,
+              "bert_score": 0.674449,
+              "compression_rate": 51.05
+            },
+            "estimated_cost_usd": 0.0028296
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gemini-2.5-flash",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản A cung cấp đầy đủ thông tin chi tiết về sự kiện, bao gồm thời gian và hoàn cảnh xảy ra sự việc, trong khi bản B thiếu một số chi tiết quan trọng như vị trí tìm thấy và các vật dụng của nạn nhân.",
+          "length_note": "Bản A dài hơn nhưng không bỏ sót thông tin cần thiết.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.0002523,
+          "latency_ms": 2277,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 2,
+      "url": "https://tienphong.vn/nguyen-lanh-dao-tphcm-chia-se-bi-kip-voi-ung-cu-vien-dai-bieu-quoc-hoi-trong-do-tuoi-doan-post1823794.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 27317,
+        "total_cost_usd": 0.0158621,
+        "total_tokens": 9660,
+        "fused_summary": "Nguyên Chủ tịch HĐND TPHCM Phạm Phương Thảo đã chia sẻ kinh nghiệm và nhấn mạnh tầm quan trọng của vai trò đại biểu Quốc hội (ĐBQH) và đại biểu HĐND tại chương trình bồi dưỡng cho ứng cử viên đại biểu Quốc hội khóa XVI và HĐND các cấp nhiệm kỳ 2026-2031, do Thành Đoàn TPHCM tổ chức. Bà Thảo ví việc trở thành ĐBQH như bước vào một trường đại học lớn, nơi các đại biểu không chỉ tiếp cận nhiều thông tin về tình hình trong nước và quốc tế mà còn rèn luyện kỹ năng hoạt động nghị trường. Bà nhấn mạnh rằng đại biểu cần đảm bảo các tiêu chí chính trị, đạo đức, và trách nhiệm, đồng thời phải luôn đặt lợi ích của nhân dân lên trên hết. \n\nBên cạnh đó, ĐBQH Phan Thị Thanh Phương khuyên các ứng cử viên nên trình bày chương trình hành động một cách tự tin và tự nhiên, chuẩn bị tâm lý để trả lời các câu hỏi của cử tri. Nhà báo Dương Thành Truyền nhấn mạnh tầm quan trọng của việc xưng hô đúng cách, nói dễ hiểu, dễ nhớ, chân thành và xúc động khi tiếp xúc với cử tri. \n\nĐối với các ứng cử viên trẻ, các lãnh đạo khuyến khích họ tự tin và chuẩn bị kỹ càng, vì sức trẻ là một ưu thế quan trọng trong việc phát triển và có tiếng nói trong hoạt động đại biểu dân cử.",
+        "fused_scores": {
+          "rouge1": 0.2136,
+          "rouge2": 0.1885,
+          "rougeL": 0.1648,
+          "bleu": 0.0095,
+          "bert_score": 0.6196,
+          "compression_rate": 19.93
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3458,
+            "scores": {
+              "rouge1": 0.1008,
+              "rouge2": 0.0866,
+              "rougeL": 0.0876,
+              "bleu": 0.0001,
+              "bert_score": 0.587265,
+              "compression_rate": 9.61
+            },
+            "estimated_cost_usd": 0.00042629999999999995
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "timeout",
+            "latency_ms": 15001,
+            "scores": {
+              "rouge1": null,
+              "rouge2": null,
+              "rougeL": null,
+              "bleu": null,
+              "bert_score": null,
+              "compression_rate": null
+            },
+            "estimated_cost_usd": null
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 6940,
+            "scores": {
+              "rouge1": 0.1752,
+              "rouge2": 0.1507,
+              "rougeL": 0.1457,
+              "bleu": 0.0032,
+              "bert_score": 0.564613,
+              "compression_rate": 16.65
+            },
+            "estimated_cost_usd": 0.005360800000000001
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:claude-haiku-4-5",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:claude-haiku-4-5",
+          "per_dimension": {
+            "faithfulness": "B",
+            "coverage": "B",
+            "fluency": "B",
+            "conciseness": "A"
+          },
+          "justification": "Bản A tóm tắt tốt hơn với sự ngắn gọn và rõ ràng, bao quát đủ các điểm chính mà không bỏ sót thông tin quan trọng như Bản B.",
+          "length_note": "Bản A ngắn hơn nhưng không làm mất đi thông tin quan trọng.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00046935,
+          "latency_ms": 1599,
+          "position_swapped": true,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 3,
+      "url": "https://tienphong.vn/bat-giu-doi-tuong-lao-xe-vao-cay-xang-khien-7-nguoi-bi-thuong-post1823347.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 15326,
+        "total_cost_usd": 0.012094700000000002,
+        "total_tokens": 6797,
+        "fused_summary": "Tối 26/2, Công an phường Xuân Hương - Đà Lạt, tỉnh Lâm Đồng đã bắt khẩn cấp Trần Văn Quốc (26 tuổi, trú phường Lâm Viên - Đà Lạt) để điều tra về hành vi gây rối trật tự công cộng. Trước đó, chiều 25/2, sau khi uống rượu tại một quán ăn ở phường Cam Ly - Đà Lạt, Quốc điều khiển xe máy và xảy ra va chạm với ô tô trung chuyển của nhà xe Phương Trang do anh Huỳnh Duy Minh (43 tuổi) điều khiển. Sau va chạm, Quốc đã chặn xe và đánh anh Minh bị thương vùng mắt. Sau đó, Quốc tiếp tục lái ô tô đến bến xe để tìm anh Minh. Tại cây xăng Anh Phát (số 1 Tô Hiến Thành, phường Xuân Hương - Đà Lạt), hai bên tiếp tục xô xát. Trong lúc hỗn loạn, Quốc lái ô tô lao vào nhóm người, khiến anh Trần Minh Thuận (24 tuổi, nhân viên nhà xe) bị thương nặng và 6 người khác bị thương nhẹ. Quốc đã rời khỏi hiện trường nhưng nhanh chóng bị bắt giữ. Kiểm tra cho thấy Quốc có nồng độ cồn 0,238 mg/l khí thở và âm tính với ma túy. Hiện Quốc bị tạm giữ hình sự 3 ngày để điều tra và xử lý theo pháp luật.",
+        "fused_scores": {
+          "rouge1": 0.5627,
+          "rouge2": 0.5166,
+          "rougeL": 0.5366,
+          "bleu": 0.3488,
+          "bert_score": 0.773065,
+          "compression_rate": 57.8
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3400,
+            "scores": {
+              "rouge1": 0.2456,
+              "rouge2": 0.192,
+              "rougeL": 0.176,
+              "bleu": 0.0126,
+              "bert_score": 0.572151,
+              "compression_rate": 22.34
+            },
+            "estimated_cost_usd": 0.00023865000000000003
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 4398,
+            "scores": {
+              "rouge1": 0.4965,
+              "rouge2": 0.4258,
+              "rougeL": 0.392,
+              "bleu": 0.2066,
+              "bert_score": 0.665368,
+              "compression_rate": 45.74
+            },
+            "estimated_cost_usd": 0.00029115
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 3897,
+            "scores": {
+              "rouge1": 0.4652,
+              "rouge2": 0.3962,
+              "rougeL": 0.4024,
+              "bleu": 0.1537,
+              "bert_score": 0.637125,
+              "compression_rate": 45.92
+            },
+            "estimated_cost_usd": 0.0034424
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gemini-2.5-flash",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "tie"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về quá trình xảy ra vụ việc và tình trạng của nạn nhân, giúp người đọc có cái nhìn rõ hơn về sự việc.",
+          "length_note": "Bản A có độ dài lớn hơn, nhưng không làm mất thông tin quan trọng.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00029715,
+          "latency_ms": 1747,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 4,
+      "url": "https://tienphong.vn/cuu-bo-truong-nguyen-thi-kim-tien-duoc-cap-duoi-chia-75-ty-dong-tu-100-ty-nhan-hoi-lo-post1823567.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 26926,
+        "total_cost_usd": 0.0191418,
+        "total_tokens": 12886,
+        "fused_summary": "Ngày 27/2, Cơ quan Cảnh sát điều tra Bộ Công an đã hoàn tất kết luận điều tra vụ án tham nhũng tại Bệnh viện Bạch Mai và Bệnh viện Hữu nghị Việt Đức cơ sở 2, xác định tổng số tiền hối lộ từ các doanh nghiệp là hơn 100 tỷ đồng. Trong đó, cựu Bộ trưởng Bộ Y tế Nguyễn Thị Kim Tiến bị cáo buộc nhận 7,5 tỷ đồng từ các khoản hối lộ liên quan đến các dự án này. Bộ Công an đã đề nghị truy tố bà Tiến về tội \"Vi phạm quy định về quản lý, sử dụng tài sản Nhà nước gây thất thoát, lãng phí\". Cùng bị đề nghị truy tố còn có 6 bị can khác, bao gồm các cựu lãnh đạo Ban Quản lý dự án y tế trọng điểm như Nguyễn Chiến Thắng và Nguyễn Hữu Tuấn, với các tội danh tương tự và \"Nhận hối lộ\". Kết luận điều tra cho thấy cơ chế \"lại quả\" 5% đã được thiết lập và duy trì qua nhiều năm, tạo điều kiện cho các nhà thầu trúng thầu và gây thiệt hại nghiêm trọng cho ngân sách Nhà nước. Tổng số tiền hối lộ được xác định là 88,465 tỷ đồng, trong đó có phần được chuyển cho Bộ Quốc phòng xử lý. Bà Nguyễn Thị Kim Tiến thừa nhận nhận tiền nhưng khai không biết rõ nguồn gốc, trong khi 10 cá nhân đưa hối lộ được miễn trách nhiệm hình sự do chủ động tố giác và hợp tác điều tra. Cơ chế chi 5% không phải là hành vi cá biệt mà là một phương thức vận hành có tổ chức, kéo dài qua nhiều đời lãnh đạo, phản ánh dấu hiệu lợi ích nhóm trong quản lý dự án y tế trọng điểm.",
+        "fused_scores": {
+          "rouge1": 0.2577,
+          "rouge2": 0.2378,
+          "rougeL": 0.2171,
+          "bleu": 0.0363,
+          "bert_score": 0.731568,
+          "compression_rate": 23.97
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5646,
+            "scores": {
+              "rouge1": 0.1163,
+              "rouge2": 0.106,
+              "rougeL": 0.1042,
+              "bleu": 0.0004,
+              "bert_score": 0.705003,
+              "compression_rate": 10.88
+            },
+            "estimated_cost_usd": 0.0004392
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 13760,
+            "scores": {
+              "rouge1": 0.2285,
+              "rouge2": 0.2086,
+              "rougeL": 0.1873,
+              "bleu": 0.019,
+              "bert_score": 0.723694,
+              "compression_rate": 21.82
+            },
+            "estimated_cost_usd": 0.0005268
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 7003,
+            "scores": {
+              "rouge1": 0.2405,
+              "rouge2": 0.2332,
+              "rougeL": 0.2188,
+              "bleu": 0.0312,
+              "bert_score": 0.726495,
+              "compression_rate": 22.06
+            },
+            "estimated_cost_usd": 0.0060208
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gemini-2.5-flash",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp đầy đủ thông tin và chi tiết về vụ án, đồng thời giữ được tính chính xác về các cáo buộc và số liệu liên quan, chính vì vậy nó được coi là bản chất lượng hơn.",
+          "length_note": "",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.000486,
+          "latency_ms": 1775,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 5,
+      "url": "https://tienphong.vn/doanh-nghiep-noi-ve-nut-that-co-che-khien-nguon-luc-dung-yen-tren-so-sach-post1823054.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 21233,
+        "total_cost_usd": 0.0168365,
+        "total_tokens": 10838,
+        "fused_summary": "Theo Nghị quyết 79 của Bộ Chính trị, khu vực kinh tế nhà nước không chỉ đóng vai trò trụ cột mà còn phải dẫn dắt trong các lĩnh vực then chốt của nền kinh tế. Tuy nhiên, nhiều doanh nghiệp nhà nước (DNNN) như EVN, Petrovietnam, VNPT đang đối mặt với những điểm nghẽn lớn về chính sách và thủ tục hành chính.\n\nTập đoàn Điện lực Việt Nam (EVN) cho biết, việc áp dụng tiền thuê đất từ ngày 1/6/2022 đối với hệ thống lưới điện truyền tải và phân phối đã làm tăng chi phí sản xuất điện gần 976 tỷ đồng mỗi năm. EVN kiến nghị khôi phục cơ chế miễn tiền thuê đất để giảm chi phí đầu vào và thúc đẩy tiến độ các dự án điện. \n\nTập đoàn Dầu khí Việt Nam (Petrovietnam) chỉ ra rằng nhiều dự án dầu khí, LNG và điện gió ngoài khơi đang bị kìm hãm bởi sự chồng chéo giữa các quy định pháp luật và thiếu cơ chế phối hợp liên ngành. Petrovietnam kiến nghị giao Bộ Công Thương làm đầu mối rà soát và hoàn thiện khung pháp lý cho lĩnh vực năng lượng.\n\nNgoài ra, các doanh nghiệp nông nghiệp, lâm nghiệp cũng gặp khó khăn về quỹ đất và cơ chế khai thác tài sản. Trong lĩnh vực kinh tế số, VNPT đề xuất hình thành quỹ đầu tư mạo hiểm nội bộ, tăng tỷ lệ lợi nhuận cho nghiên cứu - phát triển và có cơ chế Nhà nước đặt hàng sản phẩm công nghệ.\n\nNhìn chung, các DNNN đều mong muốn có cơ chế chính sách rõ ràng, đồng bộ và linh hoạt hơn để phát huy vai trò trụ cột của mình trong nền kinh tế.",
+        "fused_scores": {
+          "rouge1": 0.3018,
+          "rouge2": 0.2484,
+          "rougeL": 0.2295,
+          "bleu": 0.0542,
+          "bert_score": 0.649646,
+          "compression_rate": 31.38
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5100,
+            "scores": {
+              "rouge1": 0.1794,
+              "rouge2": 0.1531,
+              "rougeL": 0.1516,
+              "bleu": 0.0056,
+              "bert_score": 0.624092,
+              "compression_rate": 17.36
+            },
+            "estimated_cost_usd": 0.0003909
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 8558,
+            "scores": {
+              "rouge1": 0.3394,
+              "rouge2": 0.2846,
+              "rougeL": 0.2441,
+              "bleu": 0.0744,
+              "bert_score": 0.621084,
+              "compression_rate": 35.62
+            },
+            "estimated_cost_usd": 0.0005034
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 6481,
+            "scores": {
+              "rouge1": 0.2295,
+              "rouge2": 0.1935,
+              "rougeL": 0.1586,
+              "bleu": 0.0154,
+              "bert_score": 0.588661,
+              "compression_rate": 23.06
+            },
+            "estimated_cost_usd": 0.0047672
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gemini-2.5-flash",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gemini-2.5-flash",
+          "per_dimension": {
+            "faithfulness": "B",
+            "coverage": "B",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về các vấn đề và kiến nghị của từng doanh nghiệp nhà nước, trong khi Bản B có một số thông tin bị bỏ sót.",
+          "length_note": "Bản A dài hơn nhưng không làm mất yếu tố chính nào, do đó độ dài không phải là yếu tố quyết định.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.0004383,
+          "latency_ms": 2605,
+          "position_swapped": true,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 6,
+      "url": "https://tienphong.vn/tiem-an-rui-ro-dut-gay-thong-tin-truy-xuat-thuy-san-post1823422.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 21056,
+        "total_cost_usd": 0.014960750000000002,
+        "total_tokens": 9631,
+        "fused_summary": "Các hợp tác xã (HTX) thủy sản tại Việt Nam đang phải đối mặt với nhiều thách thức lớn trong việc quản lý dữ liệu và truy xuất nguồn gốc sản phẩm. Nguyên nhân chính là do năng lực quản trị dữ liệu yếu, thói quen ghi chép thủ công của người dân, và sự nhạy cảm về chi phí khi áp dụng công nghệ mới. Trong khi đó, thị trường tiêu thụ, đặc biệt là các doanh nghiệp chế biến và xuất khẩu, ngày càng yêu cầu cao về minh bạch dữ liệu, an toàn thực phẩm, bền vững và giảm phát thải. \n\nTại Hội nghị đối thoại chính sách về phát triển HTX thủy sản bền vững diễn ra ở Cần Thơ, các đại biểu đã nhấn mạnh tầm quan trọng của việc số hóa dữ liệu và phát triển hạ tầng kỹ thuật viễn thông để giúp HTX hoạt động hiệu quả hơn. Nhiều HTX thủy sản ở Đồng bằng sông Cửu Long gặp khó khăn do quy mô nhỏ, vốn ít, và năng lực quản trị chưa đồng đều, dẫn đến phụ thuộc vào thương lái. \n\nĐể cải thiện tình hình, cần phát triển các công cụ ghi chép đơn giản, dễ sử dụng, và mang lại lợi ích rõ ràng cho nông dân. Đồng thời, cần đột phá hạ tầng kỹ thuật viễn thông và giảm thiểu thủ tục hành chính để hỗ trợ quá trình chuyển đổi số. Nếu không có sự cải thiện về mặt quản trị dữ liệu, năng lực cạnh tranh của các sản phẩm thủy sản sẽ bị ảnh hưởng, đồng thời gây khó khăn cho việc duy trì nguồn cung ổn định và chất lượng cao cho xuất khẩu.",
+        "fused_scores": {
+          "rouge1": 0.3507,
+          "rouge2": 0.2787,
+          "rougeL": 0.2335,
+          "bleu": 0.0577,
+          "bert_score": 0.68738,
+          "compression_rate": 32.15
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4244,
+            "scores": {
+              "rouge1": 0.2459,
+              "rouge2": 0.1995,
+              "rougeL": 0.1606,
+              "bleu": 0.0149,
+              "bert_score": 0.59307,
+              "compression_rate": 20.87
+            },
+            "estimated_cost_usd": 0.00038895
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 7946,
+            "scores": {
+              "rouge1": 0.1358,
+              "rouge2": 0.1149,
+              "rougeL": 0.0962,
+              "bleu": 0.0005,
+              "bert_score": 0.61717,
+              "compression_rate": 12.43
+            },
+            "estimated_cost_usd": 0.0003099
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 6247,
+            "scores": {
+              "rouge1": 0.2304,
+              "rouge2": 0.2073,
+              "rougeL": 0.1994,
+              "bleu": 0.0192,
+              "bert_score": 0.692013,
+              "compression_rate": 22.38
+            },
+            "estimated_cost_usd": 0.0043744000000000005
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về vấn đề, bao gồm các lý do và ý kiến từ nhiều bên liên quan, giúp người đọc hiểu rõ hơn về tình hình hợp tác xã thủy sản.",
+          "length_note": "Không có yếu tố độ dài ảnh hưởng đến quyết định.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00038399999999999996,
+          "latency_ms": 2738,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 7,
+      "url": "https://tienphong.vn/bo-truong-bo-gddt-nguyen-kim-son-tiep-tuc-dau-tu-phat-trien-cac-truong-su-pham-post1822465.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 19996,
+        "total_cost_usd": 0.013857600000000001,
+        "total_tokens": 8170,
+        "fused_summary": "Bộ trưởng Bộ Giáo dục và Đào tạo Nguyễn Kim Sơn đã đến thăm và chúc mừng năm mới cán bộ, viên chức, người lao động, học sinh, sinh viên, học viên tại Trường Đại học Sư phạm Hà Nội vào ngày 23/2. Ông nhấn mạnh mục tiêu trong 5 năm tới là xây dựng mô hình đại học sư phạm toàn diện, đa dạng, linh hoạt và bề thế hơn để đáp ứng yêu cầu phát triển đội ngũ nhà giáo trong bối cảnh mới. Bộ trưởng khẳng định rằng lực lượng nhà giáo là yếu tố nền tảng và là đột phá của ngành giáo dục, và việc phát triển đội ngũ này gắn liền với hệ thống các trường sư phạm. \n\nTrong giai đoạn 5 năm tới, Bộ GD&ĐT sẽ tiếp tục chú trọng đầu tư phát triển các trường sư phạm, đặc biệt là Trường Đại học Sư phạm Hà Nội và Trường Đại học Sư phạm Thành phố Hồ Chí Minh, được xác định là hai trường trọng điểm quốc gia trong quy hoạch mạng lưới. Bộ trưởng cũng nhấn mạnh vai trò của các trường sư phạm không chỉ trong đào tạo mà còn phát triển khoa học giáo dục và phương pháp giảng dạy.\n\nPhó Giáo sư, Tiến sĩ Nguyễn Đức Sơn, Hiệu trưởng Trường Đại học Sư phạm Hà Nội, chia sẻ rằng nhà trường đã kiên trì triển khai các chỉ đạo và đạt được kết quả tích cực. Ông cam kết tiếp tục nỗ lực đổi mới và phát huy tinh thần trách nhiệm, không chỉ vì sự phát triển của nhà trường mà còn đóng góp tích cực cho sự phát triển chung của toàn ngành Giáo dục.",
+        "fused_scores": {
+          "rouge1": 0.4713,
+          "rouge2": 0.4186,
+          "rougeL": 0.365,
+          "bleu": 0.2044,
+          "bert_score": 0.738747,
+          "compression_rate": 47.84
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3361,
+            "scores": {
+              "rouge1": 0.2054,
+              "rouge2": 0.19,
+              "rougeL": 0.1689,
+              "bleu": 0.0127,
+              "bert_score": 0.667009,
+              "compression_rate": 20.05
+            },
+            "estimated_cost_usd": 0.0002829
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 9051,
+            "scores": {
+              "rouge1": 0.3848,
+              "rouge2": 0.3319,
+              "rougeL": 0.3139,
+              "bleu": 0.1062,
+              "bert_score": 0.671211,
+              "compression_rate": 39.45
+            },
+            "estimated_cost_usd": 0.0003477
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 4291,
+            "scores": {
+              "rouge1": 0.3295,
+              "rouge2": 0.3058,
+              "rougeL": 0.2993,
+              "bleu": 0.0816,
+              "bert_score": 0.708496,
+              "compression_rate": 32.9
+            },
+            "estimated_cost_usd": 0.004052
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gemini-2.5-flash",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản A cung cấp đầy đủ thông tin quan trọng hơn và giữ được tính chính xác so với bản B.",
+          "length_note": "Bản B ngắn hơn và có phần thiếu chi tiết nhưng không làm mất thông điệp chính.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.0003327,
+          "latency_ms": 1723,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 8,
+      "url": "https://tienphong.vn/ban-khoan-hieu-truong-cat-phu-cap-uu-dai-cua-giao-vien-hop-dong-post1822948.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 18015,
+        "total_cost_usd": 0.0107416,
+        "total_tokens": 6771,
+        "fused_summary": "Bài viết đề cập đến vấn đề giáo viên hợp đồng tại các trường THCS, tiểu học và mầm non công lập bị cắt phụ cấp ưu đãi đứng lớp từ ngày 1/9/2025, gây ra nhiều băn khoăn trong cộng đồng. Bộ Giáo dục và Đào tạo (GD&ĐT) đã làm rõ rằng việc cắt phụ cấp này là chưa đúng quy định. Theo Quyết định số 244/2005/QĐ-TTg của Thủ tướng Chính phủ và các văn bản hướng dẫn, giáo viên hợp đồng thuộc biên chế trả lương, đang trực tiếp giảng dạy trong các cơ sở giáo dục công lập đều được hưởng phụ cấp ưu đãi nhà giáo. Việc cắt phụ cấp ưu đãi đứng lớp không chỉ vi phạm quy định mà còn ảnh hưởng đến quyền lợi chính đáng của các giáo viên. Bộ GD&ĐT đã nhấn mạnh rằng các giáo viên hợp đồng này nằm trong đối tượng được hưởng phụ cấp ưu đãi và hành động của các hiệu trưởng là không đúng quy định hiện hành.",
+        "fused_scores": {
+          "rouge1": 0.4105,
+          "rouge2": 0.3261,
+          "rougeL": 0.2762,
+          "bleu": 0.126,
+          "bert_score": 0.659196,
+          "compression_rate": 39.38
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3154,
+            "scores": {
+              "rouge1": 0.2593,
+              "rouge2": 0.2087,
+              "rougeL": 0.2114,
+              "bleu": 0.0326,
+              "bert_score": 0.655753,
+              "compression_rate": 23.32
+            },
+            "estimated_cost_usd": 0.00024450000000000003
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 6455,
+            "scores": {
+              "rouge1": 0.4074,
+              "rouge2": 0.3431,
+              "rougeL": 0.304,
+              "bleu": 0.115,
+              "bert_score": 0.722619,
+              "compression_rate": 42.14
+            },
+            "estimated_cost_usd": 0.0002982
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 3650,
+            "scores": {
+              "rouge1": 0.3503,
+              "rouge2": 0.3014,
+              "rougeL": 0.2515,
+              "bleu": 0.0952,
+              "bert_score": 0.708346,
+              "compression_rate": 34.72
+            },
+            "estimated_cost_usd": 0.0032064
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản B cung cấp thông tin chi tiết hơn về quy định và các văn bản liên quan, đồng thời nhấn mạnh tác động của việc cắt phụ cấp đến quyền lợi của giáo viên, làm cho bài viết trở nên toàn diện hơn.",
+          "length_note": "Bản A tuy ngắn gọn nhưng thiếu một số thông tin quan trọng.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00027345,
+          "latency_ms": 1875,
+          "position_swapped": true,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 9,
+      "url": "https://tienphong.vn/tai-dien-canh-nhet-tien-le-vao-mam-le-post1823064.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 19774,
+        "total_cost_usd": 0.012443450000000002,
+        "total_tokens": 7313,
+        "fused_summary": "Vào ngày 25/2, tại Khu di tích lịch sử và danh lam thắng cảnh quốc gia - địa điểm khởi nghĩa Bà Triệu ở Thanh Hóa, đã diễn ra lễ khai hội và nghi lễ cúng trời đất, hay còn gọi là lễ \"mở cổng trời\". Sự kiện này thu hút hàng vạn người dân và du khách thập phương đến tham dự để cầu bình an, sức khỏe và tài lộc cho năm mới. Mặc dù thời tiết mưa và sương mù bao phủ, nhưng không ngăn cản được dòng người đổ về khu di tích nổi tiếng này. Chính quyền các xã Tân Ninh, Trung Chính và Mậu Lâm đã tổ chức lễ tại huyệt đạo thiêng trên đỉnh Núi Nưa, nơi được coi là điểm hội tụ linh khí đất trời. \n\nBan quản lý khu di tích đã thực hiện nhiều biện pháp quản lý như bố trí nhân viên thu gom tiền lẻ từ các mâm cúng, lắp đặt camera AI để giám sát an ninh, và chỉnh trang cảnh quan bằng cách tháo dỡ các hạng mục vi phạm. Tiền công đức thu được sẽ được kiểm đếm, ghi sổ sách và bàn giao cho cơ quan chức năng. Ngoài ra, các điểm trông giữ xe cũng được bố trí để đảm bảo an toàn và trật tự cho du khách. Trong 9 ngày nghỉ Tết vừa qua, khu di tích đã đón gần 2 vạn khách du lịch.",
+        "fused_scores": {
+          "rouge1": 0.5101,
+          "rouge2": 0.4165,
+          "rougeL": 0.3333,
+          "bleu": 0.1631,
+          "bert_score": 0.66998,
+          "compression_rate": 48.05
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3246,
+            "scores": {
+              "rouge1": 0.1783,
+              "rouge2": 0.1393,
+              "rougeL": 0.142,
+              "bleu": 0.0019,
+              "bert_score": 0.608185,
+              "compression_rate": 16.37
+            },
+            "estimated_cost_usd": 0.00024419999999999997
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 7169,
+            "scores": {
+              "rouge1": 0.4203,
+              "rouge2": 0.3585,
+              "rougeL": 0.2957,
+              "bleu": 0.1023,
+              "bert_score": 0.657782,
+              "compression_rate": 40.09
+            },
+            "estimated_cost_usd": 0.00031755
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 4746,
+            "scores": {
+              "rouge1": 0.3942,
+              "rouge2": 0.3135,
+              "rougeL": 0.2826,
+              "bleu": 0.0846,
+              "bert_score": 0.626475,
+              "compression_rate": 37.69
+            },
+            "estimated_cost_usd": 0.0035792000000000003
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gemini-2.5-flash",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gemini-2.5-flash",
+          "per_dimension": {
+            "faithfulness": "B",
+            "coverage": "B",
+            "fluency": "B",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp đầy đủ thông tin quan trọng và rõ ràng về sự kiện, đồng thời trình bày mạch lạc hơn so với bản B.",
+          "length_note": "Bản A có độ dài ngắn hơn nhưng vẫn đảm bảo tất cả thông tin chính được giữ lại.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00031319999999999997,
+          "latency_ms": 2292,
+          "position_swapped": true,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 10,
+      "url": "https://tienphong.vn/nhac-si-nguyen-vinh-tien-tro-thanh-y-si-o-tuoi-52-post1823424.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 24425,
+        "total_cost_usd": 0.0151076,
+        "total_tokens": 8321,
+        "fused_summary": "Nhạc sĩ Nguyễn Vĩnh Tiến, sinh năm 1974 tại Phú Thọ, đã gây bất ngờ khi thông báo chính thức trở thành y sĩ sau khi tốt nghiệp loại giỏi ngành Y sĩ Y học cổ truyền từ Trường Trung cấp Y Dược Tuệ Tĩnh Hà Nội. Sự kiện này diễn ra đúng Ngày Thầy thuốc Việt Nam (27/2), khi anh được tiếp nhận vào thực hành nghề tại một bệnh viện ở Hà Nội. Dù đã thành công trong các lĩnh vực kiến trúc, văn chương và âm nhạc, tình yêu với ngành y vẫn luôn âm ỉ trong anh từ nhỏ, nhờ sự định hướng của mẹ là bác sĩ. \n\nNguyễn Vĩnh Tiến đã tốt nghiệp Đại học Kiến trúc Hà Nội năm 1996 và hoàn thành cao học Pháp ngữ chuyên ngành Thiết kế đô thị. Anh từng là Trưởng khoa Kiến trúc, Đại học Chu Văn An và là hội viên Hội Kiến trúc sư Việt Nam. Trong văn chương, anh là hội viên Hội Nhà văn Việt Nam từ năm 2006, và trong âm nhạc, anh là hội viên Hội Nhạc sĩ Việt Nam, từng đoạt quán quân Bài hát Việt 2005 với ca khúc \"Bà tôi\". Đặc biệt, ca khúc \"Bài ca ngành y Việt Nam\" của anh đã được trao giải thưởng của Bộ Y tế năm 2024.\n\nNguyễn Vĩnh Tiến hiện mang năm danh xưng: kiến trúc sư, nhạc sĩ, văn sĩ, thi sĩ và y sĩ. Anh cho rằng dù có nhiều danh xưng, điều quan trọng là phải có thành quả cụ thể trong từng lĩnh vực. Việc học y không chỉ giúp anh hiểu và đồng cảm hơn với bệnh nhân mà còn biết cách chăm sóc sức khỏe cho bản thân và gia đình. Anh xác định cần thêm 10-20 năm rèn nghề để thực sự thành thạo trong lĩnh vực y học cổ truyền.",
+        "fused_scores": {
+          "rouge1": 0.5909,
+          "rouge2": 0.5166,
+          "rougeL": 0.3514,
+          "bleu": 0.2998,
+          "bert_score": 0.640585,
+          "compression_rate": 57.87
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5054,
+            "scores": {
+              "rouge1": 0.3612,
+              "rouge2": 0.2804,
+              "rougeL": 0.2482,
+              "bleu": 0.0526,
+              "bert_score": 0.598646,
+              "compression_rate": 33.84
+            },
+            "estimated_cost_usd": 0.00033525
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 11819,
+            "scores": {
+              "rouge1": 0.3943,
+              "rouge2": 0.3223,
+              "rougeL": 0.2789,
+              "bleu": 0.1068,
+              "bert_score": 0.611477,
+              "compression_rate": 36.46
+            },
+            "estimated_cost_usd": 0.00033345
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 6189,
+            "scores": {
+              "rouge1": 0.4705,
+              "rouge2": 0.4219,
+              "rougeL": 0.4066,
+              "bleu": 0.2117,
+              "bert_score": 0.699889,
+              "compression_rate": 45.58
+            },
+            "estimated_cost_usd": 0.0044464
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp đầy đủ thông tin về quá trình học tập và sự nghiệp của Nguyễn Vĩnh Tiến, đồng thời nhấn mạnh mối liên hệ giữa các lĩnh vực mà anh theo đuổi.",
+          "length_note": "",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00032714999999999996,
+          "latency_ms": 1606,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    }
+  ],
+  "statistics": {
+    "per_metric": {
+      "bert_score": {
+        "n": 10,
+        "fused_mean": 0.6910370999999998,
+        "fused_stdev": 0.05157192460470459,
+        "best_mean": 0.6774571,
+        "best_stdev": 0.04448466855608171,
+        "delta_mean": 0.013580000000000004,
+        "delta_stdev": 0.050120740020696254,
+        "wins": 7,
+        "losses": 3,
+        "ties": 0,
+        "sign_test_p": 0.3437500000000008
+      },
+      "rouge1": {
+        "n": 10,
+        "fused_mean": 0.4347899999999999,
+        "fused_stdev": 0.15377203509669038,
+        "best_mean": 0.37238999999999994,
+        "best_stdev": 0.12079150494412537,
+        "delta_mean": 0.06240000000000001,
+        "delta_stdev": 0.055720672405610225,
+        "wins": 9,
+        "losses": 1,
+        "ties": 0,
+        "sign_test_p": 0.02148437500000002
+      },
+      "rouge2": {
+        "n": 10,
+        "fused_mean": 0.37028,
+        "fused_stdev": 0.132161557698649,
+        "best_mean": 0.31918,
+        "best_stdev": 0.09835209764469241,
+        "delta_mean": 0.05109999999999999,
+        "delta_stdev": 0.052256801790133825,
+        "wins": 8,
+        "losses": 2,
+        "ties": 0,
+        "sign_test_p": 0.10937500000000017
+      },
+      "rougeL": {
+        "n": 10,
+        "fused_mean": 0.32202,
+        "fused_stdev": 0.12449936903008339,
+        "best_mean": 0.2977,
+        "best_stdev": 0.09837805762578475,
+        "delta_mean": 0.02431999999999999,
+        "delta_stdev": 0.053843906082510606,
+        "wins": 6,
+        "losses": 4,
+        "ties": 0,
+        "sign_test_p": 0.7539062500000018
+      },
+      "bleu": {
+        "n": 10,
+        "fused_mean": 0.16347000000000003,
+        "fused_stdev": 0.1284120628636145,
+        "best_mean": 0.10877999999999999,
+        "best_stdev": 0.08065700768618242,
+        "delta_mean": 0.054689999999999996,
+        "delta_stdev": 0.05492921606738783,
+        "wins": 9,
+        "losses": 1,
+        "ties": 0,
+        "sign_test_p": 0.02148437500000002
+      }
+    },
+    "pairwise_judge": {
+      "n": 10,
+      "wins_fused": 7,
+      "wins_best": 3,
+      "ties": 0,
+      "sign_test_p": 0.3437500000000008
+    }
+  }
+}

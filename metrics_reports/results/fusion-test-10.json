@@ -1,0 +1,397 @@
+{
+  "started_at": "2026-05-07T19:20:48.008Z",
+  "finished_at": "2026-05-07T19:25:05.575Z",
+  "api_base": "http://localhost:3000",
+  "proposers": [
+    "gpt-4o-mini",
+    "gemini-2.5-flash",
+    "claude-haiku-4-5"
+  ],
+  "aggregator": "gpt-4o",
+  "records": [
+    {
+      "index": 1,
+      "url": "https://tienphong.vn/tim-thay-thi-the-nguoi-me-tre-dang-mang-thai-va-con-gai-duoi-ho-nuoc-o-dak-lak-post1823800.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 49685,
+        "total_cost_usd": 0.00869295,
+        "total_tokens": 4542,
+        "fused_summary": "Vào ngày 27/2 tại xã Ea Tul, tỉnh Đắk Lắk, một vụ việc thương tâm đã xảy ra khi chị H.B.K. (sinh năm 2007), đang mang thai 21 tuần, cùng con gái nhỏ sinh năm 2022 được phát hiện tử vong dưới hồ nước gần nhà. Khi người thân trở về từ rẫy và không thấy hai mẹ con, họ đã tổ chức tìm kiếm và phát hiện dép và áo khoác của chị trên bờ hồ cách nhà khoảng 1km. Thi thể chị H.B.K. được tìm thấy vào tối 27/2, và thi thể con gái vào sáng 28/2. Gia đình chị thuộc diện khó khăn và đã được chính quyền địa phương hỗ trợ. Hiện, cơ quan chức năng đang điều tra nguyên nhân cái chết của họ để làm rõ sự việc.",
+        "fused_scores": {
+          "rouge1": 0.4847,
+          "rouge2": 0.3606,
+          "rougeL": 0.3393,
+          "bleu": 0.1193,
+          "bert_score": 0.667308,
+          "compression_rate": 47.63
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 6019,
+            "scores": {
+              "rouge1": 0.4541,
+              "rouge2": 0.3427,
+              "rougeL": 0.352,
+              "bleu": 0.1376,
+              "bert_score": 0.685326,
+              "compression_rate": 42.89
+            },
+            "estimated_cost_usd": 0.00023385
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "failed",
+            "latency_ms": 1759,
+            "scores": {
+              "rouge1": null,
+              "rouge2": null,
+              "rougeL": null,
+              "bleu": null,
+              "bert_score": null,
+              "compression_rate": null
+            },
+            "estimated_cost_usd": null
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 3916,
+            "scores": {
+              "rouge1": 0.5995,
+              "rouge2": 0.4731,
+              "rougeL": 0.3648,
+              "bleu": 0.259,
+              "bert_score": 0.71142,
+              "compression_rate": 57.89
+            },
+            "estimated_cost_usd": 0.0029816
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "tie",
+          "winner_label": "tie",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:claude-haiku-4-5",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "tie",
+            "fluency": "tie",
+            "conciseness": "tie"
+          },
+          "justification": "Cả hai bản đều cung cấp thông tin đầy đủ và chính xác về vụ việc mà không bỏ sót điều gì quan trọng.",
+          "length_note": "Độ dài không ảnh hưởng đến quyết định vì cả hai bản đều truyền đạt nội dung tương đương.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.0002385,
+          "latency_ms": 1583,
+          "position_swapped": true,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 2,
+      "url": "https://tienphong.vn/nguyen-lanh-dao-tphcm-chia-se-bi-kip-voi-ung-cu-vien-dai-bieu-quoc-hoi-trong-do-tuoi-doan-post1823794.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 21740,
+        "total_cost_usd": 0.0169529,
+        "total_tokens": 12477,
+        "fused_summary": "Thành Đoàn TPHCM đã tổ chức một chương trình bồi dưỡng cho các ứng cử viên trẻ tuổi tham gia ứng cử đại biểu Quốc hội khóa XVI và HĐND các cấp nhiệm kỳ 2026-2031. Nguyên Chủ tịch HĐND TPHCM, Phạm Phương Thảo, chia sẻ rằng việc trở thành đại biểu Quốc hội như bước vào một trường đại học lớn, giúp cá nhân trưởng thành và tiếp cận nhiều thông tin. Bà nhấn mạnh vai trò của đại biểu dân cử là người đại diện được cử tri ủy quyền, cần có tiêu chí về chính trị, đạo đức và trách nhiệm với cử tri. Các diễn giả khác, bao gồm ĐBQH Phan Thị Thanh Phương và nhà báo Dương Thành Truyền, khuyến khích ứng cử viên trẻ tin tưởng vào sức trẻ, chuẩn bị kỹ lưỡng và thể hiện sự chân thành khi tiếp xúc cử tri. Họ cũng được khuyên nên xem trọng cách xưng hô, giới thiệu bản thân một cách cụ thể và chân thành để tạo thiện cảm với cử tri. Quá trình ứng cử được xem là cơ hội quý báu để học hỏi và rèn luyện, bất kể kết quả ra sao.",
+        "fused_scores": {
+          "rouge1": 0.1659,
+          "rouge2": 0.1436,
+          "rougeL": 0.1309,
+          "bleu": 0.0024,
+          "bert_score": 0.595403,
+          "compression_rate": 16.17
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 7046,
+            "scores": {
+              "rouge1": 0.155,
+              "rouge2": 0.1332,
+              "rougeL": 0.1265,
+              "bleu": 0.0019,
+              "bert_score": 0.597541,
+              "compression_rate": 15.33
+            },
+            "estimated_cost_usd": 0.0004844999999999999
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 9566,
+            "scores": {
+              "rouge1": 0.2442,
+              "rouge2": 0.2088,
+              "rougeL": 0.195,
+              "bleu": 0.0178,
+              "bert_score": 0.64676,
+              "compression_rate": 22.49
+            },
+            "estimated_cost_usd": 0.0005195999999999999
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 7410,
+            "scores": {
+              "rouge1": 0.1752,
+              "rouge2": 0.1578,
+              "rougeL": 0.1594,
+              "bleu": 0.0035,
+              "bert_score": 0.637315,
+              "compression_rate": 16.47
+            },
+            "estimated_cost_usd": 0.0053688
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gpt-4o-mini",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "B",
+            "coverage": "B",
+            "fluency": "B",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp một cái nhìn súc tích hơn về cái nhìn và lời khuyên cho các ứng cử viên mà không bỏ sót thông tin quan trọng, trong khi bản B có phần lặp lại và không ngắn gọn bằng.",
+          "length_note": "Bản A ngắn gọn hơn nhưng vẫn giữ được thông điệp chính, vì vậy độ dài không ảnh hưởng tiêu cực đến sự chất lượng.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.0004722,
+          "latency_ms": 2462,
+          "position_swapped": true,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 3,
+      "url": "https://tienphong.vn/bat-giu-doi-tuong-lao-xe-vao-cay-xang-khien-7-nguoi-bi-thuong-post1823347.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 186130,
+        "error": "fetch failed"
+      }
+    },
+    {
+      "index": 4,
+      "url": "https://tienphong.vn/cuu-bo-truong-nguyen-thi-kim-tien-duoc-cap-duoi-chia-75-ty-dong-tu-100-ty-nhan-hoi-lo-post1823567.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 4,
+        "error": "fetch failed"
+      }
+    },
+    {
+      "index": 5,
+      "url": "https://tienphong.vn/doanh-nghiep-noi-ve-nut-that-co-che-khien-nguon-luc-dung-yen-tren-so-sach-post1823054.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 1,
+        "error": "fetch failed"
+      }
+    },
+    {
+      "index": 6,
+      "url": "https://tienphong.vn/tiem-an-rui-ro-dut-gay-thong-tin-truy-xuat-thuy-san-post1823422.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 1,
+        "error": "fetch failed"
+      }
+    },
+    {
+      "index": 7,
+      "url": "https://tienphong.vn/bo-truong-bo-gddt-nguyen-kim-son-tiep-tuc-dau-tu-phat-trien-cac-truong-su-pham-post1822465.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 0,
+        "error": "fetch failed"
+      }
+    },
+    {
+      "index": 8,
+      "url": "https://tienphong.vn/ban-khoan-hieu-truong-cat-phu-cap-uu-dai-cua-giao-vien-hop-dong-post1822948.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 0,
+        "error": "fetch failed"
+      }
+    },
+    {
+      "index": 9,
+      "url": "https://tienphong.vn/tai-dien-canh-nhet-tien-le-vao-mam-le-post1823064.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 2,
+        "error": "fetch failed"
+      }
+    },
+    {
+      "index": 10,
+      "url": "https://tienphong.vn/nhac-si-nguyen-vinh-tien-tro-thanh-y-si-o-tuoi-52-post1823424.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 0,
+        "error": "fetch failed"
+      }
+    }
+  ],
+  "statistics": {
+    "per_metric": {
+      "bert_score": {
+        "n": 2,
+        "fused_mean": 0.6313555,
+        "fused_stdev": 0.0508445131012187,
+        "best_mean": 0.67909,
+        "best_stdev": 0.045721524471522196,
+        "delta_mean": -0.04773450000000001,
+        "delta_stdev": 0.005122988629696498,
+        "wins": 0,
+        "losses": 2,
+        "ties": 0,
+        "sign_test_p": 0.5
+      },
+      "rouge1": {
+        "n": 2,
+        "fused_mean": 0.32530000000000003,
+        "fused_stdev": 0.22542564184227137,
+        "best_mean": 0.42185,
+        "best_stdev": 0.25123503935558034,
+        "delta_mean": -0.09655000000000001,
+        "delta_stdev": 0.025809397513308987,
+        "wins": 0,
+        "losses": 2,
+        "ties": 0,
+        "sign_test_p": 0.5
+      },
+      "rouge2": {
+        "n": 2,
+        "fused_mean": 0.2521,
+        "fused_stdev": 0.1534421715174808,
+        "best_mean": 0.34095000000000003,
+        "best_stdev": 0.18688832226760452,
+        "delta_mean": -0.08885000000000003,
+        "delta_stdev": 0.03344615075012372,
+        "wins": 0,
+        "losses": 2,
+        "ties": 0,
+        "sign_test_p": 0.5
+      },
+      "rougeL": {
+        "n": 2,
+        "fused_mean": 0.23509999999999998,
+        "fused_stdev": 0.1473610531992765,
+        "best_mean": 0.27990000000000004,
+        "best_stdev": 0.12006673144547578,
+        "delta_mean": -0.04480000000000002,
+        "delta_stdev": 0.02729432175380073,
+        "wins": 0,
+        "losses": 2,
+        "ties": 0,
+        "sign_test_p": 0.5
+      },
+      "bleu": {
+        "n": 2,
+        "fused_mean": 0.06085,
+        "fused_stdev": 0.08266078272070741,
+        "best_mean": 0.1384,
+        "best_stdev": 0.17055415562219528,
+        "delta_mean": -0.07755,
+        "delta_stdev": 0.08789337290148785,
+        "wins": 0,
+        "losses": 2,
+        "ties": 0,
+        "sign_test_p": 0.5
+      }
+    },
+    "pairwise_judge": {
+      "n": 2,
+      "wins_fused": 0,
+      "wins_best": 1,
+      "ties": 1,
+      "sign_test_p": 1
+    }
+  }
+}
