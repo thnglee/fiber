@@ -139,7 +139,7 @@ tuoitre.vn, thanhnien.vn, vietnamnet.vn, laodong.vn, tienphong.vn, vtv.vn, nld.c
 
 **Status:** MoA is shipped on `main`. Source article is intentionally injected into the aggregator prompt as a residual connection (Equation 1 in the paper). After commit `afac46e` (drop "cô đọng" from the prompt — 2026-05-08) the fused-vs-best-draft win rate flipped from 22.2% to 70%+; fused now beats every sync proposer on overlap metrics too. P0-1..P0-5 + P1-1 + C-1 (`--routing-mode` flag) + C-2 (`compare-synthesis-vs-ranker.ts`) all code-complete on `main`. Smoke 10-article batch verified end-to-end on 2026-05-08. P0-6 (multi-source n=50 execution) and P0-7 (~30-LOC B.2c report section) are the only remaining items before thesis-grade evidence lands.
 
-**Source of truth:** `fusion.pdf` (Wang et al., 2024, arXiv:2406.04692). Deltas + replication strategy: `fix_plan.md` (D1–D10 table, P0/P1/P2 phases, acceptance criteria per task).
+**Source of truth:** `fusion.pdf` (Wang et al., 2024, arXiv:2406.04692). Remaining tasks before thesis writing: `thesis_prep.md` (P0-7 + P0-6 + M-H, acceptance criteria per task).
 
 ### Three-way batch comparison (3 OpenAI proposers + gpt-4o aggregator, 50 tienphong.vn articles)
 
@@ -193,7 +193,7 @@ Softening the rules (v2) vs strict rules (v1) made no meaningful difference — 
 - **P0-6 — multi-source 50-article execution batch** (synthesis × ranker_only paired runs + synthesis-vs-ranker comparison; ~250 new verdicts; cost ≈$1 at smoke rate). No code blocker. Blocker for thesis Axis B.
 - **P0-7 — add B.2c "Synthesis vs Ranker" section to `unified-report.ts`** (~30 LOC). Without this, `synthesis_vs_ranker` verdicts persist correctly in the DB but don't appear in the thesis-ready Markdown.
 - **20-article human peer study** (Axis C). Build tasks at `/evaluate/admin`, get ≥2 raters, target Fleiss κ ≥ 0.4.
-- After data lands: re-run `npm run report:unified`, walk the decision tree in `fix_plan.md`, write thesis chapters T-1 (methodology alignment) + T-2 (results).
+- After data lands: re-run `npm run report:unified`, walk the decision tree in `thesis_prep.md`, write thesis chapters T-1 (methodology alignment) + T-2 (results).
 
 ### Key files
 
@@ -204,7 +204,7 @@ Softening the rules (v2) vs strict rules (v1) made no meaningful difference — 
 - `backend/output-fusion/scripts/collect-metrics.ts` — batch harness; `--judge-vs-all` + `--routing-mode fusion_ranker_only`
 - `backend/output-fusion/scripts/stats.ts` — sign test + Fleiss κ + `lengthBucketedWinRate`
 - `fusion_reports/results/fusion-batch-50*.{json,md}` — historical three-way evidence (the `-with-source` and `-source-v2` variants live only on branch `fix/moa-aggregator-source-prompt`)
-- `fix_plan.md` — Phase 0/1/2 paper-alignment plan
+- `thesis_prep.md` — Phase 0/1/2 paper-alignment plan
 - `fusion.pdf` — paper (the only spec)
 
 ## Three-Axis Evaluation System (the thesis contribution)
@@ -338,7 +338,7 @@ npx tsx --test output-fusion/__tests__/stats.test.ts \
 ### Background docs
 
 - `thesis_defense_narratives.md` — pre-committed contingency stories for thesis defense
-- `fix_plan.md` — Phase 0/1/2 paper-alignment plan (P0-6 + thesis writing remain)
+- `thesis_prep.md` — three remaining tasks before thesis writing (P0-7, P0-6, M-H) + decision tree
 - `fusion.pdf` — Wang et al. 2024, the only spec for MoA
 
 ### Status
