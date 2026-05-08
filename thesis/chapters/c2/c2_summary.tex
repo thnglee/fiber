@@ -1,0 +1,19 @@
+\section{Summary}
+\hspace{1cm} This chapter presented TOCL+, our extension to OCL for specifying and 
+verifying temporal properties in UML models. We began by examining the limitations 
+of standard OCL and existing temporal extensions, particularly the inability to 
+express event-based and bounded existence properties. To address these limitations, 
+we introduced TOCL+, which extends TOCL with two key event constructs: 
+\texttt{isCalled} for detecting operation invocations and \texttt{becomesTrue} for 
+capturing state changes. We complemented these with bounded existence operators that 
+enable specifying constraints on event frequencies. We provided formal semantics for 
+these constructs, defining them precisely in terms of state transitions, and developed 
+a complete EBNF grammar to support automated processing. For verification, we presented 
+a three-step approach: first transforming the application model into a filmstrip model, 
+then translating TOCL+ specifications into standard OCL constraints over this model, 
+and finally using the USE Model Validator to check these constraints. We demonstrated 
+the effectiveness of our approach on a Software System example, showing how TOCL+ 
+can express and verify complex temporal properties including safety, liveness, and 
+fairness constraints that were previously inexpressible in OCL. This combination of 
+enhanced expressiveness with automated verification provides modelers with powerful 
+new capabilities for ensuring the correctness of dynamic behavior in their UML models.

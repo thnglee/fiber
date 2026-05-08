@@ -1,0 +1,58 @@
+\section{Related Work}
+\hspace{1cm} Several approaches have addressed the challenge of specifying and verifying temporal 
+properties in UML models. Al Lail et al. \cite{TPV} proposed a technique similar to 
+ours, transforming application models into Snapshot Transition Models (STM) and using 
+TOCL for specification, but their approach inherits TOCL's limitations with 
+event-based properties. Kanso and Taha \cite{TOCL_Taha} and Dadeau et al. 
+\cite{verification_TOCL_Taha} explored pattern-based specification approaches, 
+implementing patterns in Eclipse but without providing verification capabilities, 
+or focusing on model-based testing rather than comprehensive verification. Baresi 
+et al. \cite{MADES} present the MADES approach, which combines several heavyweight 
+formalisms for verifying embedded systems, but requires steep learning curves and 
+mathematical skills that make it inaccessible for many UML designers. Similarly, 
+Combemale et al. \cite{Combemale_related_work_2} use a temporal extension to OCL 
+with translation to Petri nets, requiring designers to learn additional formalisms 
+to understand verification results. Meyers et al. \cite{ProMoBox_related_work_3} 
+support verifying temporal properties in domain-specific modeling through a family 
+of five languages, but rely on LTL and the Spin model checker, creating a separation 
+between specification and verification languages. Hilken and Gogolla 
+\cite{verifying_filmstripping} presented a filmstripping approach similar to our 
+verification technique, but without support for high-level temporal property 
+specification. In contrast, our approach unifies specification and verification 
+within the familiar OCL context, eliminating the need to learn additional formalisms.
+% 1
+% \cite{TPV} is an approach similar to the technique used in our work. The approach 
+% transforms application model into a so-called Snapshot Transition Model (STM) which 
+% and use TOCL to specify temporal properties. But the approach contains limitations of 
+% the TOCL extension mentioned above.
+
+% 2
+% The research work described in \cite{TOCL_Taha} \cite{verification_TOCL_Taha} discusses
+% pattern-based specification approaches. \cite{TOCL_Taha} implements the patterns on 
+% top of Eclipse but does not provide a verification tool. On the other hand, \cite{verification_TOCL_Taha}
+% describes a new property, a model-based testing approach using UML/OCL models to 
+% evaluate the quality of test suites. 
+
+% 3
+% In \cite{MADES}, the MADES approach is presented, which combines several heavy
+% weight formalisms and techniques to verify embedded systems.
+%  These techniques require steep learning and mathematical skills,
+%  makingthetoolhardtousebyUMLdesigners.
+
+% 4
+% Combemale et al. \cite{Combemale_related_work_2} use a temporal extension to OCL based 
+% on process states to specify temporal constraints. These constraints
+% are then translated to Petri nets for verification. Designers are,
+% therefore, required to learn Petri nets to understand the verification results.
+
+% 5
+% Similarly, ProMoBox \cite{ProMoBox_related_work_3} supports verifying temporal
+%  properties in the context of domain-specific modeling. ProMoBox
+%  defines a family of five languages that are required to support property
+% specification and verification. Properties are specified in LTL,
+%  and models are translated to the Spin model checker for verification.
+
+% 6
+% In \cite{verifying_filmstripping}, an approach to verify linear temporal logic 
+% properties similar to our verification approach is presented. But this approach
+% does not support specification of temporal properties.

@@ -1,0 +1,18 @@
+%%% Description for Software System Model
+%%% Version 1
+% Figure \ref{fig:class_diagram_software_system_model} shows an example class diagram
+% of a software system. This system has id and freeMemory attributes. The id attribute
+% is used to uniquely identify each instance of the software system. The freeMemory
+% attribute is used to store the amount of free memory available in the system. The
+% system also has three operations: 
+%  - load(app : Application): downloads the application app given as parameter;
+%  - install(app : Application): installs the loaded application app given as parameter;
+%  - run(app : Application): runs the installed application app given as parameter.
+% There is a one-to-many association between a system and applications. An application
+% has id, size, and state attributes. The id attribute is used to uniquely identify each
+% instance of the application, while the size attribute indicates the amount of memory 
+% the application requires, and the state attribute reflects the current status of the 
+% application (e.g., loaded, installed, or running). This association allows the system 
+% to manage multiple applications effectively, ensuring that resources are allocated 
+% appropriately and that the system can track the state of each application.
+% We will use this illustrative example along this work.

@@ -1,28 +1,133 @@
-% ============================================================
-% KẾT LUẬN
-% ============================================================
-\chapter*{KẾT LUẬN}
-\addcontentsline{toc}{chapter}{Kết luận}
+\begin{center}
+  \textbf{\fontsize{20}{24}\selectfont Conclusion}
+\end{center}
 
-\section*{Kết quả đạt được}
-% TODO:
-% 1. Xây dựng thành công hệ thống Fiber: browser extension tóm tắt + fact-check
-% 2. Tích hợp đa mô hình (14 models, 3 providers) với cơ chế routing tự động
-% 3. Xây dựng khung đánh giá toàn diện (ROUGE, BLEU, BERTScore/PhoBERT)
-% 4. Phát hiện ViT5 đạt BERTScore cao hơn GPT-4o trên tóm tắt tiếng Việt
-% 5. Xây dựng pipeline kiểm chứng sự kiện search-augmented
+\addcontentsline{toc}{chapter}{Conclusion}
 
-\section*{Hạn chế}
-% TODO:
-% 1. Chưa triển khai được PhoGPT, Vistral do ràng buộc GPU
-% 2. Bộ dữ liệu đánh giá còn nhỏ (50 bài)
-% 3. Chưa có human evaluation (chỉ có automatic metrics)
-% 4. Fact-checking phụ thuộc chất lượng search engine
+This thesis has addressed the challenge of specifying and verifying temporal 
+properties in UML/OCL models without requiring specialized temporal verification 
+tools. By extending OCL with temporal operators and event constructs, and providing 
+a transformation mechanism to standard OCL, we have created an approach that enables 
+modelers to verify complex behavioral properties while remaining within familiar 
+modeling environments.
 
-\section*{Hướng phát triển}
-% TODO:
-% 1. Mở rộng bộ dữ liệu đánh giá, thêm human evaluation
-% 2. Triển khai PhoGPT/Vistral khi có hạ tầng GPU phù hợp
-% 3. Fine-tune model riêng cho tóm tắt tin tức tiếng Việt
-% 4. Cải thiện fact-checking: thêm nguồn xác minh tiếng Việt
-% 5. Phát hành browser extension trên Chrome Web Store
+Our work has made several significant contributions to the field of model verification.
+First, we introduced TOCL+ (Temporal OCL+), an extension of OCL that incorporates 
+temporal operators and event constructs that enable expressing complex temporal 
+properties in a concise and intuitive way. Second, we developed a transformation 
+approach that converts TOCL+ expressions into equivalent standard OCL constraints 
+that can be verified over filmstrip models, leveraging existing OCL tools without 
+requiring specialized temporal logic model checkers.
+
+Third, we implemented our approach as a plugin for the USE tool, demonstrating its 
+practical applicability. The plugin uses ANTLR4 for parsing TOCL+ expressions and 
+employs a listener-based approach to generate the corresponding OCL constraints.
+Fourth, we validated our approach through a detailed case study of a Software System 
+model, verifying various types of temporal properties including safety and liveness 
+constraints.
+
+The significance of our work lies in making temporal verification accessible within 
+standard modeling environments. Our approach enables comprehensive model verification 
+without requiring modelers to learn specialized temporal logics or verification tools.
+This is particularly valuable for verifying behavioral properties that cannot be 
+expressed in standard OCL, such as correct operational sequencing, eventual progress, 
+and bounded existence constraints.
+
+Several directions for future work will build upon the foundation established in this 
+research. We plan to define formal transformation rules for converting TOCL+ to OCL, 
+providing rigorous mathematical underpinnings for our approach. Additionally, we intend 
+to develop formal verification techniques for the translation process to ensure semantic 
+preservation between the original specifications and their OCL translations. To further 
+validate our approach, we will apply the method to more diverse and complex case studies 
+across different application domains. We also aim to address current limitations of the 
+filmstrip model, particularly related to performance and scalability for larger systems. 
+Finally, we plan to integrate formal property specification patterns to reduce the effort 
+required to specify common temporal properties, making our approach even more accessible 
+to practitioners.
+% As discussed in Chapter 3, while our approach has proven effective in practice, 
+% several limitations exist and various directions for future research have been 
+% identified. These include developing formal proofs for our transformation rules, 
+% exploring optimization strategies, and extending support for real-time properties.
+
+% In conclusion, our TOCL+ approach successfully bridges the gap between standard 
+% UML/OCL modeling and temporal verification, enabling modelers to specify and verify 
+% complex behavioral properties without specialized temporal verification tools. 
+% The approach provides a practical solution to an important problem in model verification, 
+% with room for future improvements that can build upon the foundation established in 
+% this work.
+% \begin{center}
+%   \textbf{\fontsize{20}{24}\selectfont Conclusion}
+% \end{center}
+
+% \addcontentsline{toc}{chapter}{Conclusion}
+
+% This thesis has addressed the challenge of specifying and verifying temporal 
+% properties in UML/OCL models without requiring specialized temporal verification 
+% tools. By extending OCL with temporal operators and event constructs, and providing 
+% a transformation mechanism to standard OCL, we have created an approach that enables 
+% modelers to verify complex behavioral properties while remaining within familiar 
+% modeling environments.
+
+% Our work has made several significant contributions to the field of model verification.
+% First, we introduced TOCL+ (Temporal OCL+), an extension of OCL that incorporates 
+% temporal operators (such as "always," "eventually," and "until") and event constructs 
+% (like "becomesTrue" and "isCalled"). This extension enables modelers to express 
+% complex temporal properties in a concise and intuitive way, addressing a significant 
+% limitation of standard OCL. Second, we developed a transformation approach that converts 
+% TOCL+ expressions into equivalent standard OCL constraints that can be verified over 
+% filmstrip models. This approach leverages existing OCL tools for temporal verification 
+% without requiring specialized temporal logic model checkers. The transformation 
+% systematically maps temporal operators and event constructs to structural navigations 
+% through snapshots, handling the complexities of object identity and state transitions.
+
+% Third, we implemented our approach as a plugin for the USE tool, demonstrating its 
+% practical applicability. The plugin uses ANTLR4 for parsing TOCL+ expressions and 
+% employs a listener-based approach to generate the corresponding OCL constraints. 
+% This implementation bridges the gap between the theoretical foundations and practical 
+% verification tasks. Fourth, we validated our approach through a detailed case study 
+% of a Software System model, verifying various types of temporal properties including 
+% safety, uniqueness, and liveness constraints. The experimental results confirmed that 
+% our transformation approach correctly preserves the semantics of temporal properties 
+% while remaining practical for real-world modeling scenarios.
+
+% The significance of our work lies in making temporal verification accessible within 
+% standard modeling environments. By allowing modelers to specify temporal properties 
+% at a high level of abstraction while handling the verification complexity behind 
+% the scenes, we enable more comprehensive model verification without requiring 
+% modelers to learn specialized temporal logics or verification tools. Our approach 
+% is particularly valuable for verifying behavioral properties that cannot 
+% be expressed in standard OCL, such as correct operational sequencing, eventual 
+% progress, and bounded existence constraints. These properties are essential for 
+% ensuring the correctness of dynamic system behavior, especially in domains where 
+% operational sequences and timing constraints are critical.
+
+% While our approach has proven effective in practice, several limitations should be 
+% acknowledged. Most notably, we have not formally defined the transformation from TOCL+ 
+% to OCL, nor have we provided a metamodel for the TOCL+ language extension. These would 
+% provide a more rigorous foundation for our approach and enable formal analysis of the 
+% language itself. Similarly, we have not formally proven the correctness of our 
+% transformation rules mathematically. Although empirical evidence from our experiments 
+% supports their correctness, a formal proof would provide stronger guarantees about 
+% the preservation of temporal semantics. Additionally, the OCL constraints generated by 
+% our transformation can be complex and potentially impact verification performance for 
+% large models with numerous temporal properties. The constraints involve intricate 
+% navigation through snapshots and careful handling of object identity, which may affect 
+% scalability for very large systems.
+
+% Several directions for future research emerge from our work. Developing formal proofs 
+% for the correctness of our transformation rules would strengthen the theoretical 
+% foundations of our approach. Exploring optimization strategies to reduce the complexity 
+% of generated OCL constraints could improve verification performance for large models. 
+% Creating a library of common temporal verification patterns with optimized translations 
+% would make the approach more accessible to practitioners. Extending our approach to 
+% other UML modeling tools beyond USE would broaden its applicability. Incorporating 
+% quantitative time constraints would enable verification of real-time properties, 
+% extending the approach to time-critical systems. Enhancing the plugin to provide 
+% more intuitive visualizations of counterexamples when temporal properties are 
+% violated would improve usability.
+
+% In conclusion, our TOCL+ approach successfully bridges the gap between standard 
+% UML/OCL modeling and temporal verification, enabling modelers to specify and verify 
+% complex behavioral properties without specialized temporal verification tools. While 
+% there remain opportunities for improvement and extension, the approach provides a 
+% practical solution to an important problem in model verification.

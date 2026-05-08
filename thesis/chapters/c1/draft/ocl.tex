@@ -1,0 +1,296 @@
+% Descriptions for Ver6
+% Listing \ref{lst:ocl_software_system} demonstrates three key aspects of OCL constraints. 
+% First, the \texttt{memoryConstraint} ensures system integrity by verifying that the 
+% system's free memory is sufficient (non-negative). 
+% Second, the \texttt{noDuplicateApps} constraint illustrates OCL's ability to express constraints 
+% over collections using built-in operations like \texttt{select()} to filter 
+% applications by state and \texttt{isUnique()} to ensure each installed application 
+% has a unique ID. Third, the \texttt{sizeConstraint} demonstrates how OCL can define 
+% simple rules that apply to all instances of a class, in this case ensuring all 
+% applications have a positive size.
+% OCL constraints typically appear in three forms:
+% \begin{itemize}
+%     \item \textbf{Invariants:} Conditions that must always be true for all instances 
+%     of a class throughout their lifetime, as shown in our examples above.
+    
+%     \item \textbf{Preconditions:} Conditions that must be true before an operation 
+%     executes. For instance, we could specify that an application must be ...
+    
+%     \item \textbf{Postconditions:} Conditions that must be true after an operation 
+%     completes. For example, after ...
+% \end{itemize}
+
+% % Needs update
+% Listing \ref{lst:ocl_rules} demonstrates pre- and postconditions for the \texttt{load} 
+% operation. The preconditions verify that (1) the application is not already loaded 
+% and (2) there is enough memory available for the application. The postconditions 
+% ensure that (1) the application state is updated to \texttt{\#Loaded} and (2) the 
+% available memory is reduced by the application's size.
+
+% \begin{lstlisting}[
+%     style=toclstyle, 
+%     caption={OCL rules.}, 
+%     label={lst:ocl_rules}
+% ]
+% pre notLoaded: not self.loadedApps->includes(app) and
+%                not self.installedApps->includes(app) and
+%                not self.runningApps->includes(app)
+% pre enoughMemory: self.freeMemory >= app.size
+% post loaded: self.loadedApps = self.loadedApps@pre->including(app)
+% post freeMemory: self.freeMemory = self.freeMemory@pre - app.size
+% \end{lstlisting}
+
+% % Needs update
+% In the postcondition \texttt{memoryDecreased}, note the use of the \texttt{@pre} 
+% operator, which references the value of an attribute before the operation execution. 
+% This allows OCL to express constraints that relate the state before and after an 
+% operation.
+
+%%%
+% To illustrate the temporal limits of OCL, let us consider the following temporal 
+% properties of our software system:
+% \begin{itemize}
+%     \item \textbf{Safety 1:} An application loading must precede its run (i.e., an application can only be run if it has been loaded before)
+%     \item \textbf{Safety 2:} There must be an install between an application's loading and its running
+%     \item \textbf{Liveness:} Every running application will eventually stop
+% \end{itemize}
+
+% Such temporal properties are impossible to specify in OCL without at least enriching 
+% the model structure with state variables. In temporal logics, we formally distinguish 
+% safety properties (which prevent bad events/states) from liveness properties 
+% (which ensure good events/states eventually happen). Safety properties consider 
+% finite behaviors and can sometimes be handled by modifying the model to save the 
+% system history, but this approach quickly becomes cumbersome and error-prone.
+
+% The fundamental limitation is that OCL expressions can only describe a single system 
+% state or a one-step transition from a previous state to a new state upon operation 
+% call. Therefore, there is no direct way to express OCL constraints involving different 
+% states of the model at arbitrary points in time—OCL has a very limited temporal 
+% dimension.
+
+%%% Sample
+% The second expression in Listing below describes the
+% rule that provides the load(app: Application) contract. It requires that the application given as a parameter is not already
+% loaded and there is enough memory available to load it. Then, it ensures that the disk attribute is updated using
+% the @pre OCL feature.
+% To illustrate the temporal limits of OCL, let us consider the following temporal properties of the example presented in
+% figure \ref{fig:class_diagram_software_system}.
+% safety_1: an application loading must precede its run
+% safety_2: there is an install between an application loading and its run
+% liveness: Every running application eventually stops
+% Such temporal properties are impossible to specify in OCL without at least enriching the model structure with state vari
+% ables. In temporal logics [9], we formally distinguish the safety properties from the liveness ones. Safety properties for bad
+%  events/states that must not happen and liveness properties for good events/states that should happen. As safety properties
+%  consider finite behaviors, they can be handled by modifying the model and adding variables which save the system history.
+
+
+%%% Overview
+% OCL provides two kinds of descriptions: expressions that evaluate to values, and 
+% constraints that must evaluate to true. The language includes navigation operators 
+% to traverse model relationships, comprehensive collection operations, and 
+% quantifiers for building logical statements. 
+% OCL constraints typically appear as 
+% class invariants (conditions that must always be true for all instances) and 
+% operation pre/postconditions (conditions that must be true before and after 
+% execution of operations).
+
+% We will describe OCL capabilities by means of an example. The UML class diagram in 
+% Figure \ref{fig:class_diagram_software_system} represents the structure of a simple 
+% software system. This model contains two classes: \texttt{System} and \texttt{Application}. 
+% Each class has a \texttt{id} attribute to uniquely identify instances. The \texttt{System}
+% class has a \texttt{disk} attribute corresponding to the amount of memory that the 
+% system has, and the following four main operations and two helper operations:
+% \begin{itemize}
+%     \setlength{\itemsep}{0pt}
+%     \setlength{\parskip}{0pt}
+%     \setlength{\parsep}{0pt}
+%     \item \texttt{load(app : Application)}: downloads the application \textit{app} given as parameter.
+%     \item \texttt{install(app : Application)}: installs the application \textit{app} given as parameter that is loaded.
+%     \item \texttt{run(app : Application)}: executes the application \textit{app} given as a
+%     parameter that should be both loaded and installed.
+%     \item \texttt{stop(app : Application)}: stops the application \textit{app} given as a
+%     parameter that should be running.
+%     \item \texttt{allLoadedApps()}: returns all loaded applications.
+%     \item \texttt{allInstalledApps()}: returns all installed applications.
+% \end{itemize}
+% An application has a \texttt{size} attribute that corresponds to the amount of memory that the
+% application uses.
+
+% Listing \ref{lst:ocl_software_system} demonstrates three key aspects of OCL constraints. 
+% First, the memoryConstraint shows a simple value constraint that ensures system 
+% integrity by preventing negative memory values. Second, the noDuplicateApps 
+% illustrates OCL's ability to express constraints over collections using built-in 
+% operations like isUnique(). Third, the sizeConstraint demonstrates how OCL can 
+% define rules that apply to all instances of a class.
+% Listing \ref{lst:ocl_software_system} demonstrates three key aspects of OCL constraints. 
+% First, the \texttt{memoryConstraint} ensures system integrity by verifying that the 
+% system's free memory is sufficient to accommodate all installed applications, using 
+% collection operations to sum the sizes of installed applications. Second, the 
+% \texttt{noDuplicateApps} constraint illustrates OCL's ability to express constraints 
+% over collections using built-in operations like \texttt{select()} to filter 
+% applications by state and \texttt{isUnique()} to ensure each installed application 
+% has a unique ID. Third, the \texttt{sizeConstraint} demonstrates how OCL can define 
+% simple rules that apply to all instances of a class, in this case ensuring all 
+% applications have a positive size.
+
+
+% These examples represent just a small subset of OCL's expressive capabilities. 
+% OCL is type-rich, supporting basic types (Boolean, Real, Integer, String), collection 
+% types (Set, Bag, Sequence, OrderedSet), and special types (tuples, OclAny, OclType). 
+% The language provides powerful navigation capabilities for traversing relationships 
+% in the model, comprehensive collection operations for manipulating groups of objects, 
+% and quantifiers (forAll, exists) for building complex logical statements.
+
+%%% Version 3
+% The first expression verifies that the \texttt{freeRam} 
+% attribute of the \texttt{System} class is greater than or equal to zero, ensuring that the 
+% system does not report negative free memory. The second expression checks that the \texttt{apps} 
+% collection of the \texttt{System} class contains unique applications by comparing their \texttt{id} 
+% attributes. The third expression verifies that the \texttt{size} attribute of the \texttt{Application} 
+% class is greater than zero, ensuring that applications have a valid size.
+
+%%% Version 2
+% We will describe OCL capabilities by means of an example. The UML class diagram in 
+% Figure \ref{fig:class_diagram_software_system} represents the structure of a simple 
+% software system. This model contains two classes: \texttt{System} and \texttt{Application}. 
+% Each class has a \texttt{id} attribute to uniquely identify instances. The \texttt{System} 
+% class has a \texttt{freeMemory} attribute corresponding to the amount of free memory
+% that is still available, and the following three operations: 
+% \begin{itemize}
+%     \setlength{\itemsep}{0pt}
+%     \setlength{\parskip}{0pt}
+%     \item \texttt{load(app : Application)}: downloads the application \textit{app} given as parameter.
+%     \item \texttt{install(app : Application)}: installs a loaded application into the system.
+%     \item \texttt{run(app : Application)}: executes the application \textit{app} given as a 
+%     parameter that should be both loaded and installed.
+% \end{itemize}
+% Below are three typical OCL expressions. The first expression verify that 
+% % continue this
+% \begin{lstlisting}[style=toclstyle]
+% context System 
+% inv memoryConstraint: self.freeMemory >= 0
+
+% context Application 
+% inv sizeConstraint: self.size > 0
+% \end{lstlisting}
+
+% As previously mentioned, the OCL expressions are evaluated over a single system state or a one-step transition at some
+%  point in time. But, the OCL language also provides some implicit quantification over time by means of OCL rules. An OCL
+%  rule is a temporal quantification applied to an OCL boolean expression, and may be an invariant of a class, a pre- or a
+%  post-condition of an operation.
+% The expression within an invariant rule has to be satisfied throughout the whole life-time of all instances of the context
+% class.
+% The precondition and postcondition are used to specify operation
+%  contracts. A precondition has to be true each time the corresponding operation is called, and a postcondition has to be true
+% each time right after the corresponding operation execution has terminated.
+
+% This system contains two classes: \texttt{System} and \texttt{Application}. 
+% The \texttt{System} class has attributes \texttt{id} and \texttt{freeMemory}, while 
+% the \texttt{Application} class has attributes \texttt{id}, \texttt{size}, and an 
+% enumeration \texttt{state}. These classes are connected through the \texttt{SystemApplication} 
+% association, allowing a system to track multiple applications. The application state 
+% can be \texttt{\#None}, \texttt{\#Loaded}, \texttt{\#Installed}, or \texttt{\#Running}, 
+% representing different stages in the application lifecycle. The \texttt{System} class 
+% provides operations to manage applications: \texttt{load(app)}, \texttt{install(app)}, 
+% and \texttt{run(app)}.
+
+% While the class diagram shows this structure, it cannot express many important constraints. Using OCL, we can specify constraints such as: "a system's free memory must always be non-negative," "an application can only be installed if its size is less than the system's free memory," or "an application must be in the Loaded state before it can be installed." These constraints can be expressed as invariants, preconditions, and postconditions. For example, an invariant could ensure that application IDs are unique within a system, a precondition on the \texttt{install} operation could verify that an application is in the \texttt{\#Loaded} state, and a postcondition could specify that after the \texttt{run} operation, the application state becomes \texttt{\#Running}. This example illustrates how OCL complements UML by allowing precise specification of constraints that maintain system integrity.
+% We will describe OCL capabilities by means of an example. The UML class diagram 
+% in figure \ref{fig:class_diagram_software_system} represents the structure of a
+% simple software system. 
+% The software system contains 2 classes: System and Application. The System class
+% has id and freeMemory attributes. The Application class has id, size, state (enum) attributes.
+% The System class and Application class has an association SystemApplication. The System
+% track installed applications by its state. An application can be #None, #Loaded, #Installed
+% #Running. #None means the app is not downloaded or installed. #Loaded means the app has been downloaded. 
+% #Installed means the app has been #Installed. And #Running means the app is running.
+% The system use its operations: load(app), install(app), running(app). We will use
+% this illustrative example to along this thesis.
+
+%%% Sample 1
+% As explained in Sect. 2.1, UML is a graphical language for visualization of the system
+% state. But visual modeling with the UML alone is not enough for the development of
+% accurate and consistent software model. For this reason, Object Management Group
+% (OMG), in 1997, developed Object Constraint Language (OCL), which describes 
+% expressions on UML models and thus extends further the functionality of UML [60].
+% [For example, ... (write about limitation of UML and how OCL can help to overcome 
+% it in the context of an example)]
+% OCL provides two kinds of descriptions, (a) OCL expression, which is defined
+%  in the context of the constrained elements and evaluates some values, and (b) OCL
+%  constraint, which is restrictive statements concerning some underlying model that
+%  should evaluate to true. Basically, an OCL constraint is referred to as an OCL
+%  expression of the Boolean type.
+% The OCLprovides variables and operations which can be combined in various ways
+% to build expressions. There are many OCL expression types. The simplest types are
+% the basic type which consists of the types Boolean, Real, Integer and String. The
+% concrete collection types are Bag, Sequence, Set and OrderedSet. The other types
+% include tuples, which can contain one to many values of other types and special types
+% such as OclAny, OclType, OclExpression, and OclState.
+% There are three different types of OCL constraints, namely invariants of classes,
+%  preconditions and postconditions of operations, which are used to describe model
+%  properties. An invariant is a restriction in the form of expression which is applied
+%  to all instances of the class diagram and that must be true for all instances, i.e., an
+%  invariant must be satisfied after the creation of an instance of the class for which
+%  the invariant is defined.
+
+%%% Sample 2
+% OCL is a formal assertion language, easy to use, with precise and unambiguous semantics [5]. It allows the annotation
+%  of any object-oriented model, even if it is most used within UML diagrams. OCL is very rich, it includes fairly complete
+%  support for:
+%  – Navigation operators to navigate within the object-oriented model;
+%  – Set/sequence operations to manipulate sets and sequences of objects;
+%  – Universal/existential quantifiers to build first order (logic) statemeents;
+
+%%% Version 1
+% For example, while a UML class diagram can show that a Bank has multiple Accounts, 
+% it cannot express that "an Account must maintain a minimum balance of 
+% \$100" - this requires OCL. OCL provides two kinds of descriptions: expressions 
+% that evaluate to values, and constraints that must evaluate to true. 
+% OCL is type-rich, supporting basic types (Boolean, Real, Integer, String), 
+% collection types (Set, Bag, Sequence, OrderedSet), and special types (tuples, 
+% OclAny, OclType). The language includes navigation operators to traverse model 
+% relationships, comprehensive collection operations, and quantifiers for building 
+% logical statements. OCL constraints typically appear as class invariants 
+% (conditions that must always be true for all instances) and operation 
+% pre/postconditions (conditions that must be true before and after operation execution).
+
+
+% \begin{itemize} 
+%     \item \textbf{Safety 1:} An application loading must precede its run (i.e., an 
+%     application can only be run if the \texttt{load} operation has previously been 
+%     called on it) 
+%     \item \textbf{Safety 2:} There must be an install operation between an 
+%     application's loading and its running (i.e., an application must have the 
+%     \texttt{install} operation called on it after loading and before running) 
+%     \item \textbf{Safety 3:} Each application can be loaded only once (i.e., the
+%     \texttt{load} operation can only be called once for each application)
+%     \item \textbf{Liveness:} Every application in the \texttt{runningApps} collection 
+%     will eventually be removed from it (i.e., the \texttt{stop} operation will 
+%     eventually be called for every running application) 
+% \end{itemize}
+% \begin{table}[h]
+    
+%     \label{tab:temporal_properties}
+%     \begin{tabular}{p{0.95\textwidth}}
+%         \textbf{Safety 1:} An application loading must precede its run. \\
+%         \textbf{Safety 2:} There must be an install operation between an application's loading and its running. \\
+%         \textbf{Safety 3:} Each application can be loaded at most one time. \\
+%         \textbf{Liveness:} Every loaded application will eventually be installed. \\
+%     \end{tabular}
+%     \caption{Expression 1}
+% \end{table}
+
+%%% Sample 1
+% An event is a predicate that holds at different instants of time. It can be seen as a function P : Time →{true, false}
+% which indicates at each instant, if the event is triggered. The subset {t ∈ Time | P(t)}⊆Time stands then for all time instants
+% at which the event P occurs. When quantifying time, we need to select such subsets of Time that correspond to events.
+% We commonly distinguish five kinds of events in the object-oriented paradigm:
+% Operation call instants when a sender calls an operation of a receiver object
+% Operation start instants when a receiver object starts executing an operation
+% Operation end instants when the execution of an operation is finished
+% Time-triggered event that occurs when a specified instant is reached
+% State change that occurs each time the system state changes (e.g. when the value of an attribute changes). Such an event
+% may have an OCL expression as a parameter and occurs each time the OCL expression value changes.
+% OCL only provides an implicit universal quantification over operation call events within pre-conditions and a universal quan
+% tification over operation end events within post-conditions. However, it lacks the finest type of events which is state change.
+% State change events are very simple, but powerful construct. It can replace other types of events.

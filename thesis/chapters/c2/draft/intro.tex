@@ -1,0 +1,42 @@
+%%% Version 1
+As established in Chapter 1, OCL provides robust support for specifying structural properties 
+and simple behavioral constraints in UML models. However, OCL has significant limitations 
+when applied to dynamic system behavior. It operates on single system states or individual 
+transitions, making it unable to express properties that span across multiple states or 
+respond to events within the system's execution. These limitations become particularly 
+problematic for modern software systems, which frequently require complex temporal and 
+reactive behaviors.
+
+This chapter presents two main contributions to address these limitations:
+
+First, we present TOCL+, a comprehensive extension of OCL that enhances its expressiveness 
+for dynamic system aspects. TOCL+ combines temporal operators adapted from Temporal OCL 
+research with novel event-based constructs. The temporal operators enable reasoning about 
+system evolution over time with constructs like \textit{always}, \textit{sometime}, and 
+\textit{until}. Our event constructs address a critical gap by enabling the detection of 
+specific occurrences during system execution, such as operation calls and state changes. 
+Together, these extensions create a more powerful specification language capable of expressing 
+complex dynamic requirements such as "when a login attempt fails three consecutive times, 
+the account must be locked."
+
+Second, we introduce a transformation approach that enables the verification of TOCL+ 
+specifications using existing model checking tools. This approach transforms UML/OCL models 
+into filmstrip models that expose state sequences, and translates TOCL+ specifications into 
+standard OCL constraints that can be verified within the filmstrip context. This transformation 
+bridges the gap between expressing temporal requirements and verifying them, providing a 
+complete solution that integrates with established verification technologies.
+
+The chapter is organized as follows:
+\begin{itemize}
+    \item Section 2.2 presents the TOCL+ language extension, covering both temporal 
+    specification capabilities and our novel event-based constructs, as well as their 
+    integration.
+    
+    \item Section 2.3 details the transformation approach for verification, explaining 
+    how UML/OCL models are transformed to filmstrip models and how TOCL+ specifications 
+    are translated to standard OCL for verification.
+\end{itemize}
+
+By addressing both specification and verification aspects, this chapter provides a 
+comprehensive solution to the challenge of expressing and verifying dynamic system properties 
+within the MDE paradigm.

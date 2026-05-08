@@ -1,0 +1,131 @@
+\subsection{Overview}
+%%%s
+% The UML-based Specification Environment (USE) is a system tool that is used for
+% the specification, modeling and validation of software models based on UML and
+% OCL.
+% The UML/OCL models are specified and presented in textual form (.use file), and
+%  it contains classes and their attributes and operations as well as associations. The
+%  pre- and postconditions of the operations and invariants of classes are defined using
+%  OCL expressions within this file. The tool USE accesses this file, and the model is
+%  evaluated graphically, which allows examination of class diagrams, object diagrams,
+%  sequence diagrams amongst others \cite{USE}.
+
+
+\subsection{USE Model Validator}
+%%% Sample
+% In USE, a plugin called model validator has been developed and using it, a 
+% developer can automatically generate different object diagrams for a class diagram in a
+%  pre-configured search space [66]. The search space of the model validator is 
+% configured based on the given configuration and sometimes also on the specified additional
+%  invariants. The model validator uses the external tool Kodkod [78] and SAT-based
+%  methods for searching the solution. Using Kodkod, the model is expressed in relational
+% logic [44]. Then it represents the model expressed in relational logic as a SAT
+%  problem. Finally, a SAT solver checks its validity. The first solution found is immediately
+% instantiated as an object diagram and made visible by the USE, however, the
+% developer can also explore the other available solutions [49].
+%  The configurations are written in text files with the extension .properties. In the
+%  configuration file, a lower and upper limit can be specified for each configurable base
+%  type (Integer, Real, String), each class, each attribute of a class, and associations,
+%  which specifies how many instances should be there in the object diagram. In addition,
+%  it is possible to specify a set of possible values of the field as a set. These specifications
+%  can speed up the validation process, as the model validator only needs to search for
+%  object diagrams that meet the model constraints. In addition to the configuration,
+%  the developer can also provide additional OCL invariants to guide the model validator
+%  to generate specific scenarios in the form of object diagrams [37].
+%  The validate command in the tool USE initializes the model validator to look for a
+%  solution that meets the requirements of the given search space. If there is a solution,
+%  the model validator gives the output showing SATISFIABLE. If there is no valid state
+%  that satisfies all the conditions, UNSATISFIABLE is reported by the validator.
+
+
+\subsection{Filmstripping}
+% Filmstripping is a model transformation technique developed to extend USE's 
+% verification capabilities from static structure to dynamic behavior \cite{Filmstripping}. 
+% While standard OCL validation tools (including USE's Model Validator) primarily 
+% focus on structural aspects like invariants, the filmstrip approach enables 
+% verification of behavioral properties by transforming dynamic specifications into 
+% static ones. The method works by converting a UML/OCL model containing both 
+% invariants and operation pre/postconditions into an equivalent model containing 
+% only invariants. This transformed "filmstrip model" consists of the original 
+% application model augmented with specialized structures that capture system state 
+% progression. The key insight is the introduction of explicit \texttt{Snapshot} 
+% classes that represent individual system states, with \texttt{OperationCall} classes 
+% that connect consecutive snapshots. Through this transformation, temporal sequences 
+% of operations and object states are flattened into a single, verifiable object 
+% diagram. Pre and postconditions from the original model are systematically converted 
+% into invariants that constrain relationships between snapshots, effectively embedding 
+% behavioral specifications within the static structure. This approach enables the 
+% Model Validator to verify complex behavioral properties—including operation sequencing, 
+% state transitions, and temporal constraints—using the same validation mechanisms 
+% originally designed for structural verification. By bridging the gap between static 
+% and dynamic validation, filmstripping provides a comprehensive framework for 
+% verifying both aspects of a model within a single technical infrastructure.
+%%% Sample
+% In MDE, it is necessary to check that an ordinary UML/OCL model meets the formal
+% and informal described requirements [42]. The UML and OCL application models
+% can involve structural aspects in the form of OCL invariants and dynamic aspects
+%  in the form of operation pre- and postconditions. The changes in object states are
+%  triggered by operation calls. A variety of validation and verification techniques are
+%  available [21] [44] [18] [78] [15] [5] [67] which usually concentrate on checking the struc
+% tural aspects of the model. The model validator in the tool USE is also specifically
+%  designed for structural analysis of models.
+% In order to validate dynamic aspects of the model, a so-called filmstrip approach 
+% has been developed and integrated in the tool USE [36]. Filmstripping transforms a
+% given UML and OCL model, which is comprised of invariants and pre- and postconditions 
+% into an equivalent model that possesses only invariants. The transformed model
+% is called a filmstrip model. The filmstrip model is comprised of a regular application
+%  model but with additional classes to supplement the system state information. This
+%  means the original model is present and unchanged with its full functionality in a
+%  filmstrip model. The additional classes create new objects called snapshots, which
+%  represent a single system state of an application model. This makes it possible to
+%  read the progression information in a single object diagram of a filmstrip model, i.e., a
+%  sequence of operation calls and object diagrams of an application model corresponds
+%  to a single object diagram of the filmstrip model. The pre- and postconditions of the
+%  application model are transformed into invariants and removed from the operations.
+%  So the complete dynamic behavior is integrated in a single structure.
+%  The transformed model involves only structural aspects and can be validated with
+%  the available USE model validator. So, this transformation approach validates and
+%  verifies both the static and dynamic properties of any given application model.
+
+% The model transformation with filmstripping can be explained best in terms of an
+% example and we will continue with the Software System model \ref{fig:class_diagram_software_system}.
+% The figure \ref{fig:filmstrip_model} shows the class diagram of the filmstrip model.
+% The original application model, consisting of the classes \texttt{System} and 
+% \texttt{Application} with the assocation \texttt{SystemApplication}, is contained in
+% the filmstrip model and indicated in a gray border style. 
+
+% The application model is automatically transformed using a plug-in in the tool
+% USE into the filmstrip model: the non-gray border classes and invariants are added.
+% Snapshot objects explicitly allow to capture single system states from the application 
+% model. Operation call objects (suffix \texttt{OpC}) describe operation calls from
+% the application model. Basically, each operation is transformed into an \texttt{OperationCall}
+% class with attributes for the self objects and for the operation parameters.
+% As shortly explained, during the transformation process, all the application model
+% elements are transformed into the filmstrip model elements, and also new filmstrip
+% elements are introduced. The description of this transformation process is shown
+% below \cite{Filmstripping}:
+% Transformation of classes: Every class and attribute from an application model is
+% transformed into a class and attribute in a filmstrip model. Furthermore, two new
+% classes are added, namely, Snapshot and OperationCall in the filmstrip model.
+% The Snapshot class assigns each object to a snapshot. The OperationCall class
+% represents the operation calls that characterize the changes happening in the snapshot. 
+% class utilizing the pre- and postconditions. The parameters of the operation become
+% attributes with respective types in the filmstrip model. The filmstrip operation call
+% classes uses a generalization relationship to inherit with class OperationCall at the
+% top.
+% Transformation of associations: All associations of the application model become
+% directly part of the filmstrip model. Apart from that, a ternary association is added,
+% which links the Snapshot classes and the OperationCall class. This association
+% navigates from a pre-snapshot to a post-snapshot through an intermediate operation
+% call. Also, other associations and aggregations are added. The associations link
+% Snapshot and application classes, which represent that each application object from
+% the filmstrip model will be linked to exactly one Snapshot object, and the rebirth of
+% application objects in newer snapshots will be expressed by aggregation links.
+% Transformation of operation definitions and invariants: The operation definition and
+% invariants of the application model become part of the filmstrip model without changing 
+% itself.
+% Transformation of pre- and postconditions: The pre- and postconditions of the 
+% application model are transformed into invariants of the filmstrip model and assigned
+% to the concrete operation call class. The invariants of the filmstrip model are called
+% once for every operation call invocation. So, the behavior of these invariants is the
+% same as pre- and postconditions of the application model.

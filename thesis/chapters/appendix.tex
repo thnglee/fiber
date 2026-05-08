@@ -1,20 +1,118 @@
-% ============================================================
-% PHỤ LỤC
-% ============================================================
-\chapter{Phụ lục}
+\begin{center}
+\textbf{\fontsize{22}{0}\selectfont APPENDIX}
+\end{center}
+\addcontentsline{toc}{chapter}{APPENDIX}
 
-\section{Mẫu kết quả tóm tắt}
-% TODO: Ví dụ input/output của hệ thống cho mỗi model
+\subsection*{A. The USE specification for Software System case study.}
 
-\section{Mẫu kết quả kiểm chứng}
-% TODO: Ví dụ fact-check results với trust scores
+\begin{lstlisting}[
+    % caption={Specification of the Software System model in USE environment.},
+    label={lst:software_system_specification}
+]
+model SoftwareSystem
+-- Classes
+class System
+attributes
+    id : Integer
+    freeMemory : Integer init = 10
+    loadedApps : Set(Application) init = Set{}
+    installedApps : Set(Application) init = Set{}
+    runningApps : Set(Application) init = Set{}
+operations
+    load(app : Application)
+    begin
+        self.loadedApps := self.loadedApps->including(app);
+        self.freeMemory := self.freeMemory - app.size;
+    end
+    install()
+    begin
+        self.installedApps := self.installedApps->union(self.loadedApps);
+        self.loadedApps := self.loadedApps->reject(true)->excluding(null);
+    end
+    run(app : Application)
+    begin
+        self.runningApps := self.runningApps->including(app);
+    end
+    stop(app : Application)
+    begin
+        self.runningApps := self.runningApps->excluding(app);
+    end
+end
+class Application
+attributes
+    id : Integer
+    size : Integer
+end
+-- Associations
+association SystemApplication between
+    System[1] role system
+    Application[0..*] role apps
+end
+-- Invariants
+constraints
+context System
+    inv memoryConstraint: self.freeMemory >= 0
+    inv notLoadedAndInstalled: self.loadedApps->intersection(self.installedApps)->isEmpty()
+    inv sets: let appNumber: Integer = self.apps->size() in
+        (self.loadedApps->size() <= appNumber and
+        self.installedApps->size() <= appNumber and
+        self.runningApps->size() <= appNumber)
+    inv notContainsNull:
+        not self.loadedApps->includes(null) and
+        not self.installedApps->includes(null) and
+        not self.runningApps->includes(null)
 
-\section{Bảng kết quả đánh giá chi tiết}
-% TODO: Bảng đầy đủ metrics cho 50 bài viết
+context Application
+    inv sizeConstraint: self.size > 0
 
-\section{Hướng dẫn cài đặt và sử dụng}
-% TODO:
-% - Cài đặt backend
-% - Cài đặt browser extension
-% - Cài đặt BERTScore microservice
-% - Cấu hình environment variables
+context System::load(app: Application)
+    pre notLoaded: not self.loadedApps->includes(app) and
+                    not self.installedApps->includes(app) and
+                    not self.runningApps->includes(app)
+    pre enoughMemory: self.freeMemory >= app.size
+    post loaded: self.loadedApps = self.loadedApps@pre->including(app)
+    post freeMemory: self.freeMemory = self.freeMemory@pre - app.size
+    post unchanged:
+        self.apps->forAll(app |
+            app.size = app.size@pre and
+            app.id = app.id@pre)
+    post sameInstalledAndRunning:
+        self.installedApps = self.installedApps@pre and
+        self.runningApps = self.runningApps@pre
+
+context System::install()
+    pre hasLoadedApps: self.loadedApps->notEmpty()
+    post installed: self.installedApps = self.installedApps@pre->union(self.loadedApps@pre)
+    post loadedAppsEmpty: self.loadedApps = self.loadedApps@pre->reject(true)->excluding(null)
+    post sameRunning: self.runningApps = self.runningApps@pre
+    post sameMemory: self.freeMemory = self.freeMemory@pre
+    post unchanged:
+        self.apps->forAll(app |
+            app.size = app.size@pre and
+            app.id = app.id@pre)
+
+context System::run(app : Application)
+    pre isInstalled: self.installedApps->includes(app)
+    pre notRunning: not self.runningApps->includes(app)
+    post running: self.runningApps = self.runningApps@pre->including(app)
+    post sameLoaded: self.loadedApps = self.loadedApps@pre
+    post sameInstalled: self.installedApps = self.installedApps@pre
+    post sameMemory: self.freeMemory = self.freeMemory@pre
+    post unchanged:
+        self.apps->forAll(app |
+            app.size = app.size@pre and
+            app.id = app.id@pre)
+
+context System::stop(app : Application)
+    pre isRunning: self.runningApps->includes(app)
+            and self.installedApps->includes(app)
+    post notRunning: self.runningApps = self.runningApps@pre->excluding(app)
+    post sameInstalled: self.installedApps = self.installedApps@pre
+    post sameLoaded: self.loadedApps = self.loadedApps@pre
+    post sameMemory: self.freeMemory = self.freeMemory@pre
+    post unchanged:
+        self.apps->forAll(app |
+            app.size = app.size@pre and
+            app.id = app.id@pre)
+\end{lstlisting}
+

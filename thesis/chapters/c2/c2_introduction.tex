@@ -1,0 +1,67 @@
+\section{Introduction}
+
+\hspace{1cm} OCL provides strong support for structural properties in UML models but 
+falls short when specifying dynamic system behavior. Operating only on single states 
+or individual transitions, OCL cannot express properties spanning multiple states or 
+responding to system events. This limitation is significant for modern systems 
+requiring temporal and reactive behaviors.
+
+Temporal logics like LTL \cite{LTL} and CTL offer formal frameworks for temporal properties but 
+require specialized knowledge unfamiliar to most UML designers. This creates a practical 
+barrier for practitioners comfortable with UML/OCL but not with formal temporal notations.
+
+This chapter first provides an overview of Temporal OCL (TOCL) \cite{TOCL}, a foundation we build upon. We then present our two main contributions:
+
+First, we introduce TOCL+, our extension to TOCL that addresses its limitations in expressing event-based properties. TOCL+ enhances TOCL with event constructs for detecting specific system occurrences such as operation calls and state changes, along with support for bounded existence properties (e.g., "an operation is called exactly n times" or "at most n times"). TOCL+ maintains OCL's familiar syntax while significantly expanding its capabilities for specifying event-driven and quantified temporal behaviors.
+
+Second, we present a comprehensive verification approach that enables the checking of TOCL+ specifications using existing OCL tools. This approach transforms UML/OCL models into filmstrip models representing state sequences, and translates TOCL+ specifications into standard OCL constraints verifiable within these models. Our implementation defines practical translation patterns for temporal operators and event constructs, mapping them to structural navigations through snapshots and operation calls in the filmstrip model.
+
+% This chapter presents two main contributions:
+
+% First, we build upon the existing Temporal OCL (TOCL) extension \cite{TOCL}, which already 
+% incorporates temporal operators like \textit{always}, \textit{sometime}, and 
+% \textit{until} for reasoning about system evolution over time. However, TOCL remains 
+% limited in its ability to express event-based properties. Our TOCL+ extension 
+% addresses this limitation by introducing enhanced event constructs for detecting 
+% specific system occurrences such as operation calls and state changes, along with 
+% support for bounded existence properties (e.g., "an operation is called exactly n 
+% times" or "at most n times"). TOCL+ maintains OCL's familiar syntax while 
+% significantly expanding its capabilities for specifying event-driven and quantified 
+% temporal behaviors.
+% First, TOCL+ extends OCL with temporal and event capabilities. It adds temporal 
+% operators like \textit{always}, \textit{sometime}, and \textit{until} for reasoning 
+% about system evolution over time, and introduces event constructs for detecting 
+% specific system occurrences such as operation calls and state changes. TOCL+ maintains 
+% OCL's familiar syntax while enabling complex dynamic specifications.
+
+% Second, we introduce an approach that enables verification of TOCL+ 
+% specifications using existing tools. This approach transforms UML/OCL models into 
+% filmstrip models representing state sequences, and translates TOCL+ specifications 
+% into standard OCL constraints verifiable within these models.
+
+% Third: Implementation of TOCL+ to OCL transformation
+% Third, we present our implementation approach for transforming TOCL+ expressions into standard OCL constraints. This transformation defines practical translation patterns for temporal operators and event constructs, mapping them to structural navigations through snapshots and operation calls in the filmstrip model. These translations enable the verification of complex temporal properties using existing OCL verification tools without requiring specialized temporal logic model checkers.
+
+% The chapter is organized as follows:
+% \begin{itemize}
+%     \item Section 2.2 presents the specification approach.
+    
+%     \item Section 2.3 details the verification approach.
+    
+%     \item Section 2.4 describes the implementation of TOCL+ to OCL transformation.
+% \end{itemize}
+The chapter is organized as follows:
+\begin{itemize}
+    \item Section 2.2 presents the specification approach, introducing TOCL and our TOCL+ extension.
+    
+    \item Section 2.3 details the verification approach using filmstrip models.
+    
+    \item Section 2.4 describes the implementation of TOCL+ to OCL transformation.
+    
+    \item Section 2.5 discusses related work in temporal specification and verification.
+    
+    \item Section 2.6 summarizes the chapter's contributions and findings.
+\end{itemize}
+
+Together, these contributions provide a complete solution for both specifying and 
+verifying temporal properties within the model-driven engineering paradigm.
