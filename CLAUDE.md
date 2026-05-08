@@ -14,7 +14,8 @@ backend/     # Next.js 14 App Router API server
 bert/        # BERTScore microservice (FastAPI + Python + PhoBERT)
 shared/      # Shared TypeScript types
 docs/        # Documentation
-metrics_reports/  # Evaluation datasets and test results
+metrics_reports/  # Original eval-metrics CSV pipeline (ROUGE/BLEU/BERT against 5 topic CSVs)
+fusion_reports/   # MoA fusion + LLM-judge batch outputs (collect-metrics.ts, unified-report.ts)
 ```
 
 ## Commands
@@ -29,7 +30,7 @@ npm run test:streaming
 npm run test:judge        # LLM-judge service + runner tests
 npm run test:moa          # MoA fusion tests
 npm run moa:collect-metrics -- --input <urls.json>   # batch harness
-npm run report:unified    # three-axis thesis report → metrics_reports/results/
+npm run report:unified    # three-axis thesis report → fusion_reports/results/
 ```
 
 ### Extension (`cd extension`)
@@ -136,7 +137,7 @@ tuoitre.vn, thanhnien.vn, vietnamnet.vn, laodong.vn, tienphong.vn, vtv.vn, nld.c
 
 ## Output Fusion (MoA) — Wang et al. 2024 alignment
 
-**Status:** MoA is shipped on `main`. Source article is now intentionally injected into the aggregator prompt as a residual connection (Equation 1 in the paper) — this depresses overlap metrics but is required for grounded news summarization. Phase 0 paper-alignment work happens on branch `fusion-refactor` (see `fix_plan.md`); P0-1 to P0-5 + P1-1 are code-complete, P0-6 (data-collection batch) is the next blocker.
+**Status:** MoA is shipped on `main`. Source article is intentionally injected into the aggregator prompt as a residual connection (Equation 1 in the paper). After commit `afac46e` (drop "cô đọng" from the prompt — 2026-05-08) the fused-vs-best-draft win rate flipped from 22.2% to 70%+; fused now beats every sync proposer on overlap metrics too. P0-1..P0-5 + P1-1 + C-1 (`--routing-mode` flag) + C-2 (`compare-synthesis-vs-ranker.ts`) all code-complete on `main`. Smoke 10-article batch verified end-to-end on 2026-05-08. P0-6 (multi-source n=50 execution) and P0-7 (~30-LOC B.2c report section) are the only remaining items before thesis-grade evidence lands.
 
 **Source of truth:** `fusion.pdf` (Wang et al., 2024, arXiv:2406.04692). Deltas + replication strategy: `fix_plan.md` (D1–D10 table, P0/P1/P2 phases, acceptance criteria per task).
 
@@ -156,10 +157,10 @@ tuoitre.vn, thanhnien.vn, vietnamnet.vn, laodong.vn, tienphong.vn, vtv.vn, nld.c
 | Wins vs best-draft BERT | 17/48 (35%) | 3/49 (6%) | 1/49 (2%) |
 | Wins vs best-draft ROUGE-1 | 24/48 (50%) | 0/49 | 0/49 |
 
-**Evidence files** (checked into `metrics_reports/results/`):
+**Evidence files** (checked into `fusion_reports/results/`):
 - `fusion-batch-50.{json,md}` — baseline
-- `fusion-batch-50-with-source.{json,md}` — v1 strict (experimental branch)
-- `fusion-batch-50-source-v2.{json,md}` — v2 soft (experimental branch)
+- `fusion-batch-50-with-source.{json,md}` — v1 strict (preserved on branch `fix/moa-aggregator-source-prompt`)
+- `fusion-batch-50-source-v2.{json,md}` — v2 soft (preserved on branch `fix/moa-aggregator-source-prompt`)
 
 ### Key finding — the "missing article" bug was not actually a bug
 
@@ -189,8 +190,8 @@ Softening the rules (v2) vs strict rules (v1) made no meaningful difference — 
 
 ### What's still open (current todos before thesis)
 
-- **P0-6 — multi-source 50-article execution batch** (synthesis × ranker_only paired runs + synthesis-vs-ranker pairwise comparison; ~250 new verdicts; cost ≤$10). Blocker for thesis Axis B.
-- **`compare-synthesis-vs-ranker.ts` script** — pairs same-article synthesis vs ranker_only outputs and runs `judgePairwise`. Not yet written; needed for P0-6.
+- **P0-6 — multi-source 50-article execution batch** (synthesis × ranker_only paired runs + synthesis-vs-ranker comparison; ~250 new verdicts; cost ≈$1 at smoke rate). No code blocker. Blocker for thesis Axis B.
+- **P0-7 — add B.2c "Synthesis vs Ranker" section to `unified-report.ts`** (~30 LOC). Without this, `synthesis_vs_ranker` verdicts persist correctly in the DB but don't appear in the thesis-ready Markdown.
 - **20-article human peer study** (Axis C). Build tasks at `/evaluate/admin`, get ≥2 raters, target Fleiss κ ≥ 0.4.
 - After data lands: re-run `npm run report:unified`, walk the decision tree in `fix_plan.md`, write thesis chapters T-1 (methodology alignment) + T-2 (results).
 
@@ -202,7 +203,7 @@ Softening the rules (v2) vs strict rules (v1) made no meaningful difference — 
 - `backend/output-fusion/moa.config.ts` — proposer/aggregator defaults
 - `backend/output-fusion/scripts/collect-metrics.ts` — batch harness; `--judge-vs-all` + `--routing-mode fusion_ranker_only`
 - `backend/output-fusion/scripts/stats.ts` — sign test + Fleiss κ + `lengthBucketedWinRate`
-- `metrics_reports/results/fusion-batch-50*.{json,md}` — historical three-way evidence (preserved on `fix/moa-aggregator-source-prompt`)
+- `fusion_reports/results/fusion-batch-50*.{json,md}` — historical three-way evidence (the `-with-source` and `-source-v2` variants live only on branch `fix/moa-aggregator-source-prompt`)
 - `fix_plan.md` — Phase 0/1/2 paper-alignment plan
 - `fusion.pdf` — paper (the only spec)
 
@@ -210,7 +211,7 @@ Softening the rules (v2) vs strict rules (v1) made no meaningful difference — 
 
 The MoA investigation above showed overlap metrics structurally punish editorial-synthesis. So we built a multi-axis evaluation system. The thesis question reframes as: *"Why overlap metrics cannot evaluate Mixture-of-Agents summarization: a three-axis empirical analysis."*
 
-Branch: `feature/llm-judge-evaluation` (three-axis foundations) → `fusion-refactor` (Phase 0 paper-alignment add-ons). All code work is shipped; remaining work is data collection (P0-6 batch + human study).
+Branches: code originated on `feature/llm-judge-evaluation` (three-axis foundations) and `fusion-refactor` (Phase 0 paper-alignment); both merged to `main` via PR #35 + 2026-05-08 follow-ups. All code is on `main`; remaining work is data collection (P0-6 batch + human study) and P0-7 (~30-LOC report-section gap).
 
 ### The three axes
 
@@ -336,22 +337,20 @@ npx tsx --test output-fusion/__tests__/stats.test.ts \
 
 ### Background docs
 
-- `overall_devplan.md` — original 17-phase plan (all code work shipped)
-- `llm_judge_PRD.md` — judge service spec
-- `metrics_system_PRD.md` — three-axis framework spec
-- `stats_devplan.md` — sign-test + κ math notes
-- `thesis_defense_narratives.md` — pre-committed contingency stories
+- `thesis_defense_narratives.md` — pre-committed contingency stories for thesis defense
+- `fix_plan.md` — Phase 0/1/2 paper-alignment plan (P0-6 + thesis writing remain)
+- `fusion.pdf` — Wang et al. 2024, the only spec for MoA
 
 ### Status
 
-All three-axis code shipped + Phase 0 paper-alignment code shipped on `fusion-refactor`. Live Supabase counts (as of 2026-05-07): ~2050 evaluation rows, 29 pairwise verdicts (`vs_best_draft` only), 0 human-eval responses. Two remaining data-collection blockers before thesis writing:
+All three-axis code + Phase 0 paper-alignment + C-1 + C-2 shipped on `main`. Live Supabase counts (2026-05-08, post-smoke): ~2200 evaluation rows, 79 pairwise verdicts (30 `vs_best_draft` + 39 `vs_individual_draft` + 10 `synthesis_vs_ranker`), 0 human-eval responses. Three remaining items before thesis writing:
 
-1. **P0-6 batch** (~250 new pairwise verdicts; 50 multi-source articles × 2 pipeline modes × judge-vs-all + paired synthesis-vs-ranker comparison). Requires `compare-synthesis-vs-ranker.ts` to be written. Cost ≤$10.
-2. **20-article human peer study** (Axis C) with ≥2 raters. Use `/evaluate/admin` → share `/evaluate?task=<uuid>` → aggregate via `/api/human-eval/report`. Target Fleiss κ ≥ 0.4.
+1. **P0-6 batch** (~250 new pairwise verdicts; 50 multi-source articles × 2 pipeline modes × judge-vs-all + paired synthesis-vs-ranker comparison). No code blocker. Cost ≈$1.
+2. **P0-7** — add B.2c "Synthesis vs Ranker" section to `unified-report.ts` (~30 LOC).
+3. **20-article human peer study** (Axis C) with ≥2 raters. Use `/evaluate/admin` → share `/evaluate?task=<uuid>` → aggregate via `/api/human-eval/report`. Target Fleiss κ ≥ 0.4.
 
 ### Branch hygiene
 
-- `main` — three-axis foundations + source-article-in-aggregator (intentional residual connection).
-- `fusion-refactor` — Phase 0 paper-alignment (P0-1..P0-5 + P1-1). Pending merge after P0-6 data lands.
-- `fix/moa-aggregator-source-prompt` — historical falsification artefact. **Do NOT merge** — preserves `fusion-batch-50-with-source.{json,md}` and `fusion-batch-50-source-v2.{json,md}`.
-- `feature/llm-judge-evaluation` — origin of the three-axis system; folded into `main`.
+- `main` — single source of truth. Three-axis foundations + Phase 0 paper-alignment + C-1 + C-2 + `afac46e` prompt fix all merged.
+- `fix/moa-aggregator-source-prompt` — historical falsification artefact. **Do NOT merge** — preserves `fusion-batch-50-with-source.{json,md}` and `fusion-batch-50-source-v2.{json,md}`. Note: those numbers reflect the OLD aggregator prompt (pre-`afac46e`); they don't represent current main.
+- `feature/llm-judge-evaluation`, `fusion-refactor` — feature branches, both merged into main; safe to delete locally.

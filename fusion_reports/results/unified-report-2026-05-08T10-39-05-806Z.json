@@ -1,0 +1,466 @@
+{
+  "generated_at": "2026-05-08T10:39:06.890Z",
+  "window": {
+    "since": "2026-05-08",
+    "until": null
+  },
+  "coverage": {
+    "evaluation_metrics": 157,
+    "llm_judge_pairwise": 69,
+    "human_eval_tasks": 0,
+    "human_eval_responses": 0
+  },
+  "axis_a": [
+    {
+      "approach": "fusion | moa:gpt-4o",
+      "n": 30,
+      "rouge1": 0.38927333333333336,
+      "rougeL": 0.29192,
+      "bleu": 0.11608,
+      "bert": 0.6746375862068965,
+      "compression": 37.47966666666666
+    },
+    {
+      "approach": "fusion_ranker_only | ranker:gemini-2.5-flash",
+      "n": 4,
+      "rouge1": 0.37722500000000003,
+      "rougeL": 0.282375,
+      "bleu": 0.09784999999999999,
+      "bert": 0.6492705000000001,
+      "compression": 35.2175
+    },
+    {
+      "approach": "sync | gemini-2.5-flash",
+      "n": 37,
+      "rouge1": 0.3318216216216216,
+      "rougeL": 0.25514054054054053,
+      "bleu": 0.07587027027027024,
+      "bert": 0.6472820555555554,
+      "compression": 31.92189189189189
+    },
+    {
+      "approach": "sync | claude-haiku-4-5-20251001",
+      "n": 40,
+      "rouge1": 0.3161900000000001,
+      "rougeL": 0.2549975,
+      "bleu": 0.06826000000000002,
+      "bert": 0.6442308499999999,
+      "compression": 30.513000000000005
+    },
+    {
+      "approach": "fusion_ranker_only | ranker:claude-haiku-4-5",
+      "n": 3,
+      "rouge1": 0.30129999999999996,
+      "rougeL": 0.23570000000000002,
+      "bleu": 0.053733333333333334,
+      "bert": 0.636038,
+      "compression": 29.573333333333334
+    },
+    {
+      "approach": "sync | gpt-4o-mini-2024-07-18",
+      "n": 40,
+      "rouge1": 0.190445,
+      "rougeL": 0.15160749999999995,
+      "bleu": 0.013495000000000002,
+      "bert": 0.6278183750000002,
+      "compression": 18.076999999999998
+    },
+    {
+      "approach": "fusion_ranker_only | ranker:gpt-4o-mini",
+      "n": 3,
+      "rouge1": 0.28706666666666664,
+      "rougeL": 0.23103333333333334,
+      "bleu": 0.05303333333333334,
+      "bert": 0.6198213333333333,
+      "compression": 27.330000000000002
+    }
+  ],
+  "axis_b1": [
+    {
+      "approach": "fusion | moa:gpt-4o",
+      "n": 30,
+      "faithfulness": 5,
+      "coverage": 5,
+      "fluency": 5,
+      "conciseness": 4.966666666666667,
+      "overall": 5
+    },
+    {
+      "approach": "fusion_ranker_only | ranker:gemini-2.5-flash",
+      "n": 4,
+      "faithfulness": 5,
+      "coverage": 4.75,
+      "fluency": 5,
+      "conciseness": 5,
+      "overall": 5
+    },
+    {
+      "approach": "fusion_ranker_only | ranker:claude-haiku-4-5",
+      "n": 3,
+      "faithfulness": 5,
+      "coverage": 4.333333333333333,
+      "fluency": 5,
+      "conciseness": 5,
+      "overall": 5
+    },
+    {
+      "approach": "sync | claude-haiku-4-5-20251001",
+      "n": 40,
+      "faithfulness": 5,
+      "coverage": 4.725,
+      "fluency": 4.95,
+      "conciseness": 4.925,
+      "overall": 4.95
+    },
+    {
+      "approach": "sync | gemini-2.5-flash",
+      "n": 37,
+      "faithfulness": 5,
+      "coverage": 4.783783783783784,
+      "fluency": 5,
+      "conciseness": 4.945945945945946,
+      "overall": 4.945945945945946
+    },
+    {
+      "approach": "sync | gpt-4o-mini-2024-07-18",
+      "n": 40,
+      "faithfulness": 5,
+      "coverage": 4.15,
+      "fluency": 5,
+      "conciseness": 4.875,
+      "overall": 4.575
+    },
+    {
+      "approach": "fusion_ranker_only | ranker:gpt-4o-mini",
+      "n": 3,
+      "faithfulness": 5,
+      "coverage": 4.333333333333333,
+      "fluency": 5,
+      "conciseness": 5,
+      "overall": 4.333333333333333
+    }
+  ],
+  "axis_b2": [
+    {
+      "pair": "fused vs best_draft:gemini-2.5-flash",
+      "n": 18,
+      "a_wins": 11,
+      "b_wins": 6,
+      "ties": 1,
+      "winner": "A (fused)",
+      "judge_models": [
+        "gpt-4o-mini-2024-07-18"
+      ],
+      "sign_test_p": 0.33230590820312567,
+      "n_decisive": 17,
+      "length_stats": {
+        "n_decisive": 17,
+        "raw_win_rate_a": 0.6470588235294118,
+        "bucketed_win_rate_a": 0.6333333333333333,
+        "bucketed": true,
+        "avg_len_ratio": 1.0821681601985969,
+        "buckets": [
+          {
+            "range": "<0.85",
+            "n": 1,
+            "decisive": 1,
+            "a_wins": 1,
+            "b_wins": 0,
+            "ties": 0,
+            "win_rate_a": 1
+          },
+          {
+            "range": "0.85–1.15",
+            "n": 11,
+            "decisive": 10,
+            "a_wins": 6,
+            "b_wins": 4,
+            "ties": 1,
+            "win_rate_a": 0.6
+          },
+          {
+            "range": ">1.15",
+            "n": 6,
+            "decisive": 6,
+            "a_wins": 4,
+            "b_wins": 2,
+            "ties": 0,
+            "win_rate_a": 0.6666666666666666
+          }
+        ]
+      }
+    },
+    {
+      "pair": "fused vs best_draft:gpt-4o-mini",
+      "n": 9,
+      "a_wins": 8,
+      "b_wins": 1,
+      "ties": 0,
+      "winner": "A (fused)",
+      "judge_models": [
+        "gpt-4o-mini-2024-07-18"
+      ],
+      "sign_test_p": 0.03906250000000003,
+      "n_decisive": 9,
+      "length_stats": {
+        "n_decisive": 9,
+        "raw_win_rate_a": 0.8888888888888888,
+        "bucketed_win_rate_a": 0.8888888888888888,
+        "bucketed": true,
+        "avg_len_ratio": 1.679822018098057,
+        "buckets": [
+          {
+            "range": "<0.85",
+            "n": 0,
+            "decisive": 0,
+            "a_wins": 0,
+            "b_wins": 0,
+            "ties": 0,
+            "win_rate_a": 0
+          },
+          {
+            "range": "0.85–1.15",
+            "n": 0,
+            "decisive": 0,
+            "a_wins": 0,
+            "b_wins": 0,
+            "ties": 0,
+            "win_rate_a": 0
+          },
+          {
+            "range": ">1.15",
+            "n": 9,
+            "decisive": 9,
+            "a_wins": 8,
+            "b_wins": 1,
+            "ties": 0,
+            "win_rate_a": 0.8888888888888888
+          }
+        ]
+      }
+    },
+    {
+      "pair": "fused vs best_draft:claude-haiku-4-5",
+      "n": 3,
+      "a_wins": 1,
+      "b_wins": 1,
+      "ties": 1,
+      "winner": "tie",
+      "judge_models": [
+        "gpt-4o-mini-2024-07-18"
+      ],
+      "sign_test_p": 1,
+      "n_decisive": 2,
+      "length_stats": {
+        "n_decisive": 2,
+        "raw_win_rate_a": 0.5,
+        "bucketed_win_rate_a": 0.5,
+        "bucketed": false,
+        "avg_len_ratio": 1.2417746990286436,
+        "buckets": [
+          {
+            "range": "<0.85",
+            "n": 0,
+            "decisive": 0,
+            "a_wins": 0,
+            "b_wins": 0,
+            "ties": 0,
+            "win_rate_a": 0
+          },
+          {
+            "range": "0.85–1.15",
+            "n": 0,
+            "decisive": 0,
+            "a_wins": 0,
+            "b_wins": 0,
+            "ties": 0,
+            "win_rate_a": 0
+          },
+          {
+            "range": ">1.15",
+            "n": 3,
+            "decisive": 2,
+            "a_wins": 1,
+            "b_wins": 1,
+            "ties": 1,
+            "win_rate_a": 0.5
+          }
+        ]
+      }
+    }
+  ],
+  "axis_b2_drafts": [
+    {
+      "draft_model": "gpt-4o-mini",
+      "n": 10,
+      "fused_wins": 9,
+      "draft_wins": 0,
+      "ties": 1,
+      "fused_win_rate": 1,
+      "sign_test_p": 0.00390625,
+      "judge_models": [
+        "gpt-4o-mini-2024-07-18"
+      ],
+      "length_stats": {
+        "n_decisive": 9,
+        "raw_win_rate_a": 1,
+        "bucketed_win_rate_a": 1,
+        "bucketed": true,
+        "avg_len_ratio": 2.1391786338402943,
+        "buckets": [
+          {
+            "range": "<0.85",
+            "n": 0,
+            "decisive": 0,
+            "a_wins": 0,
+            "b_wins": 0,
+            "ties": 0,
+            "win_rate_a": 0
+          },
+          {
+            "range": "0.85–1.15",
+            "n": 0,
+            "decisive": 0,
+            "a_wins": 0,
+            "b_wins": 0,
+            "ties": 0,
+            "win_rate_a": 0
+          },
+          {
+            "range": ">1.15",
+            "n": 10,
+            "decisive": 9,
+            "a_wins": 9,
+            "b_wins": 0,
+            "ties": 1,
+            "win_rate_a": 1
+          }
+        ]
+      }
+    },
+    {
+      "draft_model": "claude-haiku-4-5",
+      "n": 10,
+      "fused_wins": 7,
+      "draft_wins": 3,
+      "ties": 0,
+      "fused_win_rate": 0.7,
+      "sign_test_p": 0.3437500000000008,
+      "judge_models": [
+        "gpt-4o-mini-2024-07-18"
+      ],
+      "length_stats": {
+        "n_decisive": 10,
+        "raw_win_rate_a": 0.7,
+        "bucketed_win_rate_a": 0.875,
+        "bucketed": true,
+        "avg_len_ratio": 1.3026958152382808,
+        "buckets": [
+          {
+            "range": "<0.85",
+            "n": 0,
+            "decisive": 0,
+            "a_wins": 0,
+            "b_wins": 0,
+            "ties": 0,
+            "win_rate_a": 0
+          },
+          {
+            "range": "0.85–1.15",
+            "n": 2,
+            "decisive": 2,
+            "a_wins": 0,
+            "b_wins": 2,
+            "ties": 0,
+            "win_rate_a": 0
+          },
+          {
+            "range": ">1.15",
+            "n": 8,
+            "decisive": 8,
+            "a_wins": 7,
+            "b_wins": 1,
+            "ties": 0,
+            "win_rate_a": 0.875
+          }
+        ]
+      }
+    },
+    {
+      "draft_model": "gemini-2.5-flash",
+      "n": 9,
+      "fused_wins": 4,
+      "draft_wins": 3,
+      "ties": 2,
+      "fused_win_rate": 0.5714285714285714,
+      "sign_test_p": 1,
+      "judge_models": [
+        "gpt-4o-mini-2024-07-18"
+      ],
+      "length_stats": {
+        "n_decisive": 7,
+        "raw_win_rate_a": 0.5714285714285714,
+        "bucketed_win_rate_a": 0.5714285714285714,
+        "bucketed": false,
+        "avg_len_ratio": 1.345319330854277,
+        "buckets": [
+          {
+            "range": "<0.85",
+            "n": 0,
+            "decisive": 0,
+            "a_wins": 0,
+            "b_wins": 0,
+            "ties": 0,
+            "win_rate_a": 0
+          },
+          {
+            "range": "0.85–1.15",
+            "n": 5,
+            "decisive": 3,
+            "a_wins": 2,
+            "b_wins": 1,
+            "ties": 2,
+            "win_rate_a": 0.6666666666666666
+          },
+          {
+            "range": ">1.15",
+            "n": 4,
+            "decisive": 4,
+            "a_wins": 2,
+            "b_wins": 2,
+            "ties": 0,
+            "win_rate_a": 0.5
+          }
+        ]
+      }
+    }
+  ],
+  "axis_b3": [
+    {
+      "approach": "sync | claude-haiku-4-5-20251001",
+      "n": 40,
+      "entailment_pct": 97.18025000000002,
+      "avg_hallucinations": 0.025,
+      "worst_case": 1
+    },
+    {
+      "approach": "sync | gemini-2.5-flash",
+      "n": 37,
+      "entailment_pct": 94.98297297297297,
+      "avg_hallucinations": 0.02702702702702703,
+      "worst_case": 1
+    },
+    {
+      "approach": "sync | gpt-4o-mini-2024-07-18",
+      "n": 40,
+      "entailment_pct": 91.26749999999998,
+      "avg_hallucinations": 0.15,
+      "worst_case": 2
+    }
+  ],
+  "axis_c": {
+    "per_approach": [],
+    "per_task": [],
+    "pooled_kappa": null
+  }
+}

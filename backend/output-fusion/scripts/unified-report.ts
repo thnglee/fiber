@@ -4,7 +4,7 @@
  *
  * Reads the live Supabase tables — evaluation_metrics, llm_judge_pairwise,
  * human_eval_tasks, human_eval_responses — and emits a single thesis-ready
- * Markdown file matching the schema in metrics_system_PRD.md §8:
+ * Markdown file with the three-axis schema:
  *
  *   ## Axis A — Content Retention
  *   ## Axis B — Quality & Preference
@@ -19,13 +19,13 @@
  * Usage:
  *   npx tsx output-fusion/scripts/unified-report.ts \
  *     --since 2026-04-01 \
- *     --output ../metrics_reports/results/unified-report-<date>.md
+ *     --output ../fusion_reports/results/unified-report-<date>.md
  *
  * Flags:
  *   --since         ISO date (YYYY-MM-DD). Filters all axes to rows on/after it.
  *   --until         ISO date (YYYY-MM-DD). Optional upper bound.
  *   --output        Path for the Markdown file. Defaults to
- *                   ../metrics_reports/results/unified-report-<ISO>.md
+ *                   ../fusion_reports/results/unified-report-<ISO>.md
  *   --task-ids      Comma-separated human_eval_task ids to include in Axis C.
  *                   Defaults: all tasks in window.
  *   --min-runs      Minimum row count per (mode, model) to surface in axes
@@ -94,7 +94,7 @@ const WRITE_JSON = args.includes("--json")
 
 const DEFAULT_OUTPUT_DIR = path.resolve(
   __dirname,
-  "../../../metrics_reports/results",
+  "../../../fusion_reports/results",
 )
 const OUTPUT_PATH = path.resolve(
   process.cwd(),
@@ -748,7 +748,7 @@ function renderAxisA(entries: AxisAEntry[]): string {
       "(2024) — the MoA paper — does **not** use these metrics; it relies on " +
       "GPT-4 LC win rate (AlpacaEval). Treat Axis B as the primary signal and " +
       "read Axis A only as supplementary evidence about how closely outputs " +
-      "track source phrasing. See `metrics_system_PRD.md` §2.1.",
+      "track source phrasing.",
   )
   lines.push("")
   lines.push(

@@ -36,6 +36,11 @@
  *                  captured for fusion runs.
  *   --judge-style  rubric|absolute. Default rubric. Per-summary judge style.
  *   --judge-model  Default gpt-4o. Any model with structured-output support.
+ *   --routing-mode fusion|fusion_ranker_only. Default fusion. Selects which
+ *                  pipeline the script asks the API to run for the fusion
+ *                  call. `fusion_ranker_only` skips the aggregator and uses
+ *                  the LLM N-way ranker to pick the top draft (Wang 2024
+ *                  Figure 4a baseline). Forced runs are unaffected.
  */
 
 import * as fs from "node:fs"
@@ -73,7 +78,7 @@ const DEFAULT_INPUT = path.resolve(
 )
 const DEFAULT_OUTPUT_DIR = path.resolve(
   __dirname,
-  "../../../metrics_reports/results",
+  "../../../fusion_reports/results",
 )
 
 const INPUT_PATH = path.resolve(process.cwd(), getArg("input", DEFAULT_INPUT))
@@ -139,6 +144,18 @@ const JUDGE_CONFIG_BODY = JUDGE_ENABLED
       ...(JUDGE_VS_ALL ? { judge_vs_all_drafts: true } : {}),
     }
   : null
+
+// ─── Routing mode (fusion vs ranker baseline) ──────────────────────────────
+
+type RoutingMode = "fusion" | "fusion_ranker_only"
+const ROUTING_MODE = (() => {
+  const raw = getArg("routing-mode", "fusion")
+  if (raw === "fusion" || raw === "fusion_ranker_only") return raw
+  console.error(
+    `Invalid --routing-mode: ${raw} (expected fusion|fusion_ranker_only)`,
+  )
+  process.exit(1)
+})() as RoutingMode
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -340,7 +357,7 @@ async function runFusion(url: string): Promise<FusionRun> {
         body: JSON.stringify({
           url,
           website: safeHostname(url),
-          routing_mode: "fusion",
+          routing_mode: ROUTING_MODE,
           fusion_config: {
             proposerModels: PROPOSERS,
             aggregatorModel: AGGREGATOR,
@@ -870,6 +887,7 @@ async function main() {
   console.log(`Aggregator:  ${AGGREGATOR}`)
   console.log(`Skip forced: ${SKIP_FORCED}`)
   console.log(`Judge mode:  ${JUDGE_MODE}${JUDGE_ENABLED ? ` (style=${JUDGE_STYLE}, model=${JUDGE_MODEL})` : ""}`)
+  console.log(`Routing:     ${ROUTING_MODE}`)
   console.log("=".repeat(70))
 
   const startedAt = new Date().toISOString()

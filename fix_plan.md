@@ -2,22 +2,39 @@
 
 > **Mục tiêu cuối:** Loại bỏ các khác biệt then chốt giữa hệ thống MoA hiện tại và paper Wang et al. (2024, arXiv:2406.04692), để thesis có thể tuyên bố "fusion làm tốt / không tốt" trên cùng phương pháp đo của paper.
 >
-> **Status (2026-05-07):** Code phase XONG. Còn lại: 1 execution task (P0-6) + thesis writing (T-1, T-2).
+> **Status (2026-05-08):** Tất cả code đã shipped trên `main`. Smoke 10-article (2026-05-08) end-to-end success. Còn lại: 1 small code task (P0-7, ~30 LOC), 1 execution task (P0-6), Axis C human study (M-H), thesis writing (T-1, T-2).
 
 ---
 
-## Đã xong (code-complete trên `fusion-refactor`)
+## Đã xong (code-complete trên `main`)
 
-| Task | What shipped | File |
-|------|--------------|------|
-| P0-1 | Bỏ cap 150 từ trên aggregator | `moa.prompt.ts` |
-| P0-2 | Axis B làm primary, Axis A có caveat box, sign-test p-value | `scripts/unified-report.ts` |
-| P0-3 | `runFusionVsAllDraftsJudge` + cột `comparison_type` + flag `--judge-vs-all` | `moa.evaluation.ts`, migration 023 |
-| P0-4 | `lengthBucketedWinRate` (simplified Dubois bucket method, MIN_BUCKET_N=5) | `scripts/stats.ts` |
-| P0-5 | `runLLMRankerBaseline` + cột `pipeline_mode` + `routing_mode='fusion_ranker_only'` | `moa.service.ts`, migration 024, `app/api/summarize/route.ts` |
-| P1-1 | Wang Table 1 alignment test + cite-paper comment block | `moa.prompt.ts`, `__tests__/moa.prompt.alignment.test.ts` |
+| Task | What shipped | File | When |
+|------|--------------|------|------|
+| P0-1 | Bỏ cap 150 từ trên aggregator | `moa.prompt.ts` | PR #35 |
+| P0-2 | Axis B làm primary, Axis A có caveat box, sign-test p-value | `scripts/unified-report.ts` | PR #35 |
+| P0-3 | `runFusionVsAllDraftsJudge` + cột `comparison_type` + flag `--judge-vs-all` | `moa.evaluation.ts`, migration 023 | PR #35 |
+| P0-4 | `lengthBucketedWinRate` (simplified Dubois bucket method, MIN_BUCKET_N=5) | `scripts/stats.ts` | PR #35 |
+| P0-5 | `runLLMRankerBaseline` + cột `pipeline_mode` + `routing_mode='fusion_ranker_only'` | `moa.service.ts`, migration 024, `app/api/summarize/route.ts` | PR #35 |
+| P1-1 | Wang Table 1 alignment test + cite-paper comment block | `moa.prompt.ts`, `__tests__/moa.prompt.alignment.test.ts` | PR #35 |
+| `afac46e` | Drop "cô đọng" from aggregator prompt — flipped fused-vs-best-draft 22% → 70% | `moa.prompt.ts` | 2026-05-08 |
+| C-1 | `--routing-mode fusion\|fusion_ranker_only` flag in `collect-metrics.ts` | `scripts/collect-metrics.ts` | 2026-05-08 |
+| C-2 | `compare-synthesis-vs-ranker.ts` script (paired offline judge run) | `scripts/compare-synthesis-vs-ranker.ts` | 2026-05-08 |
 
 Cut tasks (per v2 validation): P2-1 (multi-layer MoA), P2-2 (aggregator diversity), P1-1 v1 (2-step output), D10 (aggregator sweep) — accepted as MoA-Lite final architecture.
+
+## Smoke verification (2026-05-08)
+
+10 articles × {synthesis, ranker_only} × judge → end-to-end success on `fusion_reports/results/smoke-10-{synthesis,ranker}.{json,md}` + `unified-report-2026-05-08T10-39-05-806Z.{json,md}`. Total cost $0.193.
+
+| Verdict type | Result | n | Sign-test p |
+|---|---|---|---|
+| `vs_best_draft` (fused vs strongest draft) | 8 fused / 1 best / 1 tie (88.9%) | 9 decisive | underpowered |
+| `vs_individual_draft` vs `gpt-4o-mini` | 9 fused / 0 / 1 tie (100%) | 9 decisive | **0.0039 ✓** |
+| `vs_individual_draft` vs `claude-haiku-4-5` | 7 fused / 3 (70%) | 10 decisive | 0.34 |
+| `vs_individual_draft` vs `gemini-2.5-flash` | 4 fused / 3 / 2 ties (57%) | 7 decisive | 1.00 |
+| `synthesis_vs_ranker` (NEW) | 7 synthesis / 3 ranker (70%) | 10 decisive | 0.34 |
+
+Direction is consistently fused-better. Statistical power is the only remaining gap before P0-6 produces n=50 evidence.
 
 ---
 
@@ -28,14 +45,12 @@ Cut tasks (per v2 validation): P2-1 (multi-layer MoA), P2-2 (aggregator diversit
 ### Vấn đề
 Hiện ~29 verdicts (chỉ `vs_best_draft`) → không đủ statistical power cho sign test (cần ~30 cho effect size lớn, 100+ cho effect size nhỏ-trung bình mà paper chứng kiến: ~6-8% win rate gap). Cũng chưa có verdicts loại `vs_individual_draft` và `synthesis_vs_ranker`.
 
-### Đây không phải code task — là execution task
-Ngoại lệ duy nhất: cần viết script `compare-synthesis-vs-ranker.ts` (step 6).
+### Đây là execution task — không còn code blocker
+C-1 (`--routing-mode` flag) và C-2 (`compare-synthesis-vs-ranker.ts`) đã shipped 2026-05-08. Smoke 10-article verified end-to-end success.
 
 ### Steps
 1. Verify Supabase còn budget (check `OPENAI_API_KEY` quota).
-2. Chuẩn bị URL list:
-   - Hiện có `output-fusion/scripts/sample-urls-tienphong-50.json` (50 bài).
-   - Tạo thêm `sample-urls-multi-source-50.json`: 50 bài từ tuoitre + thanhnien + vietnamnet (không dùng tienphong để tránh domain bias).
+2. Compile URL list `sample-urls-multi-source-50.json`: 50 bài từ tuoitre + thanhnien + vietnamnet (không dùng tienphong để tránh domain bias).
 3. Chạy batch synthesis mode:
    ```bash
    cd backend
@@ -51,25 +66,47 @@ Ngoại lệ duy nhất: cần viết script `compare-synthesis-vs-ranker.ts` (s
      --routing-mode fusion_ranker_only \
      --judge-mode metrics_only
    ```
-   *Note:* `--routing-mode` flag chưa được implement trong `collect-metrics.ts` — cần wire flag này vào script trước khi chạy step 4. Nhỏ, ~10 dòng.
-5. Viết script `backend/output-fusion/scripts/compare-synthesis-vs-ranker.ts`:
-   - Query Supabase: lấy cặp (`moa_fusion_results` synthesis, `moa_fusion_results` ranker) cùng `article_url` trong batch window.
-   - Với mỗi cặp, gọi `judgePairwise(synthesis_summary, ranker_summary, article)`.
-   - Save với `comparison_type='synthesis_vs_ranker'`.
+5. Chạy compare script over paired runs:
+   ```bash
+   npx tsx output-fusion/scripts/compare-synthesis-vs-ranker.ts \
+     --since <ISO timestamp khi step 3 bắt đầu> \
+     --judge-model gpt-4o-mini
+   ```
 6. Sau khi xong:
    - 50 articles × 3 drafts = 150 fused-vs-individual verdicts
    - 50 fused-vs-best verdicts
    - 50 synthesis-vs-ranker verdicts
    - **Total: ~250 verdicts mới**
-7. Chạy `npm run report:unified -- --since 2026-05-07` để get fresh report.
+7. Chạy `npm run report:unified -- --since <step 3 timestamp>` để get fresh report.
 
 ### Acceptance criteria
-- [ ] `llm_judge_pairwise` table có ≥ 200 rows mới với `created_at > '2026-05-07'`.
+- [ ] `llm_judge_pairwise` table có ≥ 200 rows mới với `created_at > <step 3 timestamp>`.
 - [ ] 3 loại verdict đầy đủ: vs_best_draft, vs_individual_draft, synthesis_vs_ranker.
 - [ ] Sign test p-value reportable cho cả 3 loại (kể cả null result).
-- [ ] Tổng cost OpenAI ≤ $10.
+- [ ] Tổng cost OpenAI ≤ $10. (Smoke at n=10 cost $0.193, so n=50 ≈ $1.)
 
-### Effort: 30 phút compile URL list + 30 phút wire `--routing-mode` flag + 1h viết compare script + 2-3h chạy batch + 30 phút verify ≈ **~5 giờ**.
+### Effort: 30 phút compile URL list + 2-3h chạy batch + 30 phút verify ≈ **~3 giờ** (giảm từ 5h vì không còn code work).
+
+---
+
+## Task P0-7: Add B.2c "Synthesis vs Ranker" section to unified-report.ts
+
+### Vấn đề
+Smoke run 2026-05-08 surfaced this gap: `compare-synthesis-vs-ranker.ts` correctly persists `comparison_type='synthesis_vs_ranker'` rows to `llm_judge_pairwise`, but `unified-report.ts` chỉ render B.2 (`vs_best_draft`) và B.2b (`vs_individual_draft`). Verdicts loại 3 invisible trong thesis-ready Markdown.
+
+### Steps
+1. Mở `backend/output-fusion/scripts/unified-report.ts`.
+2. Sau B.2b section, thêm B.2c block:
+   - Query `llm_judge_pairwise` filter `comparison_type = 'synthesis_vs_ranker'` trong window.
+   - Compute synthesis-wins / ranker-wins / ties + sign_test_p + length-bucketed win rate (use existing `lengthBucketedWinRate` helper).
+   - Render Markdown table song song với B.2 layout.
+3. Verify on existing 10 verdicts từ 2026-05-08 smoke.
+
+### Effort: ~30 LOC, ~30 phút.
+
+### Acceptance criteria
+- [ ] `unified-report.ts` produces a B.2c section khi có ≥ 1 `synthesis_vs_ranker` row trong window.
+- [ ] Re-running `npm run report:unified --since 2026-05-08` shows the 10 smoke verdicts.
 
 ---
 
@@ -182,7 +219,7 @@ P0-6 done → 3 loại verdict trên bàn:
 | `backend/output-fusion/scripts/collect-metrics.ts` | Batch harness |
 | `backend/output-fusion/scripts/unified-report.ts` | Three-axis report |
 | `backend/output-fusion/scripts/stats.ts` | Sign test, Fleiss κ, length-bucketed win rate |
-| `backend/output-fusion/scripts/compare-synthesis-vs-ranker.ts` | **TODO (P0-6 step 5)** — paired synthesis-vs-ranker judge |
+| `backend/output-fusion/scripts/compare-synthesis-vs-ranker.ts` | Paired synthesis-vs-ranker judge (shipped 2026-05-08) |
 | `backend/services/llm-judge.service.ts` | Judge calls (rubric/absolute/pairwise/ranker) |
 | `backend/services/llm-judge.runner.ts` | Judge config resolution |
 | `fusion.pdf` | Source of truth — Wang et al. 2024 |
@@ -190,8 +227,8 @@ P0-6 done → 3 loại verdict trên bàn:
 ---
 
 # Notes
-- **Branch hygiene:** `fusion-refactor` chứa toàn bộ code phase. P0-6 chạy trên cùng branch — không cần branch mới. Không động `feature/llm-judge-evaluation` (đã ship vào main). Không động `fix/moa-aggregator-source-prompt` (preserve evidence).
-- **Cost ceiling:** P0-6 estimated ≤$10 OpenAI. Confirm trước khi chạy.
+- **Branch hygiene:** Mọi code phase đã merged vào `main` (PR #35 + 2026-05-08 commits). P0-6 và P0-7 chạy trên `main`. Không động `fix/moa-aggregator-source-prompt` (preserve historical falsification evidence — outdated framing now, see project_fusion_debug.md).
+- **Cost ceiling:** Smoke at n=10 cost $0.193 → n=50 ≈ $1. Well under the $10 ceiling.
 - **Memory updates:** Sau P0-6, update `MEMORY.md` với headline numbers (raw + bucketed win rate, sign-test p cho cả 3 loại verdict).
 
 ---
@@ -199,4 +236,5 @@ P0-6 done → 3 loại verdict trên bàn:
 # Changelog
 - **v1 (2026-05-03):** Initial plan
 - **v2 (2026-05-03):** Validation pass — cut P2-1, P2-2, P1-1 v1; promoted ranker baseline to P0-5; simplified P0-4
-- **v3 (2026-05-07):** Pruned completed tasks (P0-1..P0-5, P1-1 all shipped on `fusion-refactor`). Only P0-6 (data collection + `compare-synthesis-vs-ranker.ts` script) and Phase 2 (T-1, T-2 thesis writing) remain.
+- **v3 (2026-05-07):** Pruned completed tasks (P0-1..P0-5, P1-1 all shipped). Only P0-6 (data collection + compare script) and Phase 2 (T-1, T-2 thesis writing) remain.
+- **v4 (2026-05-08):** afac46e fix flipped fused-vs-best-draft 22% → 70%. C-1 (`--routing-mode`) and C-2 (compare script) shipped — P0-6 has no code blocker. Smoke n=10 verified end-to-end. Added P0-7 (B.2c report section, surfaced by smoke). Branch hygiene updated (everything on `main`).

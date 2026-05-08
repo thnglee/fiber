@@ -1,0 +1,802 @@
+{
+  "started_at": "2026-05-08T10:35:24.415Z",
+  "finished_at": "2026-05-08T10:37:58.095Z",
+  "api_base": "http://localhost:3000",
+  "proposers": [
+    "gpt-4o-mini",
+    "gemini-2.5-flash",
+    "claude-haiku-4-5"
+  ],
+  "aggregator": "gpt-4o",
+  "records": [
+    {
+      "index": 1,
+      "url": "https://tienphong.vn/chu-nhat-do-2026-gap-nu-sinh-gan-10-lan-hien-mau-post1823998.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "ranker:gpt-4o-mini",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 19449,
+        "total_cost_usd": 0.0062074,
+        "total_tokens": 9101,
+        "fused_summary": "Trong ngày hội hiến máu Chủ Nhật Đỏ, nhiều sinh viên đã thể hiện tinh thần sẻ chia và trách nhiệm của tuổi trẻ thông qua việc hiến máu cứu người. Nguyễn Khánh Huyền, một sinh viên tại Trường ĐH Tài chính - Marketing, đã ghi dấu ấn với 6 lần hiến máu, xem đó là cách sống tích cực và có ý nghĩa. Cô cảm thấy tự hào mỗi khi nhận thông báo rằng máu của mình đã giúp cứu sống một bệnh nhân.\nNguyễn Khánh Duyên, một sinh viên ngành Lâm nghiệp, cũng chia sẻ sự hào hứng khi tham gia lần đầu vào chương trình. Cô đã hiến máu 7 lần, động lực bắt nguồn từ sự mất mát người thân. Các sinh viên khác như Đoàn Ngọc Toàn cũng cùng tâm trạng, chờ đón ngày hội với mong muốn tiếp tục góp sức cho những người cần máu. Chương trình Chủ Nhật Đỏ 2026 dự kiến quy tụ hàng ngàn sinh viên, nghệ sĩ và nhiều hoạt động ý nghĩa khác, hứa hẹn sẽ lan tỏa thông điệp hiến máu cứu người.",
+        "fused_scores": {
+          "rouge1": 0.1543,
+          "rouge2": 0.1367,
+          "rougeL": 0.121,
+          "bleu": 0.0011,
+          "bert_score": 0.58265,
+          "compression_rate": 14.61
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 7784,
+            "scores": {
+              "rouge1": 0.1543,
+              "rouge2": 0.1367,
+              "rougeL": 0.121,
+              "bleu": 0.0011,
+              "bert_score": 0.58265,
+              "compression_rate": 14.61
+            },
+            "estimated_cost_usd": 0.0004851
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 11467,
+            "scores": {
+              "rouge1": 0.1694,
+              "rouge2": 0.1455,
+              "rougeL": 0.1314,
+              "bleu": 0.0027,
+              "bert_score": 0.553531,
+              "compression_rate": 17.42
+            },
+            "estimated_cost_usd": 0.0004743
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 6065,
+            "scores": {
+              "rouge1": 0.1584,
+              "rouge2": 0.144,
+              "rougeL": 0.1356,
+              "bleu": 0.0023,
+              "bert_score": 0.546567,
+              "compression_rate": 16.13
+            },
+            "estimated_cost_usd": 0.005248
+          }
+        ],
+        "judge_pairwise": null,
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 2,
+      "url": "https://tienphong.vn/ong-tran-sy-thanh-cam-ket-gi-voi-cu-tri-lang-son-post1823987.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "ranker:gemini-2.5-flash",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 15885,
+        "total_cost_usd": 0.005162750000000001,
+        "total_tokens": 6513,
+        "fused_summary": "Ông Trần Sỹ Thanh, Chủ nhiệm Ủy ban Kiểm tra Trung ương, cùng các ứng cử viên Đại biểu Quốc hội khóa XVI đã có buổi tiếp xúc cử tri tại Đơn vị bầu cử số 1 tỉnh Lạng Sơn. Tại đây, ông Thanh cam kết nếu được bầu sẽ nỗ lực hết mình để xứng đáng là người đại diện cho nhân dân, gương mẫu chấp hành hiến pháp và pháp luật, bảo vệ quyền và lợi ích hợp pháp của nhân dân.\n\nCác ứng cử viên đều khẳng định sẽ giữ mối liên hệ chặt chẽ với cử tri, lắng nghe và phản ánh ý kiến, kiến nghị của nhân dân đến Quốc hội. Ông Trần Sỹ Thanh đặc biệt nhấn mạnh quyết tâm cùng lãnh đạo và cử tri tỉnh Lạng Sơn hoàn thành xuất sắc nhiệm vụ phát triển kinh tế - xã hội, quốc phòng an ninh giai đoạn 2025-2030, hướng tới mục tiêu xây dựng Lạng Sơn thành cực tăng trưởng vùng trung du và miền núi phía Bắc vào năm 2030.\n\nĐa số cử tri bày tỏ sự đồng tình và đánh giá cao chương trình hành động của các ứng cử viên, cho rằng các nội dung trình bày thể hiện sự quan tâm sâu sắc đến việc phát triển kinh tế - xã hội và nâng cao đời sống cho nhân dân. Buổi tiếp xúc diễn ra trong không khí dân chủ, thẳng thắn, thể hiện tinh thần trách nhiệm của các ứng cử viên và sự quan tâm của cử tri đối với cuộc bầu cử sắp tới.",
+        "fused_scores": {
+          "rouge1": 0.3711,
+          "rouge2": 0.3444,
+          "rougeL": 0.3091,
+          "bleu": 0.1237,
+          "bert_score": 0.615323,
+          "compression_rate": 34.94
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4315,
+            "scores": {
+              "rouge1": 0.2147,
+              "rouge2": 0.1915,
+              "rougeL": 0.1752,
+              "bleu": 0.0104,
+              "bert_score": 0.613958,
+              "compression_rate": 19.64
+            },
+            "estimated_cost_usd": 0.000345
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 8905,
+            "scores": {
+              "rouge1": 0.3711,
+              "rouge2": 0.3444,
+              "rougeL": 0.3091,
+              "bleu": 0.1237,
+              "bert_score": 0.615323,
+              "compression_rate": 34.94
+            },
+            "estimated_cost_usd": 0.00040095
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 5422,
+            "scores": {
+              "rouge1": 0.2965,
+              "rouge2": 0.277,
+              "rougeL": 0.2704,
+              "bleu": 0.0532,
+              "bert_score": 0.631094,
+              "compression_rate": 28.1
+            },
+            "estimated_cost_usd": 0.0044168
+          }
+        ],
+        "judge_pairwise": null,
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 3,
+      "url": "https://tienphong.vn/thong-tin-moi-vu-2-nu-sinh-lop-8-bi-bat-ve-lam-vo-o-nghe-an-post1823985.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "ranker:gpt-4o-mini",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 14727,
+        "total_cost_usd": 0.0039692500000000006,
+        "total_tokens": 5180,
+        "fused_summary": "Hai nữ sinh lớp 8 tại Trường Phổ thông Dân tộc Bán trú Trung học Cơ sở Na Loi, Nghệ An, đã bị tổ chức bắt về làm vợ theo tập tục địa phương. Sau một thời gian tuyên truyền vận động, một trong hai em, L.H.D., đã quyết định quay trở lại trường học vào ngày 3/3 tới. Nguyên nhân dẫn đến việc hai nữ sinh nghỉ học là do những nam thanh niên không phải học sinh của trường đã thực hiện việc bắt cóc vào ban đêm mà không ai ngăn cản kịp thời.\n\nNhà trường và Sở GD&ĐT Nghệ An đã có những hành động tích cực nhằm ngăn chặn tình trạng tảo hôn, tuy nhiên, hiện tượng này vẫn tồn tại tại một số khu vực. Ngành giáo dục sẽ tiếp tục tăng cường tuyên truyền để giảm thiểu tình trạng này trong tương lai.",
+        "fused_scores": {
+          "rouge1": 0.3034,
+          "rouge2": 0.2444,
+          "rougeL": 0.2375,
+          "bleu": 0.0367,
+          "bert_score": 0.605407,
+          "compression_rate": 27.75
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5599,
+            "scores": {
+              "rouge1": 0.3034,
+              "rouge2": 0.2444,
+              "rougeL": 0.2375,
+              "bleu": 0.0367,
+              "bert_score": 0.605407,
+              "compression_rate": 27.75
+            },
+            "estimated_cost_usd": 0.0003048
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 6531,
+            "scores": {
+              "rouge1": 0.3588,
+              "rouge2": 0.3197,
+              "rougeL": 0.3087,
+              "bleu": 0.0906,
+              "bert_score": 0.660655,
+              "compression_rate": 35.01
+            },
+            "estimated_cost_usd": 0.00031965
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 4588,
+            "scores": {
+              "rouge1": 0.3298,
+              "rouge2": 0.2682,
+              "rougeL": 0.2243,
+              "bleu": 0.0615,
+              "bert_score": 0.628455,
+              "compression_rate": 30.96
+            },
+            "estimated_cost_usd": 0.0033448
+          }
+        ],
+        "judge_pairwise": null,
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 4,
+      "url": "https://tienphong.vn/vung-2-hai-quan-bo-phieu-bau-cu-som-post1823970.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "ranker:claude-haiku-4-5",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 13269,
+        "total_cost_usd": 0.00473665,
+        "total_tokens": 4648,
+        "fused_summary": "Tổ bầu cử sớm của Vùng 2 Hải quân đã tổ chức bỏ phiếu sớm cho các cử tri trên biển, bao gồm tàu Hải An 68, Nhà giàn DK1/9 và các tàu của Hải đoàn 128, 129. Sau 3 ngày xuất phát, đoàn công tác đã có mặt tại Cụm Ba Kè vào sáng 1/3 và tổ chức lễ tưởng niệm các anh hùng liệt sĩ trước khi tiến hành bầu cử.\n\nCác thuyền viên trên tàu Hải An 68 được đón bằng xuồng của Tàu Trường Sa 04 để thực hiện quyền bầu cử sớm. Họ bỏ phiếu chọn đại biểu Quốc hội khóa XVI và đại biểu HĐND Thành phố nhiệm kỳ 2026-2031. Các cử tri tỏ ra phấn khởi và cảm thấy ý nghĩa khi được tham gia bầu cử trên biển.\n\nSau đó, tổ bầu cử nhanh chóng chuẩn bị để tổ chức bầu cử trên Nhà giàn DK1/9, nơi cán bộ, chiến sĩ đã trang trí phòng bầu cử. Công tác bầu cử diễn ra nghiêm túc, chặt chẽ theo đúng quy trình. Trên chuyến hải trình đến Cụm Ba Kè ngày 27/2, tổ cũng đã tiến hành bầu cử cho các cử tri của 4 tàu Hải đoàn 128, 129 đang thực hiện nhiệm vụ tại khu vực mỏ Bạch Hổ.",
+        "fused_scores": {
+          "rouge1": 0.3449,
+          "rouge2": 0.3106,
+          "rougeL": 0.3113,
+          "bleu": 0.0848,
+          "bert_score": 0.69439,
+          "compression_rate": 34.13
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3432,
+            "scores": {
+              "rouge1": 0.1405,
+              "rouge2": 0.1207,
+              "rougeL": 0.1237,
+              "bleu": 0.0016,
+              "bert_score": 0.665607,
+              "compression_rate": 13.69
+            },
+            "estimated_cost_usd": 0.00030225
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "failed",
+            "latency_ms": 5532,
+            "scores": {
+              "rouge1": null,
+              "rouge2": null,
+              "rougeL": null,
+              "bleu": null,
+              "bert_score": null,
+              "compression_rate": null
+            },
+            "estimated_cost_usd": null
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 5432,
+            "scores": {
+              "rouge1": 0.3449,
+              "rouge2": 0.3106,
+              "rougeL": 0.3113,
+              "bleu": 0.0848,
+              "bert_score": 0.69439,
+              "compression_rate": 34.13
+            },
+            "estimated_cost_usd": 0.0044344
+          }
+        ],
+        "judge_pairwise": null,
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 5,
+      "url": "https://tienphong.vn/nhung-la-phieu-dac-biet-tren-them-luc-dia-phia-nam-post1823954.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "ranker:gemini-2.5-flash",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 14991,
+        "total_cost_usd": 0.0051849999999999995,
+        "total_tokens": 6196,
+        "fused_summary": "Sáng 1/3, Tổ bầu cử sớm của Vùng 2 Hải quân đã có mặt tại Cụm Ba Kè để tổ chức bỏ phiếu sớm cho cử tri trên tàu Hải An 68 và Nhà giàn DK1/9, sau 3 ngày xuất phát. Trước khi tiến hành bầu cử, đoàn công tác đã tổ chức Lễ tưởng niệm các anh hùng liệt sĩ hy sinh trên thềm lục địa phía Nam của Tổ quốc.\nCác thuyền viên tàu Hải An 68 bày tỏ sự phấn khởi và ấn tượng khi lần đầu tiên được thực hiện quyền công dân trên biển, với không khí trang trọng không khác gì đất liền. Sau đó, Tổ bầu cử tiếp tục cơ động lên Nhà giàn DK1/9, nhanh chóng trang trí phòng bầu cử và tiến hành lễ khai mạc đầy đủ nghi thức, đảm bảo mọi quy định về bầu cử được tuân thủ.\nHoạt động này là một phần trong chuỗi hải trình của Tổ bầu cử, trước đó vào ngày 27/2, Tổ cũng đã tổ chức bỏ phiếu cho các cử tri của 4 tàu thuộc Hải đoàn 128 và 129 đang thực hiện nhiệm vụ tại khu vực mỏ Bạch Hổ.",
+        "fused_scores": {
+          "rouge1": 0.3055,
+          "rouge2": 0.2661,
+          "rougeL": 0.2505,
+          "bleu": 0.0519,
+          "bert_score": 0.667421,
+          "compression_rate": 30.45
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4966,
+            "scores": {
+              "rouge1": 0.1548,
+              "rouge2": 0.1386,
+              "rougeL": 0.1405,
+              "bleu": 0.0023,
+              "bert_score": 0.635488,
+              "compression_rate": 16.02
+            },
+            "estimated_cost_usd": 0.000312
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 5585,
+            "scores": {
+              "rouge1": 0.3055,
+              "rouge2": 0.2661,
+              "rougeL": 0.2505,
+              "bleu": 0.0519,
+              "bert_score": 0.667421,
+              "compression_rate": 30.45
+            },
+            "estimated_cost_usd": 0.0003594
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 6531,
+            "scores": {
+              "rouge1": 0.3595,
+              "rouge2": 0.3058,
+              "rougeL": 0.2525,
+              "bleu": 0.0847,
+              "bert_score": 0.664361,
+              "compression_rate": 35.19
+            },
+            "estimated_cost_usd": 0.0045135999999999996
+          }
+        ],
+        "judge_pairwise": null,
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 6,
+      "url": "https://tienphong.vn/dong-bao-dan-toc-giao-dan-dak-lak-gui-tron-niem-tin-vao-la-phieu-bau-post1823827.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "ranker:gemini-2.5-flash",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 17354,
+        "total_cost_usd": 0.0045506,
+        "total_tokens": 5894,
+        "fused_summary": "Bài viết nêu bật không khí chuẩn bị sôi nổi cho cuộc bầu cử đại biểu Quốc hội khóa XVI và HĐND các cấp nhiệm kỳ 2026-2031 tại Đắk Lắk, đặc biệt trong cộng đồng dân tộc thiểu số và bà con có đạo. Người dân bày tỏ sự kỳ vọng vào cuộc bầu cử và thể hiện rõ trách nhiệm, quyền công dân của mình.\n\nCông tác tuyên truyền được triển khai sâu rộng tại các buôn làng và giáo xứ, giúp người dân nắm rõ quy định và ý nghĩa của sự kiện chính trị này. Linh mục Nguyễn Minh Hảo của Giáo xứ Mẫu Tâm nhấn mạnh việc lồng ghép thông tin bầu cử vào sinh hoạt tôn giáo, coi việc tham gia bầu cử là bổn phận của mỗi giáo dân để chọn ra những người tài đức, có tâm góp phần phát triển đất nước.\n\nBên cạnh tuyên truyền, việc niêm yết danh sách cử tri cũng được thực hiện công khai, minh bạch tại các nhà văn hóa và trụ sở UBND, tạo điều kiện cho người dân theo dõi và kiểm tra. Ủy ban bầu cử tỉnh Đắk Lắk cho biết các khâu chuẩn bị đang được triển khai đồng bộ, chặt chẽ, đúng lộ trình và pháp luật, nhằm đảm bảo mọi cử tri chủ động tham gia và phát huy đầy đủ trách nhiệm của mình.",
+        "fused_scores": {
+          "rouge1": 0.3837,
+          "rouge2": 0.3354,
+          "rougeL": 0.2709,
+          "bleu": 0.0871,
+          "bert_score": 0.679466,
+          "compression_rate": 36.05
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 7520,
+            "scores": {
+              "rouge1": 0.1768,
+              "rouge2": 0.1584,
+              "rougeL": 0.1427,
+              "bleu": 0.0043,
+              "bert_score": 0.700735,
+              "compression_rate": 16.38
+            },
+            "estimated_cost_usd": 0.0002982
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 8519,
+            "scores": {
+              "rouge1": 0.3837,
+              "rouge2": 0.3354,
+              "rougeL": 0.2709,
+              "bleu": 0.0871,
+              "bert_score": 0.679466,
+              "compression_rate": 36.05
+            },
+            "estimated_cost_usd": 0.00037319999999999996
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 5056,
+            "scores": {
+              "rouge1": 0.3206,
+              "rouge2": 0.294,
+              "rougeL": 0.2472,
+              "bleu": 0.0602,
+              "bert_score": 0.660413,
+              "compression_rate": 29.49
+            },
+            "estimated_cost_usd": 0.0038792
+          }
+        ],
+        "judge_pairwise": null,
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 7,
+      "url": "https://tienphong.vn/cuu-chien-binh-duoc-chuong-trinh-chu-nhat-do-sua-nha-khang-trang-toi-mung-khong-ngu-duoc-post1823966.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "ranker:claude-haiku-4-5",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 12794,
+        "total_cost_usd": 0.005879850000000001,
+        "total_tokens": 8247,
+        "fused_summary": "Chương trình Chủ Nhật Đỏ 2026 do Báo Tiền Phong khởi xướng và Ngân hàng Vietcombank đồng hành đã hỗ trợ sửa chữa nhà cho 6 cựu chiến binh có hoàn cảnh khó khăn tại xã Đông Thạnh và xã Củ Chi, TPHCM. Những người lính năm xưa như ông Lưu Văn Chính, ông Nguyễn Văn Nghị, ông Lê Thanh Bằng đã sống nhiều năm trong những căn nhà xuống cấp, ẩm thấp với mái tôn dột, tường nứt, nền hư hỏng. Hỗ trợ này không chỉ cải thiện điều kiện sinh hoạt mà còn là sự tri ân đối với những người đã cống hiến tuổi trẻ cho Tổ quốc.\n\nChương trình Chủ Nhật Đỏ 2026 tại TPHCM được tổ chức bởi Báo Tiền Phong, Viện Huyết học - Truyền máu Trung ương, phối hợp cùng nhiều đơn vị như Vietcombank, Trường Đại học Văn Hiến, Bệnh viện Quân y 175 và các tập đoàn khác. Sự kiện chính thức diễn ra ngày 7-8/3 tại trường ĐH Văn Hiến với dự kiến 5.000 sinh viên, người trẻ tham gia hiến máu cứu người, cùng với sự xuất hiện của 20 nghệ sĩ, hoa hậu và các tiết mục âm nhạc ấn tượng.",
+        "fused_scores": {
+          "rouge1": 0.1877,
+          "rouge2": 0.1777,
+          "rougeL": 0.151,
+          "bleu": 0.0066,
+          "bert_score": 0.56125,
+          "compression_rate": 19.33
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3125,
+            "scores": {
+              "rouge1": 0.0699,
+              "rouge2": 0.0664,
+              "rougeL": 0.0628,
+              "bleu": 0,
+              "bert_score": 0.593975,
+              "compression_rate": 7.37
+            },
+            "estimated_cost_usd": 0.00037890000000000005
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 5977,
+            "scores": {
+              "rouge1": 0.0829,
+              "rouge2": 0.0758,
+              "rougeL": 0.074,
+              "bleu": 0,
+              "bert_score": 0.582663,
+              "compression_rate": 8.34
+            },
+            "estimated_cost_usd": 0.00035775
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 5366,
+            "scores": {
+              "rouge1": 0.1877,
+              "rouge2": 0.1777,
+              "rougeL": 0.151,
+              "bleu": 0.0066,
+              "bert_score": 0.56125,
+              "compression_rate": 19.33
+            },
+            "estimated_cost_usd": 0.0051432000000000005
+          }
+        ],
+        "judge_pairwise": null,
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 8,
+      "url": "https://tienphong.vn/no-tai-benh-vien-tra-vinh-xuat-phat-tu-hop-banh-cua-nguoi-tham-benh-post1823965.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "ranker:claude-haiku-4-5",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 11770,
+        "total_cost_usd": 0.0036927,
+        "total_tokens": 3697,
+        "fused_summary": "Sáng ngày 27/2, tại phòng E609 Khoa Chấn thương chỉnh hình của Bệnh viện Đa khoa Trà Vinh (Vĩnh Long), một hộp bánh Danisa bất ngờ phát nổ khi bà P.T.G (mẹ của bệnh nhân L.M.L) nhặt lên định mở xem. Vụ nổ làm bà G. bị thương nhẹ ở tay và chân.\n\nTheo điều tra ban đầu, hộp bánh này do N.T.N mang đến thăm bệnh nhân L.M.L vào tối 26/2 và để lại dưới gầm giường. Công an phường Nguyệt Hóa phối hợp các đơn vị nghiệp vụ Công an tỉnh Vĩnh Long tiến hành khám nghiệm hiện trường và xác minh nguyên nhân vụ việc.\n\nNhân viên y tế đã kịp thời dập tắt đám cháy bằng bình chữa cháy, ngăn chặn lửa lan sang các khu vực khác. Toàn bộ 5 bệnh nhân trong phòng đã được di chuyển an toàn sang các phòng bệnh khác, không ghi nhận thương vong. Thiệt hại chủ yếu là các vật dụng trong phòng bệnh.",
+        "fused_scores": {
+          "rouge1": 0.3713,
+          "rouge2": 0.312,
+          "rougeL": 0.2448,
+          "bleu": 0.0698,
+          "bert_score": 0.652474,
+          "compression_rate": 35.26
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 2614,
+            "scores": {
+              "rouge1": 0.1822,
+              "rouge2": 0.1546,
+              "rougeL": 0.1488,
+              "bleu": 0.0043,
+              "bert_score": 0.571366,
+              "compression_rate": 17.63
+            },
+            "estimated_cost_usd": 0.0002511
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "failed",
+            "latency_ms": 1448,
+            "scores": {
+              "rouge1": null,
+              "rouge2": null,
+              "rougeL": null,
+              "bleu": null,
+              "bert_score": null,
+              "compression_rate": null
+            },
+            "estimated_cost_usd": null
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 6156,
+            "scores": {
+              "rouge1": 0.3713,
+              "rouge2": 0.312,
+              "rougeL": 0.2448,
+              "bleu": 0.0698,
+              "bert_score": 0.652474,
+              "compression_rate": 35.26
+            },
+            "estimated_cost_usd": 0.0034416000000000004
+          }
+        ],
+        "judge_pairwise": null,
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 9,
+      "url": "https://tienphong.vn/giai-the-5-trung-tam-y-te-o-ca-mau-post1823962.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "ranker:gemini-2.5-flash",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 20396,
+        "total_cost_usd": 0.0043745500000000005,
+        "total_tokens": 5420,
+        "fused_summary": "Cà Mau đã quyết định giải thể 5 Trung tâm Y tế khu vực không có giường bệnh, chỉ thực hiện chức năng y tế dự phòng, nhằm tinh gọn bộ máy hành chính. Khoảng 179 nhân sự tại các trung tâm này sẽ được điều chuyển về các trạm y tế cấp xã hoặc giải quyết chế độ nghỉ việc, đồng thời toàn bộ tài chính, tài sản sẽ được bàn giao cho các đơn vị tiếp nhận.\n\nSong song đó, tỉnh cũng tiến hành sắp xếp lại 11 trung tâm y tế có hai chức năng (dự phòng và khám chữa bệnh). Chức năng y tế dự phòng của các trung tâm này sẽ được chuyển về trạm y tế cấp xã, còn các trung tâm sẽ được tổ chức lại thành mô hình bệnh viện khu vực để tập trung vào khám chữa bệnh. Khoảng 240 nhân sự liên quan đến y tế dự phòng từ nhóm trung tâm này cũng sẽ được chuyển về y tế cơ sở.\n\nĐộng thái này nhằm mục đích cân đối lại nguồn lực, tối ưu hóa bộ máy y tế và cải thiện chất lượng hoạt động của các trạm y tế cơ sở. Việc chuyển giao tài chính, tài sản và trang thiết bị y tế về y tế cơ sở được kỳ vọng sẽ giúp nâng cao năng lực cho các trạm y tế, vốn đang đối mặt với tình trạng xuống cấp và thiếu hụt trang thiết bị.",
+        "fused_scores": {
+          "rouge1": 0.4486,
+          "rouge2": 0.3725,
+          "rougeL": 0.299,
+          "bleu": 0.1287,
+          "bert_score": 0.634872,
+          "compression_rate": 39.43
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3258,
+            "scores": {
+              "rouge1": 0.177,
+              "rouge2": 0.1629,
+              "rougeL": 0.1603,
+              "bleu": 0.0069,
+              "bert_score": 0.663806,
+              "compression_rate": 18.14
+            },
+            "estimated_cost_usd": 0.0002676
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 12501,
+            "scores": {
+              "rouge1": 0.4486,
+              "rouge2": 0.3725,
+              "rougeL": 0.299,
+              "bleu": 0.1287,
+              "bert_score": 0.634872,
+              "compression_rate": 39.43
+            },
+            "estimated_cost_usd": 0.00035895
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 3613,
+            "scores": {
+              "rouge1": 0.3481,
+              "rouge2": 0.3246,
+              "rougeL": 0.2967,
+              "bleu": 0.085,
+              "bert_score": 0.685155,
+              "compression_rate": 32.88
+            },
+            "estimated_cost_usd": 0.0037480000000000005
+          }
+        ],
+        "judge_pairwise": null,
+        "judge_vs_drafts": []
+      }
+    },
+    {
+      "index": 10,
+      "url": "https://tienphong.vn/qua-bom-khung-con-nguyen-kip-no-nam-duoi-mong-nha-dan-post1823973.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "ranker:gpt-4o-mini",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 13031,
+        "total_cost_usd": 0.00336935,
+        "total_tokens": 4283,
+        "fused_summary": "Trong quá trình đào móng xây nhà, ông Vũ Trọng Cương ở xã Quỳnh Sơn, Nghệ An đã phát hiện một quả bom nặng 350 kg còn nguyên kíp nổ, nằm sâu khoảng 1,5 m dưới mặt đất. Ngay lập tức, Ban Chỉ huy Quân sự xã Quỳnh Sơn đã cử lực lượng đến xác minh và xác định đây là một quả bom MK-82, loại bom phá có sức công phá mạnh và nguy hiểm.\n\nĐể đảm bảo an toàn cho người dân trong khu vực, lực lượng chức năng đã phong tỏa khu vực và thực hiện biện pháp canh gác. Sau đó, Ban Công binh, Bộ Chỉ huy Quân sự tỉnh Nghệ An đã tiến hành tiêu hủy thành công quả bom tại khu vực thôn 5 Ngọc Sơn, bảo đảm an toàn tuyệt đối cho người và tài sản.",
+        "fused_scores": {
+          "rouge1": 0.4035,
+          "rouge2": 0.3195,
+          "rougeL": 0.3346,
+          "bleu": 0.1213,
+          "bert_score": 0.671407,
+          "compression_rate": 39.63
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5109,
+            "scores": {
+              "rouge1": 0.4035,
+              "rouge2": 0.3195,
+              "rougeL": 0.3346,
+              "bleu": 0.1213,
+              "bert_score": 0.671407,
+              "compression_rate": 39.63
+            },
+            "estimated_cost_usd": 0.00026654999999999995
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 4709,
+            "scores": {
+              "rouge1": 0.4961,
+              "rouge2": 0.4122,
+              "rougeL": 0.3484,
+              "bleu": 0.1991,
+              "bert_score": 0.684675,
+              "compression_rate": 49.17
+            },
+            "estimated_cost_usd": 0.00027959999999999997
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 2885,
+            "scores": {
+              "rouge1": 0.3858,
+              "rouge2": 0.3432,
+              "rougeL": 0.3169,
+              "bleu": 0.1145,
+              "bert_score": 0.663468,
+              "compression_rate": 37.97
+            },
+            "estimated_cost_usd": 0.0028232
+          }
+        ],
+        "judge_pairwise": null,
+        "judge_vs_drafts": []
+      }
+    }
+  ],
+  "statistics": {
+    "per_metric": {
+      "bert_score": {
+        "n": 10,
+        "fused_mean": 0.636466,
+        "fused_stdev": 0.04423092008488581,
+        "best_mean": 0.6553224,
+        "best_stdev": 0.041035030374330435,
+        "delta_mean": -0.018856400000000006,
+        "delta_stdev": 0.021010959136179896,
+        "wins": 0,
+        "losses": 6,
+        "ties": 4,
+        "sign_test_p": 0.031250000000000014
+      },
+      "rouge1": {
+        "n": 10,
+        "fused_mean": 0.3274,
+        "fused_stdev": 0.09329094275437462,
+        "best_mean": 0.34911000000000003,
+        "best_stdev": 0.10123964364044573,
+        "delta_mean": -0.021709999999999997,
+        "delta_stdev": 0.033457583428706986,
+        "wins": 0,
+        "losses": 4,
+        "ties": 6,
+        "sign_test_p": 0.125
+      },
+      "rouge2": {
+        "n": 10,
+        "fused_mean": 0.28193,
+        "fused_stdev": 0.07580448608829896,
+        "best_mean": 0.30358,
+        "best_stdev": 0.0819532902193547,
+        "delta_mean": -0.02165,
+        "delta_stdev": 0.03532340269251786,
+        "wins": 0,
+        "losses": 4,
+        "ties": 6,
+        "sign_test_p": 0.125
+      },
+      "rougeL": {
+        "n": 10,
+        "fused_mean": 0.25297000000000003,
+        "fused_stdev": 0.06974780044321591,
+        "best_mean": 0.26313,
+        "best_stdev": 0.07024895491512073,
+        "delta_mean": -0.010159999999999997,
+        "delta_stdev": 0.022223071094897944,
+        "wins": 0,
+        "losses": 4,
+        "ties": 6,
+        "sign_test_p": 0.125
+      },
+      "bleu": {
+        "n": 10,
+        "fused_mean": 0.07117,
+        "fused_stdev": 0.0467405855048194,
+        "best_mean": 0.08778000000000001,
+        "best_stdev": 0.05728650801017636,
+        "delta_mean": -0.016609999999999996,
+        "delta_stdev": 0.02843614483950546,
+        "wins": 0,
+        "losses": 4,
+        "ties": 6,
+        "sign_test_p": 0.125
+      }
+    }
+  }
+}

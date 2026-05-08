@@ -1,0 +1,1550 @@
+{
+  "started_at": "2026-05-08T10:30:11.158Z",
+  "finished_at": "2026-05-08T10:34:45.613Z",
+  "api_base": "http://localhost:3000",
+  "proposers": [
+    "gpt-4o-mini",
+    "gemini-2.5-flash",
+    "claude-haiku-4-5"
+  ],
+  "aggregator": "gpt-4o",
+  "records": [
+    {
+      "index": 1,
+      "url": "https://tienphong.vn/chu-nhat-do-2026-gap-nu-sinh-gan-10-lan-hien-mau-post1823998.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 28267,
+        "total_cost_usd": 0.0159287,
+        "total_tokens": 9832,
+        "fused_summary": "Ngày hội hiến máu Chủ Nhật Đỏ, do báo Tiền Phong phát động, đã thu hút sự tham gia nhiệt tình của nhiều sinh viên với tinh thần sẻ chia và trách nhiệm. Nguyễn Nguyễn Khánh Huyền, sinh viên ngành Quản lý kinh tế tại Trường ĐH Tài chính - Marketing, đã ghi dấu ấn với 6 lần hiến máu. Cô chia sẻ rằng mỗi lần hiến máu không chỉ là trao đi những giọt máu hồng mà còn là cách sống có ý nghĩa hơn. Khánh Huyền cảm thấy xúc động khi nhận được tin máu của mình đã được truyền cho bệnh nhân.\n\nNguyễn Khánh Duyên, sinh viên ngành Lâm nghiệp tại Trường ĐH Nông Lâm TPHCM, cũng đã hiến máu 7 lần, động lực bắt nguồn từ biến cố gia đình khi người thân mắc ung thư máu. Với Duyên, hiến máu là hành động lan tỏa yêu thương và đã thay đổi lối sống của cô theo hướng tích cực hơn.\n\nNgoài ra, Đoàn Ngọc Toàn, sinh viên ngành Quản trị kinh doanh quốc tế tại Trường ĐH Tài chính - Marketing, đã hiến máu 3 lần. Dù có chút lo lắng lần đầu, nhưng khi nhận tin máu của mình đã được truyền cho bệnh nhân, Toàn cảm thấy tự hào và hạnh phúc.\n\nNgày hội Chủ Nhật Đỏ là dịp để các bạn trẻ lan tỏa yêu thương, dự kiến sẽ thu hút hơn 5.000 sinh viên và sự góp mặt của nhiều nghệ sĩ, hoa hậu và các tiết mục âm nhạc đặc sắc.",
+        "fused_scores": {
+          "rouge1": 0.2083,
+          "rouge2": 0.1881,
+          "rougeL": 0.1652,
+          "bleu": 0.0101,
+          "bert_score": 0.614203,
+          "compression_rate": 20.81
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 7842,
+            "scores": {
+              "rouge1": 0.1491,
+              "rouge2": 0.1273,
+              "rougeL": 0.1138,
+              "bleu": 0.0011,
+              "bert_score": 0.590608,
+              "compression_rate": 14.67
+            },
+            "estimated_cost_usd": 0.00048569999999999993
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "failed",
+            "latency_ms": 1610,
+            "scores": {
+              "rouge1": null,
+              "rouge2": null,
+              "rougeL": null,
+              "bleu": null,
+              "bert_score": null,
+              "compression_rate": null
+            },
+            "estimated_cost_usd": null
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 5271,
+            "scores": {
+              "rouge1": 0.1377,
+              "rouge2": 0.1221,
+              "rougeL": 0.1096,
+              "bleu": 0.0011,
+              "bert_score": 0.565881,
+              "compression_rate": 14.2
+            },
+            "estimated_cost_usd": 0.005048
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản B chi tiết hơn trong việc mô tả các nhân vật và trải nghiệm của họ, cung cấp cái nhìn sâu sắc hơn về ý nghĩa của việc hiến máu.",
+          "length_note": "Bản A ngắn gọn nhưng vẫn giữ được thông tin cần thiết, do đó không bị phạt chỉ vì độ dài.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00047805,
+          "latency_ms": 2078,
+          "position_swapped": true,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": [
+          {
+            "winner": "tie",
+            "winner_label": "tie",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gpt-4o-mini",
+            "per_dimension": {
+              "faithfulness": "tie",
+              "coverage": "tie",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Cả hai bản tóm tắt đều giữ được các thông tin chính từ bài báo gốc và phản ánh tinh thần của những người tham gia hiến máu, do đó không có bản nào vượt trội hơn.",
+            "length_note": "Bản B có phần ngắn gọn hơn nhưng không bỏ sót thông tin quan trọng.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00047924999999999997,
+            "latency_ms": 1986,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:claude-haiku-4-5",
+            "per_dimension": {
+              "faithfulness": "tie",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản B cung cấp nhiều chi tiết và cảm xúc hơn về các nhân vật tham gia hiến máu, từ đó tạo nên sự kết nối sâu sắc hơn với người đọc.",
+            "length_note": "Bản A tuy ngắn gọn nhưng có phần thiếu chiều sâu trong những trải nghiệm của nhân vật.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00047384999999999994,
+            "latency_ms": 2006,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "url": "https://tienphong.vn/ong-tran-sy-thanh-cam-ket-gi-voi-cu-tri-lang-son-post1823987.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 28142,
+        "total_cost_usd": 0.01589925,
+        "total_tokens": 9613,
+        "fused_summary": "Ngày 1/3, tại xã Lộc Bình, tỉnh Lạng Sơn, Ủy ban Mặt trận Tổ quốc Việt Nam tỉnh Lạng Sơn đã tổ chức Hội nghị tiếp xúc cử tri với các ứng cử viên Đại biểu Quốc hội khóa XVI thuộc Đơn vị bầu cử số 1. Ông Trần Sỹ Thanh, Chủ nhiệm Ủy ban Kiểm tra Trung ương, cùng các ứng viên khác đã trình bày chương trình hành động và cam kết duy trì liên hệ chặt chẽ với cử tri, lắng nghe và phản ánh trung thực ý kiến của nhân dân đến Quốc hội. Ông Thanh nhấn mạnh nếu được bầu, ông sẽ nỗ lực hết mình để xứng đáng là người đại diện cho nhân dân, chấp hành Hiến pháp, pháp luật và bảo vệ quyền lợi hợp pháp của nhân dân. Ông cam kết cùng lãnh đạo và cử tri Lạng Sơn phấn đấu hoàn thành nhiệm vụ phát triển kinh tế - xã hội, đảm bảo quốc phòng an ninh giai đoạn 2025-2030, với mục tiêu xây dựng Lạng Sơn thành cực tăng trưởng vùng trung du và miền núi phía Bắc vào năm 2030. Đa số cử tri bày tỏ sự đồng tình và đánh giá cao chương trình hành động của các ứng viên, cho rằng các nội dung đã thể hiện rõ sự quan tâm đến phát triển kinh tế - xã hội và nâng cao đời sống nhân dân. Buổi tiếp xúc diễn ra trong không khí dân chủ, thẳng thắn, thể hiện tinh thần trách nhiệm của ứng cử viên và sự quan tâm của cử tri đối với cuộc bầu cử sắp tới. Trước đó, danh sách 13 ứng cử viên cho 7 vị trí đại biểu Quốc hội khóa XVI của tỉnh Lạng Sơn đã được công bố.",
+        "fused_scores": {
+          "rouge1": 0.4124,
+          "rouge2": 0.3822,
+          "rougeL": 0.3459,
+          "bleu": 0.1506,
+          "bert_score": 0.63252,
+          "compression_rate": 39.48
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5786,
+            "scores": {
+              "rouge1": 0.2147,
+              "rouge2": 0.1915,
+              "rougeL": 0.1752,
+              "bleu": 0.0104,
+              "bert_score": 0.613958,
+              "compression_rate": 19.64
+            },
+            "estimated_cost_usd": 0.000345
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 8280,
+            "scores": {
+              "rouge1": 0.4429,
+              "rouge2": 0.411,
+              "rougeL": 0.3603,
+              "bleu": 0.1868,
+              "bert_score": 0.682969,
+              "compression_rate": 42.9
+            },
+            "estimated_cost_usd": 0.00044594999999999997
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 5339,
+            "scores": {
+              "rouge1": 0.3208,
+              "rouge2": 0.3013,
+              "rougeL": 0.2956,
+              "bleu": 0.0797,
+              "bert_score": 0.62466,
+              "compression_rate": 30.11
+            },
+            "estimated_cost_usd": 0.0045608
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "tie",
+          "winner_label": "tie",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gemini-2.5-flash",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "tie",
+            "fluency": "tie",
+            "conciseness": "tie"
+          },
+          "justification": "Cả hai bản tóm tắt đều phản ánh đầy đủ thông tin chính của bài báo gốc, với nội dung tương tự và không bỏ sót điểm quan trọng nào.",
+          "length_note": "Độ dài không ảnh hưởng đến quyết định vì cả hai bản đều chứa đựng thông tin cần thiết.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00039959999999999996,
+          "latency_ms": 2016,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": [
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gpt-4o-mini",
+            "per_dimension": {
+              "faithfulness": "B",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản B cung cấp một cái nhìn chi tiết hơn về sự kiện và các cam kết của ông Trần Sỹ Thanh, mặc dù có phần dài hơn và chứa thêm thông tin về bối cảnh mà Bản A không đề cập.",
+            "length_note": "Bản B dài hơn nhưng không bị phạt vì nó cung cấp thông tin quan trọng hơn về các ứng cử viên và cam kết của họ.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00037695000000000003,
+            "latency_ms": 2270,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "tie",
+            "winner_label": "tie",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gemini-2.5-flash",
+            "per_dimension": {
+              "faithfulness": "tie",
+              "coverage": "tie",
+              "fluency": "tie",
+              "conciseness": "tie"
+            },
+            "justification": "Cả hai bản tóm tắt đều phản ánh đầy đủ thông tin chính của bài báo gốc, với nội dung tương tự và không bỏ sót điểm quan trọng nào.",
+            "length_note": "Độ dài không ảnh hưởng đến quyết định vì cả hai bản đều chứa đựng thông tin cần thiết.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00039959999999999996,
+            "latency_ms": 2058,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:claude-haiku-4-5",
+            "per_dimension": {
+              "faithfulness": "B",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "A"
+            },
+            "justification": "Bản B cung cấp thông tin đầy đủ hơn về các ứng viên và các chi tiết liên quan đến hội nghị tiếp xúc cử tri, mặc dù bản A ngắn gọn hơn nhưng thiếu một số thông tin quan trọng.",
+            "length_note": "Bản A ngắn hơn nhưng không bỏ sót điểm chính nào.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00038174999999999993,
+            "latency_ms": 1916,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "url": "https://tienphong.vn/thong-tin-moi-vu-2-nu-sinh-lop-8-bi-bat-ve-lam-vo-o-nghe-an-post1823985.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 24925,
+        "total_cost_usd": 0.01242535,
+        "total_tokens": 7665,
+        "fused_summary": "Hai nữ sinh lớp 8 của Trường Phổ thông Dân tộc Bán trú Trung học Cơ sở Na Loi, Nghệ An, là L.H.A. và L.H.D., đã bị hai nam thanh niên từ xã Mường Lống tổ chức \"bắt\" về làm vợ theo tập tục địa phương. Sự việc diễn ra trong đêm nên không ai phát hiện và ngăn chặn kịp thời. Trước đó, cả hai nữ sinh đều ngoan ngoãn và không có biểu hiện bất thường nào. Sau một thời gian vận động và tuyên truyền, em L.H.D. đã đồng ý quay trở lại trường học vào ngày 3/3. Nhà trường đang tiếp tục nỗ lực thuyết phục em học sinh còn lại quay lại trường. Sở Giáo dục và Đào tạo Nghệ An đã yêu cầu nhà trường báo cáo sự việc và sẽ phối hợp với chính quyền địa phương để tăng cường tuyên truyền, vận động nhằm ngăn chặn tình trạng tảo hôn trong lứa tuổi học sinh, một hiện tượng vẫn còn tồn tại cá biệt tại một số địa phương mặc dù ngành giáo dục đã nỗ lực giảm thiểu trong những năm gần đây.",
+        "fused_scores": {
+          "rouge1": 0.3879,
+          "rouge2": 0.3276,
+          "rougeL": 0.2916,
+          "bleu": 0.1011,
+          "bert_score": 0.625609,
+          "compression_rate": 35.84
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 5924,
+            "scores": {
+              "rouge1": 0.3034,
+              "rouge2": 0.2444,
+              "rougeL": 0.2375,
+              "bleu": 0.0367,
+              "bert_score": 0.605407,
+              "compression_rate": 27.75
+            },
+            "estimated_cost_usd": 0.0003048
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 5940,
+            "scores": {
+              "rouge1": 0.3351,
+              "rouge2": 0.2853,
+              "rougeL": 0.2507,
+              "bleu": 0.067,
+              "bert_score": 0.652179,
+              "compression_rate": 33.75
+            },
+            "estimated_cost_usd": 0.00031125
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 5911,
+            "scores": {
+              "rouge1": 0.4195,
+              "rouge2": 0.3382,
+              "rougeL": 0.3127,
+              "bleu": 0.1031,
+              "bert_score": 0.634,
+              "compression_rate": 39.75
+            },
+            "estimated_cost_usd": 0.0038168000000000004
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "A"
+          },
+          "justification": "Bản A cung cấp đầy đủ thông tin về sự việc, nguyên nhân và các phản ứng của nhà trường và ngành giáo dục, trong khi Bản B thiếu một số chi tiết quan trọng và không được trình bày rõ ràng như Bản A.",
+          "length_note": "",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.0003003,
+          "latency_ms": 2392,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": [
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gpt-4o-mini",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản A cung cấp đầy đủ thông tin về sự việc, nguyên nhân và các phản ứng của nhà trường và ngành giáo dục, trong khi Bản B thiếu một số chi tiết quan trọng và ngôn ngữ kém chuyên nghiệp hơn.",
+            "length_note": "Bản A dài hơn nhưng không bỏ sót thông tin chính nào.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.0003069,
+            "latency_ms": 2274,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "tie",
+            "winner_label": "tie",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gemini-2.5-flash",
+            "per_dimension": {
+              "faithfulness": "tie",
+              "coverage": "tie",
+              "fluency": "tie",
+              "conciseness": "tie"
+            },
+            "justification": "Cả hai bản tóm tắt đều đưa ra thông tin chính xác về sự việc một cách đầy đủ và rõ ràng, không bỏ sót điểm nào quan trọng.",
+            "length_note": "Yếu tố độ dài không ảnh hưởng đến quyết định do cả hai bản đều tương đương về nội dung.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00030975,
+            "latency_ms": 2328,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "B",
+            "winner_label": "individual_draft:claude-haiku-4-5",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:claude-haiku-4-5",
+            "per_dimension": {
+              "faithfulness": "tie",
+              "coverage": "B",
+              "fluency": "B",
+              "conciseness": "A"
+            },
+            "justification": "Bản A cung cấp thông tin rõ ràng và đầy đủ hơn về sự kiện, cũng như nhấn mạnh các nỗ lực của nhà trường và Sở Giáo dục, trong khi bản B thiếu một số chi tiết quan trọng.",
+            "length_note": "Nội dung của bản A phong phú hơn mặc dù bản B có lượng từ tương đương.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00032279999999999993,
+            "latency_ms": 2700,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "url": "https://tienphong.vn/vung-2-hai-quan-bo-phieu-bau-cu-som-post1823970.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 33591,
+        "total_cost_usd": 0.01478525,
+        "total_tokens": 8831,
+        "fused_summary": "Tổ bầu cử sớm của Vùng 2 Hải quân đã tiến hành tổ chức bỏ phiếu cho các cử tri trên biển, bao gồm thuyền viên trên tàu Hải An 68, cán bộ, chiến sĩ trên Nhà giàn DK1/9 và các tàu thuộc Hải đoàn 128 và 129. Hoạt động bỏ phiếu được triển khai tại Cụm Ba Kè vào ngày 1/3, bắt đầu với Lễ tưởng niệm các anh hùng liệt sĩ đã hy sinh trên thềm lục địa phía Nam của Tổ quốc. \n\nCác thuyền viên tàu Hải An 68, như anh Võ Tá Thanh và Hồ Viết Huy, bày tỏ sự phấn khởi và ấn tượng khi được thực hiện quyền công dân trên biển, tham gia bầu cử sớm đại biểu Quốc hội khóa XVI và đại biểu HĐND TPHCM nhiệm kỳ 2026-2031. Sau đó, Tổ bầu cử tiếp tục đến Nhà giàn DK1/9, nơi công tác bầu cử cũng được tổ chức nghiêm túc, chặt chẽ và đúng quy trình, dưới sự hướng dẫn của Đại tá Lê Hồng Quang, Phó Chủ nhiệm Chính trị Vùng 2 Hải quân, Tổ trưởng Tổ bầu cử.\n\nTrước đó, từ ngày 27/2, Tổ bầu cử đã tiến hành bầu cử cho các cử tri trên 4 tàu của Hải đoàn 128 và 129 tại khu vực mỏ Bạch Hổ. Quá trình bầu cử diễn ra nghiêm túc, chặt chẽ với sự hướng dẫn cụ thể về thể lệ và quy trình bầu cử, đảm bảo quyền bầu cử cho toàn bộ cử tri, kể cả những người đang làm nhiệm vụ tại các vị trí xa xôi trên biển.",
+        "fused_scores": {
+          "rouge1": 0.4214,
+          "rouge2": 0.3515,
+          "rougeL": 0.2966,
+          "bleu": 0.124,
+          "bert_score": 0.705471,
+          "compression_rate": 42.12
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3864,
+            "scores": {
+              "rouge1": 0.1405,
+              "rouge2": 0.1228,
+              "rougeL": 0.1237,
+              "bleu": 0.0017,
+              "bert_score": 0.663567,
+              "compression_rate": 13.69
+            },
+            "estimated_cost_usd": 0.00030225
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 9190,
+            "scores": {
+              "rouge1": 0.3061,
+              "rouge2": 0.2644,
+              "rougeL": 0.2558,
+              "bleu": 0.0523,
+              "bert_score": 0.677254,
+              "compression_rate": 30.39
+            },
+            "estimated_cost_usd": 0.0003591
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 4936,
+            "scores": {
+              "rouge1": 0.2904,
+              "rouge2": 0.2424,
+              "rougeL": 0.2044,
+              "bleu": 0.0376,
+              "bert_score": 0.611345,
+              "compression_rate": 27.8
+            },
+            "estimated_cost_usd": 0.0040464
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gemini-2.5-flash",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn và có thêm những quan điểm cảm xúc từ các thuyền viên về việc tham gia bầu cử, điều này làm cho nó chất lượng hơn Bản B.",
+          "length_note": "Bản A dài hơn nhưng không thiếu điểm chính nào, nên không bị ảnh hưởng bởi độ dài.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00038100000000000005,
+          "latency_ms": 2547,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": [
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gpt-4o-mini",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản B cung cấp thông tin chi tiết hơn về quy trình bầu cử, phản hồi của thuyền viên và các hoạt động diễn ra trong quá trình bỏ phiếu, làm rõ bối cảnh và ý nghĩa của sự kiện.",
+            "length_note": "Bản B dài hơn nhưng không làm mất đi sự súc tích cần thiết.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00035745,
+            "latency_ms": 2547,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gemini-2.5-flash",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản A cung cấp thông tin chi tiết hơn và có thêm những quan điểm cá nhân từ các thuyền viên về ý nghĩa của việc bầu cử, điều này giúp người đọc hiểu rõ hơn về sự kiện.",
+            "length_note": "Bản B ngắn hơn nhưng không bỏ sót thông tin chính, tuy nhiên bản A vẫn có sức nặng hơn nhờ các chi tiết và ý kiến thêm vào.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.0003906,
+            "latency_ms": 3173,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:claude-haiku-4-5",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản A truyền tải thông tin chi tiết hơn về các cử tri và quá trình bầu cử, bao gồm cả lễ tưởng niệm và trải nghiệm cá nhân của các thuyền viên.",
+            "length_note": "Bản A dài hơn nhưng không bỏ sót thông tin quan trọng.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00037184999999999996,
+            "latency_ms": 2488,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "url": "https://tienphong.vn/nhung-la-phieu-dac-biet-tren-them-luc-dia-phia-nam-post1823954.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 27544,
+        "total_cost_usd": 0.015405100000000001,
+        "total_tokens": 9024,
+        "fused_summary": "Sáng 1/3, Tổ bầu cử sớm của Vùng 2 Hải quân đã hoàn thành hải trình đến Cụm Ba Kè sau 3 ngày xuất phát, để tổ chức bỏ phiếu sớm cho các cử tri trên tàu Hải An 68 và Nhà giàn DK1/9. Đoàn công tác số 1 do Đại tá Lê Hồng Quang - Phó Chủ nhiệm Chính trị Vùng 2 Hải quân dẫn đầu, đã tổ chức Lễ tưởng niệm các anh hùng liệt sĩ hy sinh trên thềm lục địa phía Nam. Sau lễ tưởng niệm, các thuyền viên tàu Hải An 68 đã được đưa sang tàu Trường Sa 04 để thực hiện quyền bầu cử trong không khí trang trọng và ấn tượng, với thông tin các ứng viên đại biểu Quốc hội Khóa XVI và đại biểu HĐND TPHCM nhiệm kỳ 2026-2031 được niêm yết rõ ràng.\n\nThuyền viên Võ Tá Thanh và Hồ Viết Huy bày tỏ sự phấn khởi khi lần đầu tiên được bầu cử trên biển, cảm thấy không khác gì bầu cử trên đất liền. Sau đó, Tổ bầu cử tiếp tục di chuyển lên Nhà giàn DK1/9, nơi công tác trang trí và chuẩn bị phòng bầu cử được thực hiện đầy đủ và nhanh chóng. Lễ khai mạc diễn ra trang trọng với nghi thức chào cờ và hát quốc ca giữa biển khơi. Các cử tri đã nghiên cứu kỹ ứng viên và tiến hành bỏ phiếu theo đúng quy định.\n\nTrước đó, vào ngày 27/2, Tổ bầu cử đã tổ chức bầu cử cho cử tri của 4 tàu thuộc Hải đoàn 128 và 129 đang làm nhiệm vụ tại khu vực mỏ Bạch Hổ. Hoạt động bầu cử sớm này nhằm đảm bảo mọi công dân, kể cả những người đang làm nhiệm vụ trên biển, đều có thể thực hiện quyền bầu cử của mình.",
+        "fused_scores": {
+          "rouge1": 0.4664,
+          "rouge2": 0.3904,
+          "rougeL": 0.3422,
+          "bleu": 0.1741,
+          "bert_score": 0.752341,
+          "compression_rate": 47.31
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4449,
+            "scores": {
+              "rouge1": 0.1813,
+              "rouge2": 0.158,
+              "rougeL": 0.1527,
+              "bleu": 0.0047,
+              "bert_score": 0.671259,
+              "compression_rate": 17.39
+            },
+            "estimated_cost_usd": 0.00031979999999999997
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 6275,
+            "scores": {
+              "rouge1": 0.389,
+              "rouge2": 0.316,
+              "rougeL": 0.2811,
+              "bleu": 0.0912,
+              "bert_score": 0.640345,
+              "compression_rate": 38.15
+            },
+            "estimated_cost_usd": 0.0004032
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 4847,
+            "scores": {
+              "rouge1": 0.2709,
+              "rouge2": 0.2375,
+              "rougeL": 0.2271,
+              "bleu": 0.0399,
+              "bert_score": 0.676178,
+              "compression_rate": 28.56
+            },
+            "estimated_cost_usd": 0.0039496
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản A cung cấp đầy đủ thông tin cần thiết, bao gồm lễ tưởng niệm, cảm xúc của cử tri và chi tiết tổ chức bầu cử, trong khi bản B thiếu nhiều chi tiết quan trọng.",
+          "length_note": "Bản B ngắn hơn nhưng không đảm bảo đầy đủ thông tin chính so với bản A.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.000366,
+          "latency_ms": 2127,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": [
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gpt-4o-mini",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản B cung cấp thông tin chi tiết hơn về tổ bầu cử, lễ tưởng niệm và cảm xúc của thuyền viên, trong khi Bản A thiếu một số yếu tố quan trọng.",
+            "length_note": "Bản B dài hơn nhưng không bỏ sót thông tin chính, do đó không ảnh hưởng tiêu cực đến quyết định.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.0003672,
+            "latency_ms": 2395,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "B",
+            "winner_label": "individual_draft:gemini-2.5-flash",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gemini-2.5-flash",
+            "per_dimension": {
+              "faithfulness": "B",
+              "coverage": "B",
+              "fluency": "B",
+              "conciseness": "A"
+            },
+            "justification": "Bản A cung cấp thông tin đầy đủ và chính xác về sự kiện, đồng thời giữ được sự mạch lạc trong cách trình bày, mặc dù B bản có thêm chi tiết về các nhân chứng.",
+            "length_note": "Bản A ngắn hơn nhưng không bỏ sót thông tin chính nào.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00039195,
+            "latency_ms": 2273,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:claude-haiku-4-5",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản A cung cấp thông tin đầy đủ hơn và chi tiết hơn về không khí bầu cử cũng như cảm xúc của các thuyền viên.",
+            "length_note": "Bản B ngắn hơn, nhưng không thiếu thông tin chính.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.0003699,
+            "latency_ms": 1959,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          }
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "url": "https://tienphong.vn/dong-bao-dan-toc-giao-dan-dak-lak-gui-tron-niem-tin-vao-la-phieu-bau-post1823827.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 27877,
+        "total_cost_usd": 0.014824900000000002,
+        "total_tokens": 8772,
+        "fused_summary": "Tại tỉnh Đắk Lắk, đồng bào dân tộc thiểu số và bà con có đạo đang tích cực chuẩn bị cho cuộc bầu cử đại biểu Quốc hội khóa XVI và đại biểu HĐND các cấp nhiệm kỳ 2026-2031, dự kiến diễn ra vào ngày 15/3. Công tác tuyên truyền đã được triển khai sâu rộng tại các buôn làng và giáo xứ, giúp người dân hiểu rõ quy định và ý nghĩa của sự kiện chính trị quan trọng này. Linh mục Nguyễn Minh Hảo, quản xứ Giáo xứ Mẫu Tâm, nhấn mạnh tầm quan trọng của việc tham gia bầu cử như một bổn phận công dân và một điều răn của Hội thánh, đồng thời bày tỏ mong muốn cử tri sẽ chọn được những người có tài, có đức để điều hành bộ máy nhà nước, góp phần vào sự phát triển và ấm no, hạnh phúc của Nhân dân. \n\nViệc niêm yết danh sách cử tri đã được thực hiện công khai tại nhà văn hóa thôn, buôn và trụ sở UBND các xã, phường, giúp người dân theo dõi và yên tâm về tính chính xác. Ông Y Mer Ayn, một cư dân địa phương, cho biết bà con đã trực tiếp theo dõi danh sách niêm yết, đảm bảo sự minh bạch và chính xác. Ủy ban bầu cử tỉnh Đắk Lắk khẳng định rằng các phần việc phục vụ bầu cử được thực hiện đồng bộ, chặt chẽ, bảo đảm đúng lộ trình và quy định pháp luật, tạo điều kiện thuận lợi để mọi cử tri chủ động thực hiện quyền và trách nhiệm công dân trong ngày hội lớn của toàn dân tộc.",
+        "fused_scores": {
+          "rouge1": 0.4592,
+          "rouge2": 0.4017,
+          "rougeL": 0.3495,
+          "bleu": 0.1578,
+          "bert_score": 0.665594,
+          "compression_rate": 43.73
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3893,
+            "scores": {
+              "rouge1": 0.181,
+              "rouge2": 0.1646,
+              "rougeL": 0.1427,
+              "bleu": 0.0061,
+              "bert_score": 0.706936,
+              "compression_rate": 17.4
+            },
+            "estimated_cost_usd": 0.0003036
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 6631,
+            "scores": {
+              "rouge1": 0.4281,
+              "rouge2": 0.3965,
+              "rougeL": 0.3713,
+              "bleu": 0.1662,
+              "bert_score": 0.743461,
+              "compression_rate": 40.79
+            },
+            "estimated_cost_usd": 0.0003906
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 6135,
+            "scores": {
+              "rouge1": 0.3557,
+              "rouge2": 0.3251,
+              "rougeL": 0.2906,
+              "bleu": 0.0866,
+              "bert_score": 0.657567,
+              "compression_rate": 34.01
+            },
+            "estimated_cost_usd": 0.0041432000000000005
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "B",
+          "winner_label": "best_draft:gemini-2.5-flash",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gemini-2.5-flash",
+          "per_dimension": {
+            "faithfulness": "tie",
+            "coverage": "B",
+            "fluency": "B",
+            "conciseness": "A"
+          },
+          "justification": "Bản B cung cấp nhiều thông tin chi tiết về kỳ bầu cử và vai trò của Nhà thờ trong việc tuyên truyền, đồng thời nhấn mạnh sự quan trọng của việc tham gia bầu cử hơn so với Bản A.",
+          "length_note": "Bản B dài hơn nhưng không bỏ sót thông tin quan trọng nào.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.0003777,
+          "latency_ms": 2621,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": [
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gpt-4o-mini",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "A"
+            },
+            "justification": "Bản A cung cấp đầy đủ thông tin về cuộc bầu cử và ý nghĩa của nó, đồng thời nhấn mạnh sự chuẩn bị và trách nhiệm của người dân, trong khi bản B thiếu một số chi tiết quan trọng.",
+            "length_note": "",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00033525,
+            "latency_ms": 1769,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "B",
+            "winner_label": "individual_draft:gemini-2.5-flash",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gemini-2.5-flash",
+            "per_dimension": {
+              "faithfulness": "tie",
+              "coverage": "B",
+              "fluency": "B",
+              "conciseness": "A"
+            },
+            "justification": "Bản B cung cấp nhiều thông tin chi tiết về kỳ bầu cử và vai trò của Nhà thờ trong việc tuyên truyền, đồng thời nhấn mạnh sự quan trọng của việc tham gia bầu cử hơn so với Bản A.",
+            "length_note": "Bản B dài hơn nhưng không bỏ sót thông tin quan trọng nào.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.0003777,
+            "latency_ms": 2323,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "B",
+            "winner_label": "individual_draft:claude-haiku-4-5",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:claude-haiku-4-5",
+            "per_dimension": {
+              "faithfulness": "tie",
+              "coverage": "B",
+              "fluency": "B",
+              "conciseness": "B"
+            },
+            "justification": "Bản A cung cấp thông tin đầy đủ hơn về thái độ và hành động của cả cộng đồng và các cá nhân liên quan đến cuộc bầu cử mà không bỏ sót điểm chính nào.",
+            "length_note": "Độ dài không ảnh hưởng đến quyết định vì cả hai bản đều cung cấp thông tin cần thiết.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00036509999999999993,
+            "latency_ms": 1957,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          }
+        ]
+      }
+    },
+    {
+      "index": 7,
+      "url": "https://tienphong.vn/cuu-chien-binh-duoc-chuong-trinh-chu-nhat-do-sua-nha-khang-trang-toi-mung-khong-ngu-duoc-post1823966.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 27597,
+        "total_cost_usd": 0.016868750000000002,
+        "total_tokens": 11809,
+        "fused_summary": "Chương trình Chủ Nhật Đỏ 2026, do Báo Tiền Phong và Ngân hàng Vietcombank tổ chức, đã hỗ trợ sửa chữa nhà cho 6 cựu chiến binh có hoàn cảnh khó khăn tại xã Đông Thạnh và Củ Chi, TP.HCM. Những cựu binh này, từng cống hiến tuổi trẻ cho Tổ quốc tại các chiến trường Campuchia và biên giới phía Bắc, nay phải sống trong những căn nhà xuống cấp, ẩm thấp với mái tôn mục nát và tường rạn nứt. Sự hỗ trợ từ chương trình không chỉ cải thiện điều kiện sống mà còn thể hiện đạo lý \"uống nước nhớ nguồn\", tri ân những người đã hy sinh cho đất nước. Các cựu chiến binh như ông Lưu Văn Chính, ông Nguyễn Văn Nghị và ông Lê Thanh Bằng bày tỏ niềm vui và lòng biết ơn sâu sắc khi nhận được sự giúp đỡ này. Chương trình Chủ Nhật Đỏ cũng là ngày hội hiến máu tình nguyện lớn, với các hoạt động an sinh xã hội ý nghĩa, dự kiến diễn ra vào ngày 7-8/3 tại trường ĐH Văn Hiến, TP.HCM, quy tụ 5.000 sinh viên và các nghệ sĩ tham gia, nhằm lan tỏa thông điệp hiến máu cứu người và tri ân những người đã cống hiến cho Tổ quốc.",
+        "fused_scores": {
+          "rouge1": 0.1972,
+          "rouge2": 0.1754,
+          "rougeL": 0.1456,
+          "bleu": 0.0077,
+          "bert_score": 0.573438,
+          "compression_rate": 20.1
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3905,
+            "scores": {
+              "rouge1": 0.106,
+              "rouge2": 0.0912,
+              "rougeL": 0.09,
+              "bleu": 0.0001,
+              "bert_score": 0.564062,
+              "compression_rate": 10.8
+            },
+            "estimated_cost_usd": 0.0004107
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 6333,
+            "scores": {
+              "rouge1": 0.1877,
+              "rouge2": 0.1629,
+              "rougeL": 0.1391,
+              "bleu": 0.0081,
+              "bert_score": 0.60937,
+              "compression_rate": 18.94
+            },
+            "estimated_cost_usd": 0.00046035
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 7088,
+            "scores": {
+              "rouge1": 0.1972,
+              "rouge2": 0.1759,
+              "rougeL": 0.148,
+              "bleu": 0.0094,
+              "bert_score": 0.569783,
+              "compression_rate": 20.49
+            },
+            "estimated_cost_usd": 0.0052552
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gemini-2.5-flash",
+          "per_dimension": {
+            "faithfulness": "B",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản B cung cấp thông tin rõ ràng hơn về hoàn cảnh của từng cựu chiến binh và liệt kê các hoạt động trong chương trình một cách chi tiết hơn, mặc dù cả hai bản đều chính xác.",
+          "length_note": "Bản B dài hơn nhưng không bị bỏ sót thông tin quan trọng nào.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00045285,
+          "latency_ms": 1871,
+          "position_swapped": true,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": [
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gpt-4o-mini",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản B cung cấp đầy đủ thông tin về chương trình và nhân vật liên quan, thể hiện rõ sự tri ân đến các cựu chiến binh và chi tiết chương trình hơn so với Bản A.",
+            "length_note": "Bản B dài hơn nhưng không bị thiếu sót thông tin chính, do đó không bị phạt về độ dài.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00043755,
+            "latency_ms": 1898,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gemini-2.5-flash",
+            "per_dimension": {
+              "faithfulness": "B",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản B cung cấp thông tin rõ ràng hơn về chương trình và cụ thể hóa tình trạng của các cựu chiến binh, trong khi Bản A thiếu một số chi tiết chính.",
+            "length_note": "Bản B dài hơn nhưng không bỏ sót điểm chính, vì vậy độ dài cải thiện chất lượng thông tin.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00045345,
+            "latency_ms": 2020,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "B",
+            "winner_label": "individual_draft:claude-haiku-4-5",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:claude-haiku-4-5",
+            "per_dimension": {
+              "faithfulness": "tie",
+              "coverage": "B",
+              "fluency": "B",
+              "conciseness": "A"
+            },
+            "justification": "Bản A cung cấp đầy đủ thông tin về hoàn cảnh của các cựu chiến binh và sự tri ân của chương trình, trong khi Bản B thiếu một số chi tiết quan trọng.",
+            "length_note": "Bản A dài hơn nhưng không làm mất mát thông tin quan trọng nào.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00045345,
+            "latency_ms": 2489,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          }
+        ]
+      }
+    },
+    {
+      "index": 8,
+      "url": "https://tienphong.vn/no-tai-benh-vien-tra-vinh-xuat-phat-tu-hop-banh-cua-nguoi-tham-benh-post1823965.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 27597,
+        "total_cost_usd": 0.01241035,
+        "total_tokens": 7367,
+        "fused_summary": "Vào sáng ngày 27/2, tại phòng bệnh E609, Khoa Chấn thương chỉnh hình của Bệnh viện Đa khoa Trà Vinh, một vụ nổ xảy ra khi bà P.T.G, mẹ của bệnh nhân L.M.L, nhặt một hộp bánh hiệu Danisa đặt dưới gầm giường lên và định mở ra xem. Hộp bánh bất ngờ phát nổ, gây thương tích nhẹ cho bà G. ở tay và chân. Sự việc không gây thiệt hại nghiêm trọng về người, nhưng một số tài sản trong phòng bị cháy sém, bao gồm vỏ ống nước, dây đồng, màn cửa sổ, tủ đầu giường và các vật dụng của bệnh nhân. Nhân viên y tế và người nhà bệnh nhân đã nhanh chóng dập tắt đám cháy bằng bình chữa cháy tại chỗ, ngăn ngừa lửa lan rộng. Toàn bộ 5 bệnh nhân trong phòng đã được di dời an toàn sang các phòng khác để tiếp tục điều trị. Công an tỉnh Vĩnh Long đã vào cuộc điều tra, xác minh rằng N.T.N (SN 1994, ngụ xã Càng Long, tỉnh Vĩnh Long) là người mang hộp bánh đến thăm bệnh nhân L.M.L vào tối 26/2 và ở lại đến sáng sớm hôm sau mới rời đi. Hiện cơ quan điều tra đang tiếp tục làm rõ vụ việc, với thiệt hại chủ yếu là tài sản trong phòng bệnh.",
+        "fused_scores": {
+          "rouge1": 0.4924,
+          "rouge2": 0.3844,
+          "rougeL": 0.2726,
+          "bleu": 0.1268,
+          "bert_score": 0.655159,
+          "compression_rate": 47.41
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3814,
+            "scores": {
+              "rouge1": 0.1822,
+              "rouge2": 0.1546,
+              "rougeL": 0.1488,
+              "bleu": 0.0043,
+              "bert_score": 0.571366,
+              "compression_rate": 17.63
+            },
+            "estimated_cost_usd": 0.0002511
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 9724,
+            "scores": {
+              "rouge1": 0.388,
+              "rouge2": 0.3134,
+              "rougeL": 0.235,
+              "bleu": 0.0816,
+              "bert_score": 0.647513,
+              "compression_rate": 38.07
+            },
+            "estimated_cost_usd": 0.00033165
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 5032,
+            "scores": {
+              "rouge1": 0.4006,
+              "rouge2": 0.3162,
+              "rougeL": 0.2601,
+              "bleu": 0.0699,
+              "bert_score": 0.615628,
+              "compression_rate": 37.78
+            },
+            "estimated_cost_usd": 0.0035176
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gemini-2.5-flash",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về sự kiện, bao gồm nguyên nhân vụ nổ và các thiệt hại vật chất cụ thể, trong khi Bản B chỉ đề cập một cách tổng quát hơn.",
+          "length_note": "Bản A dài hơn nhưng không bỏ sót thông tin chính nào.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00031695,
+          "latency_ms": 1921,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": [
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gpt-4o-mini",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "A"
+            },
+            "justification": "Bản A cung cấp thông tin chi tiết và rõ ràng về vụ nổ, bao gồm cả thông tin về nguyên nhân, thiệt hại, và phản ứng của nhân viên y tế, trong khi Bản B thiếu nhiều chi tiết quan trọng.",
+            "length_note": "Bản A dài hơn nhưng không ảnh hưởng đến chất lượng thông tin.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00029985,
+            "latency_ms": 1876,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "B",
+            "winner_label": "individual_draft:gemini-2.5-flash",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gemini-2.5-flash",
+            "per_dimension": {
+              "faithfulness": "tie",
+              "coverage": "B",
+              "fluency": "B",
+              "conciseness": "B"
+            },
+            "justification": "Bản A cung cấp thông tin đầy đủ hơn với sự rõ ràng và dễ hiểu về vụ nổ so với bản B, mặc dù hai bản đều trung thực và không sai lệch thông tin cơ bản.",
+            "length_note": "Bản A không dài hơn đáng kể so với bản B nhưng lại bao quát hơn về sự kiện.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00031935000000000004,
+            "latency_ms": 1804,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:claude-haiku-4-5",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "A"
+            },
+            "justification": "Bản A cung cấp thông tin chi tiết và có cấu trúc rõ ràng hơn, đồng thời nhấn mạnh các yếu tố quan trọng như thương tích của nạn nhân và phản ứng của nhân viên y tế.",
+            "length_note": "Bản A dài hơn nhưng không ảnh hưởng đến chất lượng thông tin.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00031545,
+            "latency_ms": 1666,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          }
+        ]
+      }
+    },
+    {
+      "index": 9,
+      "url": "https://tienphong.vn/giai-the-5-trung-tam-y-te-o-ca-mau-post1823962.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 26385,
+        "total_cost_usd": 0.01280965,
+        "total_tokens": 7876,
+        "fused_summary": "UBND tỉnh Cà Mau đã quyết định giải thể 5 Trung tâm Y tế khu vực không có giường bệnh, bao gồm các trung tâm tại Cà Mau, Đầm Dơi, Năm Căn, Trần Văn Thời và Cái Nước. Quyết định này nhằm chuyển các chức năng y tế dự phòng về các trạm y tế cấp xã, đồng thời giải quyết chế độ cho khoảng 179 nhân sự làm việc tại các trung tâm này. Các trung tâm phải hoàn thành các công việc đang thực hiện và bàn giao cho các đơn vị tiếp nhận theo chức năng và nhiệm vụ. Sở Tài chính sẽ hướng dẫn điều phối tài chính và tài sản sau khi giải thể, và Giám đốc Công an tỉnh sẽ thu hồi con dấu của các trung tâm theo quy định. \n\nNgoài ra, 11 trung tâm y tế khác có hai chức năng (dự phòng và khám chữa bệnh) sẽ được sắp xếp lại. Chức năng dự phòng cùng 240 nhân sự sẽ chuyển về trạm y tế cấp xã, trong khi chức năng khám chữa bệnh sẽ được tái cấu trúc thành mô hình bệnh viện khu vực. Toàn bộ tài chính, tài sản và trang thiết bị của các trung tâm này sẽ chuyển về y tế cơ sở, nhằm tinh gọn bộ máy, cân đối nguồn lực và cải thiện chất lượng hoạt động của các trạm y tế cơ sở, vốn đang thiếu thốn cơ sở vật chất và trang thiết bị.",
+        "fused_scores": {
+          "rouge1": 0.4641,
+          "rouge2": 0.3928,
+          "rougeL": 0.3648,
+          "bleu": 0.1485,
+          "bert_score": 0.702075,
+          "compression_rate": 42.02
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 4824,
+            "scores": {
+              "rouge1": 0.2919,
+              "rouge2": 0.2455,
+              "rougeL": 0.2356,
+              "bleu": 0.0366,
+              "bert_score": 0.660007,
+              "compression_rate": 27.29
+            },
+            "estimated_cost_usd": 0.0003084
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 6380,
+            "scores": {
+              "rouge1": 0.4139,
+              "rouge2": 0.3593,
+              "rougeL": 0.317,
+              "bleu": 0.1078,
+              "bert_score": 0.671158,
+              "compression_rate": 38.61
+            },
+            "estimated_cost_usd": 0.00035175
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 4016,
+            "scores": {
+              "rouge1": 0.3313,
+              "rouge2": 0.2982,
+              "rougeL": 0.2811,
+              "bleu": 0.0697,
+              "bert_score": 0.685843,
+              "compression_rate": 30.7
+            },
+            "estimated_cost_usd": 0.003612
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:gpt-4o-mini",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản A cung cấp thông tin đầy đủ và chi tiết hơn về quyết định giải thể các trung tâm y tế, bao gồm cả kế hoạch chuyển đổi nhân sự và tài sản, trong khi bản B thiếu một số điểm chính.",
+          "length_note": "Bản A dài hơn nhưng không bỏ sót thông tin quan trọng nào.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.0003159,
+          "latency_ms": 2121,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": [
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gpt-4o-mini",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản A cung cấp thông tin đầy đủ và chi tiết hơn về quyết định giải thể các trung tâm y tế, bao gồm cả kế hoạch chuyển đổi nhân sự và tài sản, điều này làm nổi bật bối cảnh và nguyên nhân của quyết định.",
+            "length_note": "Bản A dài hơn một chút nhưng không ảnh hưởng đến chất lượng thông tin.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.0003195,
+            "latency_ms": 2564,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gemini-2.5-flash",
+            "per_dimension": {
+              "faithfulness": "tie",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản A cung cấp đầy đủ thông tin chính xác về quyết định giải thể các trung tâm y tế, quy trình thực hiện và bối cảnh sắp xếp lại hệ thống y tế, trong khi Bản B thiếu một số chi tiết quan trọng.",
+            "length_note": "Bản A dài hơn nhưng không bỏ sót thông tin quan trọng.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00033135,
+            "latency_ms": 2480,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:claude-haiku-4-5",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản A cung cấp thông tin đầy đủ hơn về quy trình giải thể và các tác động liên quan, đặc biệt là chi tiết về việc thu hồi con dấu và công tác tài chính sau giải thể.",
+            "length_note": "Bản A dài hơn nhưng không bỏ sót thông tin quan trọng nào.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00031665,
+            "latency_ms": 2163,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          }
+        ]
+      }
+    },
+    {
+      "index": 10,
+      "url": "https://tienphong.vn/qua-bom-khung-con-nguyen-kip-no-nam-duoi-mong-nha-dan-post1823973.tpo",
+      "forced": [],
+      "fusion": {
+        "mode": "fusion",
+        "aggregator_model": "gpt-4o",
+        "proposer_models": [
+          "gpt-4o-mini",
+          "gemini-2.5-flash",
+          "claude-haiku-4-5"
+        ],
+        "latency_ms": 22516,
+        "total_cost_usd": 0.00987905,
+        "total_tokens": 5889,
+        "fused_summary": "Ngày 23/2, trong quá trình đào móng xây nhà tại thôn 12 Quỳnh Lâm, xã Quỳnh Sơn, Nghệ An, ông Vũ Trọng Cương đã phát hiện một quả bom nặng 350 kg còn nguyên kíp nổ, nằm sâu dưới mặt đất khoảng 1,5 m. Quả bom này có đường kính 20 cm, dài 155 cm, được xác định là loại bom phá MK-82, một loại bom có sức công phá mạnh và nguy hiểm, còn sót lại từ thời kỳ chiến tranh. Ngay sau khi nhận được tin báo, Ban Chỉ huy Quân sự xã Quỳnh Sơn đã cử lực lượng chức năng đến hiện trường để xác minh và phong tỏa khu vực, tổ chức canh trực 24/24 giờ nhằm đảm bảo an toàn cho người dân xung quanh. Ban Công binh, Bộ Chỉ huy Quân sự tỉnh Nghệ An đã tiến hành vô hiệu hóa ngòi nổ và di chuyển quả bom đến khu vực thôn 5 Ngọc Sơn để tiêu hủy thành công vào ngày 1/3, bảo đảm an toàn tuyệt đối về người và tài sản.",
+        "fused_scores": {
+          "rouge1": 0.5197,
+          "rouge2": 0.4458,
+          "rougeL": 0.376,
+          "bleu": 0.2368,
+          "bert_score": 0.694762,
+          "compression_rate": 52.07
+        },
+        "drafts": [
+          {
+            "model_name": "gpt-4o-mini",
+            "status": "success",
+            "latency_ms": 3118,
+            "scores": {
+              "rouge1": 0.2165,
+              "rouge2": 0.1854,
+              "rougeL": 0.1909,
+              "bleu": 0.0167,
+              "bert_score": 0.674147,
+              "compression_rate": 21.99
+            },
+            "estimated_cost_usd": 0.00021434999999999998
+          },
+          {
+            "model_name": "gemini-2.5-flash",
+            "status": "success",
+            "latency_ms": 3782,
+            "scores": {
+              "rouge1": 0.1713,
+              "rouge2": 0.142,
+              "rougeL": 0.1516,
+              "bleu": 0.0036,
+              "bert_score": 0.603191,
+              "compression_rate": 18.88
+            },
+            "estimated_cost_usd": 0.000192
+          },
+          {
+            "model_name": "claude-haiku-4-5",
+            "status": "success",
+            "latency_ms": 3109,
+            "scores": {
+              "rouge1": 0.4193,
+              "rouge2": 0.3728,
+              "rougeL": 0.3425,
+              "bleu": 0.15,
+              "bert_score": 0.660955,
+              "compression_rate": 41.08
+            },
+            "estimated_cost_usd": 0.0029352
+          }
+        ],
+        "judge_pairwise": {
+          "winner": "A",
+          "winner_label": "fused",
+          "summary_a_label": "fused",
+          "summary_b_label": "best_draft:claude-haiku-4-5",
+          "per_dimension": {
+            "faithfulness": "A",
+            "coverage": "A",
+            "fluency": "A",
+            "conciseness": "B"
+          },
+          "justification": "Bản A cung cấp thông tin chi tiết hơn về quy trình xử lý quả bom và các biện pháp được thực hiện, trong khi Bản B ngắn gọn hơn nhưng có thể thiếu một số yếu tố quan trọng.",
+          "length_note": "Bản A dài hơn nhưng không bỏ sót thông tin chính, vì vậy độ dài không ảnh hưởng đến quyết định.",
+          "judge_model": "gpt-4o-mini-2024-07-18",
+          "cost_usd": 0.00027479999999999996,
+          "latency_ms": 2063,
+          "position_swapped": false,
+          "comparison_type": "vs_best_draft"
+        },
+        "judge_vs_drafts": [
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gpt-4o-mini",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản B cung cấp thông tin chi tiết hơn về quả bom, bao gồm kích thước, bối cảnh và quá trình xử lý sau đó, trong khi Bản A bỏ sót nhiều yếu tố quan trọng.",
+            "length_note": "Mặc dù Bản B dài hơn, nhưng sự chi tiết của nó cung cấp thông tin cần thiết cho người đọc.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00025979999999999997,
+            "latency_ms": 3050,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:gemini-2.5-flash",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản B cung cấp chi tiết hơn về quá trình phát hiện và xử lý quả bom, bao gồm ngày tháng và các hành động cụ thể của lực lượng chức năng, trong khi bản A thiếu thông tin này.",
+            "length_note": "Bản B dài hơn nhưng không làm mất đi sự rõ ràng và đầy đủ thông tin.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.00025395,
+            "latency_ms": 2638,
+            "position_swapped": true,
+            "comparison_type": "vs_individual_draft"
+          },
+          {
+            "winner": "A",
+            "winner_label": "fused",
+            "summary_a_label": "fused",
+            "summary_b_label": "individual_draft:claude-haiku-4-5",
+            "per_dimension": {
+              "faithfulness": "A",
+              "coverage": "A",
+              "fluency": "A",
+              "conciseness": "B"
+            },
+            "justification": "Bản A cung cấp thông tin chi tiết hơn về quy trình xử lý quả bom và các biện pháp được thực hiện, trong khi Bản B ngắn gọn hơn nhưng có thể thiếu một số yếu tố quan trọng.",
+            "length_note": "Bản A dài hơn nhưng không bỏ sót thông tin chính, vì vậy không bị phạt về độ dài.",
+            "judge_model": "gpt-4o-mini-2024-07-18",
+            "cost_usd": 0.0002742,
+            "latency_ms": 1693,
+            "position_swapped": false,
+            "comparison_type": "vs_individual_draft"
+          }
+        ]
+      }
+    }
+  ],
+  "statistics": {
+    "per_metric": {
+      "bert_score": {
+        "n": 10,
+        "fused_mean": 0.6621172000000001,
+        "fused_stdev": 0.05282183206423478,
+        "best_mean": 0.6639522,
+        "best_stdev": 0.04263577119118016,
+        "delta_mean": -0.0018349999999999977,
+        "delta_stdev": 0.04530442167775191,
+        "wins": 6,
+        "losses": 4,
+        "ties": 0,
+        "sign_test_p": 0.7539062500000018
+      },
+      "rouge1": {
+        "n": 10,
+        "fused_mean": 0.4029,
+        "fused_stdev": 0.11226903204158997,
+        "best_mean": 0.35656999999999994,
+        "best_stdev": 0.10420681412993639,
+        "delta_mean": 0.04633,
+        "delta_stdev": 0.052965671272375406,
+        "wins": 7,
+        "losses": 2,
+        "ties": 1,
+        "sign_test_p": 0.17968750000000014
+      },
+      "rouge2": {
+        "n": 10,
+        "fused_mean": 0.34398999999999996,
+        "fused_stdev": 0.09090551199520913,
+        "best_mean": 0.30776000000000003,
+        "best_stdev": 0.09328483501858405,
+        "delta_mean": 0.03623,
+        "delta_stdev": 0.04185140512708158,
+        "wins": 7,
+        "losses": 3,
+        "ties": 0,
+        "sign_test_p": 0.3437500000000008
+      },
+      "rougeL": {
+        "n": 10,
+        "fused_mean": 0.295,
+        "fused_stdev": 0.08090201206123093,
+        "best_mean": 0.27626,
+        "best_stdev": 0.08629261845604178,
+        "delta_mean": 0.018739999999999996,
+        "delta_stdev": 0.03201535048483253,
+        "wins": 6,
+        "losses": 4,
+        "ties": 0,
+        "sign_test_p": 0.7539062500000018
+      },
+      "bleu": {
+        "n": 10,
+        "fused_mean": 0.12375000000000003,
+        "fused_stdev": 0.07048610974274767,
+        "best_mean": 0.09495,
+        "best_stdev": 0.062283371242518114,
+        "delta_mean": 0.028800000000000003,
+        "delta_stdev": 0.042715544919593125,
+        "wins": 6,
+        "losses": 4,
+        "ties": 0,
+        "sign_test_p": 0.7539062500000018
+      }
+    },
+    "pairwise_judge": {
+      "n": 10,
+      "wins_fused": 8,
+      "wins_best": 1,
+      "ties": 1,
+      "sign_test_p": 0.03906250000000003
+    }
+  }
+}

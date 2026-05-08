@@ -6,8 +6,6 @@
  *
  * No new npm packages — binomial p-value is computed inline using a
  * cached log-factorial table for numerical stability.
- *
- * See `stats_devplan.md` §3 for spec and §3.3 for the unit-test fixtures.
  */
 
 export function mean(xs: number[]): number {
