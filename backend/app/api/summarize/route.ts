@@ -72,10 +72,8 @@ export async function POST(request: NextRequest) {
 
     // ============================================================================
     // FUSION MODE — MoA pipeline (N proposers → aggregator)
-    //   • routing_mode='fusion'             → full synthesis (runMoAFusion)
-    //   • routing_mode='fusion_ranker_only' → LLM-ranker baseline (no aggregator)
     // ============================================================================
-    if (routingMode === 'fusion' || routingMode === 'fusion_ranker_only') {
+    if (routingMode === 'fusion') {
       if (isStreaming) {
         return NextResponse.json(
           { error: 'Streaming is not supported in fusion mode' },
@@ -99,10 +97,9 @@ export async function POST(request: NextRequest) {
       }
 
       const { buildMoAConfig } = await import('@/output-fusion/moa.config')
-      const { runMoAFusion, runLLMRankerBaseline } = await import('@/output-fusion/moa.service')
+      const { runMoAFusion } = await import('@/output-fusion/moa.service')
       const { MoAInsufficientDraftsError } = await import('@/output-fusion/moa.types')
       const { saveMoAFusionResult, saveLLMJudgePairwise } = await import('@/output-fusion/moa.persistence')
-      const isRankerBaseline = routingMode === 'fusion_ranker_only'
 
       let moaConfig
       try {
@@ -121,16 +118,9 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        const fusionResult = isRankerBaseline
-          ? await runLLMRankerBaseline(articleText, website, moaConfig)
-          : await runMoAFusion(articleText, website, moaConfig)
+        const fusionResult = await runMoAFusion(articleText, website, moaConfig)
 
-        // Tag downstream rows so reports can split synthesis vs ranker.
-        // (`runLLMRankerBaseline` already prefixes aggregator.model_name with
-        // "ranker:", so we strip and re-add to keep the format stable.)
-        const modelTag = isRankerBaseline
-          ? `ranker:${fusionResult.aggregator.model_name.replace(/^ranker:/, '')}`
-          : `moa:${fusionResult.aggregator.model_name}`
+        const modelTag = `moa:${fusionResult.aggregator.model_name}`
 
         // Save routing decision + persist fusion detail + evaluation row (fire-and-forget)
         const { saveRoutingDecision, estimateTokenCount, classifyComplexity } = await import('@/services/routing.service')
@@ -143,7 +133,7 @@ export async function POST(request: NextRequest) {
               article_tokens: estimateTokenCount(articleText),
               category: fusionResult.fused.category,
               complexity,
-              routing_mode: isRankerBaseline ? 'fusion_ranker_only' : 'fusion',
+              routing_mode: 'fusion',
               selected_model: modelTag,
               fallback_used: fusionResult.pipeline.failed_proposers.length > 0,
               fallback_reason: fusionResult.pipeline.failed_proposers.length > 0
@@ -205,7 +195,7 @@ export async function POST(request: NextRequest) {
                 total_tokens: fusionResult.pipeline.total_tokens,
               },
               latency: fusionResult.pipeline.total_latency_ms,
-              mode: isRankerBaseline ? 'fusion_ranker_only' : 'fusion',
+              mode: 'fusion',
               model: modelTag,
               promptTokens: fusionResult.aggregator.prompt_tokens ?? undefined,
               completionTokens: fusionResult.aggregator.completion_tokens ?? undefined,

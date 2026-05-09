@@ -232,7 +232,7 @@ export interface RoutingDecision {
   article_tokens: number
   category?: string
   complexity: 'short' | 'medium' | 'long'
-  routing_mode: 'auto' | 'evaluation' | 'forced' | 'fusion' | 'fusion_ranker_only'
+  routing_mode: 'auto' | 'evaluation' | 'forced' | 'fusion'
   selected_model: string
   fallback_used: boolean
   fallback_reason?: string

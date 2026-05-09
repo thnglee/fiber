@@ -117,11 +117,11 @@ PLASMO_PUBLIC_API_URL=http://localhost:3000/api
 Core tables:
 - `evaluation_metrics` — one row per summary. Holds ROUGE/BLEU/BERTScore/compression/latency (Axis A) plus `judge_*` columns (rubric JSONB, absolute, justification, cost, latency) and `factuality_*` columns (entailed ratio, claim counts, hallucinations JSONB) for Axis B.
 - `dashboard_actions` — extension user-action log (summarize, fact-check events).
-- `llm_judge_pairwise` — one row per pairwise verdict produced during fusion runs. `comparison_type` discriminates `vs_best_draft` / `vs_individual_draft` / `synthesis_vs_ranker`. Linked to `moa_fusion_results` and `routing_decisions`.
+- `llm_judge_pairwise` — one row per pairwise verdict. `comparison_type` discriminates `vs_best_draft` / `vs_individual_draft` (auto-emitted during fusion) / `vs_single_aggregator` (P0-8, fused vs gpt-4o-alone). Deprecated `synthesis_vs_ranker` value remains in the DB enum for historical rows but is no longer written. Linked to `moa_fusion_results` and `routing_decisions`.
 - `human_eval_tasks` — admin-created bundles of (article + K labelled candidate summaries with hidden model/mode). Axis C.
 - `human_eval_responses` — per-rater ranking + rationale. Unique on `(task_id, rater_id)`.
 - `app_settings` — singleton config rows. `judge_config` controls the judge feature (`judge_mode`, default model, default style, `factuality_enabled`).
-- `moa_fusion_results` / `moa_draft_results` — per-fusion-run records (aggregator + each proposer draft). `pipeline_mode` discriminates `moa_synthesis` (aggregator path) vs `llm_ranker` (P0-5 baseline, top-1 ranker draft).
+- `moa_fusion_results` / `moa_draft_results` — per-fusion-run records (aggregator + each proposer draft). `pipeline_mode` column always written as `moa_synthesis`; the old `llm_ranker` value remains in historical rows from before the LLM-Ranker feature was removed (2026-05-09).
 - `routing_decisions`, `model_configurations` — routing infrastructure.
 
 ## Supported News Sites
@@ -137,7 +137,7 @@ tuoitre.vn, thanhnien.vn, vietnamnet.vn, laodong.vn, tienphong.vn, vtv.vn, nld.c
 
 ## Output Fusion (MoA) — Wang et al. 2024 alignment
 
-**Status:** MoA is shipped on `main`. Source article is intentionally injected into the aggregator prompt as a residual connection (Equation 1 in the paper). After commit `afac46e` (drop "cô đọng" from the prompt — 2026-05-08) the fused-vs-best-draft win rate flipped from 22.2% to 70%+; fused now beats every sync proposer on overlap metrics too. P0-1..P0-5 + P1-1 + C-1 (`--routing-mode` flag) + C-2 (`compare-synthesis-vs-ranker.ts`) all code-complete on `main`. Smoke 10-article batch verified end-to-end on 2026-05-08. P0-6 (multi-source n=50 execution) and P0-7 (~30-LOC B.2c report section) are the only remaining items before thesis-grade evidence lands.
+**Status:** MoA is shipped on `main`. Source article is intentionally injected into the aggregator prompt as a residual connection (Equation 1 in the paper). After commit `afac46e` (drop "cô đọng" from the prompt — 2026-05-08) the fused-vs-best-draft win rate flipped from 22.2% to 70%+. P0-6 (n=50 synthesis batch on tienphong.vn dataset) executed 2026-05-09: fused beats every individual proposer with sign-test significance (98% / 84% / 70% vs gpt-4o-mini / claude-haiku-4-5 / gemini-2.5-flash; bucketed length-controlled rates ~identical). **P0-8 (thesis-decisive comparison) executed 2026-05-09**: fused vs gpt-4o-alone on the same 50 articles → **fused wins 37/48 = 77.1%, p=0.0002**. Capability-gap confound dissolved (both candidates are gpt-4o output). All three axes triangulate: rubric (4.96 vs 4.88 overall), pairwise (77%), overlap metrics (BERT 0.663 vs 0.625, ROUGE-1 0.421 vs 0.362). LLM-Ranker baseline (formerly P0-5 / `runLLMRankerBaseline` / `synthesis_vs_ranker`) was removed 2026-05-09 — confounded by capability gap, replaced by P0-8.
 
 **Source of truth:** `fusion.pdf` (Wang et al., 2024, arXiv:2406.04692). Remaining tasks before thesis writing: `thesis_prep.md` (P0-7 + P0-6 + M-H, acceptance criteria per task).
 
@@ -183,25 +183,27 @@ Softening the rules (v2) vs strict rules (v1) made no meaningful difference — 
 |------|--------------|-------|
 | P0-1 | 150-word cap removed from aggregator | `moa.prompt.ts` |
 | P0-2 | Unified report headlines Axis B; Axis A rendered with caveat box; sign-test p-value column | `scripts/unified-report.ts` |
-| P0-3 | `runFusionVsAllDraftsJudge` + `comparison_type` column (`vs_best_draft` / `vs_individual_draft` / `synthesis_vs_ranker`) + `--judge-vs-all` flag | `moa.evaluation.ts`, migration 023 |
+| P0-3 | `runFusionVsAllDraftsJudge` + `comparison_type` column (`vs_best_draft` / `vs_individual_draft`) + `--judge-vs-all` flag | `moa.evaluation.ts`, migration 023 |
 | P0-4 | `lengthBucketedWinRate` (Dubois 2024, simplified bucket method, MIN_BUCKET_N=5); on-the-fly length lookup from `moa_fusion_results.fused_summary` + `moa_draft_results.summary` | `scripts/stats.ts`, `scripts/unified-report.ts` |
-| P0-5 | `runLLMRankerBaseline` (top-1 ranker draft, no aggregator call); `pipeline_mode` column; `routing_mode='fusion_ranker_only'` | `moa.service.ts`, migration 024, `app/api/summarize/route.ts` |
+| ~~P0-5~~ | LLM-Ranker baseline (`runLLMRankerBaseline`, `routing_mode='fusion_ranker_only'`, `synthesis_vs_ranker` comparisons) — **removed 2026-05-09**. DB columns `pipeline_mode` (always `moa_synthesis` now) and `comparison_type` enum value `synthesis_vs_ranker` retained for historical rows. |
 | P1-1 | Wang Table 1 alignment test + cite-paper comment block | `moa.prompt.ts`, `__tests__/moa.prompt.alignment.test.ts` |
 
 ### What's still open (current todos before thesis)
 
-- **P0-6 — multi-source 50-article execution batch** (synthesis × ranker_only paired runs + synthesis-vs-ranker comparison; ~250 new verdicts; cost ≈$1 at smoke rate). No code blocker. Blocker for thesis Axis B.
-- **P0-7 — add B.2c "Synthesis vs Ranker" section to `unified-report.ts`** (~30 LOC). Without this, `synthesis_vs_ranker` verdicts persist correctly in the DB but don't appear in the thesis-ready Markdown.
-- **20-article human peer study** (Axis C). Build tasks at `/evaluate/admin`, get ≥2 raters, target Fleiss κ ≥ 0.4.
-- After data lands: re-run `npm run report:unified`, walk the decision tree in `thesis_prep.md`, write thesis chapters T-1 (methodology alignment) + T-2 (results).
+- **P0-6 — DONE 2026-05-09.** 50-article tienphong.vn synthesis batch (10 URLs/topic × 5 topics). Fused beats every individual proposer (98% / 84% / 70%; bucketed length-controlled rates ~identical).
+- **P0-8 — DONE 2026-05-09.** Thesis-decisive: fused vs gpt-4o-alone on same 50 articles → **77.1%, p=0.0002**. Triangulates with B.1 rubric + Axis A overlap. Capability-gap confound dissolved.
+- **20-article human peer study** (Axis C). Build tasks at `/evaluate/admin`, get ≥2 raters, target Fleiss κ ≥ 0.4. **Only remaining task before T-1/T-2 thesis chapters.**
+- Thesis chapters T-1 (methodology alignment) + T-2 (results) once Axis C data lands.
 
 ### Key files
 
-- `backend/output-fusion/moa.service.ts` — orchestration; exports `runMoAFusion` + `runLLMRankerBaseline`
+- `backend/output-fusion/moa.service.ts` — orchestration; exports `runMoAFusion`
 - `backend/output-fusion/moa.prompt.ts` — aggregator prompt; source article injected as residual connection; Wang Table 1 alignment enforced by `__tests__/moa.prompt.alignment.test.ts`
 - `backend/output-fusion/moa.evaluation.ts` — `runFusionPairwiseJudge` (vs best-draft) + `runFusionVsAllDraftsJudge` (vs each draft)
 - `backend/output-fusion/moa.config.ts` — proposer/aggregator defaults
-- `backend/output-fusion/scripts/collect-metrics.ts` — batch harness; `--judge-vs-all` + `--routing-mode fusion_ranker_only`
+- `backend/output-fusion/scripts/collect-metrics.ts` — batch harness; `--judge-vs-all`
+- `backend/output-fusion/scripts/run-single-baseline.ts` — P0-8 runner; calls `/api/summarize` with `routing_mode='forced', model='gpt-4o'`
+- `backend/output-fusion/scripts/compare-fused-vs-single.ts` — P0-8 offline pairwise judge (synthesis vs gpt-4o-alone)
 - `backend/output-fusion/scripts/stats.ts` — sign test + Fleiss κ + `lengthBucketedWinRate`
 - `fusion_reports/results/fusion-batch-50*.{json,md}` — historical three-way evidence (the `-with-source` and `-source-v2` variants live only on branch `fix/moa-aggregator-source-prompt`)
 - `thesis_prep.md` — Phase 0/1/2 paper-alignment plan
@@ -240,15 +242,15 @@ backend/services/
   factuality.runner.ts         glue, mirrors llm-judge.runner.ts
 
 backend/output-fusion/
-  moa.service.ts               runMoAFusion (synthesis) + runLLMRankerBaseline (ranker_only, P0-5)
+  moa.service.ts               runMoAFusion (synthesis pipeline)
   moa.evaluation.ts            pickBestDraftByJudge + runFusionPairwiseJudge (vs_best_draft) +
                                runFusionVsAllDraftsJudge (vs_individual_draft, P0-3)
-  moa.persistence.ts           saveLLMJudgePairwise (writes comparison_type + pipeline_mode)
+  moa.persistence.ts           saveLLMJudgePairwise (writes comparison_type); pipeline_mode hard-coded to "moa_synthesis"
   scripts/stats.ts             mean, stdev, signTestPValue, pairedMetricStats,
                                fleissKappa, fleissKappaFromRankings, aggregateRankings,
                                lengthBucketedWinRate (P0-4, simplified Dubois bucket method)
   scripts/collect-metrics.ts   batch harness — --judge-mode/--judge-style/--judge-model/
-                               --stats-only/--judge-vs-all/--routing-mode
+                               --stats-only/--judge-vs-all
   scripts/unified-report.ts    pulls all 3 axes from Supabase → Markdown; Axis B headlined,
                                raw + length-bucketed win rate, sign-test p-value, B.2b per-draft table
 
@@ -272,8 +274,13 @@ backend/supabase/migrations/
   020_add_factuality.sql       factuality_* columns + factuality defaults merged into judge_config
   021_add_human_eval.sql       human_eval_tasks + human_eval_responses with RLS
   023_add_comparison_type.sql  llm_judge_pairwise.comparison_type
-                               (vs_best_draft | vs_individual_draft | synthesis_vs_ranker)
-  024_add_pipeline_mode.sql    moa_fusion_results.pipeline_mode (moa_synthesis | llm_ranker)
+                               (vs_best_draft | vs_individual_draft; synthesis_vs_ranker remains in
+                               the DB enum for historical rows but is no longer written)
+  024_add_pipeline_mode.sql    moa_fusion_results.pipeline_mode (always written as moa_synthesis;
+                               llm_ranker remains in old rows from before the LLM-Ranker feature
+                               was removed 2026-05-09)
+  025_add_single_aggregator_comparison.sql  extends comparison_type CHECK with
+                               'vs_single_aggregator' for P0-8 fused-vs-gpt-4o-alone verdicts
 ```
 
 ### How to use
@@ -320,7 +327,7 @@ npm run report:unified -- --since 2026-04-01 --task-ids <uuid1>,<uuid2> --json
 
 ```bash
 npm run test:judge      # llm-judge.service + runner tests
-npm run test:moa        # MoA fusion tests (currently 31/31 pass, includes runLLMRankerBaseline + vs-all-drafts)
+npm run test:moa        # MoA fusion tests (28/28 pass after LLM-Ranker removal 2026-05-09)
 npx tsx --test output-fusion/__tests__/stats.test.ts \
   output-fusion/__tests__/moa.prompt.alignment.test.ts \
   services/__tests__/factuality.service.test.ts
@@ -338,16 +345,19 @@ npx tsx --test output-fusion/__tests__/stats.test.ts \
 ### Background docs
 
 - `thesis_defense_narratives.md` — pre-committed contingency stories for thesis defense
-- `thesis_prep.md` — three remaining tasks before thesis writing (P0-7, P0-6, M-H) + decision tree
+- `thesis_prep.md` — remaining tasks before thesis writing (M-H human study) + decision tree
 - `fusion.pdf` — Wang et al. 2024, the only spec for MoA
 
 ### Status
 
-All three-axis code + Phase 0 paper-alignment + C-1 + C-2 shipped on `main`. Live Supabase counts (2026-05-08, post-smoke): ~2200 evaluation rows, 79 pairwise verdicts (30 `vs_best_draft` + 39 `vs_individual_draft` + 10 `synthesis_vs_ranker`), 0 human-eval responses. Three remaining items before thesis writing:
+All three-axis code + Phase 0 paper-alignment + P0-8 (fused vs gpt-4o-alone) shipped on `main`. Two batches executed 2026-05-09:
+- **P0-6 (synthesis batch)** — 50 tienphong.vn articles, `--judge-vs-all`. Fused beats every proposer (98% / 84% / 70% vs gpt-4o-mini / claude-haiku-4-5 / gemini-2.5-flash, all p<0.05; length-bucketed rates ~identical).
+- **P0-8 (thesis-decisive)** — fused vs gpt-4o-alone on the same 50 articles. **Fused wins 37/48 = 77.1%, p=0.0002.** Both candidates are gpt-4o output → capability-gap confound dissolved. All three axes triangulate (rubric overall 4.96 vs 4.88; pairwise 77%; Axis A overlap all in fused's favor). Cost across both batches: ~$1.24.
 
-1. **P0-6 batch** (~250 new pairwise verdicts; 50 multi-source articles × 2 pipeline modes × judge-vs-all + paired synthesis-vs-ranker comparison). No code blocker. Cost ≈$1.
-2. **P0-7** — add B.2c "Synthesis vs Ranker" section to `unified-report.ts` (~30 LOC).
-3. **20-article human peer study** (Axis C) with ≥2 raters. Use `/evaluate/admin` → share `/evaluate?task=<uuid>` → aggregate via `/api/human-eval/report`. Target Fleiss κ ≥ 0.4.
+LLM-Ranker baseline (formerly P0-5) removed 2026-05-09 — replaced by the cleaner P0-8 design. Remaining work:
+
+1. **20-article human peer study** (Axis C) with ≥2 raters. Use `/evaluate/admin` → share `/evaluate?task=<uuid>` → aggregate via `/api/human-eval/report`. Target Fleiss κ ≥ 0.4.
+2. **Thesis chapters T-1 (methodology) + T-2 (results)** once Axis C lands.
 
 ### Branch hygiene
 

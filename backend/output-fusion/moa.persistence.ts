@@ -22,7 +22,7 @@ export async function saveMoAFusionResult(input: SaveMoAFusionInput): Promise<st
       .from("moa_fusion_results")
       .insert({
         routing_id: routingId ?? null,
-        pipeline_mode: result.pipeline_mode ?? "moa_synthesis",
+        pipeline_mode: "moa_synthesis",
         fused_summary: result.fused.summary,
         fused_category: result.fused.category,
         fused_reading_time: result.fused.readingTime,

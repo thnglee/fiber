@@ -25,12 +25,14 @@ export interface MoAConfig {
 
 /**
  * Kind of pairwise verdict, used by persistence and the unified report to
- * group rows. See `023_add_comparison_type.sql` for the source of truth.
+ * group rows. See `023_add_comparison_type.sql` + `025_add_single_aggregator_comparison.sql`
+ * for the source of truth. The DB enum still includes the deprecated
+ * `synthesis_vs_ranker` value for historical rows; we no longer write it.
  */
 export type PairwiseComparisonType =
   | "vs_best_draft"
   | "vs_individual_draft"
-  | "synthesis_vs_ranker"
+  | "vs_single_aggregator"
 
 /**
  * Pairwise (AlpacaEval-style) verdict for fused vs best-draft. Caller-side
@@ -92,12 +94,7 @@ export interface MoAScoredDraft extends MoADraftResult {
   scores: MoAScores
 }
 
-/** Distinguishes the full MoA pipeline from the LLM-ranker baseline. */
-export type PipelineMode = "moa_synthesis" | "llm_ranker"
-
 export interface MoAFusionResult {
-  /** How the fused output was produced. Defaults to "moa_synthesis". */
-  pipeline_mode?: PipelineMode
   fused: {
     summary: string
     category: string

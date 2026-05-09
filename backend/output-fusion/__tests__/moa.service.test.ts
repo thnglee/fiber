@@ -12,7 +12,6 @@ import type {
 import { SummaryDataSchema } from "@/domain/schemas"
 import {
   runMoAFusion,
-  runLLMRankerBaseline,
   type MoADependencies,
 } from "../moa.service"
 import {
@@ -308,93 +307,3 @@ describe("runMoAFusion — aggregator failure", () => {
   })
 })
 
-// ─── runLLMRankerBaseline ──────────────────────────────────────────────────
-
-describe("runLLMRankerBaseline", () => {
-  it("emits the winning draft as the fused output without calling the aggregator", async () => {
-    let aggregatorCalls = 0
-    const deps = makeDeps({
-      generateJsonCompletion: async () => {
-        aggregatorCalls++
-        throw new Error("ranker baseline must not call the aggregator")
-      },
-    })
-    const result = await runLLMRankerBaseline(ARTICLE, undefined, makeConfig(), deps)
-
-    assert.equal(aggregatorCalls, 0)
-    assert.equal(result.pipeline_mode, "llm_ranker")
-    assert.equal(result.judge_pairwise, null)
-    assert.deepEqual(result.judge_vs_drafts, [])
-    // Aggregator metadata is reused as a marker; cost/latency must be zero.
-    assert.match(result.aggregator.model_name, /^ranker:/)
-    assert.equal(result.aggregator.estimated_cost_usd, 0)
-    assert.equal(result.aggregator.latency_ms, 0)
-    // The "fused" summary must equal one of the proposer summaries.
-    const draftSummaries = result.drafts.map(d => d.summary)
-    assert.ok(draftSummaries.includes(result.fused.summary))
-  })
-
-  it("throws MoAInsufficientDraftsError when too few proposers succeed", async () => {
-    const deps = makeDeps({
-      performSummarize: async (_req, model) => {
-        if (model?.model_name === "gpt-4o-mini") {
-          return {
-            summary: "draft from gpt-4o-mini",
-            category: "Khác",
-            readingTime: 1,
-            model: model.model_name,
-            usage: { prompt_tokens: 50, completion_tokens: 10, total_tokens: 60 },
-          }
-        }
-        throw new Error("simulated proposer failure")
-      },
-    })
-    await assert.rejects(
-      () =>
-        runLLMRankerBaseline(
-          ARTICLE,
-          undefined,
-          makeConfig({ minSuccessfulDrafts: 2 }),
-          deps,
-        ),
-      MoAInsufficientDraftsError,
-    )
-  })
-
-  it("populates fused scores when evaluation is enabled", async () => {
-    const winnerScores: MoAScores = {
-      rouge1: 0.55,
-      rouge2: 0.4,
-      rougeL: 0.5,
-      bleu: 0.3,
-      bert_score: 0.85,
-      compression_rate: 22,
-    }
-    const otherScores: MoAScores = {
-      rouge1: 0.3,
-      rouge2: 0.22,
-      rougeL: 0.28,
-      bleu: 0.15,
-      bert_score: 0.7,
-      compression_rate: 28,
-    }
-    const deps = makeDeps({
-      scoreSummary: async summary => {
-        // Score the gpt-4o-mini draft highest so it wins on metric fallback
-        // (the judge is disabled in makeDeps default — pickBestDraftByMetrics
-        // will pick the highest BERTScore).
-        return summary === "Bản tóm tắt từ gpt-4o-mini." ? winnerScores : otherScores
-      },
-    })
-    const result = await runLLMRankerBaseline(
-      ARTICLE,
-      undefined,
-      makeConfig({ includeEvaluation: true }),
-      deps,
-    )
-    // Winner should be gpt-4o-mini; fused scores should match its scores.
-    assert.equal(result.fused.summary, "Bản tóm tắt từ gpt-4o-mini.")
-    assert.equal(result.fused.scores.bert_score, 0.85)
-    assert.equal(result.aggregator.model_name, "ranker:gpt-4o-mini")
-  })
-})

@@ -1,30 +1,30 @@
 #!/usr/bin/env tsx
 /**
- * compare-synthesis-vs-ranker.ts
+ * compare-fused-vs-single.ts
  *
- * For each article that has BOTH a `pipeline_mode='moa_synthesis'` row and a
- * `pipeline_mode='llm_ranker'` row in `moa_fusion_results` within the batch
- * window, run a pairwise judge call (synthesis as A, ranker as B) and persist
- * the verdict to `llm_judge_pairwise` with `comparison_type='synthesis_vs_ranker'`.
+ * For each article that has BOTH a `mode='fusion'` row and a
+ * `mode='sync' AND model LIKE 'gpt-4o%'` (excluding mini variants) row in
+ * `evaluation_metrics` within the time window, run a pairwise judge call
+ * (fused as A, gpt-4o-alone as B) and persist the verdict to
+ * `llm_judge_pairwise` with `comparison_type='vs_single_aggregator'`.
  *
- * Wang et al. (2024) Figure 4a comparison applied to our domain: does MoA
- * actually aggregate (synthesis wins) or merely select (synthesis ties /
- * loses)?
+ * The thesis-decisive question: "Does fusion add value beyond running the
+ * aggregator model alone?" — isolates synthesis behavior from aggregator
+ * model capability (both candidates are gpt-4o-produced, so judge family
+ * bias cancels).
  *
  * Usage:
- *   npx tsx output-fusion/scripts/compare-synthesis-vs-ranker.ts \
- *     --since 2026-05-08 \
+ *   cd backend
+ *   npx tsx output-fusion/scripts/compare-fused-vs-single.ts \
+ *     --since 2026-05-09T08:51:03Z \
  *     --judge-model gpt-4o-mini
  *
  * Flags:
- *   --since         ISO timestamp. Limits paired rows to this lower bound.
+ *   --since         ISO timestamp. Required-ish (all eligible pairs in window).
  *   --until         ISO timestamp. Optional upper bound.
- *   --judge-model   Model name (must exist in `model_configurations`).
- *                   Default: gpt-4o-mini.
- *   --dry-run       Compute verdicts but do NOT persist them. Useful for
- *                   smoke-testing the pairing logic without polluting the
- *                   table.
- *   --limit         Cap number of pairs processed (handy for quick checks).
+ *   --judge-model   Default: gpt-4o-mini.
+ *   --dry-run       Compute verdicts but do NOT persist them.
+ *   --limit         Cap pairs processed (smoke test).
  */
 
 import * as path from "node:path"
@@ -38,7 +38,7 @@ import { judgePairwise } from "@/services/llm-judge.service"
 import { extractContentFromUrl } from "@/services/content-extraction.service"
 import type { ModelConfig } from "@/domain/types"
 
-// ─── CLI args ──────────────────────────────────────────────────────────────
+// ─── CLI args ─────────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2)
 function getArg(name: string, fallback: string = ""): string {
@@ -58,47 +58,43 @@ const JUDGE_MODEL_NAME = getArg("judge-model", "gpt-4o-mini")
 const DRY_RUN = args.includes("--dry-run")
 const LIMIT = getIntArg("limit", 0)
 
-// ─── Supabase client ───────────────────────────────────────────────────────
+// ─── Supabase ─────────────────────────────────────────────────────────────
 
 const SUPABASE_URL =
   process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 if (!SUPABASE_URL || !SUPABASE_KEY) {
-  console.error(
-    "Missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY in backend/.env",
-  )
+  console.error("Missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY in backend/.env")
   process.exit(1)
 }
 const supabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
 })
 
-// ─── Types ─────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────
 
-interface FusionRow {
+interface EvalRow {
   id: string
-  routing_id: string | null
-  article_url: string | null
-  pipeline_mode: "moa_synthesis" | "llm_ranker"
-  fused_summary: string
+  url: string | null
+  mode: string
+  model: string | null
+  summary_text: string
   created_at: string
 }
 
 interface Pair {
   url: string
-  synthesis: FusionRow
-  ranker: FusionRow
+  fused: EvalRow
+  single: EvalRow
 }
 
-// ─── Steps ─────────────────────────────────────────────────────────────────
+// ─── Pairing logic ────────────────────────────────────────────────────────
 
 async function fetchPairs(): Promise<Pair[]> {
   let query = supabase
-    .from("moa_fusion_results")
-    .select(
-      "id, routing_id, article_url, pipeline_mode, fused_summary, created_at",
-    )
-    .order("article_url", { ascending: true })
+    .from("evaluation_metrics")
+    .select("id, url, mode, model, summary_text, created_at")
+    .order("url", { ascending: true })
     .order("created_at", { ascending: false })
   if (SINCE) query = query.gte("created_at", SINCE)
   if (UNTIL) query = query.lte("created_at", UNTIL)
@@ -106,22 +102,26 @@ async function fetchPairs(): Promise<Pair[]> {
   const { data, error } = await query
   if (error) throw new Error(`fetchPairs: ${error.message}`)
 
-  // Group by article_url; keep the most recent of each pipeline_mode.
-  const byUrl = new Map<string, { synthesis?: FusionRow; ranker?: FusionRow }>()
-  for (const row of (data ?? []) as FusionRow[]) {
-    if (!row.article_url || !row.fused_summary) continue
-    const bucket = byUrl.get(row.article_url) ?? {}
-    if (row.pipeline_mode === "moa_synthesis" && !bucket.synthesis)
-      bucket.synthesis = row
-    if (row.pipeline_mode === "llm_ranker" && !bucket.ranker)
-      bucket.ranker = row
-    byUrl.set(row.article_url, bucket)
+  const isFusion = (r: EvalRow) => r.mode === "fusion"
+  const isSingleGpt4o = (r: EvalRow) =>
+    r.mode === "sync" &&
+    typeof r.model === "string" &&
+    r.model.startsWith("gpt-4o") &&
+    !r.model.includes("mini")
+
+  const byUrl = new Map<string, { fused?: EvalRow; single?: EvalRow }>()
+  for (const row of (data ?? []) as EvalRow[]) {
+    if (!row.url || !row.summary_text) continue
+    const bucket = byUrl.get(row.url) ?? {}
+    if (!bucket.fused && isFusion(row)) bucket.fused = row
+    if (!bucket.single && isSingleGpt4o(row)) bucket.single = row
+    byUrl.set(row.url, bucket)
   }
 
   const pairs: Pair[] = []
-  for (const [url, bucket] of byUrl) {
-    if (bucket.synthesis && bucket.ranker) {
-      pairs.push({ url, synthesis: bucket.synthesis, ranker: bucket.ranker })
+  for (const [u, bucket] of byUrl) {
+    if (bucket.fused && bucket.single) {
+      pairs.push({ url: u, fused: bucket.fused, single: bucket.single })
     }
   }
   return pairs
@@ -142,10 +142,10 @@ async function persistVerdict(
   verdict: Awaited<ReturnType<typeof judgePairwise>>,
 ): Promise<{ ok: boolean; error?: string }> {
   const { error } = await supabase.from("llm_judge_pairwise").insert({
-    routing_id: pair.synthesis.routing_id ?? null,
-    fusion_id: pair.synthesis.id,
-    summary_a_label: "synthesis",
-    summary_b_label: "ranker",
+    routing_id: null,
+    fusion_id: null,
+    summary_a_label: "fused",
+    summary_b_label: "single_aggregator",
     winner: verdict.winner,
     per_dimension: verdict.per_dimension,
     justification: verdict.justification,
@@ -154,17 +154,17 @@ async function persistVerdict(
     judge_cost_usd: verdict.cost_usd,
     judge_latency_ms: verdict.latency_ms,
     position_swapped: verdict.position_swapped,
-    comparison_type: "synthesis_vs_ranker",
+    comparison_type: "vs_single_aggregator",
   })
   if (error) return { ok: false, error: error.message }
   return { ok: true }
 }
 
-// ─── Main ──────────────────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────
 
 async function main() {
   console.log("=".repeat(70))
-  console.log("SYNTHESIS vs RANKER pairwise judge")
+  console.log("FUSED vs SINGLE-AGGREGATOR pairwise judge")
   console.log("=".repeat(70))
   console.log(`Judge model:  ${JUDGE_MODEL_NAME}`)
   console.log(`Since:        ${SINCE || "(none)"}`)
@@ -184,16 +184,18 @@ async function main() {
   const allPairs = await fetchPairs()
   const pairs = LIMIT > 0 ? allPairs.slice(0, LIMIT) : allPairs
   console.log(
-    `Found ${allPairs.length} paired (synthesis × ranker) runs; processing ${pairs.length}.`,
+    `Found ${allPairs.length} paired (fusion × single-gpt-4o) runs; processing ${pairs.length}.`,
   )
   if (pairs.length === 0) {
-    console.log("Nothing to do. Run synthesis + ranker_only batches first.")
+    console.log(
+      "Nothing to do. Run synthesis batch + run-single-baseline.ts first.",
+    )
     return
   }
   console.log("")
 
-  let synthesisWins = 0
-  let rankerWins = 0
+  let fusedWins = 0
+  let singleWins = 0
   let ties = 0
   let saved = 0
   let skipped = 0
@@ -209,9 +211,7 @@ async function main() {
       const extracted = await extractContentFromUrl(pair.url)
       articleText = extracted.content
     } catch (err) {
-      console.log(
-        `✗ extract: ${err instanceof Error ? err.message : String(err)}`,
-      )
+      console.log(`✗ extract: ${err instanceof Error ? err.message : String(err)}`)
       skipped++
       continue
     }
@@ -219,10 +219,10 @@ async function main() {
     let verdict: Awaited<ReturnType<typeof judgePairwise>>
     try {
       verdict = await judgePairwise(
-        { label: "synthesis", text: pair.synthesis.fused_summary },
-        { label: "ranker", text: pair.ranker.fused_summary },
+        { label: "fused", text: pair.fused.summary_text },
+        { label: "single_aggregator", text: pair.single.summary_text },
         articleText,
-        { model: judgeModel, logContext: "compare-synthesis-vs-ranker" },
+        { model: judgeModel, logContext: "compare-fused-vs-single" },
       )
     } catch (err) {
       console.log(`✗ judge: ${err instanceof Error ? err.message : String(err)}`)
@@ -232,8 +232,8 @@ async function main() {
 
     if (verdict.cost_usd) totalCost += verdict.cost_usd
     if (verdict.winner === "tie") ties++
-    else if (verdict.winner_label === "synthesis") synthesisWins++
-    else rankerWins++
+    else if (verdict.winner_label === "fused") fusedWins++
+    else singleWins++
 
     const cost = verdict.cost_usd ? `$${verdict.cost_usd.toFixed(6)}` : "?"
     console.log(
@@ -252,16 +252,16 @@ async function main() {
   console.log("=".repeat(70))
   console.log("RESULTS")
   console.log("=".repeat(70))
-  const decisive = synthesisWins + rankerWins
-  console.log(`Synthesis wins:                ${synthesisWins}`)
-  console.log(`Ranker wins:                   ${rankerWins}`)
+  const decisive = fusedWins + singleWins
+  console.log(`Fused wins:                    ${fusedWins}`)
+  console.log(`Single-aggregator wins:        ${singleWins}`)
   console.log(`Ties:                          ${ties}`)
   console.log(`Skipped (extract/judge fail):  ${skipped}`)
   console.log(`Verdicts saved:                ${saved}${DRY_RUN ? " (dry run)" : ""}`)
   console.log(`Total judge cost:              $${totalCost.toFixed(6)}`)
   if (decisive > 0) {
-    const pct = ((synthesisWins / decisive) * 100).toFixed(1)
-    console.log(`Synthesis decisive win rate:   ${pct}% (${synthesisWins}/${decisive})`)
+    const pct = ((fusedWins / decisive) * 100).toFixed(1)
+    console.log(`Fused decisive win rate:       ${pct}% (${fusedWins}/${decisive})`)
   }
 }
 

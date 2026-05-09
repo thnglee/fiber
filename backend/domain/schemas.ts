@@ -86,7 +86,7 @@ export const SummarizeRequestSchema = z.object({
   debug: z.boolean().optional(),
   website: z.string().optional(), // Website where the action was taken
   model: z.string().optional(),   // Optional model override
-  routing_mode: z.enum(['auto', 'evaluation', 'forced', 'fusion', 'fusion_ranker_only']).optional(), // Routing mode for model selection
+  routing_mode: z.enum(['auto', 'evaluation', 'forced', 'fusion']).optional(), // Routing mode for model selection
   fusion_config: FusionConfigSchema.optional(),
   judge_config: JudgeRequestSchema.optional(),  // Per-request override of stored judge config
 }).refine(
