@@ -1,68 +1,14 @@
-\setcounter{page}{1}
-
-\pagenumbering{arabic}
-
-\setlength{\parindent}{1cm}
-
-\begin{center}
-  \section*{INTRODUCTION}
-\end{center}
+\chapter*{INTRODUCTION}
 \addcontentsline{toc}{chapter}{INTRODUCTION}
 
-Modern software development faces significant challenges as
-systems grow increasingly complex. Traditional development approaches relying on 
-manual coding often struggle to manage this complexity, leading to higher error
-rates and extended development cycles. These problems often come from the development 
-process, not the system requirements. Model-Driven Engineering (MDE) \cite{MDE} 
-addresses these challenges by shifting the focus from code to models. 
-In MDE, developers use models to design systems, and tools can automatically generate 
-code, documentation, and tests from those models. 
-The Unified Modeling Language (UML) \cite{UML} and the Object 
-Constraint Language (OCL) \cite{OCL} have become the \textit{de facto} standards 
-for model-driven approaches. UML provides a rich set of visual modeling concepts to 
-represent the structural and behavioral aspects of a system, while OCL allows 
-specifying constraints and structural properties of UML models. However, for 
-complex systems, it is often necessary to specify and verify dynamic behaviors 
-that involve temporal constraints and event-driven conditions. Unfortunately, OCL 
-lacks the expressiveness to model these dynamic aspects, which limits its ability 
-to specify and verify temporal properties and event-based behaviors.
+\section*{Rationale}
 
-This thesis aims to address this limitation by extending OCL with constructs for
-temporal properties and events, thereby enhancing its expressiveness in modeling dynamic 
-system aspects. We implement this extension, called TOCL+, as a plugin for the 
-UML-based Specification Environment (USE) \cite{USE}, a tool that supports the 
-specification and validation of software systems using UML and OCL. To enable both
-specification and verification of temporal properties, we employ a 
-technique known as filmstripping \cite{Filmstripping}, which transforms models 
-with dynamic temporal constraints into structurally equivalent models that can 
-be analyzed using existing verification tools. Our plugin automatically translates 
-temporal OCL expressions into standard OCL constraints on filmstrip models, 
-allowing modelers to leverage the existing USE model validator \cite{USE_Validator} 
-for verification. This approach bridges the gap between expressing temporal 
-requirements and verifying them, providing a complete solution that integrates 
-seamlessly with the established USE environment and its validation capabilities.
-% This thesis aims to address this limitation by extending OCL with constructs for
-% temporal properties and events, enhancing its expressiveness in modeling dynamic 
-% system aspects. We implement this extension as a plugin, called TOCL+, for the 
-% UML-based Specification Environment (USE) \cite{USE}, a tool that supports the 
-% specification and validation of software systems using UML and OCL. To enable not 
-% only specification but also verification of temporal properties, we employ a 
-% technique known as filmstripping \cite{Filmstripping}, which transforms models 
-% with dynamic temporal constraints into structurally equivalent models that can 
-% be analyzed using existing verification tools. Our plugin automatically translates 
-% temporal OCL expressions into standard OCL constraints on a filmstrip model, 
-% allowing modelers to leverage the existing USE model validator \cite{USE_Validator} 
-% for verification. This approach bridges the gap between expressing temporal 
-% requirements and verifying them, providing a complete solution that integrates 
-% seamlessly with the established USE environment and its validation capabilities.
+\section*{Scientific and Practical Significance}
 
-The thesis is structured as follows:
-\begin{itemize}
-  \item \textbf{Chapter 1: Background} lays the foundation for understanding the theoretical concepts and tools used in this thesis.
-  
-  \item \textbf{Chapter 2: Specification and Verification of Temporal Properties in OCL} presents our approach to extending OCL for specifying and verifying temporal properties.
+\section*{Research Objectives}
 
-  \item \textbf{Chapter 3: Implementation and Experiment} describes the implementation of our approach and evaluates it through a case study.
+\section*{Scope and Object of Study}
 
-  \item \textbf{Conclusion} summarizes the contributions of this thesis and discusses future work.
-\end{itemize}
+\section*{Research Methodology}
+
+\section*{Outline of the Thesis}
