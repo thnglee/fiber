@@ -17,6 +17,7 @@ export function Header() {
   const navItems = [
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'Metrics', href: '/metrics' },
+    { name: 'Human Eval', href: '/evaluate/admin' },
     { name: 'Live', href: '/live' },
     { name: 'Debug', href: '/debug' },
     { name: 'Settings', href: '/settings' },
