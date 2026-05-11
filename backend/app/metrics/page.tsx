@@ -65,6 +65,7 @@ interface LLMJudgePairwiseRow {
 }
 
 interface EvaluationData {
+  id?: string;
   summary: string;
   original: string;
   url?: string;
@@ -76,6 +77,16 @@ interface EvaluationData {
   estimatedCostUsd?: number;
   judge?: JudgePersist | null;
   factuality?: FactualityPersist | null;
+}
+
+interface AxisCAggregate {
+  task_id: string;
+  hidden_mode: string | null;
+  hidden_model: string | null;
+  n_raters: number;
+  avg_rank: number;
+  n_first: number;
+  pct_first: number;
 }
 
 interface RoutingDecision {
@@ -879,6 +890,10 @@ export default function EvaluationDashboard() {
     });
   }, []);
 
+  // Axis C aggregates keyed by evaluation_metrics.id. Populated lazily once
+  // metrics arrive — only IDs we don't already have are requested.
+  const [axisCByMetric, setAxisCByMetric] = useState<Record<string, AxisCAggregate>>({});
+
   // ── Routing state ─────────────────────────────────────────────────
   const [routingDecisions, setRoutingDecisions] = useState<RoutingDecision[]>([]);
   const [, setRoutingComparisons] = useState<ModelComparison[]>([]);
@@ -1067,6 +1082,35 @@ export default function EvaluationDashboard() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, activeTab]);
+
+  // Fetch Axis C aggregates for any newly-visible metric ids.
+  useEffect(() => {
+    if (activeTab !== 'evaluation' || axisView !== 'full') return;
+    const missing = metrics
+      .map(m => m.id)
+      .filter((id): id is string => !!id && !(id in axisCByMetric));
+    if (missing.length === 0) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/human-eval/by-metric-ids', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ metric_ids: missing }),
+        });
+        if (!res.ok) return;
+        const json = await res.json();
+        if (cancelled) return;
+        const incoming = (json.data ?? {}) as Record<string, AxisCAggregate>;
+        // Mark missing-but-not-found ids as null-equivalent so we don't refetch.
+        // We keep them out of state so the UI falls back to the "Pending" stub.
+        setAxisCByMetric(prev => ({ ...prev, ...incoming }));
+      } catch (err) {
+        console.error('Failed to fetch axis-C aggregates:', err);
+      }
+    })();
+    return () => { cancelled = true };
+  }, [metrics, axisView, activeTab, axisCByMetric]);
 
   useEffect(() => {
     if (activeTab === 'routing') {
@@ -1668,17 +1712,44 @@ export default function EvaluationDashboard() {
                           </div>
                         )}
 
-                        {/* Axis C — Human Validation (placeholder until M-D/E/F land) */}
-                        {axisView === 'full' && (
-                          <div className="mt-3 pt-3 border-l-4 border-orange-400 pl-3 -ml-1">
-                            <p className="text-[10px] uppercase tracking-wider text-orange-700 font-semibold mb-2">
-                              Axis C · Human Validation
-                            </p>
-                            <p className="text-xs text-gray-400 italic">
-                              Pending — connect via the human-eval study (M-D / M-E / M-F).
-                            </p>
-                          </div>
-                        )}
+                        {/* Axis C — Human Validation (live human-eval aggregates) */}
+                        {axisView === 'full' && (() => {
+                          const ax = item.id ? axisCByMetric[item.id] : undefined;
+                          return (
+                            <div className="mt-3 pt-3 border-l-4 border-orange-400 pl-3 -ml-1">
+                              <p className="text-[10px] uppercase tracking-wider text-orange-700 font-semibold mb-2">
+                                Axis C · Human Validation
+                              </p>
+                              {ax ? (
+                                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-700">
+                                  <span>
+                                    Avg rank:{' '}
+                                    <span className="font-semibold text-gray-900">{ax.avg_rank.toFixed(2)}</span>
+                                    <span className="text-gray-400"> / 3</span>
+                                  </span>
+                                  <span>
+                                    Won #1:{' '}
+                                    <span className="font-semibold text-gray-900">
+                                      {ax.n_first}/{ax.n_raters} ({ax.pct_first.toFixed(0)}%)
+                                    </span>
+                                  </span>
+                                  <span>
+                                    Raters: <span className="font-semibold text-gray-900">{ax.n_raters}</span>
+                                  </span>
+                                  {ax.hidden_mode && (
+                                    <span className="text-gray-500 text-[11px] uppercase tracking-wide">
+                                      role · {ax.hidden_mode}
+                                    </span>
+                                  )}
+                                </div>
+                              ) : (
+                                <p className="text-xs text-gray-400 italic">
+                                  No human-eval data for this row.
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
                   );

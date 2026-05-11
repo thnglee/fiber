@@ -28,6 +28,7 @@ export interface JudgePersistFields {
 export type { FactualityPersistFields };
 
 export interface EvaluationData {
+  id?: string;
   summary: string;
   original: string;
   url?: string;
@@ -280,6 +281,7 @@ export const getEvaluationMetrics = async (
           : null
 
       return {
+        id: row.id,
         summary: row.summary_text,
         original: "", // Not fetching full original text to save bandwidth
         url: row.url,
