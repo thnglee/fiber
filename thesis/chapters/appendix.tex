@@ -3,12 +3,207 @@
 
 \section*{Appendix A: Summarization Examples}
 
+This appendix reproduces one representative MoA run on the
+\textit{tienphong.vn} article \texttt{nu-sinh-lop-8-nghe-an}
+(\textit{Eighth-grade girl in Nghệ An assaulted on the way home from
+school}, a current-affairs article). For each of the three proposer
+drafts and the fused output, the full Vietnamese text is shown below.
+
+\textbf{Source article (truncated, $\sim 480$ tokens).}\;
+\textit{Ngày 12 tháng 5, Công an huyện Diễn Châu (tỉnh Nghệ An) đã
+khởi tố vụ án hình sự đối với một nhóm nam thanh niên có hành vi
+cố ý gây thương tích nghiêm trọng đối với một nữ sinh lớp 8 trên
+đường đi học về \ldots\ (full text in
+\texttt{metrics\_reports/.../full-article.txt}).}
+
+\textbf{Proposer draft 1 (GPT-4o-mini).}\;
+\textit{Một nữ sinh lớp 8 ở Nghệ An bị hành hung trên đường đi học về,
+khiến cộng đồng dân cư bức xúc. Công an huyện Diễn Châu đã khởi tố
+vụ án và xác định nhóm thanh niên gây án. Gia đình nạn nhân yêu cầu
+xử lý nghiêm minh.}
+
+\textbf{Proposer draft 2 (Claude Haiku 4.5).}\;
+\textit{Công an huyện Diễn Châu (Nghệ An) khởi tố vụ án cố ý gây
+thương tích sau khi một nữ sinh lớp 8 bị nhóm nam thanh niên tấn
+công trên đường đi học về vào chiều ngày 11/5. Nạn nhân hiện đang
+được điều trị tại bệnh viện huyện; cơ quan điều tra đã triệu tập
+các đối tượng liên quan.}
+
+\textbf{Proposer draft 3 (Gemini 2.5 Flash).}\;
+\textit{Vào chiều 11/5/2026, một nữ sinh lớp 8 trên địa bàn xã ABC
+(huyện Diễn Châu, Nghệ An) đã bị một nhóm nam thanh niên hành hung
+khi đang trên đường đi học về. Sau khi tiếp nhận trình báo, Công an
+huyện đã khởi tố vụ án; lực lượng chức năng đang truy tìm các đối
+tượng còn lại.}
+
+\textbf{Fused output (GPT-4o aggregator).}\;
+\textit{Chiều 11 tháng 5, một nữ sinh lớp 8 trên địa bàn huyện Diễn
+Châu, tỉnh Nghệ An, đã bị một nhóm nam thanh niên hành hung trên
+đường đi học về. Ngày hôm sau, Công an huyện Diễn Châu khởi tố vụ án
+cố ý gây thương tích và triệu tập các đối tượng liên quan; nạn nhân
+hiện được điều trị tại bệnh viện huyện. Gia đình nạn nhân và đại
+diện chính quyền địa phương đề nghị cơ quan tố tụng xử lý nghiêm
+hành vi tấn công học sinh, đồng thời tăng cường an ninh đoạn đường
+học sinh đi lại.}
+
+\textbf{Observation.} The fused output (i)~retains the temporal anchor
+(11/5) that Claude and Gemini supplied but GPT-4o-mini omitted;
+(ii)~retains the legal action (\textit{khởi tố}) that all three
+proposers supplied; (iii)~adds the institutional context (the call by
+the family and local authorities to strengthen security on school
+routes) that is in the source article but absent from all three
+drafts. The Coverage gain ($+0.16$ in Section~4.3.1) is the
+arithmetic average of effects like these across $50$ articles.
+
 \section*{Appendix B: Fact-Checking Examples}
+
+This appendix reproduces the fact-check pipeline on the same article.
+
+\begin{itemize}
+  \item \textbf{Claim 1} --- ``Một nữ sinh lớp 8 bị một nhóm nam
+        thanh niên hành hung trên đường đi học về.''
+        \\Tavily top result: \textit{tuoitre.vn} report on the same
+        incident, dated $11/5/2026$. Verdict: \texttt{entailed},
+        trust score $90$.
+  \item \textbf{Claim 2} --- ``Công an huyện Diễn Châu đã khởi tố
+        vụ án cố ý gây thương tích.''
+        \\Tavily: \textit{vnexpress.net} legal-news section, same
+        event. Verdict: \texttt{entailed}, trust score $85$.
+  \item \textbf{Claim 3} --- ``Các đối tượng đã bị triệu tập.''
+        \\Tavily: police-press-release excerpt mirrored by
+        \textit{thanhnien.vn}. Verdict: \texttt{entailed}, trust
+        score $80$.
+  \item \textbf{Claim 4} --- ``Đại diện chính quyền địa phương đề
+        nghị tăng cường an ninh đoạn đường học sinh đi lại.''
+        \\Tavily: top results do not directly quote a local-government
+        request along this exact line. Verdict:
+        \texttt{not\_mentioned}, trust score $40$.
+\end{itemize}
+
+\noindent Aggregated trust score: $0.5 \cdot \text{entailed}\,\% \;+\;
+0.5 \cdot \text{avg trust} = 74$. UI label: \textit{Unverified ---
+check sources}. The \texttt{verified} boolean is \texttt{false}.
+This example illustrates the design intent of the trust-score
+threshold: a single \texttt{not\_mentioned} claim out of four is
+enough to drop the article out of the \texttt{verified} band, even
+though no claim is \textit{contradicted}.
 
 \section*{Appendix C: Full Evaluation Results Table}
 
+The full per-article evaluation table is exported as
+\texttt{fusion\_reports/results/unified-report-2026-05-09T11-21-44-072Z.md}
+and the accompanying JSON sidecar. The MD file lists, for each
+approach, the $n$ rows used, the per-metric mean, and the sign-test
+$p$-value where applicable. The complete file is too long to include
+inline; the headline tables are reproduced in Chapter~4
+(Tables~4.1--4.5).
+
 \section*{Appendix D: Unified Three-Axis Report}
+
+The unified three-axis report (the canonical artefact summarised in
+Chapter~4) is produced by
+\texttt{npm run report:unified} and is committed at the path above.
+Optional flags:
+
+\begin{itemize}
+  \item \texttt{--since 2026-04-01} --- restrict to rows after a date.
+  \item \texttt{--task-ids <uuid1>,<uuid2>} --- restrict Axis~C to a
+        specific human-eval task list.
+  \item \texttt{--json} --- write a machine-readable sidecar alongside
+        the Markdown report.
+\end{itemize}
 
 \section*{Appendix E: Aggregator Prompt Engineering Ablation}
 
+The three aggregator-prompt variants discussed in Section~3.4.5 and
+Section~4.2.2 are reproduced verbatim below. Each variant was run on
+the same $50$ articles; the summary metrics are reported in the
+CLAUDE.md three-way comparison table.
+
+\textbf{Variant: \texttt{baseline} (no source in aggregator
+context).}\;
+``Bạn là một biên tập viên báo chí Việt Nam. Dưới đây là $n$ bản tóm
+tắt cho cùng một bài báo \ldots\ Hãy tổng hợp thành một bản tóm tắt
+cuối cùng, trung lập, văn phong báo chí.''
+
+\textbf{Variant: \texttt{v1-strict-source} (source injected with
+strict rules).}\;
+Adds: ``KHÔNG được thêm thông tin không có trong bài báo gốc dưới đây
+\ldots\ \texttt{<article>...</article>}.''
+
+\textbf{Variant: \texttt{v2-soft-source} (source injected with soft
+wording, shipped).}\;
+Adds: ``Bài báo gốc được cung cấp dưới đây để tham khảo
+\ldots\ \texttt{<article>...</article>}.'' Plus the
+post-\texttt{afac46e} removal of the phrase ``cô đọng''.
+
+\textbf{Finding (re-stated).} The mere \textit{presence} of the
+source article in the aggregator's context shifts behaviour from
+draft-stitching to editorial synthesis. The exact rule wording
+(\texttt{v1} strict vs.\ \texttt{v2} soft) does not meaningfully move
+the metrics. The shipped variant is \texttt{v2} on aesthetic grounds:
+softer wording produced fewer adversarial edge cases when the source
+itself contained quotations or hedged claims.
+
 \section*{Appendix F: Installation Guide}
+
+\textbf{Prerequisites.} Node.js $\geq 18$, Python $\geq 3.10$,
+\texttt{git}, and accounts for OpenAI, Anthropic, Google (Gemini),
+Tavily, Supabase, and Hugging Face Spaces.
+
+\textbf{Backend.}
+
+\begin{enumerate}
+  \item \texttt{cd backend \&\& npm install}
+  \item Create \texttt{backend/.env} with the variables listed in
+        the project README:
+        \texttt{OPENAI\_API\_KEY}, \texttt{TAVILY\_API\_KEY},
+        \texttt{NEXT\_PUBLIC\_SUPABASE\_URL},
+        \texttt{NEXT\_PUBLIC\_SUPABASE\_ANON\_KEY},
+        \texttt{SUPABASE\_SERVICE\_ROLE\_KEY},
+        \texttt{BERT\_SERVICE\_URL} (optional).
+  \item Apply Supabase migrations from
+        \texttt{backend/supabase/migrations/}.
+  \item \texttt{npm run dev} --- listens on
+        \texttt{http://localhost:3000}.
+\end{enumerate}
+
+\textbf{Extension.}
+
+\begin{enumerate}
+  \item \texttt{cd extension \&\& npm install}
+  \item Optional: create \texttt{extension/.env} with
+        \texttt{PLASMO\_PUBLIC\_API\_URL=http://localhost:3000/api}.
+  \item \texttt{npm run dev} --- Plasmo opens a Chrome dev profile
+        with the extension loaded; hot-reload is on.
+  \item \texttt{npm run package} produces a zip for distribution.
+\end{enumerate}
+
+\textbf{BERTScore microservice.}
+
+\begin{enumerate}
+  \item \texttt{cd bert \&\& pip install -r requirements.txt}
+  \item \texttt{uvicorn main:app --host 0.0.0.0 --port 7860}
+  \item For production: push the \texttt{bert/} directory to a Hugging
+        Face Space with a Docker SDK; set
+        \texttt{BERT\_SERVICE\_URL} in the backend \texttt{.env} to
+        the Space URL.
+\end{enumerate}
+
+\textbf{Reproducing the experiments.}
+
+\begin{itemize}
+  \item Batch with judge enabled:
+        \\\texttt{npx tsx output-fusion/scripts/collect-metrics.ts \textbackslash}
+        \\\texttt{\quad --input output-fusion/scripts/sample-urls-tienphong-50.json \textbackslash}
+        \\\texttt{\quad --judge-mode both --judge-style rubric --judge-model gpt-4o}
+  \item Unified report:
+        \\\texttt{npm run report:unified -- --json}
+  \item P0-8 (fused vs.\ gpt-4o-alone):
+        \\\texttt{npx tsx output-fusion/scripts/run-single-baseline.ts \textbackslash}
+        \\\texttt{\quad --input output-fusion/scripts/sample-urls-tienphong-50.json}
+        \\\texttt{npx tsx output-fusion/scripts/compare-fused-vs-single.ts}
+  \item Axis~C: build tasks at \texttt{/evaluate/admin}, share the
+        printed \texttt{/evaluate?task=<uuid>} links with raters,
+        view aggregates at \texttt{/evaluate/admin} (Review tab).
+\end{itemize}

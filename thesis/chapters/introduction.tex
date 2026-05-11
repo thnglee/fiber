@@ -3,12 +3,150 @@
 
 \section*{Rationale}
 
+Vietnamese online news has become a primary medium of public information, with
+tens of millions of articles published each year across major outlets such as
+\textit{tuoitre.vn}, \textit{thanhnien.vn}, \textit{tienphong.vn},
+\textit{vietnamnet.vn}, and \textit{vtv.vn}. This volume creates two parallel
+needs for the typical reader. The first is \textbf{compression}: a quick,
+trustworthy summary that lets a reader skim a long article in a few seconds.
+The second is \textbf{verification}: a check on whether the article's main
+claims are corroborated by other reputable sources, particularly as
+misinformation, clickbait, and partial reporting circulate alongside accurate
+journalism.
+
+State-of-the-art Vietnamese summarizers built on a single Large Language Model
+(LLM) still produce uneven outputs --- sometimes too long, sometimes too
+literal, occasionally hallucinated. A recent line of work,
+\textbf{Mixture-of-Agents} (MoA) by Wang et al.\ \cite{Wang2024}, argues that
+multiple LLMs can be combined in a hierarchical proposer--aggregator structure
+to outperform any single model on instruction-following benchmarks. Whether
+this benefit transfers to \textit{grounded} Vietnamese summarization --- where
+the system must remain faithful to a source article rather than answer
+free-form prompts --- is an open question that has not been answered in the
+Vietnamese NLP literature.
+
+A second, deeper problem motivates this thesis. The metrics most commonly used
+to evaluate summarization in Vietnamese research --- ROUGE \cite{Lin2004},
+BLEU, and BERTScore \cite{Zhang2020} computed against the source article ---
+measure overlap, not quality. They reward summaries that reuse phrases from
+the source and punish summaries that paraphrase or compress aggressively.
+A correctly-implemented aggregator that synthesizes drafts into a cleaner
+editorial summary will, by construction, score lower on these metrics than a
+draft that copies surface forms. If Vietnamese summarization research is to
+adopt aggregator-style systems, it needs an evaluation methodology that does
+not structurally disadvantage them.
+
 \section*{Scientific and Practical Significance}
+
+\textbf{Scientific significance.}
+This thesis contributes a \textit{three-axis evaluation framework} that
+combines (i)~content-retention metrics against the source, (ii)~LLM-as-judge
+quality and pairwise preference scoring, and (iii)~blind human ranking with
+inter-rater agreement statistics. It uses this framework to expose, with
+empirical evidence on Vietnamese data, a structural limitation of overlap
+metrics for aggregator-style summarization. This limitation has been alluded
+to in English-language work \cite{Wang2024,Zheng2023} but has not been
+explicitly studied for Vietnamese.
+
+\textbf{Practical significance.}
+The thesis ships an end-to-end product, called \textbf{Fiber}, that any
+Vietnamese reader can install in a Chromium-based browser. Fiber injects a
+sidebar into seven major Vietnamese news domains, summarizes the article in
+real time using a chosen LLM (or a fused MoA pipeline), and fact-checks the
+summary against live web evidence via the Tavily search API. The whole
+system --- a Next.js backend, a Plasmo browser extension, and a Python
+BERTScore microservice --- is open-source and reproducible.
 
 \section*{Research Objectives}
 
+\begin{enumerate}
+  \item Design and build an end-to-end browser-extension system that
+        summarizes and fact-checks Vietnamese news articles in real time,
+        supporting multiple LLM providers (OpenAI, Anthropic, Google) and
+        multiple routing strategies.
+  \item Adapt the Mixture-of-Agents pipeline of Wang et al.\ (2024) to the
+        grounded Vietnamese summarization setting, including a source-article
+        residual connection in the aggregator prompt.
+  \item Propose and validate a three-axis evaluation framework --- content
+        retention (Axis~A), LLM-judge quality and preference (Axis~B), and
+        human ranking with agreement statistics (Axis~C) --- and use it to
+        compare MoA fusion against single-model baselines on a topic-balanced
+        Vietnamese dataset.
+\end{enumerate}
+
 \section*{Scope and Object of Study}
+
+\textbf{Object.} Vietnamese-language news articles published on
+\textit{tuoitre.vn}, \textit{thanhnien.vn}, \textit{tienphong.vn},
+\textit{vietnamnet.vn}, \textit{laodong.vn}, \textit{vtv.vn}, and
+\textit{nld.com.vn}. The empirical evaluation in Chapter~4 uses 50 articles
+from \textit{tienphong.vn}, balanced across five topics: current affairs
+(\textit{thời sự}), law (\textit{pháp luật}), economy (\textit{kinh tế}),
+education (\textit{giáo dục}), and culture (\textit{văn hóa}).
+
+\textbf{Scope.}
+\begin{itemize}
+  \item \textit{Modeling.} Three commercial cloud LLMs (GPT-4o-mini, Claude
+        Haiku 4.5, Gemini 2.5 Flash) as proposers; GPT-4o as the aggregator;
+        GPT-4o running alone as the strongest single-model baseline.
+        Vietnamese-specific models (ViT5 \cite{Nguyen2022},
+        PhoBERT \cite{Nguyen2020}, PhoGPT \cite{Phan2023}) are used for
+        routing classification and embedding-based scoring; on-device
+        Vietnamese-only generation is out of scope due to GPU deployment
+        constraints documented in Chapter~4.
+  \item \textit{Evaluation.} Single domain (\textit{tienphong.vn}), single run
+        per article, no multi-domain generalization claim. The human study is
+        a pilot with $n = 4$ raters and $48$ tasks, framed as a descriptive
+        complement to Axis~A and Axis~B.
+  \item \textit{Fact-checking.} Search-augmented verification via the Tavily
+        web-search API. Claim-detection and evidence-retrieval are
+        implemented; deeper structured-knowledge fact-checking
+        (knowledge-graph or stance-classification) is out of scope.
+\end{itemize}
 
 \section*{Research Methodology}
 
+The thesis follows a comparative experimental methodology. The same $50$
+articles are summarized by five approaches (three individual proposers, the
+MoA fused output, and the GPT-4o single-model baseline), and the resulting
+$250$ summaries are evaluated along three axes. Axis~A uses ROUGE-1/2/L,
+BLEU, BERTScore (with PhoBERT) and compression rate; Axis~B uses a
+FLASK-derived 5-dimension rubric \cite{Ye2023}, an MT-Bench-style absolute
+score \cite{Zheng2023}, an AlpacaEval-style pairwise preference judge with
+position randomization \cite{Dubois2024}, and a claim-level factuality
+classifier; Axis~C uses a blind $K = 3$ ranking interface administered
+through the same browser-extension product. Statistical tests include the
+two-sided sign test (ties excluded) for pairwise win rates and Fleiss'
+$\kappa$ \cite{Landis1977} for inter-rater agreement; length bias is
+controlled via the simplified-bucket method of
+Dubois et al.\ \cite{Dubois2024}.
+
 \section*{Outline of the Thesis}
+
+The remainder of this thesis is organized as follows.
+
+\textbf{Chapter 1 --- Background.} Introduces the summarization and fact-checking
+problems, the Mixture-of-Agents technique, and related Vietnamese and
+international work, identifying the gap that this thesis fills.
+
+\textbf{Chapter 2 --- Theoretical Foundations.} Reviews the LLM architectures used
+in the system, the three families of evaluation metrics (overlap, LLM-judge,
+human-ranking), the factuality methodology, and the technologies used to
+build the browser extension and back-end services.
+
+\textbf{Chapter 3 --- System Design and Implementation.} Presents requirement
+analysis, the three-service architecture, the multi-provider LLM abstraction,
+the MoA pipeline (the technical contribution), the three-axis evaluation
+framework (the methodological contribution), the database schema, and the
+user interface.
+
+\textbf{Chapter 4 --- Experiments and Evaluation.} Reports results along the three
+axes on the 50-article dataset, including the headline pairwise result
+(fused beats GPT-4o-alone $77.1\%$, $p = 0.0002$), the topic-balanced
+breakdown, the human-pilot interpretation, the cross-axis triangulation, and
+the methodological limitations.
+
+The \textbf{Conclusion} summarizes contributions, limitations, and future work;
+six appendices document examples, full evaluation tables, the unified
+three-axis report, the aggregator-prompt ablation, and installation
+instructions.

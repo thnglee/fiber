@@ -1,11 +1,170 @@
 \chapter{Background}
 
+This chapter introduces the two problems addressed by the thesis ---
+automatic news summarization and automatic fact-checking --- the
+Mixture-of-Agents (MoA) technique that underpins the technical contribution,
+and a survey of related work in Vietnamese and international NLP. The chapter
+ends with a statement of the gap this thesis closes.
+
 \section{Automatic Text Summarization}
+
+\textbf{Definition.}
+Automatic text summarization is the task of producing a shorter version of a
+source text that preserves its essential information. Given an input document
+$D$, a summarizer $f$ produces a summary $S = f(D)$ such that $|S| \ll |D|$
+and $S$ retains the key facts of $D$.
+
+\textbf{Classification.}
+Summarization systems are commonly classified along two axes.
+
+\begin{itemize}
+  \item \textit{Extractive vs.\ abstractive.}
+        Extractive systems select existing sentences (or sub-sentences) from
+        the source. Abstractive systems generate new text and can paraphrase,
+        re-order, or combine ideas. Modern LLM-based summarizers are
+        predominantly abstractive.
+  \item \textit{Single-document vs.\ multi-document.}
+        Single-document systems summarize one article in isolation;
+        multi-document systems aggregate information across several related
+        articles. The system in this thesis is single-document, but the MoA
+        pipeline can be read as a degenerate multi-source aggregator in
+        which the ``multiple sources'' are different LLM drafts of the same
+        article.
+\end{itemize}
+
+\textbf{Vietnamese-specific challenges.}
+Vietnamese poses three difficulties for summarization.
+\begin{enumerate}
+  \item \textit{Word segmentation.} Vietnamese is written with a space
+        between syllables, not between words; a single conceptual word may
+        span two or three syllables (\textit{tóm tắt}, \textit{kiểm chứng}).
+        Token-overlap metrics computed on whitespace tokens systematically
+        under-credit paraphrases that recompose multi-syllable terms.
+  \item \textit{Diacritics and tone marks.} Vietnamese has six lexical tones,
+        encoded as diacritics on vowels; encoder vocabularies that fragment
+        diacriticised characters lose semantic granularity.
+  \item \textit{Scarcity of evaluation corpora.} Compared with English
+        (CNN/DailyMail, XSum, MultiNews), Vietnamese has no widely-adopted,
+        human-annotated summarization benchmark with reference summaries.
+        This is the practical reason ROUGE/BLEU/BERTScore in Vietnamese
+        research are usually computed \textit{against the source article},
+        not against human reference summaries --- the methodological caveat
+        revisited in Chapter~4.
+\end{enumerate}
 
 \section{News Fact-Checking}
 
+\textbf{Misinformation in Vietnamese media.}
+Vietnamese readers encounter clickbait headlines, partial quotations, and
+outright misinformation across social media and news aggregators. Manual
+fact-checking does not scale; an automated complement that can flag
+unsupported claims is increasingly valuable.
+
+\textbf{The standard pipeline.}
+The literature converges on a three-step automatic fact-checking pipeline.
+\begin{enumerate}
+  \item \textit{Claim detection.} Extract check-worthy atomic claims from a
+        document.
+  \item \textit{Evidence retrieval.} For each claim, retrieve passages from
+        a corpus (or the open web) that may support or refute it.
+  \item \textit{Verdict prediction.} Classify each claim as \textit{entailed},
+        \textit{contradicted}, or \textit{not mentioned} given the evidence,
+        and aggregate per-claim verdicts into a per-document score.
+\end{enumerate}
+
+\textbf{Search-augmented verification.}
+Open-web search has become the de-facto evidence source for production
+fact-checking, because no curated knowledge base keeps pace with breaking
+news. Search-augmented verification combines a web-search API with an LLM
+that reads the retrieved snippets and renders a verdict; this is the design
+adopted in Chapter~3 (Tavily $\rightarrow$ GPT-4o-mini).
+
 \section{Mixture-of-Agents (MoA)}
+
+\textbf{Origin.}
+Wang et al.\ proposed Mixture-of-Agents in 2024 \cite{Wang2024}. The central
+empirical observation is that an LLM acting as an \textit{aggregator} produces
+better answers when given several candidate answers from other LLMs ---
+even when those other LLMs are individually weaker than the aggregator
+itself. The authors call this the \textit{collaborativeness of LLMs}.
+
+\textbf{Architecture.}
+MoA is a layered structure. Layer $\ell$ consists of $n$ agents
+$\{A_{\ell,1}, \ldots, A_{\ell,n}\}$; each agent at layer $\ell+1$ receives
+the prompt together with the outputs of all agents at layer $\ell$. Formally,
+agent $i$ at layer $\ell+1$ produces
+
+\[
+y_{\ell+1,i} \;=\; A_{\ell+1,i}\!\left(\,[\,y_{\ell,1}, y_{\ell,2}, \ldots, y_{\ell,n}\,] \,+\, x \right),
+\]
+
+\noindent where $x$ is the user prompt and $+$ denotes concatenation. In a
+two-layer instantiation (the one used in this thesis), layer~1 is the
+\textit{proposer} layer and layer~2 is a single \textit{aggregator}.
+
+\textbf{Reported results.}
+On the AlpacaEval~2.0 benchmark, an MoA configuration with six open-source
+proposers and one aggregator reaches an LC win rate of $65.1\%$, surpassing
+GPT-4o ($57.5\%$) under the same evaluation protocol. Performance scales
+monotonically with the number of layers and the number of proposers per
+layer (Tables~3--4 of \cite{Wang2024}).
+
+\textbf{Open question for this thesis.}
+The MoA paper evaluates on instruction-following benchmarks (AlpacaEval,
+MT-Bench, FLASK) where the LLM judge --- not overlap against any source
+text --- is the ground truth. Whether MoA transfers to \textit{grounded}
+summarization (where a source article exists and overlap can in principle
+be measured), and whether the benefit shows up in Vietnamese, is the
+empirical question this thesis answers.
 
 \section{Related Works}
 
+\textbf{Vietnamese summarization systems.}
+\textit{Google News Vietnam} and \textit{Báo Mới} provide aggregated news with
+short snippets, but their snippets are extractive lead-paragraph excerpts,
+not editorial abstractive summaries. Academic Vietnamese summarization work
+has used ViT5 \cite{Nguyen2022} and PhoGPT \cite{Phan2023} for abstractive
+generation, evaluated almost exclusively with ROUGE against either reference
+summaries (when available) or the source article (more often).
+
+\textbf{Fact-checking tools.}
+\textit{ClaimBuster} (UT Arlington) detects check-worthy claims in English
+political speech; the \textit{Google Fact Check Tools} API surfaces existing
+fact-checking-organization verdicts. Neither targets Vietnamese, and neither
+operates at the article level for ordinary readers.
+
+\textbf{Browser-extension reading aids.}
+\textit{TLDR This}, \textit{Summari}, and \textit{Reader Mode} extensions
+inject in-page summaries on top of arbitrary web pages but are
+English-first; their summarizers degrade on Vietnamese, and they do not
+offer fact-checking. \textit{NewsGuard} and \textit{Bias Buddy} score the
+reliability of \textit{publishers}, not individual articles, and rely on
+manual ratings rather than per-article verification.
+
+\textbf{LLM-as-judge evaluation.}
+Zheng et al.\ \cite{Zheng2023} introduced MT-Bench and the Chatbot Arena
+methodology, demonstrating that a strong LLM (GPT-4) agrees with human
+preferences on chatbot outputs at $\sim$80\% (broadly the same level at
+which two humans agree with each other). FLASK \cite{Ye2023} extended this
+to fine-grained rubric scoring along multiple alignment skills.
+AlpacaEval \cite{Dubois2024} added position randomization and length
+control to mitigate two known LLM-judge biases. The Axis~B evaluation
+component of this thesis is built on these methods.
+
+\textbf{The gap.}
+To the best of our knowledge, no prior work has (i)~applied Mixture-of-Agents
+to Vietnamese, (ii)~combined extension-based product delivery with
+fact-checking and summarization on Vietnamese news, or (iii)~explicitly
+contrasted overlap, LLM-judge, and human evaluation in a single
+\textit{three-axis} framework for Vietnamese summarization. This thesis fills
+all three gaps.
+
 \section{Summary}
+
+This chapter framed Vietnamese news summarization and fact-checking as the
+two parallel needs the thesis addresses, introduced Mixture-of-Agents as the
+technique that the thesis adapts, surveyed related Vietnamese and
+international work, and identified the gap: no prior Vietnamese system
+combines MoA fusion, browser-extension delivery, and a methodologically
+rigorous three-axis evaluation. Chapter~2 develops the theoretical
+foundations that the system in Chapter~3 builds upon.

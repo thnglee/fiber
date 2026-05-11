@@ -1,19 +1,51 @@
 \chapter*{ABBREVIATIONS AND TERMS}
 \addcontentsline{toc}{chapter}{ABBREVIATIONS AND TERMS}
 
-\begin{longtable}{|>{\raggedright\arraybackslash}p{4cm}|>{\raggedright\arraybackslash}p{10cm}|}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}p{10.4cm}|}
   \hline
-  \textbf{Abbreviation}       & \textbf{Full Form}           
-  \\
+  \textbf{Abbreviation} & \textbf{Full Form / Meaning} \\
   \hline
-  LLM                    & Large Language Model  
-  \\
+  API   & Application Programming Interface \\ \hline
+  BLEU  & Bilingual Evaluation Understudy --- modified $n$-gram precision metric \\ \hline
+  BERT  & Bidirectional Encoder Representations from Transformers \\ \hline
+  BERTScore & Embedding-based similarity metric built on a contextual encoder (PhoBERT in this work) \\ \hline
+  CAPI  & (Server-side) Conversion API \\ \hline
+  CoT   & Chain-of-Thought \\ \hline
+  CSV   & Comma-Separated Values \\ \hline
+  CRUD  & Create, Read, Update, Delete \\ \hline
+  DOM   & Document Object Model \\ \hline
+  GPT   & Generative Pre-trained Transformer \\ \hline
+  HF    & Hugging Face \\ \hline
+  JSON  & JavaScript Object Notation \\ \hline
+  JSDOM & JavaScript DOM implementation in Node.js \\ \hline
+  LLM   & Large Language Model \\ \hline
+  MoA   & Mixture-of-Agents (Wang et al., 2024) \\ \hline
+  MV3   & Manifest V3 (Chrome Extension specification) \\ \hline
+  NLP   & Natural Language Processing \\ \hline
+  PRD   & Product Requirements Document \\ \hline
+  RAG   & Retrieval-Augmented Generation \\ \hline
+  RLS   & Row-Level Security (PostgreSQL) \\ \hline
+  ROUGE & Recall-Oriented Understudy for Gisting Evaluation \\ \hline
+  SAG   & Search-Augmented Generation \\ \hline
+  SDK   & Software Development Kit \\ \hline
+  SSE   & Server-Sent Events \\ \hline
+  TS    & TypeScript \\ \hline
+  UI    & User Interface \\ \hline
+  URL   & Uniform Resource Locator \\ \hline
+  UUID  & Universally Unique Identifier \\ \hline
+  ViT5  & Vietnamese Text-to-Text Transfer Transformer \\ \hline
+  PhoBERT & Vietnamese pre-trained BERT (vinai/phobert-base) \\ \hline
+  PhoGPT  & Vietnamese decoder-only LLM (VinAI) \\ \hline
+  \multicolumn{2}{l}{} \\
   \hline
-  MoA                    & Mixture-of-Agents    
-  \\
-  \hline
-  RAG                    & Retrieval-Augmented Generation
-  \\
-  \hline
-  % Add more abbreviations here
+  \textbf{Term} & \textbf{Definition} \\ \hline
+  Proposer    & A first-tier LLM in the MoA pipeline that produces a candidate summary draft \\ \hline
+  Aggregator  & The second-tier LLM in the MoA pipeline that fuses the proposer drafts into a final answer \\ \hline
+  Residual connection (MoA) & Injection of the original source article into the aggregator prompt so that fusion stays grounded \\ \hline
+  Rubric judging   & LLM-as-judge that scores a summary on multiple named criteria with a numerical scale \\ \hline
+  Pairwise judging & LLM-as-judge that compares two summaries A vs.\ B and selects a winner \\ \hline
+  Fleiss' $\kappa$ & Inter-rater agreement statistic for categorical ratings by $\geq 2$ raters \\ \hline
+  Sign test        & Non-parametric test for paired binary outcomes, used here for pairwise win rates \\ \hline
+  Length bucketing & Stratification of pairwise verdicts by output-length ratio to control length bias \\ \hline
+  Entailment       & Logical relation: hypothesis is supported by premise; used for claim-level factuality \\ \hline
 \end{longtable}

@@ -1,19 +1,349 @@
 \chapter{Theoretical Foundations}
 
+This chapter develops the theoretical machinery the system in Chapter~3 is
+built on: the LLM architectures used, the three families of evaluation
+metrics, the factuality methodology, the content-extraction stack, and the
+browser-extension framework. Each section ties the theory to a concrete
+choice in the system.
+
 \section{Large Language Models}
+
+\subsection{The Transformer Architecture}
+
+The Transformer \cite{Vaswani2017} replaced recurrent and convolutional
+sequence models for natural-language tasks by relying entirely on attention.
+For a query $Q$, key $K$, and value $V$, the scaled dot-product attention is
+
+\[
+\text{Attention}(Q,K,V) \;=\; \text{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right) V,
+\]
+
+\noindent where $d_k$ is the key dimension. \textit{Multi-head} attention
+projects $Q, K, V$ into $h$ subspaces, runs attention in each, and
+concatenates the results, allowing the model to attend to different
+positional relationships simultaneously.
+
+\subsection{Architectural Families}
+
+Modern LLMs fall into three architectural families.
+
+\begin{itemize}
+  \item \textit{Encoder-only} models such as BERT and PhoBERT \cite{Nguyen2020}
+        produce contextual embeddings for input tokens; they are used in this
+        thesis as the embedding backbone for BERTScore (Section~2.2.3).
+  \item \textit{Decoder-only} models such as GPT, Claude, Gemini, and
+        PhoGPT \cite{Phan2023} generate text autoregressively and are used
+        as the proposers and aggregator of the MoA pipeline (Chapter~3).
+  \item \textit{Encoder--decoder} models such as T5 and
+        ViT5 \cite{Nguyen2022} encode the input and condition decoder
+        generation on it; ViT5 is used as the routing fallback for short
+        Vietnamese inputs.
+\end{itemize}
+
+\subsection{Models Used in the System}
+
+\begin{itemize}
+  \item \textbf{GPT-4o} (OpenAI, 2024-08-06 snapshot) --- aggregator in the
+        MoA pipeline and the strongest-single-model baseline.
+  \item \textbf{GPT-4o-mini} (OpenAI, 2024-07-18 snapshot) --- proposer
+        and judge model; default LLM-judge in Axis~B.
+  \item \textbf{Claude Haiku 4.5} (Anthropic) --- proposer; included to
+        widen the proposer family beyond OpenAI.
+  \item \textbf{Gemini 2.5 Flash} (Google) --- proposer; the third
+        proposer family used in MoA.
+  \item \textbf{ViT5-large} (VinAI) --- routing fallback for short
+        Vietnamese inputs in the complexity-based routing layer.
+  \item \textbf{PhoBERT-base} (\texttt{vinai/phobert-base}) --- contextual
+        encoder for BERTScore.
+  \item \textbf{PhoGPT-4B-Chat} (VinAI) --- evaluated for on-device
+        deployment; not used in the headline experiments due to GPU
+        constraints discussed in Chapter~4.
+\end{itemize}
+
+\subsection{Reasoning-Model Considerations}
+
+Reasoning-tuned models such as OpenAI \texttt{o4-mini} and
+\texttt{o3-mini} require special handling: temperature, top-$p$, and
+penalty parameters are unsupported, and the streaming protocol differs from
+chat-completion models. The service layer in Chapter~3 abstracts these
+differences so that all 14 supported models can be selected interchangeably
+at runtime.
 
 \section{Summarization Evaluation Metrics (Axis A)}
 
+\subsection{ROUGE}
+
+ROUGE \cite{Lin2004} (Recall-Oriented Understudy for Gisting Evaluation)
+measures $n$-gram and longest-common-subsequence overlap between a candidate
+summary $C$ and a reference $R$. Let $g_n$ denote the set of $n$-grams.
+
+\[
+\text{ROUGE-}n_{\text{recall}} \;=\; \frac{|g_n(C) \cap g_n(R)|}{|g_n(R)|},
+\qquad
+\text{ROUGE-}n_{\text{prec}} \;=\; \frac{|g_n(C) \cap g_n(R)|}{|g_n(C)|},
+\]
+
+\noindent and ROUGE-$n_{F1}$ is the harmonic mean of the two.
+ROUGE-1 and ROUGE-2 use unigrams and bigrams respectively; ROUGE-L is
+based on the longest common subsequence and rewards in-order overlap.
+
+\textbf{Caveat for Vietnamese.} ROUGE is computed on whitespace tokens.
+A Vietnamese word such as \textit{kiểm chứng} is two tokens, and a paraphrase
+that uses \textit{thẩm định} instead receives zero credit even though the
+meaning is identical.
+
+\subsection{BLEU}
+
+BLEU is a precision-oriented metric originally designed for machine
+translation. For an $n$-gram set, modified precision $p_n$ clips counts at
+the maximum reference count; BLEU then combines $p_1, \ldots, p_4$ as a
+weighted geometric mean and multiplies by a brevity penalty $BP$:
+
+\[
+\text{BLEU} \;=\; BP \cdot \exp\!\left(\sum_{n=1}^{4} w_n \log p_n \right),
+\qquad
+BP \;=\; \min\!\left(1, \exp\!\left(1 - \tfrac{r}{c}\right)\right),
+\]
+
+\noindent where $r$ is the reference length, $c$ is the candidate length,
+and $w_n = 1/4$. BLEU shares ROUGE's tokenization fragility for Vietnamese.
+
+\subsection{BERTScore (with PhoBERT)}
+
+BERTScore \cite{Zhang2020} replaces $n$-gram matching with cosine similarity
+between contextual embeddings. For each token $c_i$ in the candidate, the
+best-matching token $r_j$ in the reference contributes
+$\cos(\mathbf{e}(c_i), \mathbf{e}(r_j))$ to BERTScore-Precision; recall is
+defined symmetrically. The final score $F_{\text{BERT}}$ is the harmonic
+mean.
+
+In this thesis, the embedding model is \texttt{vinai/phobert-base}; inputs
+are truncated to $256$ tokens before scoring, which both fits the model's
+context window and standardizes the cost of an evaluation call.
+BERTScore captures semantic similarity that overlap metrics miss, but it
+still scores against the source article, so it inherits the same
+\textit{content-retention} interpretation as ROUGE and BLEU.
+
+\subsection{Compression Rate}
+
+Compression rate is $|S| / |D|$ expressed as a percentage, where $|S|$ and
+$|D|$ are the token counts of the summary and the source. It is not a
+quality metric, but it explains \textit{why} overlap metrics behave as they
+do: an editorial summary at $30\%$ compression has fewer surface forms to
+match than a draft-stitching summary at $50\%$, and overlap will fall
+even when quality rises.
+
+\subsection{Methodological Limit of Axis A}
+
+The most important caveat of this thesis, restated formally:
+\textit{ROUGE, BLEU, and BERTScore computed against the source article
+measure content retention, not summary quality}. When the system is
+allowed (or encouraged) to paraphrase, an editorial rewrite that improves
+clarity will reduce token overlap. Wang et al.\ \cite{Wang2024} bypass
+this issue by using an LLM judge as ground truth; the same choice is made
+in Axis~B of this thesis.
+
 \section{LLM-as-Judge Methodology (Axis B)}
+
+\subsection{Rubric Evaluation (FLASK-Derived)}
+
+A rubric judge scores a summary along several named dimensions
+on an integer scale. Following FLASK \cite{Ye2023}, this thesis uses five
+dimensions on a 1--5 scale: \textit{faithfulness}, \textit{coverage},
+\textit{fluency}, \textit{conciseness}, and a holistic \textit{overall}.
+The judge model receives the source article, the candidate summary, and a
+Vietnamese-journalism rubric specification, and is instructed to return a
+JSON object with the five scores and a one-sentence justification per
+dimension.
+
+\subsection{Absolute Scoring (MT-Bench Style)}
+
+The MT-Bench protocol \cite{Zheng2023} asks the judge for a single
+holistic integer score in $\{1,\ldots,10\}$. This is faster than the
+rubric and is included as a secondary signal; it does not replace the
+rubric.
+
+\subsection{Pairwise Preference (AlpacaEval Style)}
+
+A pairwise judge is shown two candidate summaries $A$ and $B$ for the same
+source and is asked to pick a winner (or a tie). The empirical headline of
+this thesis is reported in pairwise form because pairwise judges show
+higher inter-judge agreement than absolute judges. Two protocol details
+matter:
+
+\begin{itemize}
+  \item \textit{Position randomization.} LLM judges have a documented bias
+        toward the first-presented candidate. Every pairwise call randomly
+        assigns the two summaries to positions $A$ and $B$, and the
+        position mapping is recorded so the winning candidate is correctly
+        attributed.
+  \item \textit{Sign-test significance.} For $w$ wins out of $n$ decisive
+        verdicts (ties excluded), the two-sided sign-test $p$-value is
+
+        \[
+        p \;=\; 2 \cdot \Pr\!\left[\,X \geq \max(w, n - w) \;\mid\; X \sim \text{Bin}(n, 0.5)\right],
+        \]
+
+        \noindent which is the probability of an outcome at least as
+        extreme as the observed one under $H_0: P(\text{A wins}) = 0.5$.
+        Throughout this thesis, $p < 0.05$ is treated as the threshold
+        for ``unlikely to be chance.''
+\end{itemize}
+
+\subsection{Length-Controlled Win Rate (Dubois 2024)}
+
+LLM judges prefer longer responses \cite{Dubois2024}. To control for this,
+pairwise verdicts are bucketed by the length ratio $|A|/|B|$:
+
+\begin{itemize}
+  \item $|A|/|B| < 0.85$ --- $A$ is much shorter;
+  \item $0.85 \leq |A|/|B| \leq 1.15$ --- comparable length;
+  \item $|A|/|B| > 1.15$ --- $A$ is much longer.
+\end{itemize}
+
+\noindent The length-bucketed win rate averages the within-bucket win rates
+of buckets that meet a minimum count ($\text{MIN\_BUCKET\_N} = 5$). If
+raw and bucketed rates agree, length bias is unlikely to explain the
+result.
 
 \section{Factuality Evaluation}
 
+Factuality is treated as a per-claim binary problem. Given a summary $S$
+and source $D$:
+
+\begin{enumerate}
+  \item \textit{Claim splitting.} Decompose $S$ into atomic claims
+        $\{c_1, \ldots, c_k\}$ via a structured-output LLM call.
+  \item \textit{Entailment classification.} For each $c_j$, classify into
+        $\{\,\text{entailed},\, \text{contradicted},\, \text{not mentioned}\,\}$
+        relative to $D$, using \texttt{gpt-4o-mini} with a constrained JSON
+        schema.
+  \item \textit{Aggregation.} Report the entailment ratio
+        $|\{c_j : \text{entailed}\}| / k$, the count of contradicted claims
+        (hallucinations), and store contradicting claims verbatim for
+        manual inspection.
+\end{enumerate}
+
+A summary with entailment ratio $> 95\%$ and zero hallucinations is
+considered factually faithful at the per-claim level; the experiment in
+Chapter~4 reports both the average and worst-case values per approach.
+
 \section{Human Evaluation \& Inter-rater Agreement (Axis C)}
+
+\subsection{Blind K-Way Ranking}
+
+Axis~C uses blind $K$-way ranking. For each article, $K = 3$ candidate
+summaries (fused, GPT-4o-alone, and a single proposer draft) are presented
+to the rater as \textit{Bản A, Bản B, Bản C}, with the model identities
+hidden. The rater drags the candidates into a total order from best to
+worst and writes a one-sentence Vietnamese justification per candidate.
+The interface deliberately mirrors Chatbot Arena
+\cite{Zheng2023} but for $K = 3$.
+
+\subsection{Fleiss' Kappa}
+
+Fleiss' $\kappa$ \cite{Landis1977} extends Cohen's $\kappa$ to
+$\geq 3$ raters. For $N$ items, $n$ raters per item, and $k$ categories,
+$\kappa = (P - P_e) / (1 - P_e)$, where $P$ is the average per-item
+agreement (over rater pairs) and $P_e$ is the chance-expected agreement
+under marginal category frequencies.
+
+The Landis--Koch interpretation bands used in this thesis are:
+
+\begin{tabular}{ll}
+$\kappa < 0$       & worse than chance \\
+$0.00$--$0.20$     & slight \\
+$0.21$--$0.40$     & fair \\
+$0.41$--$0.60$     & moderate \\
+$0.61$--$0.80$     & substantial \\
+$0.81$--$1.00$     & almost perfect \\
+\end{tabular}
+
+For ranking data, $\kappa$ is computed on per-position labels: for each
+$(item, rank)$ pair, the ``category'' assigned by a rater is the candidate
+that received that rank. The implementation is described in
+Section~3.6.4.
 
 \section{Content Extraction}
 
+The browser extension is invoked on arbitrary news pages; before the article
+can be summarized, the system must isolate the article body from
+navigation, advertisements, comments, and related-article rails.
+
+\textbf{Mozilla Readability + JSDOM.} The backend reuses
+\textit{Mozilla Readability} --- the algorithm behind Firefox's Reader View
+--- run inside a JSDOM environment. Readability scores DOM nodes by
+content-density heuristics and returns the highest-scoring subtree as the
+main article.
+
+\textbf{Vietnamese-news edge cases.} Vietnamese outlets use several
+DOM patterns that defeat the default heuristics:
+
+\begin{itemize}
+  \item \textit{VnExpress} embeds article paragraphs inside a custom
+        web component with a Shadow DOM root; the extension must pierce
+        the shadow boundary on the client before sending text.
+  \item \textit{Cloudflare-protected sites} (\textit{laodong.vn},
+        \textit{nld.com.vn}) require the extraction to happen in the
+        content script, where the browser session already holds the
+        Cloudflare cookie.
+  \item \textit{VietnamNet} renders the article through a server-side
+        template that injects ad slots inline with paragraphs; the
+        Readability score must ignore script-tagged ad blocks.
+\end{itemize}
+
 \section{Search-Augmented Generation for Fact-Checking}
+
+\textbf{Tavily API.} Tavily is a search API tuned for LLM consumption:
+each result is a tuple \texttt{(title, url, snippet)} with a relevance
+score. The fact-check service issues a single Tavily query per candidate
+claim, requests $6$ results, and feeds the snippets to GPT-4o-mini for
+verdict prediction.
+
+\textbf{RAG framing.} The pipeline is a one-shot retrieval-augmented
+generation (RAG) instance: the source article and Tavily snippets are the
+``retrieved context'' for a verdict LLM. The thesis does not introduce a
+vector database; live web evidence is fresher than any cached corpus and is
+sufficient for breaking-news verification.
+
+\textbf{Trust score.} The verdict LLM returns a trust score in $[0, 100]$,
+a boolean \texttt{verified} flag (true iff trust $\geq 75$), and a list of
+source URLs. The extension renders these in a fact-check modal next to the
+summary.
 
 \section{Browser Extension Development}
 
+\subsection{Chrome Extension Manifest V3}
+
+Manifest V3 (MV3) is the current Chromium extension specification. The
+relevant constraints are:
+
+\begin{itemize}
+  \item \textit{Service worker} replaces the persistent background page;
+        any cross-tab state must be persisted to \texttt{chrome.storage}
+        and re-hydrated on each event.
+  \item \textit{Permissions model} requires explicit host permissions for
+        every site the extension can read; this is the reason the
+        supported-domain list is enumerated rather than wildcarded.
+  \item \textit{Content scripts} run in the page world; CSS is namespaced
+        via Shadow DOM to avoid clashing with the host page's styles.
+\end{itemize}
+
+\subsection{Plasmo Framework}
+
+\textit{Plasmo} is a React + TypeScript framework for browser extensions
+that provides hot-reload during development, a unified configuration
+file, and automatic build outputs for Chromium and Firefox. The Fiber
+extension uses Plasmo to compose its content script (sidebar),
+popup, and background service worker from a single TypeScript codebase.
+
 \section{Summary}
+
+This chapter laid out the LLM architectures, the three evaluation families
+(overlap, LLM-judge, human), the factuality methodology, the
+content-extraction stack, and the browser-extension framework that the
+system in Chapter~3 builds on. The crucial theoretical claim of the
+chapter is that overlap metrics computed against a source article measure
+content retention, not summary quality; this claim, made formal in
+Section~2.2.5, motivates the addition of Axis~B and Axis~C in the
+evaluation framework.

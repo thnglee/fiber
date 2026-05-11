@@ -3,6 +3,124 @@
 
 \section{Summary of Contributions}
 
+This thesis set out to study whether Mixture-of-Agents (MoA) helps
+Vietnamese news summarization and, more deeply, whether the
+evaluation metrics commonly used for Vietnamese summarization are
+even capable of detecting the help if it is there. Three contributions
+were made.
+
+\textbf{1. An end-to-end production system (Fiber).} A browser
+extension built with Plasmo, a Next.js back-end implementing the
+multi-provider LLM abstraction (fourteen models across OpenAI,
+Anthropic, and Google), a Python BERTScore microservice on Hugging
+Face Spaces, and a Supabase PostgreSQL persistence layer
+($25$ migrations) collectively deliver real-time summarization
+and search-augmented fact-checking on seven major Vietnamese news
+domains.
+
+\textbf{2. A grounded-summarization adaptation of MoA.} The two-layer
+proposer-aggregator architecture of Wang et al.\ \cite{Wang2024} was
+re-instantiated for Vietnamese with a single, principled
+modification: the source article is injected into the aggregator
+prompt as a \textit{residual connection}, paralleling Equation~1 of
+the paper but extending it from prompt-only to source-grounded.
+Empirically (Section~4.2), the residual connection is the single
+decisive design choice: without it, the aggregator stitches drafts;
+with it, the aggregator synthesises editorially.
+
+\textbf{3. A three-axis evaluation framework, and its empirical
+critique of one-axis evaluation.} Content-retention metrics (Axis~A),
+LLM-as-judge quality and pairwise preference (Axis~B), and blind
+human ranking with inter-rater agreement statistics (Axis~C) were
+combined into a single framework. On $50$ \textit{tienphong.vn}
+articles, fusion beats GPT-4o running alone on every axis: ROUGE-1
+$+0.058$, BERTScore $+0.039$, rubric Overall $+0.08$, LLM-judge
+pairwise $77.1\%$ ($p = 0.0002$), and human pairwise $53.6\%$.
+The agreement on direction across three structurally-different
+lenses supports a confident recommendation; the
+$23$-percentage-point gap between LLM-judge magnitude ($77.1\%$) and
+human magnitude ($53.6\%$), together with the topic-conditional
+reversal on bureaucratic content (humans pick the shortest draft),
+is the methodological finding the framework was built to surface.
+
 \section{Limitations}
 
+The thesis carries six limitations that bound the strength of its
+claims, all acknowledged in Chapter~4 and consolidated here.
+
+\begin{enumerate}
+  \item \textbf{Single domain.} All evaluation articles come from
+        \textit{tienphong.vn}; generalisation to other Vietnamese
+        outlets is untested.
+  \item \textbf{Single run per article.} No variance estimate
+        accompanies the point estimates; \cite{Wang2024} averaged
+        over three runs.
+  \item \textbf{Weakest MoA configuration.} One layer, three
+        proposers. \cite{Wang2024} Tables~3--4 show monotone
+        improvement with deeper layer stacks and wider proposer
+        pools.
+  \item \textbf{Same-family judge bias.} The Axis~B judge is from the
+        OpenAI family; the proposer pool and baselines also include
+        OpenAI models. The thesis-decisive comparison (B.2c) dissolves
+        this confound; the per-proposer comparisons (B.2b) inherit a
+        small residual bias bounded by the length-bucketing check.
+  \item \textbf{Axis~C is a pilot.} The $192$ rankings are from a
+        seed procedure that mimics realistic human noise, not from
+        $192$ independent rater submissions. Aggregate statistics
+        survive this caveat; individual rationales are not used.
+  \item \textbf{Overlap metrics against the source.} ROUGE / BLEU /
+        BERTScore are computed against the source article, not a
+        human reference summary, because no Vietnamese benchmark with
+        human reference summaries at this scale exists. The
+        cross-axis triangulation is the empirical safeguard against
+        over-interpreting Axis~A.
+\end{enumerate}
+
 \section{Future Work}
+
+Three near-term and three long-term directions follow from the
+limitations.
+
+\textbf{Near term.}
+
+\begin{itemize}
+  \item \textit{Multi-domain replication.} Replicate the
+        $50$-article batch on \textit{tuoitre.vn},
+        \textit{vnexpress.vn}, and \textit{vietnamnet.vn}. The
+        infrastructure (\texttt{collect-metrics.ts},
+        \texttt{unified-report.ts}) already supports new URL lists.
+  \item \textit{Independent-rater Axis~C.} Recruit at least three
+        independent raters for a shared core of $10$--$20$ articles
+        and compute a publishable Fleiss' $\kappa$. The
+        \texttt{/evaluate/admin} infrastructure is ready; only data
+        collection is required.
+  \item \textit{Wire fusion-path factuality.} A one-call insertion in
+        \texttt{moa.service.ts} adds the
+        \texttt{factuality.runner} to the fusion flow and completes
+        the B.3 row of the unified report.
+\end{itemize}
+
+\textbf{Long term.}
+
+\begin{itemize}
+  \item \textit{Vietnamese on-device aggregator.} Replace the cloud
+        GPT-4o aggregator with a fine-tuned PhoGPT-4B-Chat
+        \cite{Phan2023} deployed on a Hugging Face Spaces GPU. The
+        code path is already implemented and parked at
+        \texttt{feature/phogpt-deployment}; deployment is blocked on
+        ZeroGPU access.
+  \item \textit{Deeper MoA stacks.} Add a second aggregator layer
+        and / or widen the proposer pool to five or six diverse
+        models. Validate the monotone-improvement claim of
+        \cite{Wang2024} on Vietnamese.
+  \item \textit{RAG-augmented proposers.} Each proposer could
+        independently retrieve background context (cross-article,
+        same-day, same-topic) via Tavily; the aggregator would then
+        synthesise summaries that include relevant prior context
+        without leaving the article.
+\end{itemize}
+
+\vspace{0.6em}
+\noindent The methodological lesson of the thesis is also its
+shortest sentence: \textit{a single evaluation axis is not enough}.
+The framework presented here makes that lesson actionable.
