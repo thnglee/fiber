@@ -1,157 +1,57 @@
 \documentclass[a4paper]{report}
-\usepackage{amsmath}
 
-% \usepackage{algpseudocode}
 \usepackage[utf8]{inputenc}
-\usepackage{vntex}
 \usepackage[english]{babel}
-\usepackage[table]{xcolor}
-% \usepackage{enumitem}
+\usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage[table]{xcolor}
 \usepackage{graphicx}
-\usepackage[hang,flushmargin]{footmisc} % For hanging footnotes
-\usepackage{setspace} % For fine spacing adjustments
-\usepackage[font=normalsize]{caption}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
 \usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage[hang,flushmargin]{footmisc}
+\usepackage{setspace}
+\usepackage[font=normalsize]{caption}
 \usepackage[unicode]{hyperref}
 \usepackage[left=3cm,right=2cm,top=2.5cm,bottom=3cm]{geometry}
 \usepackage{titlesec}
-\usepackage{mdframed}
-\usepackage{lipsum} % For example text (if needed)
-\usepackage{colortbl}
-\usepackage{booktabs}
-\usepackage{array}
-\usepackage{xcolor}
-% \usepackage{scrextend}
-\usepackage{enumerate}
+\usepackage{sectsty}
+\usepackage{tocloft,calc}
 \usepackage{tikz}
 \usepackage{float}
-\usepackage{afterpage}
-\usepackage{multirow}
-\usepackage{multicol}
-% \usepackage{sectsty}
-\usepackage{tocloft,calc}
-\usepackage{listings}
-\usepackage{makecell}
-\usepackage{tocloft}
-\usepackage{tcolorbox}
-\usepackage{mathptmx}
-\usepackage{longtable} % Include this in the preamble
-\usepackage{inconsolata}  % Font monospace đẹp cho code
-\usepackage{csquotes}
+\usepackage{scrextend}
 \usepackage{lmodern}
-\usepackage{tabularx} % Add to preamble if not already there
+\usepackage{csquotes}
 
 \hypersetup{pdfborder={0 0 0}}
 
-% Định nghĩa màu
 \definecolor{orange}{RGB}{255,128,0}
 \definecolor{gray}{RGB}{128,128,128}
 \definecolor{purple}{RGB}{128,0,128}
 
 \usetikzlibrary{calc}
-\usepackage{algorithm}
-% \usepackage{perpage} %the perpage package
-% \MakePerPage{footnote} %the perpage package command
-\PassOptionsToPackage{table}{xcolor}
+\usepackage{perpage}
+\MakePerPage{footnote}
 
 \def\changemargin#1#2{\list{}{\rightmargin#2\leftmargin#1}\item[]}
 \let\endchangemargin=\endlist
 
 \changefontsizes{13pt}
-% \bibliographystyle{unsrt}
-
-\lstset{
-  basicstyle=\ttfamily\scriptsize, % Match font size and style in the image
-  breaklines=true, % Allow line breaks
-  numbers=left, % Add line numbers to the left
-  % numberstyle=\tiny, % Smaller font for line numbers
-  frame=lines, % Add a frame around the code
-  xleftmargin=20pt, % Adjust left margin for alignment
-  tabsize=4, % Tab size for indentation
-  showstringspaces=false, % Hide visible spaces in strings
-  language=Prolog % Set the language to Prolog
-}
-
-%%% Code block style
-\definecolor{codebackground}{rgb}{0.95,0.95,0.97}
-\definecolor{codekeyword}{rgb}{0.13,0.29,0.53}
-\definecolor{codecomment}{rgb}{0.25,0.5,0.35}
-\definecolor{codestring}{rgb}{0.63,0.13,0.09}
-\lstdefinestyle{toclstyle}{
-  backgroundcolor=\color{codebackground},
-  basicstyle=\ttfamily\scriptsize,
-  breakatwhitespace=false,
-  breaklines=true,
-  commentstyle=\color{codecomment},
-  keywordstyle=\color{codekeyword}\bfseries,
-  stringstyle=\color{codestring},
-  numbers=left,
-  numbersep=8pt,
-  numberstyle=\tiny\color{gray},
-  frame=single,
-  rulecolor=\color{gray!30},
-  showspaces=false,
-  showstringspaces=false,
-  showtabs=false,
-  tabsize=2,
-  morekeywords={context, inv, always, next, sometime, until, before, previous, 
-                alwaysPast, sometimePast, since, implies, and, or, not, self, 
-                isCalled, becomesTrue},
-}
-
-% Java code listing style - Add to preamble
-% Java code listing style - Update string color
-\definecolor{javakeyword}{rgb}{0.0, 0.0, 0.75}     % Dark blue for keywords
-\definecolor{javacomment}{rgb}{0.5, 0.5, 0.5}      % Gray for comments
-\definecolor{javastring}{rgb}{0.0, 0.6, 0.0}       % Changed to green for strings
-\definecolor{javaannotation}{rgb}{0.6, 0.0, 0.6}   % Purple for annotations
-\definecolor{javadoc}{rgb}{0.25, 0.5, 0.35}        % Forest green for javadoc
-\definecolor{javabackground}{rgb}{0.98, 0.98, 1.0} % Very light blue background
-\lstdefinestyle{javastyle}{
-  language=Java,
-  backgroundcolor=\color{white},
-  basicstyle=\ttfamily\footnotesize,
-  keywordstyle=\color{javakeyword}\bfseries,
-  commentstyle=\color{javacomment}\itshape,
-  stringstyle=\color{javastring},
-  numberstyle=\tiny\color{gray},
-  breakatwhitespace=false,
-  breaklines=true,
-  keepspaces=true,
-  numbers=left,
-  numbersep=5pt,
-  frame=none,
-  rulecolor=\color{black},
-  showspaces=false,
-  showstringspaces=false,
-  showtabs=false,
-  tabsize=4,
-  % Java-specific keywords
-  morekeywords={String, TokenStream},
-  % Handle annotations
-  moredelim=[s][\color{javaannotation}]{@}{(},
-  % Handle Javadoc comments
-  morecomment=[s][\color{javadoc}]{/*}{*/},
-  morecomment=[l][\color{javacomment}]{//},
-}
 
 \makeatletter
 \def\l@figure{\@dottedtocline{1}{1em}{2.2em}}
 \def\l@table{\@dottedtocline{1}{1em}{2.2em}}
-\renewcommand*{\ALG@name}{Algorithm}
 \makeatother
 
-% \sectionfont{\fontsize{15}{15}\selectfont}
-% \subsectionfont{\fontsize{13}{15}\selectfont}
-\titleformat{\section}{\normalfont\fontsize{15}{15}\bfseries}{\thesection}{1em}{}
-\titleformat{\subsection}{\normalfont\fontsize{13}{15}\bfseries}{\thesubsection}{1em}{}
+\sectionfont{\fontsize{15}{15}\selectfont}
+\subsectionfont{\fontsize{13}{15}\selectfont}
 \titleformat{\subsubsection}[runin]
 {\normalfont\normalsize\bfseries}{\thesubsubsection.}{1em}{}
 \titlespacing*{\subsubsection}{0pt}{*0.5}{*0.5}
 
-% Include subsubsections in numbering and TOC
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
 
@@ -160,30 +60,21 @@
 \titlespacing*{\chapter}{0cm}{-\topskip}{20pt}[0pt]
 
 \renewcommand{\baselinestretch}{1.3}
-%\renewcommand{\cftsecpresnum}{Chương\space}
 \renewcommand{\cftchappresnum}{Chapter }
+\renewcommand{\cftchapaftersnum}{: }
 \AtBeginDocument{\addtolength\cftchapnumwidth{\widthof{\bfseries Chapter}}}
+\setlength{\cftchapnumwidth}{2.5em}
 \setlength{\parskip}{0.4em}
 \setlength{\parindent}{0pt}
 
-
-% Tùy chỉnh định dạng mục lục
-\renewcommand{\cftchappresnum}{Chapter }
-\renewcommand{\cftchapaftersnum}{: }
-
-\setlength{\cftchapnumwidth}{2.5em}
-
-%
 \newcommand{\argmax}{\arg\!\max}
+
 \usepackage[
   backend=biber,
   sorting=ynt
 ]{biblatex}
 \addbibresource{references.bib}
 
-
-\usepackage{graphicx}
-\usepackage{array}
 \graphicspath{ {figures/} }
 
 \renewcommand{\listfigurename}{List of plots}
@@ -193,11 +84,9 @@
 \begin{document}
 \input{cover}\newpage\cleardoublepage
 
-% Abstract Vietnamese
-\input{chapters/abtract_vi}\newpage\cleardoublepage
-% Abstract English
+% Abstract
 \input{chapters/abtract_en}\newpage\cleardoublepage
-% Assurance
+% Declaration
 \input{chapters/assurance}\newpage\cleardoublepage
 % Acknowledgement
 \input{chapters/acknowledgement}\newpage\cleardoublepage
@@ -206,7 +95,6 @@
 \addcontentsline{toc}{chapter}{TABLE OF CONTENTS}
 \renewcommand{\contentsname}{\centering \fontsize{22}{0}\selectfont \bfseries TABLE OF CONTENTS}
 \tableofcontents\newpage\cleardoublepage
-%
 
 \newpage
 \addcontentsline{toc}{chapter}{LIST OF FIGURES}
@@ -220,21 +108,13 @@
 
 \newpage
 \input{chapters/glossary}\newpage\cleardoublepage
-%\listoftables
 
-%
 \input{chapters/introduction}\newpage\cleardoublepage
 \input{chapters/c1/c1_chapter}\newpage\cleardoublepage
 \input{chapters/c2/c2_chapter}\newpage\cleardoublepage
 \input{chapters/c3/c3_chapter}\newpage\cleardoublepage
 \input{chapters/c4/c4_chapter}\newpage\cleardoublepage
 \input{chapters/conclusion}\newpage\cleardoublepage
-
-%\nocite{*}
-% \phantomsection 
-% \addcontentsline{toc}{chapter}{REFERENCES}
-% \bibliography{references}\newpage\cleardoublepage
-% \bibliographystyle{plain}
 
 \printbibliography[title={REFERENCES}]
 \addcontentsline{toc}{chapter}{REFERENCES}
