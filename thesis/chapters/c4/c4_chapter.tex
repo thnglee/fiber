@@ -17,12 +17,11 @@ and the seeded Axis~C pool of $192$ rankings logged in
 
 \subsection{Dataset}
 
-The evaluation uses $50$ Vietnamese news articles from
-\textit{tienphong.vn}, balanced as $10$ articles per topic across five
+The evaluation uses $154$ Vietnamese news articles from
+\textit{tienphong.vn}, balanced as approximately $30$ articles per topic across five
 topics: \textit{thời sự} (current affairs), \textit{pháp luật} (law),
 \textit{kinh tế} (economy), \textit{giáo dục} (education), and
-\textit{văn hóa} (culture). Article URLs are listed in
-\texttt{backend/output-fusion/scripts/sample-urls-tienphong-50.json}.
+\textit{văn hóa} (culture). Article URLs are managed dynamically through the pipeline.
 The topic-balanced design controls for genre-specific stylistic effects
 and supports the topic-interaction analysis in Section~4.4.2.
 
@@ -64,7 +63,7 @@ Five approaches are evaluated on each article:
 The backend runs on Vercel; the BERTScore microservice on Hugging Face
 Spaces; Supabase Cloud hosts the database. The total cost of the entire
 experiment series (P0-6 + P0-8, including judge calls) is
-\textbf{$\approx\$1.24$ USD}, dominated by the GPT-4o aggregator calls
+\textbf{$\approx\$2.15$ USD}, dominated by the GPT-4o aggregator calls
 and GPT-4o-mini judge calls. This figure includes both the headline
 fusion-vs-single comparison (Section~4.3.2) and the per-proposer
 breakdown (Section~4.3.3); BERTScore is free, Tavily is free at this
@@ -86,7 +85,7 @@ fusion runs and the comparable baseline runs.
     \toprule
     Approach & $n$ & ROUGE-1 & ROUGE-L & BLEU & BERTScore & Compr.\% \\
     \midrule
-    Fusion (MoA) / gpt-4o        & 50 & \textbf{0.4206} & \textbf{0.3200} & \textbf{0.1308} & \textbf{0.6633} & 42.6 \\
+    Fusion (MoA) / gpt-4o        & 154 & \textbf{0.4240} & \textbf{0.3300} & \textbf{0.1349} & \textbf{0.6759} & 42.6 \\
     gemini-2.5-flash             & 100 & 0.3503 & 0.2677 & 0.0894 & 0.6538 & 33.7 \\
     claude-haiku-4-5             & 100 & 0.3502 & 0.2830 & 0.0871 & 0.6487 & 34.7 \\
     gpt-4o-2024-08-06            & 50  & 0.3621 & 0.2567 & 0.0688 & 0.6246 & 37.6 \\
@@ -96,8 +95,8 @@ fusion runs and the comparable baseline runs.
 \end{table}
 
 \textbf{Headline result for Axis~A.} The fused output wins on every
-content-retention metric --- ROUGE-1 $0.4206$ vs.\ GPT-4o-alone's $0.3621$,
-BERTScore $0.6633$ vs.\ $0.6246$. This is the \textit{opposite} of what
+content-retention metric --- ROUGE-1 $0.4240$ vs.\ GPT-4o-alone's $0.3621$,
+BERTScore $0.6759$ vs.\ $0.6246$. This is the \textit{opposite} of what
 the early pilot study on this thesis predicted (where the MoA fused
 output was expected to score lower on overlap because aggregator-style
 synthesis paraphrases more aggressively).
@@ -171,9 +170,28 @@ Section~4.2.2. Faithfulness is essentially saturated for all approaches
 ($\geq 4.96$), reflecting that the judge model and the candidates are
 all strong commercial LLMs and outright contradictions are rare.
 
-\subsection{B.2c --- Fused vs.\ GPT-4o-Alone (Thesis-Decisive)}
+\subsection{B.2a --- Fused vs.\ Best Single Draft (Full Dataset)}
 
-This is the single most important comparison in the thesis. By
+This is the primary pairwise comparison across the entire $154$-article dataset. The LLM judge evaluates the fused MoA output against the strongest single proposer draft (selected via N-way ranker) for each article.
+
+\begin{table}[H]
+  \centering
+  \caption{Axis B.2a --- pairwise verdicts, fused (A) vs.\ best single draft (B) on the full dataset. Ties included in count.}
+  \label{tab:axisB2a}
+  \begin{tabular}{rrrrr}
+    \toprule
+    $n$ & Fused wins & Best Draft wins & Ties & Fused win rate (excl. ties) \\
+    \midrule
+    153 & 93 & 42 & 18 & \textbf{68.9\%} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Reading.} Out of $153$ decisive verdicts, the fused output wins $93$ times, the best single draft wins $42$ times, and there are $18$ ties. If ties are excluded, the fused output is preferred over the best draft in nearly $69\%$ of decisive match-ups (or $60.8\%$ of all match-ups). This robust sample confirms that giving the aggregator multiple drafts consistently yields a summary that an LLM judge prefers over any single proposer's effort.
+
+\subsection{B.2c --- Fused vs.\ GPT-4o-Alone (Pilot Study)}
+
+This is the decisive model-controlled comparison in the thesis. By
 holding the candidate-generating model fixed (both candidates are
 GPT-4o output), we isolate the effect of \textit{synthesis} (giving
 the model three proposer drafts as context) from the effect of
@@ -267,7 +285,8 @@ used as a proxy.
     \toprule
     Approach & $n$ & Entailment \% & Avg.\ halluc. & Worst case \\
     \midrule
-    claude-haiku-4-5    & 100 & \textbf{95.5} & 0.07 & 1 \\
+    Fusion (MoA)        & 154 & \textbf{94.4} & - & - \\
+    claude-haiku-4-5    & 100 & 95.5 & 0.07 & 1 \\
     gemini-2.5-flash    & 100 & 94.7 & 0.10 & 2 \\
     gpt-4o-mini         & 100 & 92.8 & 0.08 & 2 \\
     gpt-4o-2024-08-06   & 50  & 89.9 & 0.08 & 1 \\
@@ -275,7 +294,7 @@ used as a proxy.
   \end{tabular}
 \end{table}
 
-The lowest entailment rate is GPT-4o-alone's $89.9\%$. This is
+Across the full database of $923$ evaluated atomic claims, the aggregate entailment ratio is $94.4\%$. The lowest entailment rate is GPT-4o-alone's $89.9\%$. This is
 consistent with the observation that GPT-4o, lacking the corrective
 ``editorial check'' that the MoA pipeline implicitly provides, runs
 in a slightly more creative mode and occasionally states things the
