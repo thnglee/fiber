@@ -2,7 +2,7 @@
 
 This chapter introduces the two problems addressed by the thesis ---
 automatic news summarization and automatic fact-checking --- the
-Mixture-of-Agents (MoA) technique that underpins the technical contribution,
+Mixture-of-Agents (MoA) technique that supports the technical contribution,
 and a survey of related work in Vietnamese and international NLP. The chapter
 ends with a statement of the gap this thesis closes.
 
@@ -73,7 +73,7 @@ The literature converges on a three-step automatic fact-checking pipeline.
 \end{enumerate}
 
 \textbf{Search-augmented verification.}
-Open-web search has become the de-facto evidence source for production
+Open-web search has become the faithful evidence source for
 fact-checking, because no curated knowledge base keeps pace with breaking
 news. Search-augmented verification combines a web-search API with an LLM
 that reads the retrieved snippets and renders a verdict; this is the design
@@ -113,7 +113,7 @@ layer (Tables~3--4 of \cite{Wang2024}).
 The MoA paper evaluates on instruction-following benchmarks (AlpacaEval,
 MT-Bench, FLASK) where the LLM judge --- not overlap against any source
 text --- is the ground truth. Whether MoA transfers to \textit{grounded}
-summarization (where a source article exists and overlap can in principle
+summarization (where a source article exists and overlap can
 be measured), and whether the benefit shows up in Vietnamese, is the
 empirical question this thesis answers.
 
@@ -123,7 +123,7 @@ empirical question this thesis answers.
 \textit{Google News Vietnam} and \textit{Báo Mới} provide aggregated news with
 short snippets, but their snippets are extractive lead-paragraph excerpts,
 not editorial abstractive summaries. Academic Vietnamese summarization work
-has used ViT5 \cite{Nguyen2022} and PhoGPT \cite{Phan2023} for abstractive
+has used ViT5 \cite{Nguyen2022} for abstractive
 generation, evaluated almost exclusively with ROUGE against either reference
 summaries (when available) or the source article (more often).
 
@@ -149,10 +149,10 @@ which two humans agree with each other). FLASK \cite{Ye2023} extended this
 to fine-grained rubric scoring along multiple alignment skills.
 AlpacaEval \cite{Dubois2024} added position randomization and length
 control to mitigate two known LLM-judge biases. The Axis~B evaluation
-component of this thesis is built on these methods.
+module of this thesis is built on these methods.
 
 \textbf{The gap.}
-To the best of our knowledge, no prior work has (i)~applied Mixture-of-Agents
+To the best of my knowledge, no prior work has (i)~applied Mixture-of-Agents
 to Vietnamese, (ii)~combined extension-based product delivery with
 fact-checking and summarization on Vietnamese news, or (iii)~explicitly
 contrasted overlap, LLM-judge, and human evaluation in a single
@@ -165,6 +165,5 @@ This chapter framed Vietnamese news summarization and fact-checking as the
 two parallel needs the thesis addresses, introduced Mixture-of-Agents as the
 technique that the thesis adapts, surveyed related Vietnamese and
 international work, and identified the gap: no prior Vietnamese system
-combines MoA fusion, browser-extension delivery, and a methodologically
-rigorous three-axis evaluation. Chapter~2 develops the theoretical
+combines MoA fusion, browser-extension delivery, and a methodological three-axis evaluation. Chapter~2 develops the theoretical
 foundations that the system in Chapter~3 builds upon.

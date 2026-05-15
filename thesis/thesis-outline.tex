@@ -25,7 +25,6 @@
 \usepackage{float}
 \usepackage{scrextend}
 \usepackage{csquotes}
-\usepackage{xurl}
 
 \hypersetup{pdfborder={0 0 0}}
 
@@ -33,7 +32,7 @@
 \definecolor{gray}{RGB}{128,128,128}
 \definecolor{purple}{RGB}{128,0,128}
 
-\usetikzlibrary{calc,shapes,arrows,positioning}
+\usetikzlibrary{calc}
 \usepackage{perpage}
 \MakePerPage{footnote}
 
@@ -85,47 +84,10 @@
 \renewcommand{\listtablename}{Tables}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nofiles
 \begin{document}
-\input{cover}\newpage\cleardoublepage
-
-\pagenumbering{roman}
-% Abstract
-\input{chapters/abtract_en}\newpage\cleardoublepage
-% Declaration
-\input{chapters/assurance}\newpage\cleardoublepage
-% Acknowledgement
-\input{chapters/acknowledgement}\newpage\cleardoublepage
-
-
 \addcontentsline{toc}{chapter}{TABLE OF CONTENTS}
 \renewcommand{\contentsname}{\centering \fontsize{22}{0}\selectfont \bfseries TABLE OF CONTENTS}
-\tableofcontents\newpage\cleardoublepage
-
-\newpage
-\addcontentsline{toc}{chapter}{LIST OF FIGURES}
-\renewcommand{\listfigurename}{\centering \fontsize{22}{0}\selectfont \bfseries LIST OF FIGURES}
-\listoffigures\cleardoublepage
-
-\newpage
-\addcontentsline{toc}{chapter}{LIST OF TABLES}
-\renewcommand{\listtablename}{\centering \fontsize{22}{0}\selectfont \bfseries LIST OF TABLES}
-\listoftables
-
-\newpage
-\input{chapters/glossary}\newpage\cleardoublepage
-
-\cleardoublepage
-\pagenumbering{arabic}
-\input{chapters/introduction}\newpage\cleardoublepage
-\input{chapters/c1/c1_chapter}\newpage\cleardoublepage
-\input{chapters/c2/c2_chapter}\newpage\cleardoublepage
-\input{chapters/c3/c3_chapter}\newpage\cleardoublepage
-\input{chapters/c4/c4_chapter}\newpage\cleardoublepage
-\input{chapters/conclusion}\newpage\cleardoublepage
-
-\printbibliography[title={REFERENCES}]
-\addcontentsline{toc}{chapter}{REFERENCES}
-
-\newpage
-\input{chapters/appendix}\newpage\cleardoublepage
+\tableofcontents
 \end{document}

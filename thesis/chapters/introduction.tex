@@ -6,15 +6,15 @@
 Vietnamese online news has become a primary medium of public information, with
 tens of millions of articles published each year across major outlets such as
 \textit{tuoitre.vn}, \textit{thanhnien.vn}, \textit{tienphong.vn},
-\textit{vietnamnet.vn}, and \textit{vtv.vn}. This volume creates two parallel
-needs for the typical reader. The first is \textbf{compression}: a quick,
+\textit{vietnamnet.vn}, etc. This volume creates two parallel
+needs for the readers. The first is \textbf{compression}: a quick,
 trustworthy summary that lets a reader skim a long article in a few seconds.
 The second is \textbf{verification}: a check on whether the article's main
-claims are corroborated by other reputable sources, particularly as
+claims are supported by other reputable sources, particularly as
 misinformation, clickbait, and partial reporting circulate alongside accurate
 journalism.
 
-State-of-the-art Vietnamese summarizers built on a single Large Language Model
+Currently, Vietnamese summarizers built on a single Large Language Model
 (LLM) still produce uneven outputs --- sometimes too long, sometimes too
 literal, occasionally hallucinated. A recent line of work,
 \textbf{Mixture-of-Agents} (MoA) by Wang et al.\ \cite{Wang2024}, argues that
@@ -44,7 +44,7 @@ combines (i)~content-retention metrics against the source, (ii)~LLM-as-judge
 quality and pairwise preference scoring, and (iii)~blind human ranking with
 inter-rater agreement statistics. It uses this framework to expose, with
 empirical evidence on Vietnamese data, a structural limitation of overlap
-metrics for aggregator-style summarization. This limitation has been alluded
+metrics for aggregator-style summarization. This limitation has been mentioned indirectly
 to in English-language work \cite{Wang2024,Zheng2023} but has not been
 explicitly studied for Vietnamese.
 
@@ -79,7 +79,7 @@ BERTScore microservice --- is open-source and reproducible.
 \textbf{Object.} Vietnamese-language news articles published on
 \textit{tuoitre.vn}, \textit{thanhnien.vn}, \textit{tienphong.vn},
 \textit{vietnamnet.vn}, \textit{laodong.vn}, \textit{vtv.vn}, and
-\textit{nld.com.vn}. The empirical evaluation in Chapter~4 uses 50 articles
+\textit{nld.com.vn}. The empirical evaluation in Chapter~4 uses 154 articles
 from \textit{tienphong.vn}, balanced across five topics: current affairs
 (\textit{thời sự}), law (\textit{pháp luật}), economy (\textit{kinh tế}),
 education (\textit{giáo dục}), and culture (\textit{văn hóa}).
@@ -88,15 +88,13 @@ education (\textit{giáo dục}), and culture (\textit{văn hóa}).
 \begin{itemize}
   \item \textit{Modeling.} Three commercial cloud LLMs (GPT-4o-mini, Claude
         Haiku 4.5, Gemini 2.5 Flash) as proposers; GPT-4o as the aggregator;
-        GPT-4o running alone as the strongest single-model baseline.
-        Vietnamese-specific models (ViT5 \cite{Nguyen2022},
-        PhoBERT \cite{Nguyen2020}, PhoGPT \cite{Phan2023}) are used for
-        routing classification and embedding-based scoring; on-device
-        Vietnamese-only generation is out of scope due to GPU deployment
-        constraints documented in Chapter~4.
+        best draft selection as the strongest single-model baseline.
+        Vietnamese-specific models (ViT5 \cite{Nguyen2022} and
+        PhoBERT \cite{Nguyen2020}) are used for
+        routing classification and embedding-based scoring.
   \item \textit{Evaluation.} Single domain (\textit{tienphong.vn}), single run
         per article, no multi-domain generalization claim. The human study is
-        a pilot with $n = 4$ raters and $48$ tasks, framed as a descriptive
+        comprehensive with $n = 17$ raters and $48$ tasks, framed as a descriptive
         complement to Axis~A and Axis~B.
   \item \textit{Fact-checking.} Search-augmented verification via the Tavily
         web-search API. Claim-detection and evidence-retrieval are
@@ -106,10 +104,10 @@ education (\textit{giáo dục}), and culture (\textit{văn hóa}).
 
 \section*{Research Methodology}
 
-The thesis follows a comparative experimental methodology. The same $50$
+The thesis follows a comparative experimental methodology. The same $154$
 articles are summarized by five approaches (three individual proposers, the
-MoA fused output, and the GPT-4o single-model baseline), and the resulting
-$250$ summaries are evaluated along three axes. Axis~A uses ROUGE-1/2/L,
+MoA fused output, and the best draft single-model baseline), and the resulting
+$770$ summaries are evaluated along three axes. Axis~A uses ROUGE-1/2/L,
 BLEU, BERTScore (with PhoBERT) and compression rate; Axis~B uses a
 FLASK-derived 5-dimension rubric \cite{Ye2023}, an MT-Bench-style absolute
 score \cite{Zheng2023}, an AlpacaEval-style pairwise preference judge with
@@ -141,12 +139,11 @@ framework (the methodological contribution), the database schema, and the
 user interface.
 
 \textbf{Chapter 4 --- Experiments and Evaluation.} Reports results along the three
-axes on the 50-article dataset, including the headline pairwise result
-(fused beats GPT-4o-alone $77.1\%$, $p = 0.0002$), the topic-balanced
-breakdown, the human-pilot interpretation, the cross-axis triangulation, and
+axes on the 154-article dataset, including the headline pairwise result
+(fused beats best draft $68.9\%$, $p < 0.0001$), the topic-balanced
+breakdown, the human study interpretation, the cross-axis triangulation, and
 the methodological limitations.
 
 The \textbf{Conclusion} summarizes contributions, limitations, and future work;
-six appendices document examples, full evaluation tables, the unified
-three-axis report, the aggregator-prompt ablation, and installation
-instructions.
+three appendices document examples, the aggregator-prompt ablation, and
+the fact-checking pipeline.

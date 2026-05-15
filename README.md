@@ -62,7 +62,7 @@ Fiber injects a sidebar into supported Vietnamese news sites, generates LLM-powe
 | Provider | Models | Type |
 |----------|--------|------|
 | OpenAI | GPT-4o Mini, GPT-4o, GPT-4.1 Mini, GPT-4.1, o4 Mini, o3 Mini | Standard + Reasoning |
-| Google Gemini | Gemini 2.0 Flash Lite, 2.0 Flash, 2.5 Flash, 2.5 Pro | Standard |
+| Google Gemini | Gemini 2.0 Flash Lite, 2.0 Flash, 2.5 Flash, 2.5 Pro, 3.1 Flash Lite, Flash Latest, 3 Flash Preview | Standard |
 | Anthropic | Claude Haiku 4.5, Sonnet 4.5, Sonnet 4.6, Opus 4.6 | Standard |
 | HuggingFace | ViT5-large (Vietnamese news summarization) | Base |
 
@@ -132,10 +132,13 @@ Three routing modes are available:
 
 ## Supported News Sites
 
-- [VnExpress](https://vnexpress.net)
 - [Tuoi Tre](https://tuoitre.vn)
-- [Dan Tri](https://dantri.com.vn)
 - [Thanh Nien](https://thanhnien.vn)
+- [VietnamNet](https://vietnamnet.vn)
+- [Lao Dong](https://laodong.vn)
+- [Tien Phong](https://tienphong.vn)
+- [VTV News](https://vtv.vn)
+- [Nguoi Lao Dong](https://nld.com.vn)
 
 ## Getting Started
 

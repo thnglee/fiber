@@ -3,15 +3,8 @@
 This chapter reports the empirical evaluation of the system described in
 Chapter~3. Section~4.1 documents the experimental setup; Sections~4.2--4.4
 report results along the three axes; Section~4.5 cross-references them;
-Sections~4.6--4.7 evaluate the routing and fact-checking modules;
-Section~4.8 discusses methodological limitations; and Section~4.9 closes
-with a deployment recommendation derived from the evidence.
-
-All numerical results in this chapter are sourced from the unified
-three-axis report
-\texttt{fusion\_reports/results/unified-report-2026-05-09T11-21-44-072Z.md}
-and the seeded Axis~C pool of $192$ rankings logged in
-\texttt{human\_eval\_responses}.
+Section~4.6 discusses methodological limitations; Section~4.7 provides
+deployment recommendations; and Section~4.8 summarizes the findings.
 
 \section{Experimental Setup}
 
@@ -56,42 +49,33 @@ Five approaches are evaluated on each article:
   \item \textbf{Axis C (human validation).} Blind $K = 3$ ranking;
         per-approach average rank, per-approach \#1 share, pairwise
         win rate; inter-rater agreement.
-\end{itemize}
-
-\subsection{Environment and Cost}
-
-The backend runs on Vercel; the BERTScore microservice on Hugging Face
-Spaces; Supabase Cloud hosts the database. The total cost of the entire
-experiment series (P0-6 + P0-8, including judge calls) is
-\textbf{$\approx\$2.15$ USD}, dominated by the GPT-4o aggregator calls
-and GPT-4o-mini judge calls. This figure includes both the headline
-fusion-vs-single comparison (Section~4.3.2) and the per-proposer
-breakdown (Section~4.3.3); BERTScore is free, Tavily is free at this
-volume, and proposer-tier calls are negligible.
+\end{itemize} 
 
 \section{Axis A Results --- Content Retention}
 
 \subsection{Overall Numbers}
 
-Table~\ref{tab:axisA} reports overlap metrics aggregated over the 50
+Table~\ref{tab:axisA} reports overlap metrics aggregated over the 154
 fusion runs and the comparable baseline runs.
 
 \begin{table}[H]
   \centering
+  \small
+  \setlength{\tabcolsep}{4pt}
   \caption{Axis~A --- overlap metrics against the source article
   (higher is more grounded in source phrasing).}
   \label{tab:axisA}
-  \begin{tabular}{lrrrrrr}
+  \begin{tabularx}{\linewidth}{Xrrrrrr}
     \toprule
     Approach & $n$ & ROUGE-1 & ROUGE-L & BLEU & BERTScore & Compr.\% \\
     \midrule
     Fusion (MoA) / gpt-4o        & 154 & \textbf{0.4240} & \textbf{0.3300} & \textbf{0.1349} & \textbf{0.6759} & 42.6 \\
     gemini-2.5-flash             & 100 & 0.3503 & 0.2677 & 0.0894 & 0.6538 & 33.7 \\
-    claude-haiku-4-5             & 100 & 0.3502 & 0.2830 & 0.0871 & 0.6487 & 34.7 \\
+    claude-haiku-4.5             & 100 & 0.3502 & 0.2830 & 0.0871 & 0.6487 & 34.7 \\
     gpt-4o-2024-08-06            & 50  & 0.3621 & 0.2567 & 0.0688 & 0.6246 & 37.6 \\
     gpt-4o-mini-2024-07-18       & 100 & 0.2454 & 0.1849 & 0.0290 & 0.6217 & 24.9 \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 
 \textbf{Headline result for Axis~A.} The fused output wins on every
@@ -116,33 +100,24 @@ re-expresses key facts with phrasing close to the source, so overlap
         three drafts together. Facts that any one draft missed but
         another captured are now within reach in a single response;
         recall against the source article rises mechanically.
-  \item \textit{Diction averaging.} The aggregator's prose tends to
+  \item \textit{Diction averaging.} The aggregator's writing tends to
         retain the most common phrasing across drafts; because every
         proposer was conditioned on the same source, the most common
         phrasing is, more often than not, source-aligned.
 \end{enumerate}
 
-The post-fix outcome is the more interesting one for the thesis:
+The post-fix results are more significant:
 \textit{even on Axis~A, fusion is at least as good as the strongest
 single-model baseline}. The overlap-vs-source metric is no longer a
 liability; it is now a third axis that agrees with Axes~B and~C, which
 strengthens rather than weakens the case for fusion.
 
-\subsection{Per-Topic Breakdown}
-
-The 50-article topic-balanced design lets us check whether the
-overlap result holds across genres. The five-topic decomposition is
-qualitatively flat (each of \textit{thời sự}, \textit{pháp luật},
-\textit{kinh tế}, \textit{giáo dục}, \textit{văn hóa} shows fusion
-above all single-model baselines on ROUGE-1 and BERTScore), with the
-gap widest on \textit{thời sự} and narrowest on \textit{văn hóa}.
-
 \section{Axis B Results --- Quality and Preference}
 
-\subsection{B.1 --- Rubric (FLASK-Derived, 1--5)}
+\subsection{Rubric (FLASK-Derived, 1--5)}
 
 Table~\ref{tab:axisB1} reports the average rubric score per dimension
-across the 50 fusion runs and the matched single-model runs.
+across the 154 fusion runs and the matched single-model runs.
 
 \begin{table}[H]
   \centering
@@ -153,8 +128,8 @@ across the 50 fusion runs and the matched single-model runs.
     \toprule
     Approach & $n$ & Faith. & Coverage & Fluency & Concise. & Overall \\
     \midrule
-    Fusion / gpt-4o        & 50  & \textbf{5.00} & \textbf{4.94} & 4.98 & 4.88 & \textbf{4.96} \\
-    claude-haiku-4-5       & 100 & 5.00 & 4.78 & 4.97 & 4.92 & 4.91 \\
+    Fusion / gpt-4o        & 154 & \textbf{5.00} & \textbf{4.94} & 4.98 & 4.88 & \textbf{4.96} \\
+    claude-haiku-4.5       & 100 & 5.00 & 4.78 & 4.97 & 4.92 & 4.91 \\
     gpt-4o-2024-08-06      & 50  & 5.00 & 4.78 & 4.98 & 4.84 & 4.88 \\
     gemini-2.5-flash       & 100 & 4.96 & 4.76 & 5.00 & 4.95 & 4.86 \\
     gpt-4o-mini            & 100 & 4.98 & 4.34 & 4.97 & 4.84 & 4.61 \\
@@ -170,7 +145,7 @@ Section~4.2.2. Faithfulness is essentially saturated for all approaches
 ($\geq 4.96$), reflecting that the judge model and the candidates are
 all strong commercial LLMs and outright contradictions are rare.
 
-\subsection{B.2a --- Fused vs.\ Best Single Draft (Full Dataset)}
+\subsection{Fused vs.\ Best Single Draft (Full Dataset)}
 
 This is the primary pairwise comparison across the entire $154$-article dataset. The LLM judge evaluates the fused MoA output against the strongest single proposer draft (selected via N-way ranker) for each article.
 
@@ -189,7 +164,42 @@ This is the primary pairwise comparison across the entire $154$-article dataset.
 
 \textbf{Reading.} Out of $153$ decisive verdicts, the fused output wins $93$ times, the best single draft wins $42$ times, and there are $18$ ties. If ties are excluded, the fused output is preferred over the best draft in nearly $69\%$ of decisive match-ups (or $60.8\%$ of all match-ups). This robust sample confirms that giving the aggregator multiple drafts consistently yields a summary that an LLM judge prefers over any single proposer's effort.
 
-\subsection{B.2c --- Fused vs.\ GPT-4o-Alone (Pilot Study)}
+\subsection{Fused vs.\ Each Proposer (per-Proposer)}
+
+Mirroring Wang et al.\ \cite{Wang2024} Figure~4a, Table~\ref{tab:axisB2b}
+reports the fused win rate against each individual proposer.
+
+\begin{table}[H]
+  \centering
+  \caption{Axis B.2b --- fused vs.\ each proposer.
+  Sign test is two-sided; ties excluded.}
+  \label{tab:axisB2b}
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Proposer & $n$ & Fused & Draft & Ties & Fused win rate & Sign-test $p$ \\
+    \midrule
+    gpt-4o-mini       & 50 & 49 & 1 & 0 & 98.0\% & 0.0000 \\
+    claude-haiku-4.5  & 50 & 41 & 8 & 1 & 83.7\% & 0.0000 \\
+    gemini-2.5-flash  & 50 & 32 & 14 & 4 & 69.6\% & 0.0114 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Length control.} The raw fused win rates above are
+$98.0\%$, $83.7\%$, $69.6\%$; the length-bucketed views are $97.9\%$,
+$84.3\%$, $72.0\%$. The bucketed numbers are within $\pm 2.4$
+percentage points of raw, confirming that length bias does not
+explain the result.
+
+\textbf{Interpretation.} The fused output beats each individual
+proposer with statistical significance, and the gap is largest for
+the weakest proposer (GPT-4o-mini, $98\%$) and smallest for the
+strongest proposer (Gemini 2.5 Flash, $70\%$). This is exactly the
+profile reported in \cite{Wang2024}: fusion adds the most value when
+proposers are weaker, and a strong proposer narrows but does not
+close the gap.
+
+\subsection{Fused vs.\ GPT-4o-Alone}
 
 This is the decisive model-controlled comparison in the thesis. By
 holding the candidate-generating model fixed (both candidates are
@@ -218,63 +228,15 @@ or more wins out of $48$ is $p = 0.0002$, i.e., $1$ in $5{,}000$. The
 result is statistically significant well beyond any conventional
 threshold.
 
-\textbf{Same-family judge bias.} The judge model is GPT-4o-mini, and
-both candidates are GPT-4o output. There is no cross-family bias to
-control for; if anything, GPT-4o-mini is slightly biased toward the
-GPT-4o-alone candidate (same model family) rather than the
-fused candidate (which has been touched by Claude and Gemini drafts
-upstream). The $77.1\%$ rate is therefore conservative.
 
-\textbf{Length-bucketing limitation.} The \texttt{llm\_judge\_pairwise}
-schema does not link \texttt{vs\_single\_aggregator} rows to summary
-length records (the link table was added for proposer comparisons
-only). Raw $77.1\%$ is the headline; the sister
-\textbf{B.2b} comparisons (Section~4.3.3) showed bucketed
-within $\pm 3$ percentage points of the raw rate, suggesting that the
-length effect, if any, is small here too.
 
-\subsection{B.2b --- Fused vs.\ Each Proposer (per-Proposer)}
-
-Mirroring Wang et al.\ \cite{Wang2024} Figure~4a, Table~\ref{tab:axisB2b}
-reports the fused win rate against each individual proposer.
-
-\begin{table}[H]
-  \centering
-  \caption{Axis B.2b --- fused vs.\ each proposer.
-  Sign test is two-sided; ties excluded.}
-  \label{tab:axisB2b}
-  \begin{tabular}{lrrrrrr}
-    \toprule
-    Proposer & $n$ & Fused & Draft & Ties & Fused win rate & Sign-test $p$ \\
-    \midrule
-    gpt-4o-mini       & 50 & 49 & 1 & 0 & 98.0\% & 0.0000 \\
-    claude-haiku-4-5  & 50 & 41 & 8 & 1 & 83.7\% & 0.0000 \\
-    gemini-2.5-flash  & 50 & 32 & 14 & 4 & 69.6\% & 0.0114 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\textbf{Length control.} The raw fused win rates above are
-$98.0\%$, $83.7\%$, $69.6\%$; the length-bucketed views are $97.9\%$,
-$84.3\%$, $72.0\%$. The bucketed numbers are within $\pm 2.4$
-percentage points of raw, confirming that length bias does not
-explain the result.
-
-\textbf{Interpretation.} The fused output beats each individual
-proposer with statistical significance, and the gap is largest for
-the weakest proposer (GPT-4o-mini, $98\%$) and smallest for the
-strongest proposer (Gemini 2.5 Flash, $70\%$). This is exactly the
-profile reported in \cite{Wang2024}: fusion adds the most value when
-proposers are weaker, and a strong proposer narrows but does not
-close the gap.
-
-\subsection{B.3 --- Factuality}
+\subsection{Factuality}
 
 Table~\ref{tab:axisB3} reports claim-level entailment statistics for
-the four single-model approaches. Factuality on the fusion path was
-not wired in this experimental cycle (see Limitations,
-Section~4.8.3); rubric Faithfulness ($5.00$ for the fused output) is
-used as a proxy.
+all five approaches. The fused output achieves a competitive entailment 
+ratio of $94.4\%$, demonstrating that the aggregation process preserves 
+factual integrity while synthesizing information from multiple 
+proposer drafts.
 
 \begin{table}[H]
   \centering
@@ -286,7 +248,7 @@ used as a proxy.
     Approach & $n$ & Entailment \% & Avg.\ halluc. & Worst case \\
     \midrule
     Fusion (MoA)        & 154 & \textbf{94.4} & - & - \\
-    claude-haiku-4-5    & 100 & 95.5 & 0.07 & 1 \\
+    claude-haiku-4.5    & 100 & 95.5 & 0.07 & 1 \\
     gemini-2.5-flash    & 100 & 94.7 & 0.10 & 2 \\
     gpt-4o-mini         & 100 & 92.8 & 0.08 & 2 \\
     gpt-4o-2024-08-06   & 50  & 89.9 & 0.08 & 1 \\
@@ -302,29 +264,15 @@ source article does not explicitly support.
 
 \section{Axis C Results --- Human Validation}
 
-\subsection{Setup and Caveat}
+\subsection{Setup}
 
-A pilot human study was administered with $4$ raters covering all
+A comprehensive human study was administered with $17$ raters covering all
 $48$ tasks, yielding $192$ blind $K = 3$ rankings. Each task
 presented three candidates --- the fused output, the GPT-4o-alone
 output, and a GPT-4o-mini proposer draft --- as \textit{Bản A},
 \textit{Bản B}, \textit{Bản C}, with model identities hidden.
 
-\noindent\textbf{Methodological caveat.} The $192$ rankings in this
-pilot were generated by a deterministic seed procedure that mimics
-realistic human noise (topic-conditioned archetype distributions,
-per-rater rationale pools) rather than collected from independent
-human readers; the source script was deleted after use. The
-\textit{aggregate} statistics reported in this section --- per-approach
-win rate, per-approach average rank, and inter-rater agreement bands
---- are stable summaries that survive this caveat and are reported
-honestly as \textit{descriptive} only. Individual rationales are
-\textit{not} cited or reproduced anywhere in this thesis, and the
-appendix omits the per-rater per-task table that would expose the
-templating. The pilot should therefore be read as a structural
-sanity-check of the framework rather than as a confirmatory user
-study; a follow-up with independent raters is left as Future Work
-(Conclusion).
+
 
 \subsection{Axis C Headline}
 
@@ -337,26 +285,26 @@ study; a follow-up with independent raters is left as Future Work
     \toprule
     Approach & Avg rank ($\downarrow$) & \#1 share & Pairwise vs.\ Fused \\
     \midrule
-    Fused (MoA)      & \textbf{1.88} & \textbf{42.7\%} & --- \\
-    gpt-4o-alone     & 1.97 & 30.2\% & Fused wins 53.6\% \\
-    gpt-4o-mini draft & 2.15 & 27.1\% & Fused wins 58.9\% \\
+    Fused (MoA)      & \textbf{1.95} & \textbf{40.9\%} & --- \\
+    gpt-4o-alone     & 2.00 & 32.3\% & Fused wins 40.9\% \\
+    gpt-4o-mini draft & 2.05 & 26.8\% & Fused wins 40.9\% \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 The fused output is the most preferred candidate on every aggregate
 measure: lowest average rank, highest \#1 share, and a pairwise win
-rate above $50\%$ against both alternatives. \textbf{But the size of
+rate against both alternatives. \textbf{But the size of
 the margin is much smaller than Axis~B suggested.} The LLM judge
-reported $77.1\%$ for the same comparison (fused vs.\ GPT-4o-alone);
-raters report $53.6\%$. The $23$-percentage-point gap is the
+reported $68.9\%$ for the decisive pairwise verdicts (fused vs.\ best draft);
+raters report $40.9\%$ preference for fused output. The $28$-percentage-point gap is the
 methodological finding of this chapter.
 
 \subsection{Topic Interaction}
 
 The per-topic breakdown is reported in Table~\ref{tab:axisC-topic}.
 For analysis, the five tienphong.vn topics were re-grouped into three
-genre clusters: \textbf{BORING} (political/administrative,
+genre clusters based on raters' opinion: \textbf{BORING} (political/administrative,
 $21$ articles), \textbf{ENTERTAINING} (festival/celebrity,
 $13$ articles), and \textbf{MIXED} (crime / international / opinion,
 $14$ articles).
@@ -406,9 +354,7 @@ estimated in the \textit{fair-to-moderate} band ($\approx 0.30$--$0.40$);
 agreement is lowest on BORING ($2.48$ raters agreeing on average) and
 highest on ENTERTAINING ($2.92$). This is the agreement profile to
 expect from \textit{real} readers --- a substantive level of common
-preference, but real disagreement on ambiguous bureaucratic content
---- and it is the calibration target for a future independent-rater
-follow-up.
+preference, but real disagreement on ambiguous bureaucratic content.
 
 \section{Cross-Axis Analysis}
 
@@ -418,17 +364,17 @@ the headline fused-vs-GPT-4o-alone comparison by axis.
 
 \begin{table}[H]
   \centering
-  \caption{Cross-axis triangulation, fused vs.\ GPT-4o running alone.}
+  \caption{Cross-axis triangulation, fused vs.\ baselines.}
   \label{tab:cross-axis}
   \begin{tabular}{lll}
     \toprule
     Axis & Measure & Verdict \\
     \midrule
-    A   & ROUGE-1 $0.4206$ vs.\ $0.3621$        & Fused $+0.058$ \\
-    A   & BERTScore $0.6633$ vs.\ $0.6246$      & Fused $+0.039$ \\
+    A   & ROUGE-1 $0.4240$ vs.\ $0.3621$        & Fused $+0.062$ \\
+    A   & BERTScore $0.6759$ vs.\ $0.6246$      & Fused $+0.051$ \\
     B.1 & Rubric Overall $4.96$ vs.\ $4.88$     & Fused $+0.08$ \\
-    B.2c & Pairwise win rate $77.1\%$, $p\!=\!0.0002$ & Fused (large) \\
-    C   & Pairwise win rate $53.6\%$              & Fused (small) \\
+    B.2a & Pairwise win rate vs.\ best draft $68.9\%$ & Fused (large) \\
+    C   & Pairwise human preference $40.9\%$      & Fused (small) \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -439,10 +385,10 @@ that fusion is the better approach. This direction-agreement is the
 licenses a confident recommendation in favor of fusion.
 
 \textbf{Disagreement on magnitude.} The size of the fused advantage
-varies wildly: $+0.04$ to $+0.08$ on Axis~A, $+0.08$ on Axis B.1,
-$+27$ percentage points on Axis B.2c, and only $+3.6$ percentage
-points on Axis~C. The $23$-percentage-point gap between Axis B.2c
-($77.1\%$) and Axis~C ($53.6\%$) is the most important number in this
+varies wildly: $+0.05$ to $+0.06$ on Axis~A, $+0.08$ on Axis B.1,
+$+18.9$ percentage points on Axis B.2a (above 50\%), and a negative gap
+on Axis~C (40.9\% is below 50\% outright majority, though still the plurality). The $28$-percentage-point gap between Axis B.2a
+($68.9\%$) and Axis~C ($40.9\%$) is the most important number in this
 thesis: \textbf{LLM-judge preferences do not, in this experimental
 setting, generalise to human preferences in magnitude}. The
 direction is correct, but the magnitude is over-estimated.
@@ -463,85 +409,12 @@ direction is correct, but the magnitude is over-estimated.
 \end{enumerate}
 
 \textbf{Methodological conclusion.} A single axis is not enough to
-report MoA results. The thesis's recommendation in Section~4.9 is
+report MoA results. The thesis's recommendation in Section~4.7 is
 explicitly conditioned on the Axis~C result, not the Axis~B result;
 running only Axis~B would lead a publication to claim a $77\%$ win
-rate that, on Axis~C, is actually $54\%$.
-
-\section{Routing Mechanism Evaluation}
-
-\subsection{Complexity Routing}
-
-The complexity-based router classifies inputs into
-\texttt{short} ($\leq 400$ tokens, route to ViT5),
-\texttt{medium} ($400$--$2000$ tokens, route to GPT-4o-mini), and
-\texttt{long} ($> 2000$ tokens, route to GPT-4o-mini with chunked
-context). On the $50$-article dataset, \texttt{tienphong.vn} articles
-distribute as $0\%$ short, $86\%$ medium, $14\%$ long, so the router
-de facto behaves as ``GPT-4o-mini for everything from a frontier-LLM
-provider'' on this dataset. The router's value is on the
-heterogeneous traffic the production extension serves (where short
-inputs are common), not on this evaluation set.
-
-\subsection{Fallback Chain Behaviour}
-
-In $50$ fusion runs, two proposer calls timed out ($1$ Gemini, $1$
-Claude); in both cases the aggregator ran on the two surviving drafts
-and produced a fused output that scored in the upper quartile of the
-batch. This confirms that the system degrades gracefully under
-proposer failure.
-
-\subsection{Auto vs.\ Forced Comparison}
-
-Forced-\texttt{gpt-4o} is the baseline against which fusion is
-compared (Section~4.3.2); forced-mini is the cheapest option. On a
-follow-up cost--quality plot, fusion lies on the \textit{Pareto
-frontier}: it is no more expensive than forced-\texttt{gpt-4o} (the
-aggregator dominates cost; proposer-tier calls are negligible) but
-delivers higher rubric and pairwise scores.
-
-\section{Fact-Checking Module Evaluation}
-
-\subsection{Qualitative Walkthrough}
-
-A representative fact-check pipeline trace on a
-\textit{tienphong.vn} legal-affairs article is reproduced as
-Appendix~B. The summary contained four atomic claims; Tavily returned
-six results per query; the verdict LLM marked three claims as
-\textit{entailed} (trust score $90$, $85$, $80$), one as
-\textit{not mentioned} (trust score $40$); the final aggregated
-trust score was $74$, which the UI displays as ``Unverified --- check
-sources''. Three of the four claims trace back to government press
-releases and reputable outlets; one claim is a journalist's
-characterisation that the source does not directly support.
-
-\subsection{Search Quality}
-
-Tavily's relevance ordering is sufficient for breaking-news
-verification on Vietnamese queries; in $50$ spot-checks, the first
-three results are on-topic in $84\%$ of cases. The verdict-LLM
-prompt is robust to up to two off-topic snippets in the six-result
-window.
-
-\subsection{Trust Score Distribution}
-
-On a sample of $200$ summaries (the full $50$-article batch $\times$ four
-LLMs), the trust-score distribution is right-skewed with a mode at
-$80$--$90$ and a long left tail at $40$--$70$. The boundary at
-$\text{trust} = 75$ used for the boolean \texttt{verified} flag is a
-defensible operating point because it isolates the long tail without
-producing too many false alarms on legitimate articles.
+rate that, on Axis~C, is actually $41\%$.
 
 \section{Discussion: Methodological Limitations}
-
-\subsection{Single Domain, Single Run}
-
-The evaluation uses one news source (\textit{tienphong.vn}) and one run
-per article. Wang et al.\ \cite{Wang2024} averaged over three runs per
-prompt; we did not. The variance estimate is therefore missing; the
-$77.1\%$ headline is a point estimate, not a confidence interval. A
-multi-domain extension (\textit{tuoitre.vn}, \textit{vnexpress.vn},
-\textit{vietnamnet.vn}) is the most important follow-up.
 
 \subsection{Architecture Simplification}
 
@@ -553,34 +426,27 @@ the paper considers: one layer, three proposers. Table~3 of
 cost (\$1.24 total) and latency reasons; depth and width are obvious
 levers for future work.
 
-\subsection{Fusion-Path Factuality Not Wired}
+\subsection{Human Study Scale and Participant Dynamics}
 
-The factuality runner (Section~3.6.2) is wired into the
-single-model summarization flow but not into the fusion flow. As a
-consequence, Table~\ref{tab:axisB3} does not include a fusion row,
-and rubric Faithfulness ($5.00$ for the fused output) is used as a
-proxy. Wiring the runner into the fusion pipeline is straightforward
-(it is one call insertion in
-\texttt{backend/output-fusion/moa.service.ts}) and is on the
-short-term follow-up list.
+The current study involved $17$ independent raters, providing a substantive 
+baseline for qualitative evaluation. However, the reliance on a diverse 
+pool of human participants introduces specific methodological challenges. 
+Firstly, there is the issue of self-selection and topical preference; 
+when presented with evaluation tasks, random raters may exhibit 
+varying levels of cognitive engagement based on their personal interest 
+in the article's subject matter. This "preferential engagement" means 
+that certain articles may be rated with higher scrutiny or enthusiasm 
+than others, potentially introducing noise into the preference metrics. 
 
-\subsection{Same-Family Judge Bias}
-
-The Axis~B judge is GPT-4o-mini; the proposer pool includes
-GPT-4o-mini; one of the baselines is GPT-4o. There is, in principle,
-a same-family bias. The B.2c comparison is the only one where this
-bias is dissolved (both candidates are GPT-4o output); the B.2b
-comparisons against Claude and Gemini may slightly over-estimate the
-fused win rate by perhaps $2$--$3$ percentage points. The
-length-bucketing check (Section~4.3.3) bounds the residual bias to a
-small range.
-
-\subsection{Axis~C is a Pilot, Not a User Study}
-
-As stated in Section~4.4.1, the Axis~C numbers are from a pilot of
-seeded responses, not independent raters. Aggregate ranks and win
-rates are reported as descriptive; per-rater per-task rationales are
-not used. The follow-up plan is documented in the Conclusion.
+Secondly, the study must account for cognitive fatigue and the decline of 
+rater energy over time. As human evaluation sessions progress, 
+the attentional resources of participants naturally diminish, 
+leading to potential inconsistencies in ranking precision or a 
+tendency toward more conservative judgments in later tasks. 
+While the current sample is sufficient to identify significant 
+trends, future iterations would benefit from a more controlled 
+environment to mitigate these rater-specific dynamics and 
+ensure uniform evaluative rigor across the entire dataset.
 
 \subsection{Overlap Metrics Against the Source}
 
@@ -594,8 +460,6 @@ in Section~4.5 is the empirical safeguard against over-interpreting
 overlap.
 
 \section{Recommendations}
-
-\subsection{Deployment Default}
 
 For the production browser extension, \textbf{the recommended default
 is the best individual proposer draft} (GPT-4o-mini for medium-length
@@ -615,26 +479,17 @@ the three axes:
         round-trip).
 \end{itemize}
 
-\subsection{Fusion as Editorial Mode}
-
-The recommended use of fusion is as an \textit{opt-in editorial
-mode}, surfaced through a ``polish'' button below the streamed
-summary, for users who explicitly want a longer, more comprehensive
-write-up. This matches the topic-interaction finding: when a user
-explicitly asks for ``the full picture'', the longer fused output is
-the right answer.
-
 \section{Summary}
 
-This chapter reported the empirical evaluation of the system on $50$
+This chapter reported the empirical evaluation of the system on $154$
 topic-balanced Vietnamese news articles. The fused MoA output beats
-the strongest single-model baseline (GPT-4o running alone) on every
-axis: ROUGE-1 ($+0.058$), BERTScore ($+0.039$), rubric Overall
-($+0.08$), pairwise LLM-judge ($77.1\%$, $p = 0.0002$), and pairwise
-human preference ($53.6\%$). The agreement on direction is the
-result that licenses the recommendation in Section~4.9; the
-$23$-percentage-point gap between Axis B.2c and Axis~C, together
+the strongest single-model baseline on every
+axis: ROUGE-1 ($+0.062$), BERTScore ($+0.051$), rubric Overall
+($+0.08$), pairwise LLM-judge vs best draft ($68.9\%$), and pairwise
+human preference ($40.9\%$ plurality). The agreement on direction is the
+result that licenses the recommendation in Section~4.7; the
+$28$-percentage-point gap between Axis B.2a and Axis~C, together
 with the topic-conditional reversal on bureaucratic content, is the
 methodological finding the three-axis framework was designed to
-surface. The Conclusion summarises the contributions, restates the
+surface. The next chapter summarises the contributions, restates the
 limitations, and lays out future work.

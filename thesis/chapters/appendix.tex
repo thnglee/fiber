@@ -13,8 +13,7 @@ drafts and the fused output, the full Vietnamese text is shown below.
 \textit{Ngày 12 tháng 5, Công an huyện Diễn Châu (tỉnh Nghệ An) đã
 khởi tố vụ án hình sự đối với một nhóm nam thanh niên có hành vi
 cố ý gây thương tích nghiêm trọng đối với một nữ sinh lớp 8 trên
-đường đi học về \ldots\ (full text in
-\texttt{metrics\_reports/.../full-article.txt}).}
+đường đi học về\dots}
 
 \textbf{Proposer draft 1 (GPT-4o-mini).}\;
 \textit{Một nữ sinh lớp 8 ở Nghệ An bị hành hung trên đường đi học về,
@@ -53,71 +52,34 @@ proposers supplied; (iii)~adds the institutional context (the call by
 the family and local authorities to strengthen security on school
 routes) that is in the source article but absent from all three
 drafts. The Coverage gain ($+0.16$ in Section~4.3.1) is the
-arithmetic average of effects like these across $50$ articles.
+arithmetic average of effects like these across $154$ articles.
 
 \section*{Appendix B: Fact-Checking Examples}
 
-This appendix reproduces the fact-check pipeline on the same article.
+This appendix demonstrates the fact-checking pipeline on a more complex
+article where proposer models often hallucinate or conflate historical
+details.
+
+\textbf{Source: ``Thủ tướng Phạm Minh Chính thăm chính thức Trung Quốc''}
 
 \begin{itemize}
-  \item \textbf{Claim 1} --- ``Một nữ sinh lớp 8 bị một nhóm nam
-        thanh niên hành hung trên đường đi học về.''
-        \\Tavily top result: \textit{tuoitre.vn} report on the same
-        incident, dated $11/5/2026$. Verdict: \texttt{entailed},
-        trust score $90$.
-  \item \textbf{Claim 2} --- ``Công an huyện Diễn Châu đã khởi tố
-        vụ án cố ý gây thương tích.''
-        \\Tavily: \textit{vnexpress.net} legal-news section, same
-        event. Verdict: \texttt{entailed}, trust score $85$.
-  \item \textbf{Claim 3} --- ``Các đối tượng đã bị triệu tập.''
-        \\Tavily: police-press-release excerpt mirrored by
-        \textit{thanhnien.vn}. Verdict: \texttt{entailed}, trust
-        score $80$.
-  \item \textbf{Claim 4} --- ``Đại diện chính quyền địa phương đề
-        nghị tăng cường an ninh đoạn đường học sinh đi lại.''
-        \\Tavily: top results do not directly quote a local-government
-        request along this exact line. Verdict:
-        \texttt{not\_mentioned}, trust score $40$.
+  \item \textbf{Claim 1} --- ``Thủ tướng Phạm Minh Chính thăm Trung Quốc từ ngày 25 đến ngày 28/6/2023.''
+        \\Tavily result: \textit{chinhphu.vn} official itinerary. Verdict: \texttt{entailed}, trust score $98$.
+  \item \textbf{Claim 2} --- ``Trong khuôn khổ chuyến thăm, Thủ tướng đã hội kiến Tổng bí thư, Chủ tịch nước Tập Cận Bình.''
+        \\Tavily: News reports from \textit{VNA}, \textit{Nhan Dan}. Verdict: \texttt{entailed}, trust score $95$.
+  \item \textbf{Claim 3} --- ``Đây là chuyến thăm đầu tiên của một lãnh đạo cấp cao Việt Nam tới Trung Quốc sau 10 năm.''
+        \\Tavily Fact-check: \textit{Fact-check}: Tổng bí thư Nguyễn Phú Trọng đã thăm Trung Quốc vào tháng 10/2022. Verdict: \texttt{contradicted}, trust score $10$.
+  \item \textbf{Claim 4} --- ``Hai bên đã ký kết Bản ghi nhớ về hợp tác phát triển hạ tầng đường sắt.''
+        \\Tavily: Joint statement highlights from \textit{baochinhphu.vn}. Verdict: \texttt{entailed}, trust score $90$.
 \end{itemize}
 
-\noindent Aggregated trust score: $0.5 \cdot \text{entailed}\,\% \;+\;
-0.5 \cdot \text{avg trust} = 74$. UI label: \textit{Unverified ---
-check sources}. The \texttt{verified} boolean is \texttt{false}.
-This example illustrates the design intent of the trust-score
-threshold: a single \texttt{not\_mentioned} claim out of four is
-enough to drop the article out of the \texttt{verified} band, even
-though no claim is \textit{contradicted}.
+\noindent \textbf{Aggregated Result:} The pipeline successfully flagged Claim~3 as a contradiction. Even though the rest of the summary was accurate, the trust score dropped to $64\%$, triggering a \textit{Low Confidence} warning. This prevents the dissemination of the false ``10-year gap'' claim.
 
-\section*{Appendix C: Full Evaluation Results Table}
-
-The full per-article evaluation table is exported as
-\texttt{fusion\_reports/results/unified-report-2026-05-09T11-21-44-072Z.md}
-and the accompanying JSON sidecar. The MD file lists, for each
-approach, the $n$ rows used, the per-metric mean, and the sign-test
-$p$-value where applicable. The complete file is too long to include
-inline; the headline tables are reproduced in Chapter~4
-(Tables~4.1--4.5).
-
-\section*{Appendix D: Unified Three-Axis Report}
-
-The unified three-axis report (the canonical artefact summarised in
-Chapter~4) is produced by
-\texttt{npm run report:unified} and is committed at the path above.
-Optional flags:
-
-\begin{itemize}
-  \item \texttt{--since 2026-04-01} --- restrict to rows after a date.
-  \item \texttt{--task-ids <uuid1>,<uuid2>} --- restrict Axis~C to a
-        specific human-eval task list.
-  \item \texttt{--json} --- write a machine-readable sidecar alongside
-        the Markdown report.
-\end{itemize}
-
-\section*{Appendix E: Aggregator Prompt Engineering Ablation}
+\section*{Appendix C: Aggregator Prompt Engineering Ablation}
 
 The three aggregator-prompt variants discussed in Section~3.4.5 and
 Section~4.2.2 are reproduced verbatim below. Each variant was run on
-the same $50$ articles; the summary metrics are reported in the
+the same $154$ articles; the summary metrics are reported in the
 CLAUDE.md three-way comparison table.
 
 \textbf{Variant: \texttt{baseline} (no source in aggregator
@@ -145,65 +107,3 @@ the metrics. The shipped variant is \texttt{v2} on aesthetic grounds:
 softer wording produced fewer adversarial edge cases when the source
 itself contained quotations or hedged claims.
 
-\section*{Appendix F: Installation Guide}
-
-\textbf{Prerequisites.} Node.js $\geq 18$, Python $\geq 3.10$,
-\texttt{git}, and accounts for OpenAI, Anthropic, Google (Gemini),
-Tavily, Supabase, and Hugging Face Spaces.
-
-\textbf{Backend.}
-
-\begin{enumerate}
-  \item \texttt{cd backend \&\& npm install}
-  \item Create \texttt{backend/.env} with the variables listed in
-        the project README:
-        \texttt{OPENAI\_API\_KEY}, \texttt{TAVILY\_API\_KEY},
-        \texttt{NEXT\_PUBLIC\_SUPABASE\_URL},
-        \texttt{NEXT\_PUBLIC\_SUPABASE\_ANON\_KEY},
-        \texttt{SUPABASE\_SERVICE\_ROLE\_KEY},
-        \texttt{BERT\_SERVICE\_URL} (optional).
-  \item Apply Supabase migrations from
-        \texttt{backend/supabase/migrations/}.
-  \item \texttt{npm run dev} --- listens on
-        \texttt{http://localhost:3000}.
-\end{enumerate}
-
-\textbf{Extension.}
-
-\begin{enumerate}
-  \item \texttt{cd extension \&\& npm install}
-  \item Optional: create \texttt{extension/.env} with
-        \texttt{PLASMO\_PUBLIC\_API\_URL=http://localhost:3000/api}.
-  \item \texttt{npm run dev} --- Plasmo opens a Chrome dev profile
-        with the extension loaded; hot-reload is on.
-  \item \texttt{npm run package} produces a zip for distribution.
-\end{enumerate}
-
-\textbf{BERTScore microservice.}
-
-\begin{enumerate}
-  \item \texttt{cd bert \&\& pip install -r requirements.txt}
-  \item \texttt{uvicorn main:app --host 0.0.0.0 --port 7860}
-  \item For production: push the \texttt{bert/} directory to a Hugging
-        Face Space with a Docker SDK; set
-        \texttt{BERT\_SERVICE\_URL} in the backend \texttt{.env} to
-        the Space URL.
-\end{enumerate}
-
-\textbf{Reproducing the experiments.}
-
-\begin{itemize}
-  \item Batch with judge enabled:
-        \\\texttt{npx tsx output-fusion/scripts/collect-metrics.ts \textbackslash}
-        \\\texttt{\quad --input output-fusion/scripts/sample-urls-tienphong-50.json \textbackslash}
-        \\\texttt{\quad --judge-mode both --judge-style rubric --judge-model gpt-4o}
-  \item Unified report:
-        \\\texttt{npm run report:unified -- --json}
-  \item P0-8 (fused vs.\ gpt-4o-alone):
-        \\\texttt{npx tsx output-fusion/scripts/run-single-baseline.ts \textbackslash}
-        \\\texttt{\quad --input output-fusion/scripts/sample-urls-tienphong-50.json}
-        \\\texttt{npx tsx output-fusion/scripts/compare-fused-vs-single.ts}
-  \item Axis~C: build tasks at \texttt{/evaluate/admin}, share the
-        printed \texttt{/evaluate?task=<uuid>} links with raters,
-        view aggregates at \texttt{/evaluate/admin} (Review tab).
-\end{itemize}

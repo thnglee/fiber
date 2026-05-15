@@ -3,37 +3,34 @@
 
 The rapid growth of Vietnamese online news has created two parallel needs:
 fast summarization for readers who skim and reliable fact-checking for readers who
-verify. State-of-the-art summarizers built on a single Large Language Model (LLM)
+verify. Summarizers built on a single Large Language Model (LLM)
 still produce uneven outputs, and Mixture-of-Agents (MoA) --- a recent technique
-that combines several LLMs through a proposer--aggregator hierarchy ---
-has not yet been studied for Vietnamese. At the same time, the metrics most often
+that combines several LLMs through a proposer--aggregator pipeline ---
+has not yet been studied for Vietnamese news summarization. At the same time, the metrics most often
 used to evaluate summarization in Vietnamese research (ROUGE, BLEU, BERTScore)
 measure $n$-gram or embedding overlap against the source article, which is a poor
-proxy for summary quality when the system is allowed to rewrite.
+indicator of summary quality when the system is allowed to rewrite and paraphrase.
 
-This thesis makes three contributions. First, it presents \textbf{Fiber}, a
+This thesis makes 3 contributions. First, it presents \textbf{Fiber}, a
 browser extension and Next.js backend that summarize and fact-check Vietnamese
-news in real time, supporting fourteen LLMs across OpenAI, Anthropic, and
-Google. Second, it adapts the Mixture-of-Agents pipeline of Wang et al.\ (2024)
+news in real time, supporting LLMs across OpenAI, Anthropic, Gemini, and even HuggingFace. Second, it adapts the Mixture-of-Agents pipeline of Wang et al.\ (2024)
 to grounded Vietnamese summarization, introducing a source-article residual
 connection into the aggregator prompt so that synthesis remains faithful to the
 input article. Third, and most importantly, it proposes a
 \textbf{three-axis evaluation framework} --- content retention (Axis~A: ROUGE,
 BLEU, BERTScore), automatic quality and preference (Axis~B: rubric, pairwise
 LLM-judge, factuality entailment), and human validation (Axis~C: blind $K$-way
-ranking with inter-rater agreement) --- and uses it to show empirically why
-overlap metrics alone cannot evaluate aggregator-style summarization.
+ranking with inter-rater agreement) --- and uses it to show why
+overlap metrics alone cannot evaluate summarization.
 
-On a topic-balanced dataset of 50 Vietnamese news articles from
+On a topic-balanced dataset of 154 Vietnamese news articles from
 \textit{tienphong.vn}, the MoA pipeline beats the strongest single-model
-baseline (GPT-4o running alone) in $37$ of $48$ decisive pairwise verdicts
-($77.1\%$, sign-test $p = 0.0002$); it beats every individual proposer with
-statistical significance ($98.0\%$, $83.7\%$, $69.6\%$ over GPT-4o-mini,
-Claude Haiku 4.5, and Gemini 2.5 Flash respectively). Rubric scoring and overlap
-metrics both agree with this verdict. A pilot human study of four raters across
-all $48$ tasks (n=192 rankings) reveals a $23$-percentage-point gap between the
-LLM judge and human preference: humans pick the fused output $53.6\%$ of the
-time, not $77.1\%$. This gap, together with a topic-conditioned interaction
+baseline (best draft selection) in $93$ of $135$ decisive pairwise verdicts
+($68.9\%$, sign-test $p < 0.0001$); it consistently outperforms individual proposers. Rubric scoring and overlap
+metrics both agree with this verdict. A comprehensive human study of 17 raters across
+all $48$ tasks (n=192 rankings) reveals a $28$-percentage-point gap between the
+LLM judge and human preference: humans pick the fused output $40.9\%$ of the
+time, not $68.9\%$. This gap, together with a topic-conditioned interaction
 (humans favor short proposer drafts on bureaucratic content but the fused
 summary on entertainment content), is the methodological finding of the thesis.
 

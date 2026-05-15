@@ -31,8 +31,8 @@ Modern LLMs fall into three architectural families.
   \item \textit{Encoder-only} models such as BERT and PhoBERT \cite{Nguyen2020}
         produce contextual embeddings for input tokens; they are used in this
         thesis as the embedding backbone for BERTScore (Section~2.2.3).
-  \item \textit{Decoder-only} models such as GPT, Claude, Gemini, and
-        PhoGPT \cite{Phan2023} generate text autoregressively and are used
+  \item \textit{Decoder-only} models such as GPT, Claude, and Gemini
+        generate text autoregressively and are used
         as the proposers and aggregator of the MoA pipeline (Chapter~3).
   \item \textit{Encoder--decoder} models such as T5 and
         ViT5 \cite{Nguyen2022} encode the input and condition decoder
@@ -50,20 +50,16 @@ Modern LLMs fall into three architectural families.
   \item \textbf{Claude Haiku 4.5} (Anthropic) --- proposer; included to
         widen the proposer family beyond OpenAI.
   \item \textbf{Gemini 2.5 Flash} (Google) --- proposer; the third
-        proposer family used in MoA.
+        family used in MoA.
   \item \textbf{ViT5-large} (VinAI) --- routing fallback for short
         Vietnamese inputs in the complexity-based routing layer.
-  \item \textbf{PhoBERT-base} (\texttt{vinai/phobert-base}) --- contextual
+  \item \textbf{PhoBERT-base} (VinAI) --- contextual
         encoder for BERTScore.
-  \item \textbf{PhoGPT-4B-Chat} (VinAI) --- evaluated for on-device
-        deployment; not used in the headline experiments due to GPU
-        constraints discussed in Chapter~4.
 \end{itemize}
 
 \subsection{Reasoning-Model Considerations}
 
-Reasoning-tuned models such as OpenAI \texttt{o4-mini} and
-\texttt{o3-mini} require special handling: temperature, top-$p$, and
+Reasoning-tuned models such as OpenAI \texttt{o4-mini} require special handling: temperature, top-$p$, and
 penalty parameters are unsupported, and the streaming protocol differs from
 chat-completion models. The service layer in Chapter~3 abstracts these
 differences so that all 14 supported models can be selected interchangeably
@@ -150,7 +146,7 @@ in Axis~B of this thesis.
 A rubric judge scores a summary along several named dimensions
 on an integer scale. Following FLASK \cite{Ye2023}, this thesis uses five
 dimensions on a 1--5 scale: \textit{faithfulness}, \textit{coverage},
-\textit{fluency}, \textit{conciseness}, and a holistic \textit{overall}.
+\textit{fluency}, \textit{conciseness}, and \textit{overall}.
 The judge model receives the source article, the candidate summary, and a
 Vietnamese-journalism rubric specification, and is instructed to return a
 JSON object with the five scores and a one-sentence justification per
@@ -159,7 +155,7 @@ dimension.
 \subsection{Absolute Scoring (MT-Bench Style)}
 
 The MT-Bench protocol \cite{Zheng2023} asks the judge for a single
-holistic integer score in $\{1,\ldots,10\}$. This is faster than the
+holistic integer score in $\{1,2,\ldots,10\}$. This is faster than the
 rubric and is included as a secondary signal; it does not replace the
 rubric.
 
@@ -213,9 +209,9 @@ and source $D$:
 
 \begin{enumerate}
   \item \textit{Claim splitting.} Decompose $S$ into atomic claims
-        $\{c_1, \ldots, c_k\}$ via a structured-output LLM call.
-  \item \textit{Entailment classification.} For each $c_j$, classify into
-        $\{\,\text{entailed},\, \text{contradicted},\, \text{not mentioned}\,\}$
+        $\{c_1, \ldots, c_k\}$ via a structured output LLM call.
+  \item \textit{Entailment classification.} Classify each $c_j$ into
+        \{\textit{entailed}, \textit{contradicted}, \textit{not mentioned}\}
         relative to $D$, using \texttt{gpt-4o-mini} with a constrained JSON
         schema.
   \item \textit{Aggregation.} Report the entailment ratio
@@ -225,7 +221,7 @@ and source $D$:
 \end{enumerate}
 
 A summary with entailment ratio $> 95\%$ and zero hallucinations is
-considered factually faithful at the per-claim level; the experiment in
+considered faithful at the per-claim level; the experiment in
 Chapter~4 reports both the average and worst-case values per approach.
 
 \section{Human Evaluation \& Inter-rater Agreement (Axis C)}
@@ -307,7 +303,7 @@ vector database; live web evidence is fresher than any cached corpus and is
 sufficient for breaking-news verification.
 
 \textbf{Trust score.} The verdict LLM returns a trust score in $[0, 100]$,
-a boolean \texttt{verified} flag (true iff trust $\geq 75$), and a list of
+a boolean \texttt{verified} flag (true if trust $\geq 75$), and a list of
 source URLs. The extension renders these in a fact-check modal next to the
 summary.
 
