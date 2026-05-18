@@ -123,13 +123,13 @@ extraction to asynchronous evaluation.
 
 The summarization process is orchestrated through a clear separation of concerns
 between the client-side browser extension and the server-side Next.js API.
-As illustrated in Figure~\ref{fig:summarization_flow}, the process begins with
-the user's interaction in the browser. The \texttt{Selection Handler} captures
-the relevant DOM context and triggers a \texttt{Tooltip} overlay, which
-allows the user to initiate a full article summary. This request is dispatched
-to the backend \url{/api/summarize} route, where the \texttt{Summarize Service}
-interacts with the LLM and validates the output via Zod before returning it to
-the \texttt{Summarize Modal}.
+As illustrated in Figure~\ref{fig:summarization_flow}, summarization can be triggered 
+via two mechanisms: (1) the \textbf{Auto Sidebar}, which automatically detects article 
+pages on load to provide a full summary, and (2) the \textbf{Fact-check Modal} system, 
+where users select specific text snippets to trigger a tooltip for on-demand 
+summarization. These requests are dispatched to the backend \url{/api/summarize} 
+route, where the \texttt{Summarize Service} interacts with the LLM and validates 
+the output via Zod before returning it to the extension UI.
 
 The end-to-end summarization pipeline consists of five primary stages:
 
@@ -255,7 +255,8 @@ and logs a warning.
 
 The aggregator prompt is the most important single artefact of the
 implementation; it determines whether the aggregator merely stitches
-drafts or actually synthesizes. The prompt, after the
+drafts or actually synthesizes. In the current implementation, \texttt{gpt-4o} 
+is used as the aggregator model. The prompt, after the
 2026-05-08 fix (the change is documented in commit \texttt{afac46e}), instructs the model to
 \begin{itemize}
   \item evaluate the drafts critically rather than copy them verbatim;
@@ -295,6 +296,8 @@ Three prompt variants were tested on 50 \textit{tienphong.vn} articles:
   \item \textbf{v2 (soft source)} --- source injected, softer
         ``use as reference'' wording.
 \end{itemize}
+
+A detailed side-by-side comparison of these prompt versions and their specific textual adaptations is provided in Appendix~C.
 
 The headline finding (reported in detail in Section~4.2) is that the
 mere \textit{presence} of the source article in the aggregator's context
@@ -364,6 +367,14 @@ JavaScript ports. BERTScore is delegated to the Python microservice
 documented in the unified report as a methodology caveat. The
 compression rate is $|S|/|D|$ in characters.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/A_calculation.png}
+  \caption{Logic for Axis A (Content Retention) metrics calculation.}
+  \label{fig:axis_a_calc}
+\end{figure}
+
+
 \subsection{Axis B --- Quality and Preference}
 
 Axis~B is the headline axis of the thesis. The
@@ -392,6 +403,13 @@ Two higher-level routines operate on MoA fusion outputs:
         \texttt{gpt-4o} output and the same-family judge bias cancels.
 \end{itemize}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=0.6\textheight,keepaspectratio]{figures/B_calculation.png}
+  \caption{Logic for Axis B (Quality and Preference) LLM-judge workflow.}
+  \label{fig:axis_b_calc}
+\end{figure}
+
 \subsection{Axis C --- Human Validation}
 
 Axis~C uses the same extension's web UI to administer blind
@@ -414,21 +432,48 @@ ranking tasks.
         average rank, per-approach win rate, and Fleiss'~$\kappa$.
 \end{itemize}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/C_calculation.png}
+  \caption{Logic for Axis C (Human Validation) statistical aggregation.}
+  \label{fig:axis_c_calc}
+\end{figure}
+
+
 \subsection{Statistical Analysis}
 
-All statistical primitives live in
-\texttt{backend/output-fusion/scripts/stats.ts}:
+To ensure the evaluation results are statistically sound, the system 
+includes a dedicated library of primitives (\texttt{backend/}\allowbreak\texttt{output-fusion/}\allowbreak\texttt{scripts/}\allowbreak\texttt{stats.ts}). 
+The implementation focuses on four key areas to make sure the metrics reported 
+in the following chapters are both accurate and reproducible:
 
 \begin{itemize}
-  \item \texttt{signTestPValue(wins, losses, ties)} --- exact two-sided
-        binomial.
-  \item \texttt{lengthBucketedWinRate(pairs)} --- Dubois-2024 simplified
-        bucket method with $\text{MIN\_BUCKET\_N} = 5$.
-  \item \texttt{fleissKappa(matrix)} and
-        \texttt{fleissKappaFromRankings(rankings)} --- inter-rater
-        agreement.
-  \item \texttt{pairedMetricStats(a, b)} --- mean, stdev, and paired
-        differences for Axis-A side-by-side reporting.
+  \item \textbf{Significance Testing (Axis A/B):} I used an exact two-sided 
+        binomial p-value via \texttt{signTestPValue} to determine if 
+        model performance gaps are meaningful. To handle larger sample sizes 
+        without numerical errors, I implemented a \textit{log-factorial cache}. 
+        This allows the system to work in log-space, preventing the 
+        floating-point overflow that typically occurs when calculating 
+        large combinations $C(n, k)$.
+  \item \textbf{Verbosity-Bias Correction (Axis B):} Since LLM judges can be 
+        biased toward longer outputs \cite{Dubois2024}, I implemented 
+        \texttt{length}\allowbreak\texttt{Bucketed}\allowbreak\texttt{WinRate}. 
+        By grouping verdicts into three buckets based on the length ratio 
+        $L_{\text{A}}/L_{\text{B}}$ ($<0.85$, $0.85$--$1.15$, and $>1.15$), 
+        the system can calculate a more balanced win rate that doesn't 
+        simply reward models for being wordy.
+  \item \textbf{Inter-Rater Agreement (Axis C):} To measure how consistently 
+        human raters ranked the summaries, the system calculates Fleiss' $\kappa$ 
+        using \texttt{fleiss}\allowbreak\texttt{Kappa}\allowbreak\texttt{From}\allowbreak\texttt{Rankings}. 
+        I follow the Landis and Koch \cite{Landis1977} convention to interpret these 
+        scores, aiming for at least "moderate" agreement ($\kappa > 0.4$) to 
+        validate the human study results.
+  \item \textbf{Paired Metric Aggregation:} For content retention metrics, 
+        \texttt{paired}\allowbreak\texttt{Metric}\allowbreak\texttt{Stats} handles 
+        the calculation of means, standard deviations, and paired differences. 
+        It is designed to automatically filter out missing data and compute 
+        sign-test p-values for head-to-head comparisons, providing a 
+        standardized way to report performance across Axis A.
 \end{itemize}
 
 \subsection{Fused vs.\ GPT-4o-Alone (Thesis-Decisive)}
@@ -436,7 +481,7 @@ All statistical primitives live in
 The decisive comparison removes a confound that plagues fused
 vs.\ \textit{best-proposer} comparisons: the best proposer is a
 weaker model than the aggregator, so any fused-vs-best win could be
-attributed to ``GPT-4o is just better than Haiku''. By comparing
+attributed to ``GPT-4o is better than Haiku''. By comparing
 fused (which uses GPT-4o as aggregator) against GPT-4o running alone
 (zero-shot, same single article), both candidates are GPT-4o output.
 A win is therefore attributable to the act of
@@ -447,52 +492,88 @@ context --- not to model-capability gap. The implementation is
 
 \section{Database Design}
 
-\subsection{Schema Overview}
+The Supabase PostgreSQL database holds twenty-five migrations. The schema is 
+organised into three functional groups: per-summary metrics, MoA-specific data, 
+and human evaluation records. The logical relationships 
+between these functional groups are illustrated in the Entity-Relationship (ER) 
+diagram in Figure~\ref{fig:database_schema}.
 
-The Supabase PostgreSQL database holds twenty-five migrations. The
-schema is organised into four functional groups:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/database_schema.png}
+  \caption{Fiber database schema (Supabase PostgreSQL) showing major tables and relationships.}
+  \label{fig:database_schema}
+\end{figure}
 
-\begin{itemize}
-  \item \textbf{Per-summary metrics:} \url{evaluation_metrics},
-        \url{routing_decisions}.
-  \item \textbf{MoA-specific:} \url{moa_fusion_results},
-        \url{moa_draft_results},
-        \url{llm_judge_pairwise}.
-  \item \textbf{Human evaluation:} \url{human_eval_tasks},
-        \url{human_eval_responses}.
-  \item \textbf{Configuration:} \url{app_settings},
-        \url{model_configurations},
-        \url{dashboard_actions}.
-\end{itemize}
+\subsection{Per-summary Metrics and Decisions}
 
-\subsection{Key Tables}
+This group tracks the lifecycle of each summarization request, from the 
+initial routing logic to the final computed evaluation scores.
 
-\textbf{\url{evaluation_metrics}.} One row per summary. Holds Axis~A
-columns (\url{rouge1_f}, \url{rouge2_f}, \url{rougel_f},
-\url{bleu}, \url{bertscore_f1}, \url{compression_pct},
-\url{latency_ms}) and Axis~B columns
-(\url{judge_rubric} JSONB, \url{judge_absolute},
-\url{judge_cost_usd}, \url{factuality_entailed_ratio},
-\url{factuality_hallucinations} JSONB).
+\begin{table}[H]
+\centering
+\caption{Schema for \texttt{evaluation\_metrics} and \texttt{routing\_decisions} tables.}
+\begin{tabular}{lll}
+\hline
+\textbf{Table / Column} & \textbf{Type} & \textbf{Description} \\ \hline
+\textit{evaluation\_metrics} & & \\
+\texttt{summary\_text} & text & The generated summary content. \\
+\texttt{rouge\_1/2/L} & float8 & Axis A: ROUGE F1-scores. \\
+\texttt{bert\_score} & float8 & Axis A: Semantic similarity score. \\
+\texttt{latency} & int4 & End-to-end processing time in ms. \\
+\texttt{judge\_rubric} & jsonb & Axis B: Multi-dimension rubric results. \\
+\texttt{factuality\_ratio} & numeric & Axis B: Proportion of entailed claims. \\ \hline
+\textit{routing\_decisions} & & \\
+\texttt{article\_tokens} & int4 & Estimated input token count. \\
+\texttt{complexity} & text & Classified complexity (Low/Med/High). \\
+\texttt{routing\_mode} & text & auto, forced, or fusion. \\
+\texttt{selected\_model} & text & The model dispatched by the router. \\ \hline
+\end{tabular}
+\end{table}
 
-\textbf{\url{llm_judge_pairwise}.} One row per pairwise verdict.
-The \url{comparison_type} column is a discriminator with three
-values: \url{vs_best_draft} (Axis B.2),
-\url{vs_individual_draft} (Axis B.2b, one row per (fusion,
-proposer) pair), and \url{vs_single_aggregator}
-(Axis B.2c, P0-8).
+\subsection{MoA-Specific Data Structures}
 
-\textbf{\url{moa_fusion_results} / \url{moa_draft_results}.}
-One row per fusion run; one row per proposer draft. The
-\url{pipeline_mode} column is currently always
-\url{moa_synthesis}; the historical \url{llm_ranker} value
-remains for rows written before 2026-05-09.
+These tables store the intermediate drafts and final fused results of the 
+Mixture-of-Agents pipeline, alongside the pairwise LLM-judge verdicts.
 
-\textbf{\url{human_eval_tasks} / \url{human_eval_responses}.}
-Tasks carry a hidden \url{candidates} JSONB array with model
-labels; rater responses carry a ranking (list of label letters) and a
-per-candidate Vietnamese \url{rationale}. The unique index
-\url{(task_id, rater_id)} prevents duplicate submissions.
+\begin{table}[H]
+\centering
+\caption{Schema for MoA-specific tables.}
+\begin{tabular}{lll}
+\hline
+\textbf{Table / Column} & \textbf{Type} & \textbf{Description} \\ \hline
+\textit{moa\_fusion\_results} & & \\
+\texttt{fused\_summary} & text & Final synthesized summary. \\
+\texttt{aggregator\_model} & text & The model used for synthesis (e.g., GPT-4o). \\
+\texttt{total\_cost\_usd} & float4 & Cumulative cost of all LLM calls in the run. \\ \hline
+\textit{moa\_draft\_results} & & \\
+\texttt{model\_name} & text & Identity of the proposer model. \\
+\texttt{summary} & text & The individual draft generated by the proposer. \\ \hline
+\textit{llm\_judge\_pairwise} & & \\
+\texttt{winner} & text & Verdict (A, B, or tie). \\
+\texttt{comparison\_type} & text & vs\_best\_draft, vs\_individual, etc. \\
+\texttt{justification} & text & Natural language rationale from the judge. \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Human Evaluation Records}
+
+The final group manages the blind ranking tasks for human raters.
+
+\begin{table}[H]
+\centering
+\caption{Schema for human evaluation tables.}
+\begin{tabular}{lll}
+\hline
+\textbf{Table / Column} & \textbf{Type} & \textbf{Description} \\ \hline
+\textit{human\_eval\_tasks} & & \\
+\texttt{article\_url} & text & Source article link for reference. \\
+\texttt{summaries} & jsonb & Model-anonymized candidate summaries. \\ \hline
+\textit{human\_eval\_responses} & & \\
+\texttt{ranking} & jsonb & Rater's ordered list of candidates. \\
+\texttt{rationale} & jsonb & Per-candidate justification from the rater. \\ \hline
+\end{tabular}
+\end{table}
 
 \section{User Interface}
 
@@ -500,10 +581,11 @@ per-candidate Vietnamese \url{rationale}. The unique index
 
 The extension sidebar is the primary user surface
 (Figure~\ref{fig:sidebar}). Tapping the toolbar icon injects a
-right-edge panel into the current page; the panel shows a
-streaming-summary area, a fact-check button (which opens the modal
-described in Section~3.5), a model selector, and a kebab menu with
-``copy summary'', ``open metrics dashboard'', and ``settings''.
+right-edge panel into the current page; the panel is dedicated
+exclusively to the streaming-summary area, which displays the
+generated content in real-time. Unlike the popup or modal interfaces,
+the sidebar contains no additional interactive buttons or controls,
+serving as a focused reading space for the news summary.
 
 \begin{figure}[H]
   \centering

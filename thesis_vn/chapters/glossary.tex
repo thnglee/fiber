@@ -1,0 +1,50 @@
+\chapter*{DANH MỤC KÝ HIỆU VÀ CHỮ VIẾT TẮT}
+\addcontentsline{toc}{chapter}{DANH MỤC KÝ HIỆU VÀ CHỮ VIẾT TẮT}
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}p{10.4cm}|}
+  \hline
+  \textbf{Chữ viết tắt} & \textbf{Nghĩa đầy đủ / Giải thích} \\
+  \hline
+  API   & Application Programming Interface (Giao diện lập trình ứng dụng) \\ \hline
+  BLEU  & Bilingual Evaluation Understudy --- hệ số đo độ chính xác $n$-gram có hiệu chỉnh \\ \hline
+  BERT  & Bidirectional Encoder Representations from Transformers \\ \hline
+  BERTScore & Hệ số tương đồng ngữ nghĩa dựa trên nhúng từ ngữ cảnh (sử dụng PhoBERT trong khóa luận này) \\ \hline
+  CAPI  & (Server-side) Conversion API \\ \hline
+  CoT   & Chain-of-Thought (Chuỗi suy luận từng bước) \\ \hline
+  CSV   & Comma-Separated Values (Dữ liệu phân cách bằng dấu phẩy) \\ \hline
+  CRUD  & Create, Read, Update, Delete (Tạo, Đọc, Cập nhật, Xóa) \\ \hline
+  DOM   & Document Object Model \\ \hline
+  GPT   & Generative Pre-trained Transformer \\ \hline
+  HF    & Hugging Face \\ \hline
+  JSON  & JavaScript Object Notation \\ \hline
+  JSDOM & JavaScript DOM implementation in Node.js \\ \hline
+  LLM   & Large Language Model (Mô hình ngôn ngữ lớn) \\ \hline
+  MoA   & Mixture-of-Agents --- Kiến trúc đa tác nhân phối hợp (Wang et al., 2024) \\ \hline
+  MV3   & Manifest V3 (Đặc tả tiện ích mở rộng Chrome) \\ \hline
+  NLP   & Natural Language Processing (Xử lý ngôn ngữ tự nhiên) \\ \hline
+  PRD   & Product Requirements Document (Tài liệu yêu cầu sản phẩm) \\ \hline
+  RAG   & Retrieval-Augmented Generation (Tạo văn bản tăng cường truy xuất) \\ \hline
+  RLS   & Row-Level Security --- Bảo mật cấp hàng (PostgreSQL) \\ \hline
+  ROUGE & Recall-Oriented Understudy for Gisting Evaluation \\ \hline
+  SAG   & Search-Augmented Generation (Tạo văn bản tăng cường tìm kiếm) \\ \hline
+  SDK   & Software Development Kit (Bộ công cụ phát triển phần mềm) \\ \hline
+  SSE   & Server-Sent Events (Sự kiện đẩy từ máy chủ) \\ \hline
+  TS    & TypeScript \\ \hline
+  UI    & User Interface (Giao diện người dùng) \\ \hline
+  URL   & Uniform Resource Locator (Địa chỉ tài nguyên thống nhất) \\ \hline
+  UUID  & Universally Unique Identifier (Mã định danh duy nhất toàn cầu) \\ \hline
+  ViT5  & Vietnamese Text-to-Text Transfer Transformer \\ \hline
+  PhoBERT & Mô hình BERT tiền huấn luyện cho tiếng Việt (vinai/phobert-base) \\ \hline
+  \multicolumn{2}{l}{} \\
+  \hline
+  \textbf{Thuật ngữ} & \textbf{Định nghĩa} \\ \hline
+  Tác nhân đề xuất (Proposer)    & LLM ở tầng thứ nhất trong pipeline MoA, có nhiệm vụ tạo ra một bản thảo tóm tắt ứng viên \\ \hline
+  Tác nhân tổng hợp (Aggregator)  & LLM ở tầng thứ hai trong pipeline MoA, có nhiệm vụ dung hợp các bản thảo thành đầu ra cuối cùng \\ \hline
+  Kết nối phần dư (Residual connection) & Việc đưa trực tiếp bài viết nguồn vào ngữ cảnh của tác nhân tổng hợp để quá trình dung hợp luôn neo vào nội dung gốc, không bị ảo tưởng \\ \hline
+  Đánh giá rubric   & Hình thức LLM-giám khảo chấm điểm tóm tắt trên nhiều tiêu chí có tên cụ thể theo thang số \\ \hline
+  Đánh giá từng cặp (Pairwise) & Hình thức LLM-giám khảo so sánh hai bản tóm tắt A và B, chọn ra bản thắng cuộc \\ \hline
+  Hệ số Fleiss' $\kappa$ & Chỉ số đồng thuận giữa các người đánh giá dùng cho dữ liệu phân loại từ $\geq 2$ người đánh giá \\ \hline
+  Kiểm định dấu (Sign test)        & Kiểm định phi tham số cho kết quả nhị phân theo từng cặp, sử dụng để kiểm tra tỷ lệ thắng từng cặp \\ \hline
+  Phân nhóm theo độ dài (Length bucketing) & Phân tầng các phán quyết theo cặp dựa trên tỷ lệ độ dài đầu ra để kiểm soát thiên kiến độ dài \\ \hline
+  Kéo theo logic (Entailment)       & Quan hệ logic: giả thuyết được hỗ trợ bởi tiền đề; sử dụng để đánh giá tính xác thực cấp tuyên bố \\ \hline
+\end{longtable}

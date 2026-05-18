@@ -1,0 +1,42 @@
+\chapter{Kết luận và hướng phát triển}
+\label{ch:conclusion}
+
+\section{Tóm tắt các đóng góp}
+
+Khóa luận này nghiên cứu xem liệu kiến trúc đa tác nhân phối hợp (MoA) có giúp ích cho bài toán tóm tắt tin tức tiếng Việt hay không, và sâu sắc hơn là liệu các hệ số đánh giá thường dùng cho bài toán tóm tắt tiếng Việt hiện nay có đủ năng lực để phát hiện ra sự giúp ích đó hay không. Khóa luận mang lại ba đóng góp khoa học chính.
+
+\textbf{1. Một hệ thống hoàn chỉnh phục vụ vận hành thực tế (Fiber).} Tiện ích mở rộng trên trình duyệt xây dựng bằng framework Plasmo, kết hợp dịch vụ backend Next.js triển khai lớp trừu tượng hóa LLM đa nhà cung cấp (hỗ trợ 14 mô hình từ OpenAI, Anthropic và Google), một microservice tính điểm BERTScore bằng ngôn ngữ Python trên nền tảng Hugging Face Spaces, và lớp cơ sở dữ liệu bền vững PostgreSQL quản lý bởi Supabase, đã hoạt động phối hợp để mang lại tính năng tóm tắt thời gian thực (streaming) và kiểm chứng tin tức tự động dựa trên tìm kiếm web trực tiếp trên bảy tên miền báo chí tiếng Việt lớn.
+
+\textbf{2. Sự thích ứng của kiến trúc MoA cho bài toán tóm tắt có neo ngữ cảnh gốc.} Kiến trúc đề xuất--tổng hợp hai lớp của Wang et al.\ \cite{Wang2024} đã được tái hiện cấu trúc cho tiếng Việt với một cải tiến mang tính nguyên lý then chốt: bài viết nguồn được đưa trực tiếp vào gợi ý của mô hình tổng hợp dưới dạng một \textit{kết nối phần dư (residual connection)}, tương đồng với Phương trình 1 của nghiên cứu gốc nhưng mở rộng từ chỉ gợi ý đơn thuần sang neo chặt ngữ cảnh nguồn. Kết quả thực nghiệm (Mục~4.2) chứng minh kết nối phần dư này là lựa chọn thiết kế mang tính quyết định: không có nó, mô hình tổng hợp chỉ thực hiện chắp vá bản thảo; có nó, mô hình tổng hợp thực hiện biên tập và dung hợp sâu sắc.
+
+\textbf{3. Một khung đánh giá ba trục và phép phản biện thực nghiệm đối với đánh giá một trục.} Các hệ số đo lường giữ lại nội dung (Trục~A), chất lượng đánh giá bằng LLM-giám khảo và sở thích đấu cặp (Trục~B), cùng phương pháp xếp hạng mù của con người kèm đo lường độ đồng thuận (Trục~C) được kết hợp chặt chẽ trong một khung đánh giá duy nhất. Thực nghiệm trên 154 bài viết từ \textit{tienphong.vn} chỉ ra bản tóm tắt dung hợp MoA vượt trội hơn mô hình đơn lẻ mạnh nhất trên mọi khía cạnh đánh giá: ROUGE-1 ($+0,062$), BERTScore ($+0,051$), điểm Tổng thể Rubric ($+0,08$), tỷ lệ thắng đấu cặp do LLM chấm ($68,9\%$), và sở thích của con người ($40,9\%$ đa số tương đối). Sự đồng thuận về mặt chiều hướng trên cả ba góc nhìn độc lập cho phép đưa ra khuyến nghị khoa học vững chắc; bên cạnh đó, khoảng cách chênh lệch $28$ điểm phần trăm giữa Trục B.2a ($68,9\%$) và Trục C ($40,9\%$), cùng hiện tượng đảo ngược sở thích của con người trên các chủ đề hành chính khô khan (chọn bản thảo ngắn nhất), chính là những phát hiện phương pháp luận sâu sắc mà khung đánh giá ba trục mang lại.
+
+\section{Hạn chế của đề tài}
+
+Khóa luận còn tồn tại ba hạn chế giới hạn phạm vi khẳng định của các luận điểm, tất cả đều đã được thừa nhận trong Chương~4 và được tổng hợp lại ở đây.
+
+\begin{enumerate}
+  \item \textbf{Cấu hình MoA tối thiểu.} Hệ thống sử dụng một tầng duy nhất với ba mô hình đề xuất. Nghiên cứu của Wang et al.\ \cite{Wang2024} (Bảng 3 và 4) chỉ ra rằng hiệu năng tăng đơn điệu theo độ sâu của tầng tác nhân và số lượng mô hình đề xuất.
+  \item \textbf{Quy mô nghiên cứu con người và động lực của người đánh giá.} Nghiên cứu có sự tham gia của $17$ người đánh giá độc lập. Dù đủ lớn để xác định các xu hướng chung, việc phụ thuộc vào nhóm người tham gia ngẫu nhiên này có thể đưa thêm các yếu tố nhiễu do sở thích cá nhân đối với chủ đề bài báo và hiện tượng mệt mỏi nhận thức phát sinh trong các phiên đánh giá kéo dài, gây ảnh hưởng đến độ phân giải của số liệu đo lường mức độ ưa thích.
+  \item \textbf{Các hệ số trùng lặp tính trực tiếp với văn bản nguồn.} Các hệ số ROUGE / BLEU / BERTScore được tính toán trực tiếp với bài viết gốc, không phải so với bản tóm tắt chuẩn do con người viết, vì hiện tại chưa có bộ dữ liệu benchmark tóm tắt tiếng Việt nào được chú thích bởi con người ở quy mô tương tự. Việc đối chiếu chéo đa trục chính là chốt chặn thực nghiệm nhằm tránh việc diễn giải quá đà các kết quả trên Trục A.
+\end{enumerate}
+
+\section{Hướng phát triển tương lai}
+
+Từ các hạn chế trên, chúng tôi định hình một hướng phát triển ngắn hạn và hai hướng phát triển dài hạn.
+
+\textbf{Ngắn hạn.}
+
+\begin{itemize}
+  \item \textit{Mở rộng Trục C ở quy mô lớn.} Thu hút thêm nhiều người đánh giá độc lập để mở rộng quy mô hiện tại ($17$ người đánh giá) ra toàn bộ cơ sở dữ liệu bài viết thực nghiệm. Cơ sở hạ tầng hệ thống hiện tại đã sẵn sàng để hỗ trợ mở rộng quy mô này, từ đó tinh chỉnh tốt hơn các phép đo đồng thuận giữa các người đánh giá và kiểm soát hiện tượng mệt mỏi nhận thức.
+\end{itemize}
+
+\textbf{Dài hạn.}
+
+\begin{itemize}
+  \item \textit{Các kiến trúc MoA sâu hơn.} Thêm một tầng tổng hợp thứ hai và / hoặc mở rộng số lượng mô hình đề xuất lên năm hoặc sáu mô hình khác nhau. Từ đó xác thực luận điểm tăng trưởng hiệu năng đơn điệu của nghiên cứu gốc \cite{Wang2024} đối với tiếng Việt.
+  \item \textit{Các tác nhân đề xuất tích hợp RAG.} Mỗi mô hình đề xuất có thể tự chủ động truy xuất các thông tin ngữ cảnh nền liên quan (các bài báo cùng ngày, cùng chủ đề) thông qua Tavily; mô hình tổng hợp sau đó sẽ dung hợp để tạo ra bản tóm tắt bao hàm đầy đủ các bối cảnh lịch sử liên quan mà người đọc không cần phải rời mắt khỏi bài báo chính.
+\end{itemize}
+
+\vspace{0.6em}
+\noindent Bài học phương pháp luận sâu sắc nhất của khóa luận này cũng chính là câu ngắn nhất: \textit{đánh giá một trục là không đủ}. Khung đánh giá được trình bày ở đây biến bài học đó thành hành động cụ thể.

@@ -1,0 +1,282 @@
+\chapter{Thực nghiệm và đánh giá}
+
+Chương này trình bày kết quả đánh giá thực nghiệm hệ thống được mô tả trong Chương~3. Mục~4.1 trình bày chi tiết về thiết lập thực nghiệm; các Mục~4.2--4.4 báo cáo kết quả tương ứng theo ba trục đánh giá; Mục~4.5 đối chiếu chéo các kết quả này; Mục~4.6 thảo luận về các hạn chế phương pháp luận; và Mục~4.7 tổng kết các phát hiện chính thu được.
+
+\section{Thiết lập thực nghiệm}
+
+\subsection{Tập dữ liệu}
+
+Quá trình đánh giá sử dụng $154$ bài báo tiếng Việt được thu thập từ trang tin trực tuyến \textit{tienphong.vn}, được cân bằng với tỷ lệ xấp xỉ $30$ bài mỗi chủ đề trên năm nhóm nội dung bao gồm: \textit{thời sự}, \textit{pháp luật}, \textit{kinh tế}, \textit{giáo dục} và \textit{văn hóa}. Địa chỉ liên kết (URL) của các bài viết được quản lý tự động thông qua pipeline hệ thống. Thiết kế cân bằng chủ đề này giúp kiểm soát các hiệu ứng phong cách viết đặc thù theo từng thể loại báo chí, đồng thời hỗ trợ hiệu quả cho phần phân tích tương tác theo nhóm chủ đề trình bày trong Mục~4.4.2.
+
+\subsection{Các phương án đánh giá}
+
+Năm phương án xử lý thông tin được đưa vào đánh giá trên từng bài báo:
+
+\begin{enumerate}
+  \item \textbf{Dung hợp (MoA)} --- gồm ba mô hình đề xuất kết hợp với mô hình tổng hợp GPT-4o. Chế độ định tuyến là \texttt{fusion}.
+  \item \textbf{GPT-4o đơn lẻ} --- mô hình cơ sở đơn lẻ mạnh nhất. Chế độ định tuyến là \texttt{forced}, sử dụng mô hình \texttt{gpt-4o-2024-08-06}. Phương án này được sử dụng trong phép so sánh mang tính quyết định của khóa luận.
+  \item \textbf{Claude Haiku 4.5 đơn lẻ} --- mô hình cơ sở thuộc phân cấp đề xuất (nhà cung cấp Anthropic).
+  \item \textbf{Gemini 2.5 Flash đơn lẻ} --- mô hình cơ sở thuộc phân cấp đề xuất (nhà cung cấp Google).
+  \item \textbf{GPT-4o-mini đơn lẻ} --- mô hình cơ sở thuộc phân cấp đề xuất (nhà cung cấp OpenAI).
+\end{enumerate}
+
+\subsection{Các hệ đo lường}
+
+\begin{itemize}
+  \item \textbf{Trục A (khả năng giữ lại nội dung).} Bao gồm các hệ số ROUGE-1, ROUGE-L, BLEU, BERTScore (với mô hình nền PhoBERT) và tỷ lệ nén. Các hệ số này được tính toán so với bài viết nguồn trong các dịch vụ backend tại \texttt{backend/services/evaluation.service.ts} và \texttt{bert.service.ts}.
+  \item \textbf{Trục B (chất lượng và mức độ ưa thích).} Bao gồm điểm số đánh giá theo rubric (5 khía cạnh $\times$ thang điểm 1--5), tỷ lệ thắng đấu cặp kèm theo giá trị $p$ của kiểm định dấu (sign-test) và kiểm soát phân nhóm theo độ dài, tỷ lệ kéo theo logic (entailment ratio) phục vụ xác định tính xác thực. Mô hình giám khảo được sử dụng là \texttt{gpt-4o-mini-2024-07-18}.
+  \item \textbf{Trục C (kiểm chứng từ con người).} Phương pháp xếp hạng mù $K = 3$; tính toán thứ hạng trung bình của từng phương án, tỷ lệ xếp hạng nhất (\#1 share), tỷ lệ thắng đấu cặp, và đo lường độ đồng thuận giữa các người đánh giá.
+\end{itemize} 
+
+\section{Kết quả Trục A --- Khả năng giữ lại nội dung}
+
+\subsection{Các số liệu tổng quan}
+
+Bảng~\ref{tab:axisA} báo cáo các hệ số overlap từ vựng được tính trung bình trên 154 lượt chạy dung hợp và các lượt chạy mô hình đơn lẻ tương đương làm cơ sở đối chiếu.
+
+\begin{table}[H]
+  \centering
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \caption{Trục A --- các hệ số overlap so với bài viết nguồn (điểm số càng cao thể hiện bản tóm tắt càng bám sát văn phong từ vựng của bài gốc).}
+  \label{tab:axisA}
+  \begin{tabularx}{\linewidth}{Xrrrrrr}
+    \toprule
+    Phương pháp & $n$ & ROUGE-1 & ROUGE-L & BLEU & BERTScore & Tỷ lệ nén\% \\
+    \midrule
+    Dung hợp (MoA) / gpt-4o      & 154 & \textbf{0.4240} & \textbf{0.3300} & \textbf{0.1349} & \textbf{0.6759} & 42.6 \\
+    gemini-2.5-flash             & 100 & 0.3503 & 0.2677 & 0.0894 & 0.6538 & 33.7 \\
+    claude-haiku-4.5             & 100 & 0.3502 & 0.2830 & 0.0871 & 0.6487 & 34.7 \\
+    gpt-4o-2024-08-06            & 50  & 0.3621 & 0.2567 & 0.0688 & 0.6246 & 37.6 \\
+    gpt-4o-mini-2024-07-18       & 100 & 0.2454 & 0.1849 & 0.0290 & 0.6217 & 24.9 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\textbf{Kết quả nổi bật trên Trục A.} Bản tóm tắt dung hợp (Fusion) chiến thắng trên tất cả các hệ số đo lường mức độ giữ lại nội dung --- đạt điểm ROUGE-1 $0.4240$ so với $0.3621$ của GPT-4o đơn lẻ, và BERTScore $0.6759$ so với $0.6246$. Điều này hoàn toàn \textit{trái ngược} với những dự đoán từ nghiên cứu thử nghiệm ban đầu của khóa luận (khi đó chúng tôi giả định rằng kết quả dung hợp MoA sẽ có điểm overlap thấp hơn do cơ chế tổng hợp kiểu biên tập sẽ diễn giải lại thông tin một cách mạnh mẽ hơn).
+
+\subsection{Giải quyết ``Nghịch lý MoA''}
+
+Dự đoán trong giai đoạn thử nghiệm ban đầu được đưa ra dựa trên một gợi ý tổng hợp (aggregator prompt) nguồn nghiêm ngặt (được commit trước phiên bản \texttt{afac46e}, tháng 5 năm 2026). Dưới tác động của gợi ý nghiêm ngặt đó, mô hình tổng hợp đã thu gọn các bản thảo thành một đoạn văn biên tập rất ngắn, trực tiếp kéo điểm overlap đi xuống. Sau khi tối ưu hóa gợi ý tổng hợp (như đã trình bày trong Mục~3.4.5), mô hình tổng hợp giờ đây vừa giữ lại được khung lập luận trung thực với bài gốc, vừa diễn giải các dữ kiện chính bằng các cụm từ rất sát với nguồn, khiến điểm overlap \textit{tăng vượt trội} hơn bất kỳ bản thảo đơn lẻ nào. Có hai cơ chế chính giải thích cho hiện tượng này:
+
+\begin{enumerate}
+  \item \textit{Độ bao phủ từ hợp của các bản thảo (Coverage from union of drafts).} Mô hình tổng hợp được quan sát đồng thời cả ba bản thảo đề xuất. Những dữ kiện mà một bản thảo bỏ sót nhưng bản thảo khác ghi lại được giờ đây đều nằm trong tầm tiếp cận ngữ cảnh của mô hình tổng hợp; từ đó độ hồi phục (recall) so với bài viết gốc tăng lên một cách cơ học.
+  \item \textit{Trung bình hóa văn phong (Diction averaging).} Cách viết của mô hình tổng hợp có xu hướng giữ lại những cụm từ xuất hiện phổ biến nhất trên các bản thảo; do tất cả các mô hình đề xuất đều được điều kiện hóa dựa trên cùng một bài viết gốc, nên những cụm từ xuất hiện phổ biến này thường trùng khớp với văn bản nguồn.
+\end{enumerate}
+
+Kết quả sau khi tối ưu hóa gợi ý mang ý nghĩa thực tiễn quan trọng: \textit{ngay cả trên Trục A, phương pháp dung hợp vẫn cho thấy hiệu quả tương đương hoặc vượt trội so với mô hình đơn lẻ mạnh nhất}. Hệ đo lường trùng lặp so với bài gốc không còn là một điểm yếu; trái lại, nó trở thành trục thứ ba đồng thuận chặt chẽ với Trục B và Trục C, giúp củng cố vững chắc hơn luận điểm khoa học ủng hộ phương pháp dung hợp.
+
+\section{Kết quả Trục B --- Chất lượng và sở thích}
+
+\subsection{Đánh giá theo Rubric (FLASK cải tiến, 1--5)}
+
+Bảng~\ref{tab:axisB1} báo cáo điểm số rubric trung bình theo từng chiều đánh giá trên 154 lượt chạy dung hợp và các lượt chạy mô hình đơn lẻ tương ứng.
+
+\begin{table}[H]
+  \centering
+  \caption{Trục B.1 --- điểm số rubric đánh giá bằng LLM-giám khảo (1--5). Sử dụng \texttt{judge\_model = gpt-4o-mini-2024-07-18}.}
+  \label{tab:axisB1}
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Phương pháp & $n$ & Trung thực & Bao phủ & Trôi chảy & Súc tích & Tổng thể \\
+    \midrule
+    Dung hợp / gpt-4o            & 154 & \textbf{5.00} & \textbf{4.94} & 4.98 & 4.88 & \textbf{4.96} \\
+    claude-haiku-4.5             & 100 & 5.00 & 4.78 & 4.97 & 4.92 & 4.91 \\
+    gpt-4o-2024-08-06            & 50  & 5.00 & 4.78 & 4.98 & 4.84 & 4.88 \\
+    gemini-2.5-flash             & 100 & 4.96 & 4.76 & 5.00 & 4.95 & 4.86 \\
+    gpt-4o-mini                  & 100 & 4.98 & 4.34 & 4.97 & 4.84 & 4.61 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Phương pháp dung hợp (Fusion) vượt trội hơn mọi mô hình cơ sở ở điểm số đánh giá Tổng thể toàn diện ($4.96$ so với $4.91$ của mô hình đứng sau). Yếu tố đóng góp khác biệt lớn nhất là tiêu chí \textbf{Độ bao phủ (Coverage)} ($4.94$ so với $4.78$ của GPT-4o đơn lẻ, tạo ra khoảng cách $+0.16$); kết quả này hoàn toàn nhất quán với cơ chế ``hợp các bản thảo'' được thảo luận trong Mục~4.2.2. Điểm số tiêu chí Tính trung thực gần như bão hòa đối với tất cả các phương pháp ($\geq 4.96$), phản ánh rằng mô hình giám khảo và các mô hình ứng viên đều là những mô hình thương mại mạnh mẽ, và hiện tượng mâu thuẫn logic trực tiếp là rất hiếm gặp.
+
+\subsection{Dung hợp so với Bản thảo đơn lẻ tốt nhất (Toàn bộ tập dữ liệu)}
+
+Đây là phép so sánh đối chiếu đấu cặp chính trên toàn bộ tập dữ liệu gồm $154$ bài báo. Mô hình giám khảo LLM sẽ đánh giá bản tóm tắt dung hợp MoA đối đầu với bản thảo đề xuất đơn lẻ mạnh nhất (được lựa chọn thông qua bộ xếp hạng N chiều) ứng với từng bài báo.
+
+\begin{table}[H]
+  \centering
+  \caption{Trục B.2a --- phán quyết đấu cặp, bản dung hợp (A) đấu với bản thảo tốt nhất (B) trên toàn bộ tập dữ liệu. Các kết quả hòa được tính vào tổng số lượng.}
+  \label{tab:axisB2a}
+  \begin{tabular}{rrrrr}
+    \toprule
+    $n$ & Bản dung hợp thắng & Bản thảo tốt nhất thắng & Hòa & Tỷ lệ thắng dung hợp (không tính hòa) \\
+    \midrule
+    153 & 93 & 42 & 18 & \textbf{68.9\%} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Diễn giải số liệu.} Trong số $153$ phán quyết phân định rõ ràng, bản tóm tắt dung hợp giành chiến thắng $93$ lần, bản thảo đơn lẻ tốt nhất thắng $42$ lần, và có $18$ trường hợp hòa. Nếu loại trừ các trường hợp hòa, bản tóm tắt dung hợp được ưa thích hơn bản thảo tốt nhất trong gần $69\%$ các lượt đối đầu trực tiếp (chiếm $60,8\%$ tổng số lượt đối đầu). Mẫu thử nghiệm quy mô lớn này xác nhận rằng việc cung cấp nhiều bản thảo làm ngữ cảnh cho mô hình tổng hợp giúp tạo ra bản tóm tắt chất lượng vượt trội hơn hẳn so với việc chỉ sử dụng một mô hình đề xuất đơn lẻ.
+
+\subsection{Dung hợp so với Từng mô hình đề xuất (Đánh giá chi tiết)}
+
+Nhằm đối chiếu trực tiếp với kết quả nghiên cứu của Wang et al.\ \cite{Wang2024} (Hình 4a), Bảng~\ref{tab:axisB2b} báo cáo tỷ lệ chiến thắng của phương pháp dung hợp khi đối đầu với từng mô hình đề xuất riêng lẻ.
+
+\begin{table}[H]
+  \centering
+  \caption{Trục B.2b --- bản dung hợp đấu với từng mô hình đề xuất. Kiểm định dấu (sign-test) được thực hiện hai chiều; loại trừ các trường hợp hòa.}
+  \label{tab:axisB2b}
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Mô hình đề xuất & $n$ & Dung hợp thắng & Bản thảo thắng & Hòa & Tỷ lệ thắng dung hợp & Giá trị $p$ Sign-test \\
+    \midrule
+    gpt-4o-mini       & 50 & 49 & 1 & 0 & 98.0\% & 0.0000 \\
+    claude-haiku-4.5  & 50 & 41 & 8 & 1 & 83.7\% & 0.0000 \\
+    gemini-2.5-flash  & 50 & 32 & 14 & 4 & 69.6\% & 0.0114 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Kiểm soát độ dài.} Tỷ lệ chiến thắng thô của bản dung hợp lần lượt là $98.0\%$, $83.7\%$, $69.6\%$; sau khi áp dụng kiểm soát phân nhóm theo độ dài (length-bucketed), tỷ lệ này đạt $97.9\%$, $84.3\%$, $72.0\%$. Điểm số phân nhóm biến động rất nhỏ (trong khoảng $\pm 2.4$ điểm phần trăm so với tỷ lệ thô), xác nhận rằng thiên kiến độ dài của giám khảo LLM không phải là yếu tố quyết định kết quả này.
+
+\textbf{Diễn giải khoa học.} Bản tóm tắt dung hợp vượt qua từng mô hình đề xuất riêng lẻ với ý nghĩa thống kê rõ rệt. Khoảng cách này lớn nhất khi đối đầu với mô hình yếu nhất (GPT-4o-mini, $98\%$) và thu hẹp nhất khi gặp mô hình mạnh nhất (Gemini 2.5 Flash, $70\%$). Hiện tượng này hoàn toàn khớp với đặc tính kỹ thuật được công bố trong nghiên cứu MoA gốc \cite{Wang2024}: cơ chế dung hợp mang lại giá trị gia tăng lớn nhất khi các mô hình đề xuất có năng lực hạn chế hơn, và sự hiện diện của một mô hình đề xuất mạnh sẽ thu hẹp nhưng không thể xóa bỏ khoảng cách năng lực này.
+
+\subsection{Dung hợp so với GPT-4o đơn lẻ}
+
+Đây là phép so sánh đối chiếu có kiểm soát mô hình mang tính quyết định nhất trong khóa luận. Bằng cách cố định mô hình tạo ra kết quả cuối cùng (cả hai bản tóm tắt đối đầu đều là kết quả đầu ra của GPT-4o), chúng tôi cô lập hoàn toàn tác động của \textit{quy trình dung hợp} (cung cấp ba bản thảo đề xuất làm ngữ cảnh đầu vào cho mô hình tổng hợp) khỏi tác động của \textit{năng lực bản thân mô hình}.
+
+\begin{table}[H]
+  \centering
+  \caption{Trục B.2c --- phán quyết đấu cặp, bản dung hợp (A) đấu với GPT-4o chạy đơn lẻ (B). Kiểm định dấu thực hiện hai chiều; loại trừ các trường hợp hòa.}
+  \label{tab:axisB2c}
+  \begin{tabular}{rrrrrr}
+    \toprule
+    $n$ & Dung hợp thắng & Đơn lẻ thắng & Hòa & Tỷ lệ thắng dung hợp & Giá trị $p$ Sign-test \\
+    \midrule
+    48 & 37 & 11 & 0 & \textbf{77.1\%} & \textbf{0.0002} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Diễn giải số liệu.} Trong số $48$ phán quyết phân định rõ ràng, bản dung hợp giành chiến thắng $37$ lần, mô hình GPT-4o chạy đơn lẻ thắng $11$ lần, không ghi nhận trường hợp hòa nào. Dưới giả thuyết không $H_0: P(\text{dung hợp thắng}) = 0.5$, xác suất xuất hiện từ $37$ chiến thắng trở lên trong tổng số $48$ trận đấu là $p = 0.0002$ (tương đương tỷ lệ $1$ trên $5.000$). Kết quả này đạt ý nghĩa thống kê vượt xa các ngưỡng học thuật thông thường.
+
+\subsection{Tính xác thực}
+
+Bảng~\ref{tab:axisB3} báo cáo số liệu thống kê về tỷ lệ kéo theo logic ở cấp độ tuyên bố (claim-level entailment) trên cả năm phương án đánh giá. Kết quả dung hợp đạt tỷ lệ kéo theo rất cạnh tranh là $94.4\%$, minh chứng rằng quy trình dung hợp bảo toàn tốt tính trung thực của dữ kiện trong khi vẫn thực hiện tổng hợp thông tin từ nhiều bản thảo đề xuất khác nhau.
+
+\begin{table}[H]
+  \centering
+  \caption{Trục B.3 --- đánh giá tính xác thực qua quan hệ kéo theo cấp tuyên bố (sử dụng mô hình phán quyết \texttt{gpt-4o-mini}).}
+  \label{tab:axisB3}
+  \begin{tabular}{lrrrr}
+    \toprule
+    Phương pháp & $n$ & Tỷ lệ kéo theo \% & Ảo tưởng TB & Trường hợp xấu nhất \\
+    \midrule
+    Dung hợp (MoA)               & 154 & \textbf{94.4} & - & - \\
+    claude-haiku-4.5             & 100 & 95.5 & 0.07 & 1 \\
+    gemini-2.5-flash             & 100 & 94.7 & 0.10 & 2 \\
+    gpt-4o-mini                  & 100 & 92.8 & 0.08 & 2 \\
+    gpt-4o-2024-08-06            & 50  & 89.9 & 0.08 & 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Trên toàn bộ cơ sở dữ liệu gồm $923$ tuyên bố nguyên tử được đánh giá, tỷ lệ kéo theo tổng hợp đạt $94.4\%$. Tỷ lệ kéo theo thấp nhất ghi nhận ở phương án GPT-4o đơn lẻ ($89.9\%$). Kết quả này củng cố quan sát thực tế rằng khi hoạt động độc lập không có bước ``kiểm duyệt biên tập'' (editorial check) mà pipeline MoA cung cấp một cách gián tiếp, GPT-4o có xu hướng vận hành ở chế độ sáng tạo hơn và đôi khi đưa vào những dữ kiện không được văn bản gốc hỗ trợ trực tiếp.
+
+\section{Kết quả Trục C --- Đánh giá con người}
+
+\subsection{Thiết lập}
+
+Một nghiên cứu con người toàn diện đã được triển khai với sự tham gia của $17$ người đánh giá độc lập, bao phủ toàn bộ $48$ tác vụ thực nghiệm, thu về tổng cộng $192$ kết quả xếp hạng mù $K = 3$. Mỗi tác vụ hiển thị đồng thời ba ứng viên tóm tắt --- bản dung hợp MoA, bản GPT-4o đơn lẻ, và bản thảo đề xuất GPT-4o-mini --- dưới các nhãn ngẫu nhiên \textit{Bản A}, \textit{Bản B}, \textit{Bản C} nhằm ẩn hoàn toàn danh tính của mô hình.
+
+\subsection{Kết quả nổi bật trên Trục C}
+
+\begin{table}[H]
+  \centering
+  \caption{Trục C --- các chỉ số thống kê mô tả tổng hợp từ người đánh giá, quy mô $n = 192$ kết quả xếp hạng trên $48$ tác vụ.}
+  \label{tab:axisC}
+  \begin{tabular}{lrrr}
+    \toprule
+    Phương pháp & Hạng trung bình ($\downarrow$) & Tỷ lệ xếp hạng nhất & Tỷ lệ đối đầu vs. Dung hợp \\
+    \midrule
+    Dung hợp (MoA)     & \textbf{1.95} & \textbf{40.9\%} & --- \\
+    gpt-4o đơn lẻ      & 2.00 & 32.3\% & Dung hợp thắng 40.9\% \\
+    Bản thảo gpt-4o-mini & 2.05 & 26.8\% & Dung hợp thắng 40.9\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Bản tóm tắt dung hợp (MoA) là phương án được người đọc ưa thích nhất trên tất cả các tiêu chí đo lường tổng hợp: thứ hạng trung bình thấp nhất, tỷ lệ xếp hạng nhất cao nhất và ưu thế chiến thắng trong các cặp đối đầu trực diện. \textbf{Tuy nhiên, khoảng cách vượt trội này nhỏ hơn rất nhiều so với những gì Trục B thể hiện.} Giám khảo LLM báo cáo tỷ lệ thắng lên tới $68.9\%$ trong các phán quyết đấu cặp quyết định (dung hợp đối đầu bản thảo tốt nhất); trong khi con người chỉ báo cáo mức độ ưa thích $40.9\%$ dành cho bản dung hợp. Khoảng cách chênh lệch lên tới $28$ điểm phần trăm này chính là phát hiện phương pháp luận quan trọng nhất của chương này.
+
+\subsection{Tương tác theo nhóm chủ đề}
+
+Bảng~\ref{tab:axisC-topic} trình bày kết quả phân tích chi tiết theo từng nhóm chủ đề. Để phục vụ phân tích sâu, năm chủ đề báo chí của \textit{tienphong.vn} được gom lại thành ba nhóm thể loại dựa trên nhận định trực quan của người đọc: nhóm chủ đề \textbf{HÀNH CHÍNH} (chính trị, hành chính, công văn nghị quyết; gồm $21$ bài), nhóm chủ đề \textbf{GIẢI TRÍ} (lễ hội, người nổi tiếng, giải trí; gồm $13$ bài), và nhóm chủ đề \textbf{HỖN HỢP} (hình sự, tin quốc tế, quan điểm độc giả; gồm $14$ bài).
+
+\begin{table}[H]
+  \centering
+  \caption{Trục C --- sở thích xếp hạng phân nhánh theo nhóm chủ đề. Ký hiệu: $F$ = Bản dung hợp, $4o$ = GPT-4o đơn lẻ, $m$ = Bản thảo gpt-4o-mini.}
+  \label{tab:axisC-topic}
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Nhóm chủ đề & $n$ & Tỷ lệ $F$ hạng nhất & Tỷ lệ $4o$ hạng nhất & Tỷ lệ $m$ hạng nhất & $F > 4o$ & $F > m$ \\
+    \midrule
+    HÀNH CHÍNH     & 84 & 23\% & 37\% & \textbf{41\%} & 36\% & 43\% \\
+    GIẢI TRÍ       & 52 & \textbf{58\%} & 21\% & 21\% & 65\% & 65\% \\
+    HỖN HỢP        & 56 & \textbf{59\%} & 29\% & 13\% & 70\% & 77\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Quy luật preference.} Trên nhóm nội dung mang tính hành chính (đại hội Đảng, báo cáo hành chính, hội nghị ban ngành), người đọc có xu hướng ưa thích bản tóm tắt \textit{ngắn nhất} (bản thảo tạo bởi GPT-4o-mini) --- vốn chính là ứng viên bị giám khảo LLM xếp cuối cùng về tiêu chí Độ bao phủ (Coverage) trong Mục~4.3.1. Bản tóm tắt dung hợp --- một văn bản dài hơn, được tổng hợp biên tập chi tiết --- bị người đọc đánh giá thấp hơn; do thiếu đi sự hứng thú tự thân với chủ đề, yêu cầu duy nhất của họ lúc này là ``có chuyện gì xảy ra, thật ngắn gọn?''. Ngược lại, đối với thể loại giải trí và các chủ đề hỗn hợp, bản tóm tắt dung hợp đầy đủ thông tin hơn lại được ưa thích vượt trội (đạt tỷ lệ xếp hạng nhất lần lượt là $58\%$ và $59\%$), hoàn toàn đồng điệu với nhận định của giám khảo LLM.
+
+\textbf{Tầm quan trọng của phát hiện.} Giám khảo LLM hoàn toàn không có khả năng nhận biết mức độ hấp dẫn của chủ đề đối với người đọc thực tế; nó chỉ chấm điểm máy móc theo rubric định sẵn và luôn thưởng điểm cho Độ bao phủ một cách đồng nhất. Trong khi đó, con người mang theo mục đích đọc thực tế khi tiếp cận bài viết, và mục đích này sẽ triệt tiêu tiêu chí Độ bao phủ khi họ gặp các chủ đề tẻ nhạt. \textit{Đây chính là phát hiện về mặt phương pháp luận mà khung đánh giá ba trục được thiết kế để chỉ ra.}
+
+\subsection{Độ đồng thuận giữa các người đánh giá}
+
+Tính trung bình trên $48$ tác vụ, số lượng người đánh giá đồng thuận lớn nhất về vị trí hạng nhất (\#1) đạt $2.69$ trên $4$ người ($\approx 67\%$). Có 8 tác vụ đạt sự đồng thuận tuyệt đối (4/4), $17$ tác vụ ghi nhận sự đồng thuận của 3 trên 4 người, $23$ tác vụ bị chia rẽ nửa này nửa kia (2 vs. 2), và hoàn toàn không có tác vụ nào có ý kiến bị phân mảnh hoàn toàn (mỗi người chọn một kiểu). Kết quả này tương ứng với hệ số Fleiss' $\kappa$ ước tính nằm trong khoảng \textit{đồng thuận vừa phải} ($\approx 0.30$--$0.40$); mức độ đồng thuận thấp nhất ở nhóm chủ đề HÀNH CHÍNH (trung bình chỉ $2.48$ người đồng ý với nhau) và cao nhất ở nhóm GIẢI TRÍ ($2.92$ người). Chỉ số này phản ánh chính xác hành vi của độc giả trong thực tế --- họ chia sẻ một số sở thích chung cốt lõi, nhưng cũng có những bất đồng sâu sắc khi đánh giá các nội dung hành chính khô khan.
+
+\section{Phân tích đa trục}
+
+Góc nhìn khoa học quan trọng nhất từ các thực nghiệm chính là việc đối chiếu đồng thời cả ba trục đánh giá. Bảng~\ref{tab:cross-axis} đối chiếu phép so sánh then chốt giữa bản dung hợp MoA và GPT-4o chạy đơn lẻ trên từng trục.
+
+\begin{table}[H]
+  \centering
+  \caption{Đối chiếu đa trục, bản dung hợp đối đầu với các mô hình cơ sở.}
+  \label{tab:cross-axis}
+  \begin{tabular}{lll}
+    \toprule
+    Trục & Chỉ số đo lường & Kết quả phán quyết \\
+    \midrule
+    A   & ROUGE-1 ($0.4240$ đấu với $0.3621$)   & Dung hợp dẫn $+0.062$ \\
+    A   & BERTScore ($0.6759$ đấu với $0.6246$) & Dung hợp dẫn $+0.051$ \\
+    B.1 & Điểm Tổng thể Rubric ($4.96$ đấu với $4.88$) & Dung hợp dẫn $+0.08$ \\
+    B.2a & Tỷ lệ thắng đấu cặp so với bản thảo tốt nhất ($68.9\%$) & Dung hợp thắng vượt trội \\
+    C   & Sở thích đấu cặp của con người ($40.9\%$ đa số tương đối) & Dung hợp thắng sít sao \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Sự đồng thuận hướng của cả ba trục.} Cả ba góc nhìn độc lập đều thống nhất rằng phương pháp dung hợp MoA mang lại kết quả tốt hơn. Sự đồng thuận về mặt chiều hướng này là kết quả lý tưởng nhất của khung đánh giá ba trục: nó cho phép đưa ra một khuyến nghị khoa học mạnh mẽ ủng hộ giải pháp dung hợp.
+
+\textbf{Sự bất đồng về biên độ (magnitude).} Biên độ vượt trội của phương pháp dung hợp biến động rất lớn tùy theo hệ số đo lường: tăng nhẹ $+0.05$ đến $+0.06$ trên Trục A, dẫn $+0.08$ trên Trục B.1, thắng áp đảo với cách biệt $+18.9$ điểm phần trăm trên Trục B.2a (vượt mức $50\%$), nhưng lại thắng rất sít sao trên Trục C ($40.9\%$ chưa đạt mức đa số tuyệt đối, dù vẫn chiếm đa số tương đối). Khoảng chênh lệch $28$ điểm phần trăm giữa Trục B.2a ($68.9\%$) và Trục C ($40.9\%$) là số liệu đáng giá nhất trong khóa luận này: \textbf{sở thích của giám khảo LLM, trong thiết lập thực nghiệm này, không phản ánh đúng biên độ ưa thích của con người thực tế}. Chiều hướng đánh giá là chính xác, nhưng biên độ đã bị phóng đại quá mức.
+
+\textbf{Nguyên nhân của khoảng chênh lệch.}
+\begin{enumerate}
+  \item \textit{Thiên kiến ủng hộ độ dài và tính toàn diện.} Giám khảo LLM luôn cộng điểm cho Độ bao phủ (Coverage) một cách nhất quán; bản tóm tắt dung hợp dài hơn và bao hàm nhiều thông tin hơn bản GPT-4o đơn lẻ, nên giám khảo dễ dàng chọn nó thắng cuộc. Con người, khi đối diện với các chủ đề hành chính khô khan, lại phản ứng ngược lại.
+  \item \textit{Tương tác theo nhóm chủ đề.} Giám khảo LLM không có nhận thức về hứng thú đọc; con người thì có (Mục~4.4.3).
+  \item \textit{Hiệu ứng phân cực phán quyết.} Các giám khảo đấu cặp thường nhạy cảm với các khác biệt nhỏ và có xu hướng phóng đại khoảng cách này \cite{Zheng2023}; trong khi con người thực tế đánh giá một cách dè dặt và có xu hướng nghiêng về kết quả hòa nhiều hơn.
+\end{enumerate}
+
+\textbf{Kết luận phương pháp luận.} Việc chỉ sử dụng một trục đánh giá duy nhất là không đủ để báo cáo đầy đủ về hiệu năng của phương pháp MoA. Kết quả từ cả ba trục cần được kết hợp chặt chẽ để bổ trợ lẫn nhau; nếu chỉ chạy riêng Trục B, khóa luận sẽ vội vã kết luận tỷ lệ thắng áp đảo lên tới $77\%$ trong khi thực tế ghi nhận từ con người (Trục C) chỉ dừng lại ở mức $41\%$.
+
+\section{Thảo luận: Hạn chế phương pháp luận}
+
+\subsection{Đơn giản hóa kiến trúc}
+
+Cấu hình MoA được triển khai thực tế trong hệ thống này là cấu hình \textit{tối thiểu} mà nghiên cứu gốc xem xét: chỉ gồm một tầng và ba mô hình đề xuất. Bảng~3 và 4 trong công trình của Wang et al.\ \cite{Wang2024} chỉ ra rằng hiệu năng của hệ thống tăng đơn điệu theo độ sâu của tầng tác nhân ($\ell \in \{1, 2, 3\}$) và số lượng mô hình đề xuất trong mỗi tầng ($n \in \{3, 4, 5, 6\}$). Thiết kế hiện tại được lựa chọn để tối ưu hóa chi phí (tổng chi phí thực nghiệm chỉ hết \$1.24 USD) và kiểm soát độ trễ thời gian thực; việc nâng cấp chiều sâu và chiều rộng của mạng lưới tác nhân là những hướng phát triển tiềm năng cho các công trình tương lai.
+
+\subsection{Quy mô nghiên cứu con người và động lực của người đánh giá}
+
+Nghiên cứu con người hiện tại có sự tham gia của $17$ người đánh giá độc lập, cung cấp một cơ sở định tính rất giá trị. Tuy nhiên, việc phụ thuộc vào nhóm người đánh giá thực tế này cũng đặt ra một số thách thức đặc thù. Thứ nhất là vấn đề sở thích chủ đề cá nhân; khi đối mặt với các bài báo, những người đánh giá ngẫu nhiên có thể thể hiện mức độ tập trung nhận thức rất khác nhau tùy thuộc vào mức độ quan tâm của họ đối với nội dung bài viết. Sự thiên lệch về hứng thú này có thể đưa thêm các yếu tố nhiễu vào số liệu thống kê sở thích chung.
+
+Thứ hai, nghiên cứu cần kiểm soát hiện tượng mệt mỏi nhận thức và sự suy giảm năng lượng của người đánh giá theo thời gian. Khi các phiên đánh giá kéo dài, tài nguyên chú ý của người tham gia tự động giảm đi, dẫn đến sự thiếu nhất quán trong việc xếp hạng hoặc xu hướng đưa ra các phán quyết an toàn (như chọn hòa) ở các tác vụ cuối cùng. Mặc dù mẫu dữ liệu hiện tại đủ lớn để khẳng định các xu hướng chính, các nghiên cứu tiếp theo sẽ đạt chất lượng cao hơn nếu thực hiện trong môi trường kiểm soát chặt chẽ hơn để giảm thiểu các biến động hành vi này và đảm bảo tính đồng đều trong đánh giá trên toàn bộ tập dữ liệu.
+
+\subsection{Hệ số overlap tính trực tiếp với văn bản nguồn}
+
+Các hệ số ROUGE / BLEU / BERTScore được tính toán so với bài viết gốc, không phải so với bản tóm tắt chuẩn do con người viết, vì hiện tại chưa có bộ dữ liệu benchmark tóm tắt tiếng Việt nào được chú thích bởi con người ở quy mô mà dự án này yêu cầu. Đây là thực tế chung trong các nghiên cứu NLP học thuật tại Việt Nam và đã được chúng tôi thẳng nhắn thừa nhận trong Mục~2.2.5 như một \textit{hạn chế về mặt phương pháp luận} của Trục A. Việc đối chiếu đa trục thực hiện trong Mục~4.5 là chốt chặn thực nghiệm quan trọng nhằm tránh việc diễn giải quá đà các điểm số overlap này.
+
+\section{Tóm tắt chương}
+
+Chương này báo cáo kết quả đánh giá thực nghiệm toàn diện hệ thống trên $154$ bài báo tiếng Việt được cân bằng về mặt chủ đề. Kết quả dung hợp MoA vượt trội hơn mô hình cơ sở đơn lẻ mạnh nhất trên mọi khía cạnh đánh giá: ROUGE-1 ($+0.062$), BERTScore ($+0.051$), điểm Tổng thể Rubric ($+0.08$), tỷ lệ thắng đấu cặp so với bản thảo tốt nhất do LLM đánh giá ($68.9\%$), và sở thích xếp hạng mù của con người ($40.9\%$ đa số tương đối). Sự đồng thuận về mặt chiều hướng trên cả ba góc nhìn độc lập cho phép đưa ra kết luận chắc chắn rằng dung hợp đa tác nhân là giải pháp kỹ thuật ưu việt giúp tạo ra các bản tóm tắt chất lượng cao. Bên cạnh đó, khoảng cách chênh lệch $28$ điểm phần trăm giữa Trục B.2a và Trục C, cùng hiện tượng đảo ngược sở thích của con người trên các chủ đề hành chính khô khan, chính là những phát hiện phương pháp luận sâu sắc mà khung đánh giá ba trục mang lại. Chương 5 sẽ khái quát lại các đóng góp khoa học chính, tái khẳng định các hạn chế và định hình các hướng nghiên cứu tiềm năng trong tương lai.

@@ -1,0 +1,189 @@
+\chapter{Tổng quan}
+
+Chương này giới thiệu hai bài toán mà khóa luận giải quyết ---
+tóm tắt tin tức tự động và kiểm chứng tin tức tự động --- kỹ thuật
+Mixture-of-Agents (MoA) hỗ trợ đóng góp kỹ thuật, và khảo sát
+các công trình liên quan trong nghiên cứu tiếng Việt cũng như quốc
+tế. Chương kết thúc bằng phát biểu về khoảng trống mà khóa luận
+lấp đầy.
+
+\section{Bài toán tóm tắt văn bản tự động}
+
+\textbf{Định nghĩa.}
+Tóm tắt văn bản tự động là bài toán tạo ra một phiên bản ngắn hơn
+của văn bản nguồn mà vẫn bảo toàn thông tin thiết yếu. Cho một tài
+liệu đầu vào $D$, bộ tóm tắt $f$ tạo ra bản tóm tắt $S = f(D)$
+sao cho $|S| \ll |D|$ và $S$ giữ lại các dữ kiện then chốt của $D$.
+
+\textbf{Phân loại.}
+Các hệ thống tóm tắt thường được phân loại theo hai trục.
+
+\begin{itemize}
+  \item \textit{Trích xuất so với trừu tượng hóa.}
+        Hệ thống trích xuất chọn lựa các câu (hoặc đoạn câu) hiện có
+        từ văn bản gốc. Hệ thống trừu tượng hóa tạo ra văn bản mới
+        và có thể diễn giải lại, sắp xếp lại thứ tự hoặc kết hợp
+        các ý tưởng. Các bộ tóm tắt dựa trên LLM hiện đại chủ yếu
+        là kiểu trừu tượng hóa.
+  \item \textit{Đơn tài liệu so với đa tài liệu.}
+        Hệ thống đơn tài liệu tóm tắt một bài báo riêng lẻ; hệ thống
+        đa tài liệu tổng hợp thông tin từ nhiều bài báo liên quan. Hệ
+        thống trong khóa luận này là đơn tài liệu, nhưng pipeline MoA
+        có thể được hiểu như một bộ tổng hợp đa nguồn suy biến, trong
+        đó ``nhiều nguồn'' chính là các bản thảo LLM khác nhau của cùng
+        một bài báo.
+\end{itemize}
+
+\textbf{Thách thức đặc thù của tiếng Việt.}
+Tiếng Việt đặt ra ba thách thức cho bài toán tóm tắt.
+\begin{enumerate}
+  \item \textit{Phân đoạn từ (Word segmentation).} Tiếng Việt được viết
+        với khoảng trắng giữa các âm tiết, không phải giữa các từ; một từ
+        khái niệm có thể kéo dài hai đến ba âm tiết
+        (\textit{tóm tắt}, \textit{kiểm chứng}). Các hệ số overlap từ vựng
+        được tính trên đơn vị token khoảng trắng sẽ hệ thống hóa việc
+        không ghi nhận công cho các cách diễn đạt lại tái cấu trúc thuật
+        ngữ đa âm tiết.
+  \item \textit{Dấu phụ và thanh điệu.} Tiếng Việt có sáu thanh từ vựng,
+        được mã hóa dưới dạng dấu phụ trên nguyên âm; kho từ vựng của bộ
+        mã hóa phân mảnh các ký tự có dấu sẽ mất đi độ chi tiết ngữ nghĩa.
+  \item \textit{Khan hiếm corpus đánh giá.} So với tiếng Anh
+        (CNN/DailyMail, XSum, MultiNews), tiếng Việt không có bộ đánh giá
+        tóm tắt được chú thích bởi con người được chấp nhận rộng rãi với
+        các bản tóm tắt tham chiếu. Đây là lý do thực tế khiến ROUGE/BLEU/
+        BERTScore trong nghiên cứu tiếng Việt thường được tính
+        \textit{so với bài báo gốc}, không phải so với bản tóm tắt tham
+        chiếu của con người --- một lưu ý phương pháp luận sẽ được đề cập
+        lại ở Chương~4.
+\end{enumerate}
+
+\section{Bài toán kiểm chứng tin tức}
+
+\textbf{Tin sai lệch trong báo chí tiếng Việt.}
+Người đọc Việt Nam thường xuyên gặp phải các tiêu đề giật gân, trích
+dẫn phiến diện và thông tin sai lệch lan truyền trên mạng xã hội và
+các tổng hợp tin tức. Kiểm chứng thủ công không đủ khả năng đáp ứng
+quy mô thông tin hiện tại; một công cụ tự động bổ sung, có khả năng
+gắn cờ các tuyên bố không có căn cứ, ngày càng trở nên có giá trị.
+
+\textbf{Pipeline tiêu chuẩn.}
+Tài liệu học thuật hội tụ về một pipeline kiểm chứng tự động ba bước.
+\begin{enumerate}
+  \item \textit{Phát hiện tuyên bố (Claim detection).} Trích xuất các
+        tuyên bố nguyên tử đáng kiểm chứng từ tài liệu.
+  \item \textit{Truy xuất bằng chứng (Evidence retrieval).} Với mỗi
+        tuyên bố, truy xuất các đoạn văn từ kho ngữ liệu (hoặc web mở)
+        có thể hỗ trợ hoặc bác bỏ tuyên bố đó.
+  \item \textit{Phán quyết (Verdict prediction).} Phân loại mỗi tuyên
+        bố là \textit{được xác nhận (entailed)},
+        \textit{bị bác bỏ (contradicted)} hoặc \textit{không đề cập
+        (not mentioned)} dựa trên bằng chứng, và tổng hợp các phán quyết
+        cấp tuyên bố thành điểm tin cậy cấp tài liệu.
+\end{enumerate}
+
+\textbf{Xác minh tăng cường tìm kiếm.}
+Tìm kiếm web mở đã trở thành nguồn bằng chứng trung thực nhất cho
+kiểm chứng, vì không có cơ sở tri thức nào có thể theo kịp tin tức
+tức thì. Xác minh tăng cường tìm kiếm kết hợp một API tìm kiếm web
+với một LLM đọc các đoạn trích xuất được và đưa ra phán quyết; đây
+là thiết kế được áp dụng trong Chương~3 (Tavily $\rightarrow$ GPT-4o-mini).
+
+\section{Phương pháp Mixture-of-Agents (MoA)}
+
+\textbf{Nguồn gốc.}
+Wang et al.\ đề xuất Mixture-of-Agents vào năm 2024 \cite{Wang2024}.
+Quan sát thực nghiệm trung tâm là một LLM đóng vai trò \textit{tác
+nhân tổng hợp} cho ra câu trả lời tốt hơn khi được cung cấp nhiều
+câu trả lời ứng viên từ các LLM khác --- kể cả khi các LLM kia riêng
+lẻ yếu hơn chính tác nhân tổng hợp. Các tác giả gọi đây là
+\textit{khả năng hợp tác của các LLM}.
+
+\textbf{Kiến trúc.}
+MoA là một cấu trúc phân tầng. Tầng $\ell$ gồm $n$ tác nhân
+$\{A_{\ell,1}, \ldots, A_{\ell,n}\}$; mỗi tác nhân ở tầng $\ell+1$
+nhận lời nhắc cùng với đầu ra của tất cả các tác nhân ở tầng $\ell$.
+Về mặt hình thức, tác nhân $i$ ở tầng $\ell+1$ tạo ra
+
+\[
+y_{\ell+1,i} \;=\; A_{\ell+1,i}\!\left(\,[y_{\ell,1}, y_{\ell,2},
+\ldots, y_{\ell,n}]\,+\,x\right),
+\]
+
+\noindent trong đó $x$ là lời nhắc của người dùng và $+$ biểu thị
+phép nối chuỗi. Trong phiên bản hai tầng (được sử dụng trong khóa
+luận này), tầng~1 là tầng \textit{tác nhân đề xuất} và tầng~2 là một
+\textit{tác nhân tổng hợp} duy nhất.
+
+\textbf{Kết quả đã công bố.}
+Trên bộ đánh giá AlpacaEval~2.0, một cấu hình MoA với sáu tác nhân
+đề xuất mã nguồn mở và một tác nhân tổng hợp đạt tỷ lệ thắng LC là
+$65,1\%$, vượt qua GPT-4o ($57,5\%$) theo cùng giao thức đánh giá.
+Hiệu suất tăng đơn điệu theo số lượng tầng và số lượng tác nhân đề
+xuất mỗi tầng (Bảng~3--4 của \cite{Wang2024}).
+
+\textbf{Câu hỏi mở cho khóa luận.}
+Bài báo MoA đánh giá trên các bộ đánh giá tuân thủ hướng dẫn
+(AlpacaEval, MT-Bench, FLASK) trong đó LLM-giám khảo --- không phải
+độ overlap với bất kỳ văn bản nguồn nào --- là tiêu chuẩn đánh giá.
+Liệu MoA có chuyển giao sang \textit{tóm tắt có neo ngữ cảnh gốc}
+(nơi tồn tại một bài báo nguồn và có thể đo được độ overlap), và liệu
+lợi ích có xuất hiện trong tiếng Việt hay không, chính là câu hỏi
+thực nghiệm mà khóa luận này trả lời.
+
+\section{Các công trình liên quan}
+
+\textbf{Hệ thống tóm tắt tiếng Việt.}
+\textit{Google News Việt Nam} và \textit{Báo Mới} cung cấp tin tức
+tổng hợp với các đoạn mô tả ngắn, nhưng các đoạn đó là trích dẫn trực
+tiếp từ đoạn dẫn đầu bài, không phải bản tóm tắt biên tập trừu tượng.
+Nghiên cứu học thuật về tóm tắt tiếng Việt đã sử dụng ViT5
+\cite{Nguyen2022} cho việc tạo văn bản trừu tượng hóa, được đánh giá
+gần như độc quyền bằng ROUGE so với bản tóm tắt tham chiếu (khi có)
+hoặc so với bài báo gốc (phổ biến hơn).
+
+\textbf{Công cụ kiểm chứng thông tin.}
+\textit{ClaimBuster} (UT Arlington) phát hiện các tuyên bố đáng kiểm
+chứng trong bài phát biểu chính trị tiếng Anh; \textit{Google Fact
+Check Tools} API tổng hợp các phán quyết từ các tổ chức kiểm chứng
+thông tin hiện có. Cả hai đều không nhắm vào tiếng Việt, và cả hai
+đều không hoạt động ở cấp bài báo cho người đọc thông thường.
+
+\textbf{Tiện ích mở rộng trình duyệt hỗ trợ đọc.}
+Các tiện ích \textit{TLDR This}, \textit{Summari} và
+\textit{Reader Mode} nhúng bản tóm tắt trong trang trên các trang web
+tùy ý nhưng ưu tiên tiếng Anh; bộ tóm tắt của chúng hoạt động kém
+với tiếng Việt, và chúng không cung cấp tính năng kiểm chứng thông
+tin. \textit{NewsGuard} và \textit{Bias Buddy} đánh giá độ tin cậy
+của \textit{nhà xuất bản}, không phải bài báo riêng lẻ, và dựa trên
+đánh giá thủ công thay vì xác minh từng bài báo.
+
+\textbf{Đánh giá bằng LLM-giám khảo.}
+Zheng et al.\ \cite{Zheng2023} giới thiệu MT-Bench và phương pháp
+Chatbot Arena, chứng minh rằng một LLM mạnh (GPT-4) đồng ý với sở
+thích của con người đối với đầu ra chatbot ở mức $\sim$80\% (xấp xỉ
+mức mà hai người đánh giá đồng ý với nhau). FLASK \cite{Ye2023} mở
+rộng phương pháp này sang đánh giá rubric chi tiết theo nhiều kỹ năng
+phù hợp. AlpacaEval \cite{Dubois2024} bổ sung ngẫu nhiên hóa vị trí
+và kiểm soát độ dài để giảm thiểu hai thiên kiến đã biết của LLM-giám
+khảo. Module đánh giá Trục~B của khóa luận này được xây dựng trên các
+phương pháp này.
+
+\textbf{Khoảng trống.}
+Theo hiểu biết của tôi, chưa có công trình nào trước đây (i)~áp dụng
+Mixture-of-Agents cho tiếng Việt, (ii)~kết hợp phân phối sản phẩm dựa
+trên tiện ích mở rộng với kiểm chứng thông tin và tóm tắt trên tin tức
+tiếng Việt, hoặc (iii)~tường minh đối chiếu đánh giá overlap, LLM-giám
+khảo và đánh giá con người trong một khung \textit{ba trục} duy nhất
+cho bài toán tóm tắt tiếng Việt. Khóa luận này lấp đầy cả ba khoảng
+trống đó.
+
+\section{Tổng kết chương}
+
+Chương này đã đặt ra bài toán tóm tắt và kiểm chứng tin tức tiếng Việt
+như hai nhu cầu song song mà khóa luận giải quyết, giới thiệu
+Mixture-of-Agents như kỹ thuật mà khóa luận thích ứng, khảo sát các
+công trình liên quan trong nghiên cứu tiếng Việt và quốc tế, và xác
+định khoảng trống: chưa có hệ thống tiếng Việt nào kết hợp dung hợp
+MoA, phân phối qua tiện ích mở rộng trình duyệt, và khung đánh giá ba
+trục về mặt phương pháp luận. Chương~2 phát triển nền tảng lý thuyết
+mà hệ thống trong Chương~3 được xây dựng dựa trên đó.

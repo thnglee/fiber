@@ -3,8 +3,8 @@
 This chapter reports the empirical evaluation of the system described in
 Chapter~3. Section~4.1 documents the experimental setup; Sections~4.2--4.4
 report results along the three axes; Section~4.5 cross-references them;
-Section~4.6 discusses methodological limitations; Section~4.7 provides
-deployment recommendations; and Section~4.8 summarizes the findings.
+Section~4.6 discusses methodological limitations; and Section~4.7
+summarizes the findings.
 
 \section{Experimental Setup}
 
@@ -409,8 +409,8 @@ direction is correct, but the magnitude is over-estimated.
 \end{enumerate}
 
 \textbf{Methodological conclusion.} A single axis is not enough to
-report MoA results. The thesis's recommendation in Section~4.7 is
-explicitly conditioned on the Axis~C result, not the Axis~B result;
+report MoA results. The findings across all three axes are
+explicitly used to validate the system's performance;
 running only Axis~B would lead a publication to claim a $77\%$ win
 rate that, on Axis~C, is actually $41\%$.
 
@@ -459,26 +459,6 @@ academic NLP and was acknowledged in Section~2.2.5 as the
 in Section~4.5 is the empirical safeguard against over-interpreting
 overlap.
 
-\section{Recommendations}
-
-For the production browser extension, \textbf{the recommended default
-is the best individual proposer draft} (GPT-4o-mini for medium-length
-articles), not the fused output. The reasoning, derived directly from
-the three axes:
-
-\begin{itemize}
-  \item Fusion is preferred by an LLM judge ($77\%$ vs.\ GPT-4o-alone,
-        $69$--$98\%$ vs.\ each proposer);
-  \item Fusion is preferred by humans by a small but real margin
-        ($53.6\%$ vs.\ GPT-4o-alone overall), but it is \textit{less
-        preferred} than the cheapest draft on bureaucratic content
-        ($23\%$ \#1 share on BORING);
-  \item Fusion is roughly four times more expensive than the cheapest
-        draft (three proposer calls $+$ one aggregator call) and has
-        higher latency (parallel proposer calls $+$ aggregator
-        round-trip).
-\end{itemize}
-
 \section{Summary}
 
 This chapter reported the empirical evaluation of the system on $154$
@@ -486,10 +466,11 @@ topic-balanced Vietnamese news articles. The fused MoA output beats
 the strongest single-model baseline on every
 axis: ROUGE-1 ($+0.062$), BERTScore ($+0.051$), rubric Overall
 ($+0.08$), pairwise LLM-judge vs best draft ($68.9\%$), and pairwise
-human preference ($40.9\%$ plurality). The agreement on direction is the
-result that licenses the recommendation in Section~4.7; the
+human preference ($40.9\%$ plurality). The agreement on direction across three 
+structurally-different lenses licenses a confident conclusion that fusion is 
+the technically superior approach for high-quality summarization. The 
 $28$-percentage-point gap between Axis B.2a and Axis~C, together
 with the topic-conditional reversal on bureaucratic content, is the
 methodological finding the three-axis framework was designed to
-surface. The next chapter summarises the contributions, restates the
+surface. Chapter 5 summarizes the contributions, restates the
 limitations, and lays out future work.

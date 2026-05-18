@@ -2,7 +2,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage{vntex}
-\usepackage[english]{babel}
+\usepackage[vietnamese]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -17,7 +17,7 @@
 \usepackage{setspace}
 \usepackage[font=normalsize]{caption}
 \usepackage[unicode]{hyperref}
-\usepackage[left=3cm,right=2cm,top=2.5cm,bottom=3cm]{geometry}
+\usepackage[left=3.5cm,right=2cm,top=2.5cm,bottom=2.5cm]{geometry}
 \usepackage{titlesec}
 \usepackage{sectsty}
 \usepackage{tocloft,calc}
@@ -65,54 +65,59 @@
 \titlespacing*{\chapter}{0cm}{-\topskip}{20pt}[0pt]
 
 \renewcommand{\baselinestretch}{1.3}
-\renewcommand{\cftchappresnum}{Chapter }
+\renewcommand{\cftchappresnum}{Chương }
 \renewcommand{\cftchapaftersnum}{: }
-\AtBeginDocument{\addtolength\cftchapnumwidth{\widthof{\bfseries Chapter \ }}}
+\AtBeginDocument{\addtolength\cftchapnumwidth{\widthof{\bfseries Chương \ }}}
 \setlength{\cftchapnumwidth}{2.8em}
 \setlength{\cftsecnumwidth}{2.8em}
 \setlength{\cftsubsecindent}{4.3em}
 \setlength{\cftsubsecnumwidth}{3.8em}
 \setlength{\parskip}{0.4em}
-\setlength{\parindent}{0pt}
+\setlength{\parindent}{1.0cm}
 
 \newcommand{\argmax}{\arg\!\max}
 
 \usepackage[
   backend=biber,
-  sorting=ynt
+  style=numeric,
+  sorting=nty
 ]{biblatex}
 \addbibresource{references.bib}
 
 \graphicspath{ {figures/} }
 
-\renewcommand{\listfigurename}{List of plots}
-\renewcommand{\listtablename}{Tables}
+%% Việt hóa các nhãn tự động
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\chaptername}{Chương}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \input{cover}\newpage\cleardoublepage
 
 \pagenumbering{roman}
-% Abstract
+% Tóm tắt tiếng Việt
+\input{chapters/abstract_vi}\newpage\cleardoublepage
+% Abstract tiếng Anh
 \input{chapters/abstract_en}\newpage\cleardoublepage
-% Declaration
+% Lời cam đoan
 \input{chapters/assurance}\newpage\cleardoublepage
-% Acknowledgement
+% Lời cảm ơn
 \input{chapters/acknowledgement}\newpage\cleardoublepage
 
 
-\addcontentsline{toc}{chapter}{TABLE OF CONTENTS}
-\renewcommand{\contentsname}{\centering \fontsize{22}{0}\selectfont \bfseries TABLE OF CONTENTS}
+\addcontentsline{toc}{chapter}{MỤC LỤC}
+\renewcommand{\contentsname}{\centering \fontsize{22}{0}\selectfont \bfseries MỤC LỤC}
 \tableofcontents\newpage\cleardoublepage
 
 \newpage
-\addcontentsline{toc}{chapter}{LIST OF FIGURES}
-\renewcommand{\listfigurename}{\centering \fontsize{22}{0}\selectfont \bfseries LIST OF FIGURES}
+\addcontentsline{toc}{chapter}{DANH MỤC HÌNH VẼ}
+\renewcommand{\listfigurename}{\centering \fontsize{22}{0}\selectfont \bfseries DANH MỤC HÌNH VẼ}
 \listoffigures\cleardoublepage
 
 \newpage
-\addcontentsline{toc}{chapter}{LIST OF TABLES}
-\renewcommand{\listtablename}{\centering \fontsize{22}{0}\selectfont \bfseries LIST OF TABLES}
+\addcontentsline{toc}{chapter}{DANH MỤC BẢNG BIỂU}
+\renewcommand{\listtablename}{\centering \fontsize{22}{0}\selectfont \bfseries DANH MỤC BẢNG BIỂU}
 \listoftables
 
 \newpage
@@ -127,8 +132,8 @@
 \input{chapters/c4/c4_chapter}\newpage\cleardoublepage
 \input{chapters/conclusion}\newpage\cleardoublepage
 
-\printbibliography[title={REFERENCES}]
-\addcontentsline{toc}{chapter}{REFERENCES}
+\printbibliography[title={TÀI LIỆU THAM KHẢO}]
+\addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
 
 \newpage
 \input{chapters/appendix}\newpage\cleardoublepage

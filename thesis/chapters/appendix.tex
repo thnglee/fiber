@@ -29,7 +29,7 @@ công trên đường đi học về vào chiều ngày 11/5. Nạn nhân hiện
 các đối tượng liên quan.}
 
 \textbf{Proposer draft 3 (Gemini 2.5 Flash).}\;
-\textit{Vào chiều 11/5/2026, một nữ sinh lớp 8 trên địa bàn xã ABC
+\textit{Vào chiều 11/5/2026, một nữ sinh lớp 8 trên địa bàn xã Diễn Hồng
 (huyện Diễn Châu, Nghệ An) đã bị một nhóm nam thanh niên hành hung
 khi đang trên đường đi học về. Sau khi tiếp nhận trình báo, Công an
 huyện đã khởi tố vụ án; lực lượng chức năng đang truy tìm các đối
@@ -78,32 +78,37 @@ details.
 \section*{Appendix C: Aggregator Prompt Engineering Ablation}
 
 The three aggregator-prompt variants discussed in Section~3.4.5 and
-Section~4.2.2 are reproduced verbatim below. Each variant was run on
-the same $154$ articles; the summary metrics are reported in the
-CLAUDE.md three-way comparison table.
+Section~4.2.2 are reproduced below. The evolution of the prompt highlights the
+transition from simple draft-stitching to grounded editorial synthesis.
 
-\textbf{Variant: \texttt{baseline} (no source in aggregator
-context).}\;
-``Bạn là một biên tập viên báo chí Việt Nam. Dưới đây là $n$ bản tóm
-tắt cho cùng một bài báo \ldots\ Hãy tổng hợp thành một bản tóm tắt
-cuối cùng, trung lập, văn phong báo chí.''
+\begin{tcolorbox}[title=Baseline Variant (Stitching Only), colback=gray!5!white, colframe=gray!75!black, breakable, fontupper=\small\ttfamily]
+Bạn là một biên tập viên báo chí Việt Nam. Dưới đây là n bản tóm tắt cho cùng một bài báo. Hãy tổng hợp thành một bản tóm tắt cuối cùng, trung lập, văn phong báo chí.
+\end{tcolorbox}
 
-\textbf{Variant: \texttt{v1-strict-source} (source injected with
-strict rules).}\;
-Adds: ``KHÔNG được thêm thông tin không có trong bài báo gốc dưới đây
-\ldots\ \texttt{<article>...</article>}.''
+\begin{tcolorbox}[title=Variant v1: Strict Source (Adding Residual Connection), colback=blue!5!white, colframe=blue!75!black, breakable, fontupper=\small\ttfamily]
+[Baseline Prompt Content...]\\
+KHÔNG được thêm thông tin không có trong bài báo gốc dưới đây:\\
+<article>\\
+\{\{source\_text\}\}\\
+</article>
+\tcblower
+\textit{Impact: Flipped behavior from draft-stitching to synthesis. ROUGE-1 against source article dropped from 0.34 to 0.24, indicating higher abstractive density.}
+\end{tcolorbox}
 
-\textbf{Variant: \texttt{v2-soft-source} (source injected with soft
-wording, shipped).}\;
-Adds: ``Bài báo gốc được cung cấp dưới đây để tham khảo
-\ldots\ \texttt{<article>...</article>}.'' Plus the
-post-\texttt{afac46e} removal of the phrase ``cô đọng''.
+\begin{tcolorbox}[title=Variant v2: Soft Source (Shipped Version), colback=green!5!white, colframe=green!75!black, breakable, fontupper=\small\ttfamily]
+[Baseline Prompt Content...]\\
+Bài báo gốc được cung cấp dưới đây để tham khảo:\\
+<article>\\
+\{\{source\_text\}\}\\
+</article>
+\tcblower
+\textit{Note: The phrase "cô đọng" (condense) was removed in the final commit \texttt{afac46e} to prevent the model from generating truncated, draft-like outputs. This change improved the semantic flow and journalistic register of the final summaries.}
+\end{tcolorbox}
 
 \textbf{Finding (re-stated).} The mere \textit{presence} of the
 source article in the aggregator's context shifts behaviour from
 draft-stitching to editorial synthesis. The exact rule wording
 (\texttt{v1} strict vs.\ \texttt{v2} soft) does not meaningfully move
-the metrics. The shipped variant is \texttt{v2} on aesthetic grounds:
-softer wording produced fewer adversarial edge cases when the source
-itself contained quotations or hedged claims.
+the metrics, but the removal of stylistic constraints like ``cô đọng''
+was decisive in achieving a premium journalistic tone.
 

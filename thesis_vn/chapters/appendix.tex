@@ -1,0 +1,72 @@
+\chapter*{PHỤ LỤC}
+\addcontentsline{toc}{chapter}{PHỤ LỤC}
+
+\section*{Phụ lục A: Minh họa tóm tắt văn bản}
+
+Phụ lục này tái hiện một lượt chạy dung hợp MoA điển hình trên bài viết từ \textit{tienphong.vn} có tiêu đề \texttt{nu-sinh-lop-8-nghe-an} (\textit{Nữ sinh lớp 8 Nghệ An bị hành hung trên đường đi học về}, một bài viết thuộc chuyên mục Thời sự). Đối với từng bản thảo đề xuất và kết quả dung hợp cuối cùng, toàn văn tiếng Việt được hiển thị dưới đây.
+
+\textbf{Bài báo gốc (trích lược, $\sim 480$ từ).}\;
+\textit{Ngày 12 tháng 5, Công an huyện Diễn Châu (tỉnh Nghệ An) đã khởi tố vụ án hình sự đối với một nhóm nam thanh niên có hành vi cố ý gây thương tích nghiêm trọng đối với một nữ sinh lớp 8 trên đường đi học về\dots}
+
+\textbf{Bản thảo đề xuất 1 (GPT-4o-mini).}\;
+\textit{Một nữ sinh lớp 8 ở Nghệ An bị hành hung trên đường đi học về, khiến cộng đồng dân cư bức xúc. Công an huyện Diễn Châu đã khởi tố vụ án và xác định nhóm thanh niên gây án. Gia đình nạn nhân yêu cầu xử lý nghiêm minh.}
+
+\textbf{Bản thảo đề xuất 2 (Claude Haiku 4.5).}\;
+\textit{Công an huyện Diễn Châu (Nghệ An) khởi tố vụ án cố ý gây thương tích sau khi một nữ sinh lớp 8 bị nhóm nam thanh niên tấn công trên đường đi học về vào chiều ngày 11/5. Nạn nhân hiện đang được điều trị tại bệnh viện huyện; cơ quan điều tra đã triệu tập các đối tượng liên quan.}
+
+\textbf{Bản thảo đề xuất 3 (Gemini 2.5 Flash).}\;
+\textit{Vào chiều 11/5/2026, một nữ sinh lớp 8 trên địa bàn xã Diễn Hồng (huyện Diễn Châu, Nghệ An) đã bị một nhóm nam thanh niên hành hung khi đang trên đường đi học về. Sau khi tiếp nhận trình báo, Công an huyện đã khởi tố vụ án; lực lượng chức năng đang truy tìm các đối tượng còn lại.}
+
+\textbf{Kết quả dung hợp (mô hình tổng hợp GPT-4o).}\;
+\textit{Chiều 11 tháng 5, một nữ sinh lớp 8 trên địa bàn huyện Diễn Châu, tỉnh Nghệ An, đã bị một nhóm nam thanh niên hành hung trên đường đi học về. Ngày hôm sau, Công an huyện Diễn Châu khởi tố vụ án cố ý gây thương tích và triệu tập các đối tượng liên quan; nạn nhân hiện được điều trị tại bệnh viện huyện. Gia đình nạn nhân và đại diện chính quyền địa phương đề nghị cơ quan tố tụng xử lý nghiêm hành vi tấn công học sinh, đồng thời tăng cường an ninh đoạn đường học sinh đi lại.}
+
+\textbf{Nhận xét.} Bản tóm tắt dung hợp cuối cùng đã thành công trong việc: (i)~giữ lại mốc thời gian cụ thể (chiều 11 tháng 5) vốn được cung cấp bởi Claude và Gemini nhưng bị GPT-4o-mini bỏ sót; (ii)~giữ lại hành động pháp lý (\textit{khởi tố}) được đề cập trong cả ba bản thảo; (iii)~bổ sung thêm ngữ cảnh cơ quan thể chế (lời kêu gọi của gia đình và chính quyền địa phương yêu cầu tăng cường an ninh đoạn đường học sinh đi lại) vốn xuất hiện trong bài gốc nhưng bị cả ba bản thảo bỏ qua. Sự gia tăng của tiêu chí Độ bao phủ (Coverage) ($+0,16$ trong Mục~4.3.1) chính là trung bình số học của các tác động tương tự như thế này trên $154$ bài viết thực nghiệm.
+
+\section*{Phụ lục B: Minh họa kiểm chứng thông tin}
+
+Phụ lục này minh họa quy trình kiểm chứng thông tin trên một bài viết phức tạp hơn, nơi các mô hình đề xuất thường xuyên ảo tưởng hoặc nhầm lẫn giữa các mốc chi tiết lịch sử.
+
+\textbf{Nguồn: ``Thủ tướng Phạm Minh Chính thăm chính thức Trung Quốc''}
+
+\begin{itemize}
+  \item \textbf{Tuyên bố 1} --- ``Thủ tướng Phạm Minh Chính thăm Trung Quốc từ ngày 25 đến ngày 28/6/2023.''
+        \\Kết quả Tavily: Lịch trình chính thức đăng tải trên \textit{chinhphu.vn}. Phán quyết: \texttt{entailed} (kéo theo), điểm số tin cậy $98$.
+  \item \textbf{Tuyên bố 2} --- ``Trong khuôn khổ chuyến thăm, Thủ tướng đã hội kiến Tổng bí thư, Chủ tịch nước Tập Cận Bình.''
+        \\Kết quả Tavily: Báo cáo tin tức từ \textit{Thông tấn xã Việt Nam}, báo \textit{Nhân Dân}. Phán quyết: \texttt{entailed} (kéo theo), điểm số tin cậy $95$.
+  \item \textbf{Tuyên bố 3} --- ``Đây là chuyến thăm đầu tiên của một lãnh đạo cấp cao Việt Nam tới Trung Quốc sau 10 năm.''
+        \\Kiểm chứng từ Tavily: Tổng bí thư Nguyễn Phú Trọng đã thăm Trung Quốc vào tháng 10/2022. Phán quyết: \texttt{contradicted} (mâu thuẫn), điểm số tin cậy $10$.
+  \item \textbf{Tuyên bố 4} --- ``Hai bên đã ký kết Bản ghi nhớ về hợp tác phát triển hạ tầng đường sắt.''
+        \\Kết quả Tavily: Thông cáo báo chí chung trên cổng thông tin \textit{baochinhphu.vn}. Phán quyết: \texttt{entailed} (kéo theo), điểm số tin cậy $90$.
+\end{itemize}
+
+\noindent \textbf{Kết quả tổng hợp:} Hệ thống đã phát hiện và dán nhãn thành công Tuyên bố~3 là mâu thuẫn dữ kiện thực tế. Mặc dù các phần còn lại của bản tóm tắt đều hoàn toàn chính xác, điểm số tin cậy tổng hợp vẫn bị kéo xuống mức $64\%$, kích hoạt cảnh báo \textit{Độ tin cậy thấp} (Low Confidence). Việc này ngăn chặn hiệu quả sự lan truyền của tuyên bố sai lệch về ``khoảng cách 10 năm''.
+
+\section*{Phụ lục C: Thử nghiệm gợi ý đối với mô hình tổng hợp}
+
+Ba biến thể gợi ý đối với mô hình tổng hợp được thảo luận trong Mục~3.4.5 và Mục~4.2.2 được tái hiện chi tiết dưới đây. Quá trình phát triển gợi ý phản ánh rõ rệt sự dịch chuyển từ việc chắp vá bản thảo thô sơ sang dung hợp biên tập có neo ngữ cảnh gốc sâu sắc.
+
+\begin{tcolorbox}[title=Biến thể cơ sở (Chỉ chắp vá bản thảo), colback=gray!5!white, colframe=gray!75!black, breakable, fontupper=\small\ttfamily]
+Bạn là một biên tập viên báo chí Việt Nam. Dưới đây là n bản tóm tắt cho cùng một bài báo. Hãy tổng hợp thành một bản tóm tắt cuối cùng, trung lập, văn phong báo chí.
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Biến thể v1: Neo nguồn nghiêm ngặt (Thêm kết nối phần dư), colback=blue!5!white, colframe=blue!75!black, breakable, fontupper=\small\ttfamily]
+[Nội dung gợi ý cơ sở...]\\
+KHÔNG được thêm thông tin không có trong bài báo gốc dưới đây:\\
+<article>\\
+\{\{source\_text\}\}\\
+</article>
+\tcblower
+\textit{Tác động: Thay đổi hoàn toàn hành vi từ chắp vá bản thảo sang dung hợp sâu sắc. Điểm ROUGE-1 so với bài gốc giảm từ 0.34 xuống 0.24, thể hiện mật độ trừu tượng hóa (abstractive density) cao hơn.}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Biến thể v2: Neo nguồn mềm dẻo (Phiên bản thực tế), colback=green!5!white, colframe=green!75!black, breakable, fontupper=\small\ttfamily]
+[Nội dung gợi ý cơ sở...]\\
+Bài báo gốc được cung cấp dưới đây để tham khảo:\\
+<article>\\
+\{\{source\_text\}\}\\
+</article>
+\tcblower
+\textit{Lưu ý: Cụm từ "cô đọng" (condense) đã được loại bỏ trong lượt commit cuối cùng \texttt{afac46e} để ngăn mô hình tạo ra các kết quả quá ngắn ngủi như các bản thảo thô. Thay đổi này giúp cải thiện mạch văn ngữ nghĩa và phong cách báo chí của bản tóm tắt cuối cùng.}
+\end{tcolorbox}
+
+\textbf{Phát hiện (tái khẳng định).} Sự \textit{xuất hiện} đơn thuần của văn bản gốc trong ngữ cảnh của mô hình tổng hợp giúp thay đổi hoàn toàn hành vi của mô hình từ chắp vá bản thảo sang dung hợp biên tập. Các quy tắc chi tiết (\texttt{v1} nghiêm ngặt so với \texttt{v2} mềm dẻo) không làm biến động mạnh các hệ số định lượng, nhưng việc loại bỏ các ràng buộc văn phong như từ ``cô đọng'' lại là yếu tố quyết định để đạt được phong cách báo chí chuẩn mực, sang trọng.
