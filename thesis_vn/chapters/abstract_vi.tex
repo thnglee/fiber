@@ -3,11 +3,10 @@
 \addcontentsline{toc}{chapter}{TÓM TẮT KHÓA LUẬN}
 
 Sự bùng nổ của thông tin trực tuyến tại Việt Nam đã đặt ra hai nhu cầu song song: tóm tắt
-nhanh nội dung bài báo cho người đọc, và kiểm chứng độ tin cậy cho
-người đọc muốn xác thực. Các hệ thống tóm tắt dựa trên một Mô hình ngôn ngữ lớn
+nhanh nội dung bài báo cho người đọc, và kiểm chứng độ tin cậy cho của thông tin. Các hệ thống tóm tắt dựa trên một Mô hình ngôn ngữ lớn
 (LLM) đơn lẻ hiện nay vẫn cho ra kết quả không ổn định, trong khi kỹ thuật
-\textbf{Mixture-of-Agents} (MoA) --- kết hợp nhiều LLM thông qua kiến trúc tác nhân
-đề xuất--tổng hợp --- chưa từng được nghiên cứu và ứng dụng cho bài toán tóm tắt tin
+\textbf{Mixture-of-Agents} (MoA) --- kết hợp nhiều LLM thông qua kiến trúc đa tác nhân
+bao gồm các tác nhân đề xuất và tổng hợp --- chưa từng được nghiên cứu và ứng dụng cho bài toán tóm tắt tin
 tức tiếng Việt. Bên cạnh đó, các hệ số đo lường được sử dụng phổ biến nhất trong
 nghiên cứu tiếng Việt (ROUGE, BLEU, BERTScore) đo độ trùng lặp $n$-gram hoặc độ
 tương đồng nhúng từ với bài báo gốc, vốn là chỉ số kém hiệu quả để phản ánh chất
@@ -21,22 +20,21 @@ pipeline Mixture-of-Agents của Wang et al.\ (2024) cho bài toán tóm tắt t
 neo ngữ cảnh gốc, bằng cách đưa bài viết nguồn trực tiếp vào ngữ cảnh của tác nhân
 tổng hợp như một \textit{kết nối phần dư} (residual connection) nhằm đảm bảo bản tóm
 tắt cuối cùng trung thực với bài gốc. \textit{Thứ ba}, và quan trọng nhất, khóa luận
-đề xuất một \textbf{khung đánh giá ba trục}: Trục A (giữ lại nội dung: ROUGE, BLEU,
-BERTScore), Trục B (chất lượng và sở thích tự động: đánh giá rubric, xếp hạng từng
-cặp bởi LLM-giám khảo, phân loại tính xác thực), và Trục C (đánh giá con người: xếp
+đề xuất một \textbf{khung đánh giá ba trục}: Trục A (khả năng giữ lại nội dung: ROUGE, BLEU,
+BERTScore), Trục B (chất lượng tóm tắt: đánh giá rubric, xếp hạng từng
+cặp bởi LLM-Judge, phân loại tính xác thực), và Trục C (đánh giá con người: xếp
 hạng mù $K$-chiều có tính chỉ số đồng thuận giữa các người đánh giá), đồng thời dùng
 khung đó để chỉ ra vì sao các hệ số overlap riêng lẻ không thể đánh giá đầy đủ chất
 lượng tóm tắt.
 
 Trên tập dữ liệu cân bằng chủ đề gồm 154 bài báo từ \textit{tienphong.vn}, pipeline
-MoA vượt trội so với mô hình đơn lẻ mạnh nhất (lựa chọn bản thảo tốt nhất) trong
+MoA tạo ra kết quả tóm tắt vượt trội so với mô hình đơn lẻ mạnh nhất (lựa chọn bản thảo tốt nhất) trong
 93 trên 135 phán quyết quyết định ($68,9\%$, $p < 0,0001$); đồng thời
 cũng vượt trội so với từng mô hình đề xuất riêng lẻ. Điểm chất lượng rubric và các
 hệ số overlap đều đồng thuận với kết quả này. Một nghiên cứu đánh giá con người toàn
-diện với 17 người đánh giá trên tất cả 48 tác vụ (192 xếp hạng) cho thấy chênh lệch lớn giữa sở thích của LLM-giám khảo và sở thích của con người. Khoảng cách này,
-cùng với sự tương tác phụ thuộc chủ đề (con người ưa bản thảo ngắn hơn với nội dung
-hành chính, nhưng ưa bản tóm tắt dung hợp với nội dung giải trí), chính là phát hiện
-phương pháp luận mà khung đánh giá được xây dựng để khẳng định.
+diện với 17 người đánh giá trên tất cả 48 tác vụ (192 xếp hạng) cho thấy chênh lệch lớn giữa đánh giá của LLM-Judge và đánh giá của con người. 
+Đồng thời, kết quả cũng phản ánh ảnh hưởng của yếu tố chủ đề: người đọc có xu hướng ưu tiên bản tóm tắt ngắn hơn đối với nội dung hành chính, nhưng lại ưa các bản tóm tắt chi tiết hơn với nội dung giải trí.
+Các quan sát này củng cố các giả định phương pháp luận mà khung đánh giá được xây dựng để kiểm chứng.
 
 \vspace{0.4em}
 \textbf{Từ khóa:} Tóm tắt tin tức tiếng Việt, kiểm chứng thông tin, mô hình ngôn ngữ
