@@ -77,7 +77,7 @@ Bảng~\ref{tab:axisB1} báo cáo điểm số rubric trung bình theo từng ch
   \centering
   \caption{Trục B.1 --- điểm số rubric đánh giá bằng LLM-giám khảo (1--5). Sử dụng \texttt{judge\_model = gpt-4o-mini-2024-07-18}.}
   \label{tab:axisB1}
-  \begin{tabular}{lrrrrrr}
+  \begin{tabularx}{\linewidth}{Xrrrrrr}
     \toprule
     Phương pháp & $n$ & Trung thực & Bao phủ & Trôi chảy & Súc tích & Tổng thể \\
     \midrule
@@ -87,7 +87,7 @@ Bảng~\ref{tab:axisB1} báo cáo điểm số rubric trung bình theo từng ch
     gemini-2.5-flash             & 100 & 4,96 & 4,76 & 5,00 & 4,95 & 4,86 \\
     gpt-4o-mini                  & 100 & 4,98 & 4,34 & 4,97 & 4,84 & 4,61 \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 
 Phương pháp dung hợp (Fusion) vượt trội hơn mọi mô hình cơ sở ở điểm số đánh giá Tổng thể toàn diện ($4,96$ so với $4,91$ của mô hình đứng sau). Yếu tố đóng góp khác biệt lớn nhất là tiêu chí \textbf{Độ bao phủ (Coverage)} ($4,94$ so với $4,78$ của GPT-4o đơn lẻ, tạo ra khoảng cách $+0,16$); kết quả này hoàn toàn nhất quán với cơ chế ``hợp các bản thảo'' được thảo luận trong Mục~4.2.2. Điểm số tiêu chí Tính trung thực gần như bão hòa đối với tất cả các phương pháp ($\geq 4,96$), phản ánh rằng mô hình giám khảo và các mô hình ứng viên đều là những mô hình thương mại mạnh mẽ, và hiện tượng mâu thuẫn logic trực tiếp là rất hiếm gặp.
@@ -100,13 +100,13 @@ Phương pháp dung hợp (Fusion) vượt trội hơn mọi mô hình cơ sở 
   \centering
   \caption{Trục B.2a --- phán quyết đấu cặp, bản dung hợp (A) đấu với bản thảo tốt nhất (B) trên toàn bộ tập dữ liệu. Các kết quả hòa được tính vào tổng số lượng.}
   \label{tab:axisB2a}
-  \begin{tabular}{rrrrr}
+  \begin{tabularx}{\linewidth}{rCCCC}
     \toprule
     $n$ & Bản dung hợp thắng & Bản thảo tốt nhất thắng & Hòa & Tỷ lệ thắng dung hợp (không tính hòa) \\
     \midrule
     153 & 93 & 42 & 18 & \textbf{68,9\%} \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 
 \textbf{Diễn giải số liệu.} Trong số $153$ phán quyết phân định rõ ràng, bản tóm tắt dung hợp giành chiến thắng $93$ lần, bản thảo đơn lẻ tốt nhất thắng $42$ lần, và có $18$ trường hợp hòa. Nếu loại trừ các trường hợp hòa, bản tóm tắt dung hợp được ưa thích hơn bản thảo tốt nhất trong gần $69\%$ các lượt đối đầu trực tiếp (chiếm $60,8\%$ tổng số lượt đối đầu). Mẫu thử nghiệm quy mô lớn này xác nhận rằng việc cung cấp nhiều bản thảo làm ngữ cảnh cho mô hình tổng hợp giúp tạo ra bản tóm tắt chất lượng vượt trội hơn hẳn so với việc chỉ sử dụng một mô hình đề xuất đơn lẻ.
@@ -119,7 +119,7 @@ Nhằm đối chiếu trực tiếp với kết quả nghiên cứu của Wang e
   \centering
   \caption{Trục B.2b --- bản dung hợp đấu với từng mô hình đề xuất. Kiểm định dấu (sign-test) được thực hiện hai chiều; loại trừ các trường hợp hòa.}
   \label{tab:axisB2b}
-  \begin{tabular}{lrrrrrr}
+  \begin{tabularx}{\linewidth}{X r c c c C C}
     \toprule
     Mô hình đề xuất & $n$ & Dung hợp thắng & Bản thảo thắng & Hòa & Tỷ lệ thắng dung hợp & Giá trị $p$ Sign-test \\
     \midrule
@@ -127,7 +127,7 @@ Nhằm đối chiếu trực tiếp với kết quả nghiên cứu của Wang e
     claude-haiku-4.5  & 50 & 41 & 8 & 1 & 83,7\% & 0,0000 \\
     gemini-2.5-flash  & 50 & 32 & 14 & 4 & 69,6\% & 0,0114 \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 
 \textbf{Kiểm soát độ dài.} Tỷ lệ chiến thắng thô của bản dung hợp lần lượt là $98,0\%$ , $83,7\%$, $69,6\%$; sau khi áp dụng kiểm soát phân nhóm theo độ dài (length-bucketed), tỷ lệ này đạt $97,9\%$, $84,3\%$, $72,0\%$. Điểm số phân nhóm biến động rất nhỏ (trong khoảng $\pm 2,4$ điểm phần trăm so với tỷ lệ thô), xác nhận rằng thiên kiến độ dài của giám khảo LLM không phải là yếu tố ảnh hưởng kết quả này.
@@ -142,13 +142,13 @@ Nhằm đối chiếu trực tiếp với kết quả nghiên cứu của Wang e
   \centering
   \caption{Trục B.2c --- phán quyết đấu cặp, bản dung hợp (A) đấu với GPT-4o chạy đơn lẻ (B). Kiểm định dấu thực hiện hai chiều; loại trừ các trường hợp hòa.}
   \label{tab:axisB2c}
-  \begin{tabular}{rrrrrr}
+  \begin{tabularx}{\linewidth}{r c c c C C}
     \toprule
     $n$ & Dung hợp thắng & Đơn lẻ thắng & Hòa & Tỷ lệ thắng dung hợp & Giá trị $p$ Sign-test \\
     \midrule
     48 & 37 & 11 & 0 & \textbf{77,1\%} & \textbf{0,0002} \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 
 \textbf{Diễn giải số liệu.} Trong số $48$ phán quyết phân định rõ ràng, bản dung hợp giành chiến thắng $37$ lần, mô hình GPT-4o chạy đơn lẻ thắng $11$ lần, không ghi nhận trường hợp hòa nào. Dưới giả thuyết không $H_0: P(\text{dung hợp thắng}) = 0,5$, xác suất xuất hiện từ $37$ chiến thắng trở lên trong tổng số $48$ trận đấu là $p = 0,0002$ (tương đương tỷ lệ $1$ trên $5.000$). Kết quả này đạt ý nghĩa thống kê vượt xa các ngưỡng học thuật thông thường.
@@ -161,9 +161,9 @@ Bảng~\ref{tab:axisB3} báo cáo số liệu thống kê về tỷ lệ chấp 
   \centering
   \caption{Trục B.3 --- đánh giá tính xác thực qua quan hệ kéo theo cấp tuyên bố (sử dụng mô hình phán quyết \texttt{gpt-4o-mini}).}
   \label{tab:axisB3}
-  \begin{tabular}{lrrrr}
+  \begin{tabularx}{\linewidth}{X r C C C}
     \toprule
-    Phương pháp & $n$ & tỷ lệ chấp thuận \% & Ảo giác TB & Trường hợp xấu nhất \\
+    Phương pháp & $n$ & tỷ lệ chấp thuận \% & Ảo tưởng TB & Trường hợp xấu nhất \\
     \midrule
     Dung hợp (MoA)               & 154 & \textbf{94,4} & - & - \\
     claude-haiku-4.5             & 100 & 95,5 & 0,07 & 1 \\
@@ -171,7 +171,7 @@ Bảng~\ref{tab:axisB3} báo cáo số liệu thống kê về tỷ lệ chấp 
     gpt-4o-mini                  & 100 & 92,8 & 0,08 & 2 \\
     gpt-4o-2024-08-06            & 50  & 89,9 & 0,08 & 1 \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 
 Trên toàn bộ cơ sở dữ liệu gồm $923$ tuyên bố nguyên tử được đánh giá, tỷ lệ chấp thuận tổng hợp đạt $94,4\%$. tỷ lệ chấp thuận thấp nhất ghi nhận ở phương án GPT-4o đơn lẻ ($89,9\%$). Kết quả này củng cố quan sát thực tế rằng khi hoạt động độc lập không có bước ``kiểm duyệt biên tập'' (editorial check) mà pipeline MoA cung cấp một cách gián tiếp, GPT-4o có xu hướng vận hành ở chế độ sáng tạo hơn và đôi khi đưa vào những dữ kiện không được văn bản gốc hỗ trợ trực tiếp.
@@ -188,7 +188,7 @@ Một nghiên cứu con người toàn diện đã được triển khai với s
   \centering
   \caption{Trục C --- các chỉ số thống kê mô tả tổng hợp từ người đánh giá, quy mô $n = 192$ kết quả xếp hạng trên $48$ tác vụ.}
   \label{tab:axisC}
-  \begin{tabular}{lrrr}
+  \begin{tabularx}{\linewidth}{X C C C}
     \toprule
     Phương pháp & Hạng trung bình ($\downarrow$) & Tỷ lệ xếp hạng nhất & Tỷ lệ đối đầu vs. Dung hợp \\
     \midrule
@@ -196,7 +196,7 @@ Một nghiên cứu con người toàn diện đã được triển khai với s
     gpt-4o đơn lẻ      & 2,00 & 32,3\% & Dung hợp thắng 40,9\% \\
     Bản thảo gpt-4o-mini & 2,05 & 26,8\% & Dung hợp thắng 40,9\% \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 
 Bản tóm tắt dung hợp (MoA) là phương án được người đọc ưa thích nhất trên tất cả các tiêu chí đo lường tổng hợp: thứ hạng trung bình thấp nhất, tỷ lệ xếp hạng nhất cao nhất và ưu thế chiến thắng trong các cặp đối đầu trực diện. \textbf{Tuy nhiên, khoảng cách vượt trội này nhỏ hơn rất nhiều so với những gì Trục B thể hiện.} Giám khảo LLM báo cáo tỷ lệ thắng lên tới $68,9\%$ trong các phán quyết đấu cặp quyết định (dung hợp đối đầu bản thảo tốt nhất); trong khi con người chỉ báo cáo mức độ ưa thích $40,9\%$ dành cho bản dung hợp. Khoảng cách chênh lệch lên tới $28$ điểm phần trăm này chính là phát hiện phương pháp luận quan trọng nhất của chương này.
@@ -209,7 +209,7 @@ Bảng~\ref{tab:axisC-topic} trình bày kết quả phân tích chi tiết theo
   \centering
   \caption{Trục C --- sở thích xếp hạng phân nhánh theo nhóm chủ đề. Ký hiệu: $F$ = Bản dung hợp, $4o$ = GPT-4o đơn lẻ, $m$ = Bản thảo gpt-4o-mini.}
   \label{tab:axisC-topic}
-  \begin{tabular}{lrrrrrr}
+  \begin{tabularx}{\linewidth}{X r C C C C C}
     \toprule
     Nhóm chủ đề & $n$ & Tỷ lệ $F$ hạng nhất & Tỷ lệ $4o$ hạng nhất & Tỷ lệ $m$ hạng nhất & $F > 4o$ & $F > m$ \\
     \midrule
@@ -217,7 +217,7 @@ Bảng~\ref{tab:axisC-topic} trình bày kết quả phân tích chi tiết theo
     GIẢI TRÍ       & 52 & \textbf{58\%} & 21\% & 21\% & 65\% & 65\% \\
     HỖN HỢP        & 56 & \textbf{59\%} & 29\% & 13\% & 70\% & 77\% \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 
 \textbf{Quy luật preference.} Trên nhóm nội dung mang tính hành chính (đại hội Đảng, báo cáo hành chính, hội nghị ban ngành), người đọc có xu hướng ưa thích bản tóm tắt \textit{ngắn nhất} (bản thảo tạo bởi GPT-4o-mini) --- vốn chính là ứng viên bị giám khảo LLM xếp cuối cùng về tiêu chí Độ bao phủ (Coverage) trong Mục~4.3.1. Bản tóm tắt dung hợp --- một văn bản dài hơn, được tổng hợp biên tập chi tiết --- bị người đọc đánh giá thấp hơn; do thiếu đi sự hứng thú tự thân với chủ đề, yêu cầu duy nhất của họ lúc này là ``có chuyện gì xảy ra, thật ngắn gọn?''. Ngược lại, đối với thể loại giải trí và các chủ đề hỗn hợp, bản tóm tắt dung hợp đầy đủ thông tin hơn lại được ưa thích vượt trội (đạt tỷ lệ xếp hạng nhất lần lượt là $58\%$ và $59\%$), hoàn toàn đồng điệu với nhận định của giám khảo LLM.
@@ -236,7 +236,7 @@ Góc nhìn khoa học quan trọng nhất từ các thực nghiệm chính là v
   \centering
   \caption{Đối chiếu đa trục, bản dung hợp đối đầu với các mô hình cơ sở.}
   \label{tab:cross-axis}
-  \begin{tabular}{lll}
+  \begin{tabularx}{\linewidth}{l X X}
     \toprule
     Trục & Chỉ số đo lường & Kết quả phán quyết \\
     \midrule
@@ -246,7 +246,7 @@ Góc nhìn khoa học quan trọng nhất từ các thực nghiệm chính là v
     B.2a & Tỷ lệ thắng đấu cặp so với bản thảo tốt nhất ($68,9\%$) & Dung hợp thắng vượt trội \\
     C   & Sở thích đấu cặp của con người ($40,9\%$ đa số tương đối) & Dung hợp thắng sít sao \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 
 \textbf{Sự đồng thuận hướng của cả ba trục.} Cả ba góc nhìn độc lập đều thống nhất rằng phương pháp dung hợp MoA mang lại kết quả tốt hơn. Sự đồng thuận về mặt chiều hướng này là kết quả lý tưởng nhất của khung đánh giá ba trục: nó cho phép đưa ra một khuyến nghị khoa học mạnh mẽ ủng hộ giải pháp dung hợp.

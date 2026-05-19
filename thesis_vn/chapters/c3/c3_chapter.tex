@@ -381,7 +381,7 @@ Nhóm bảng này chịu trách nhiệm theo dõi toàn bộ vòng đời của 
 \begin{table}[H]
 \centering
 \caption{Lược đồ cho các bảng \texttt{evaluation\_metrics} và \texttt{routing\_decisions}.}
-\begin{tabular}{lll}
+\begin{tabularx}{\linewidth}{llX}
 \hline
 \textbf{Bảng / Cột} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả chi tiết} \\ \hline
 \textit{evaluation\_metrics} & & \\
@@ -396,7 +396,7 @@ Nhóm bảng này chịu trách nhiệm theo dõi toàn bộ vòng đời của 
 \texttt{complexity} & text & Mức độ phức tạp được phân loại (Thấp/Trung bình/Cao). \\
 \texttt{routing\_mode} & text & Chế độ định tuyến hiện hoạt (auto, forced, hoặc fusion). \\
 \texttt{selected\_model} & text & Mô hình cụ thể được bộ định tuyến phân bổ xử lý. \\ \hline
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsection{Cấu trúc dữ liệu đặc thù MoA}
@@ -406,7 +406,7 @@ Các bảng này chịu trách nhiệm lưu trữ các bản thảo sơ bộ ở
 \begin{table}[H]
 \centering
 \caption{Lược đồ cho các bảng đặc thù phục vụ cấu trúc MoA.}
-\begin{tabular}{lll}
+\begin{tabularx}{\linewidth}{llX}
 \hline
 \textbf{Bảng / Cột} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả chi tiết} \\ \hline
 \textit{moa\_fusion\_results} & & \\
@@ -420,7 +420,7 @@ Các bảng này chịu trách nhiệm lưu trữ các bản thảo sơ bộ ở
 \texttt{winner} & text & Kết quả phán quyết so sánh cặp (Bản A, Bản B, hoặc Hòa - Tie). \\
 \texttt{comparison\_type} & text & Loại so sánh (so với bản thảo tốt nhất, so với từng bản thảo lẻ, v.v.). \\
 \texttt{justification} & text & Đoạn giải thích lý do phán quyết bằng ngôn ngữ tự nhiên của giám khảo. \\ \hline
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsection{Hồ sơ đánh giá của con người}
@@ -430,7 +430,7 @@ Nhóm bảng cuối cùng này chịu trách nhiệm quản lý và lưu giữ t
 \begin{table}[H]
 \centering
 \caption{Lược đồ cho các bảng phục vụ đánh giá của con người.}
-\begin{tabular}{lll}
+\begin{tabularx}{\linewidth}{llX}
 \hline
 \textbf{Bảng / Cột} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả chi tiết} \\ \hline
 \textit{human\_eval\_tasks} & & \\
@@ -439,7 +439,7 @@ Nhóm bảng cuối cùng này chịu trách nhiệm quản lý và lưu giữ t
 \textit{human\_eval\_responses} & & \\
 \texttt{ranking} & jsonb & Danh sách xếp hạng thứ tự ưu tiên do người đánh giá quyết định. \\
 \texttt{rationale} & jsonb & Các nhận xét giải thích chi tiết cho từng bản tóm tắt tương ứng. \\ \hline
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \section{Giao diện người dùng}
