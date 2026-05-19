@@ -1,3 +1,4 @@
+% !TEX root = ../thesis.tex
 \chapter*{MỞ ĐẦU}
 \addcontentsline{toc}{chapter}{MỞ ĐẦU}
 
@@ -19,27 +20,27 @@ Hiện nay, các hệ thống tóm tắt tiếng Việt xây dựng dựa trên 
 ngữ gốc, thậm chí đôi khi bịa đặt thông tin. Một hướng nghiên cứu gần đây,
 \textbf{Mixture-of-Agents} (MoA) của Wang et al.\ \cite{Wang2024}, lập luận rằng
 nhiều LLM có thể được kết hợp trong một kiến trúc phân cấp tác nhân đề xuất--tổng hợp
-để vượt trội so với bất kỳ mô hình đơn lẻ nào trên các bộ đánh giá tuân thủ hướng dẫn.
-Tuy nhiên, liệu lợi ích này có chuyển giao được sang bài toán tóm tắt tiếng Việt
+để tạo ra kết quả vượt trội so với bất kỳ mô hình đơn lẻ nào trên các thang đánh giá.
+Tuy nhiên, liệu phương pháp này có thể áp dụng với bài toán tóm tắt tiếng Việt
 \textit{có neo ngữ cảnh gốc} --- nơi hệ thống phải trung thực với bài báo nguồn thay
 vì trả lời tự do --- hay không, vẫn là câu hỏi chưa được giải đáp trong các nghiên
 cứu xử lý ngôn ngữ tự nhiên tiếng Việt.
 
 Một vấn đề sâu hơn thúc đẩy khóa luận này: các hệ số đo lường phổ biến nhất trong
 nghiên cứu tóm tắt tiếng Việt --- ROUGE \cite{Lin2004}, BLEU và BERTScore
-\cite{Zhang2020} được tính so với bài báo gốc --- đo độ trùng lặp, không đo chất lượng.
-Chúng thưởng cho các bản tóm tắt tái sử dụng cụm từ từ bài gốc và phạt các bản tóm tắt
-diễn giải lại hoặc rút gọn mạnh. Một tác nhân tổng hợp được cài đặt đúng đắn, tổng
+\cite{Zhang2020} được tính toán dựa vào đối chiếu so với bài báo gốc --- đo độ trùng lặp, không đo chất lượng.
+Các thang điểm này đánh giá cao các bản tóm tắt tái sử dụng cụm từ từ bài gốc và chấm điểm thấp các bản tóm tắt
+diễn giải lại hoặc rút gọn mạnh. Một tác nhân tổng hợp được sử dụng đúng, tổng
 hợp các bản thảo thành bản tóm tắt biên tập sạch hơn, về nguyên lý sẽ đạt điểm thấp
-hơn trên các hệ số này so với bản thảo sao chép cụm từ bề mặt. Nếu nghiên cứu tóm
+hơn trên các hệ số này so với bản thảo sao chép cụm từ đơn thuần. Nếu nghiên cứu tóm
 tắt tiếng Việt muốn áp dụng các hệ thống kiểu tác nhân tổng hợp, lĩnh vực này cần
 một phương pháp luận đánh giá không có thiên kiến cấu trúc bất lợi cho các hệ thống đó.
 
 \section*{Ý nghĩa khoa học và thực tiễn}
 
 \textbf{Ý nghĩa khoa học.}
-Khóa luận đóng góp một \textit{khung đánh giá ba trục} kết hợp: (i)~các hệ số giữ lại
-nội dung so với bài gốc, (ii)~đánh giá chất lượng bởi LLM-giám khảo và xếp hạng theo
+Khóa luận đóng góp một \textit{khung đánh giá ba trục} kết hợp: (i)~các hệ số overlap
+nội dung so với bài gốc, (ii)~đánh giá chất lượng bởi LLM và xếp hạng theo
 cặp, và (iii)~xếp hạng mù bởi con người với chỉ số đồng thuận giữa các người đánh giá.
 Khóa luận sử dụng khung đó để chỉ ra, bằng bằng chứng thực nghiệm trên dữ liệu tiếng
 Việt, một hạn chế cấu trúc của các hệ số overlap đối với bài toán tóm tắt kiểu tổng
@@ -53,20 +54,20 @@ Fiber nhúng một thanh sidebar vào bảy tên miền báo chí tiếng Việt
 báo theo thời gian thực bằng một LLM do người dùng chọn (hoặc pipeline MoA dung hợp),
 và kiểm chứng bản tóm tắt so với bằng chứng từ web trực tiếp thông qua API tìm kiếm
 Tavily. Toàn bộ hệ thống --- một backend Next.js, một tiện ích mở rộng trình duyệt
-Plasmo, và một dịch vụ BERTScore Python --- là mã nguồn mở và có khả năng tái tạo.
+Plasmo, và một dịch vụ BERTScore Python --- là mã nguồn mở.
 
 \section*{Mục tiêu nghiên cứu}
 
 \begin{enumerate}
   \item Thiết kế và xây dựng hệ thống tiện ích mở rộng trình duyệt đầu-cuối hoàn
         chỉnh, có khả năng tóm tắt và kiểm chứng bài báo tiếng Việt theo thời gian
-        thực, hỗ trợ nhiều nhà cung cấp LLM (OpenAI, Anthropic, Google) và nhiều
-        chiến lược định tuyến.
+        thực, hỗ trợ nhiều nhà cung cấp LLM (OpenAI, Anthropic, Google) và nhiều cơ chế
+        phân loại định tuyến.
   \item Thích ứng pipeline Mixture-of-Agents của Wang et al.\ (2024) cho bài toán
         tóm tắt tiếng Việt có neo ngữ cảnh gốc, bao gồm một kết nối phần dư bài
-        viết nguồn vào lời nhắc của tác nhân tổng hợp.
-  \item Đề xuất và kiểm chứng một khung đánh giá ba trục --- giữ lại nội dung
-        (Trục~A), chất lượng và sở thích bởi LLM-giám khảo (Trục~B), và xếp hạng
+        viết nguồn vào câu lệnh của tác nhân tổng hợp.
+  \item Đề xuất và kiểm chứng một khung đánh giá ba trục --- khả năng giữ lại nội dung
+        (Trục~A), chất lượng kết quả tóm tắt đánh giá bởi LLM (Trục~B), và xếp hạng
         con người với chỉ số đồng thuận (Trục~C) --- đồng thời sử dụng khung đó
         để so sánh dung hợp MoA với các mô hình đơn lẻ cơ sở trên tập dữ liệu
         tiếng Việt cân bằng chủ đề.
@@ -120,7 +121,7 @@ Phần còn lại của khóa luận được tổ chức như sau.
 
 \textbf{Chương 1 --- Tổng quan.} Giới thiệu bài toán tóm tắt và kiểm chứng tin tức,
 kỹ thuật Mixture-of-Agents, và các công trình liên quan trong nghiên cứu tiếng Việt
-cũng như quốc tế, từ đó xác định khoảng trống mà khóa luận lấp đầy.
+cũng như quốc tế, từ đó xác định khoảng trống mà khoá luận sẽ khai thác.
 
 \textbf{Chương 2 --- Cơ sở lý thuyết.} Trình bày các kiến trúc LLM được sử dụng
 trong hệ thống, ba dòng hệ số đánh giá (overlap, LLM-giám khảo, xếp hạng con người),

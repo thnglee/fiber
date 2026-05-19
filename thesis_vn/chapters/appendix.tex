@@ -1,3 +1,4 @@
+% !TEX root = ../thesis.tex
 \chapter*{PHỤ LỤC}
 \addcontentsline{toc}{chapter}{PHỤ LỤC}
 
@@ -30,13 +31,13 @@ Phụ lục này minh họa quy trình kiểm chứng thông tin trên một bà
 
 \begin{itemize}
   \item \textbf{Tuyên bố 1} --- ``Thủ tướng Phạm Minh Chính thăm Trung Quốc từ ngày 25 đến ngày 28/6/2023.''
-        \\Kết quả Tavily: Lịch trình chính thức đăng tải trên \textit{chinhphu.vn}. Phán quyết: \texttt{entailed} (kéo theo), điểm số tin cậy $98$.
+        \\Kết quả Tavily: Lịch trình chính thức đăng tải trên \textit{chinhphu.vn}. Phán quyết: \texttt{entailed} (chấp thuận), điểm số tin cậy $98$.
   \item \textbf{Tuyên bố 2} --- ``Trong khuôn khổ chuyến thăm, Thủ tướng đã hội kiến Tổng bí thư, Chủ tịch nước Tập Cận Bình.''
-        \\Kết quả Tavily: Báo cáo tin tức từ \textit{Thông tấn xã Việt Nam}, báo \textit{Nhân Dân}. Phán quyết: \texttt{entailed} (kéo theo), điểm số tin cậy $95$.
+        \\Kết quả Tavily: Báo cáo tin tức từ \textit{Thông tấn xã Việt Nam}, báo \textit{Nhân Dân}. Phán quyết: \texttt{entailed} (chấp thuận), điểm số tin cậy $95$.
   \item \textbf{Tuyên bố 3} --- ``Đây là chuyến thăm đầu tiên của một lãnh đạo cấp cao Việt Nam tới Trung Quốc sau 10 năm.''
         \\Kiểm chứng từ Tavily: Tổng bí thư Nguyễn Phú Trọng đã thăm Trung Quốc vào tháng 10/2022. Phán quyết: \texttt{contradicted} (mâu thuẫn), điểm số tin cậy $10$.
   \item \textbf{Tuyên bố 4} --- ``Hai bên đã ký kết Bản ghi nhớ về hợp tác phát triển hạ tầng đường sắt.''
-        \\Kết quả Tavily: Thông cáo báo chí chung trên cổng thông tin \textit{baochinhphu.vn}. Phán quyết: \texttt{entailed} (kéo theo), điểm số tin cậy $90$.
+        \\Kết quả Tavily: Thông cáo báo chí chung trên cổng thông tin \textit{baochinhphu.vn}. Phán quyết: \texttt{entailed} (chấp thuận), điểm số tin cậy $90$.
 \end{itemize}
 
 \noindent \textbf{Kết quả tổng hợp:} Hệ thống đã phát hiện và dán nhãn thành công Tuyên bố~3 là mâu thuẫn dữ kiện thực tế. Mặc dù các phần còn lại của bản tóm tắt đều hoàn toàn chính xác, điểm số tin cậy tổng hợp vẫn bị kéo xuống mức $64\%$, kích hoạt cảnh báo \textit{Độ tin cậy thấp} (Low Confidence). Việc này ngăn chặn hiệu quả sự lan truyền của tuyên bố sai lệch về ``khoảng cách 10 năm''.
