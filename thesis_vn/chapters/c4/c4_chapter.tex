@@ -130,7 +130,7 @@ Nhằm đối chiếu trực tiếp với kết quả nghiên cứu của Wang e
   \end{tabularx}
 \end{table}
 
-\textbf{Kiểm soát độ dài.} Tỷ lệ chiến thắng thô của bản dung hợp lần lượt là $98,0\%$ , $83,7\%$, $69,6\%$; sau khi áp dụng kiểm soát phân nhóm theo độ dài (length-bucketed), tỷ lệ này đạt $97,9\%$, $84,3\%$, $72,0\%$. Điểm số phân nhóm biến động rất nhỏ (trong khoảng $\pm 2,4$ điểm phần trăm so với tỷ lệ thô), xác nhận rằng thiên kiến độ dài của LLM-Judge không phải là yếu tố ảnh hưởng kết quả này.
+\textbf{Kiểm soát độ dài.} Tỷ lệ chiến thắng thô của bản dung hợp lần lượt là $98,0\%$, $83,7\%$, $69,6\%$; sau khi áp dụng kiểm soát phân nhóm theo độ dài (length-bucketed), tỷ lệ này đạt $97,9\%$, $84,3\%$, $72,0\%$. Điểm số phân nhóm biến động rất nhỏ (trong khoảng $\pm 2,4$ điểm phần trăm so với tỷ lệ thô), xác nhận rằng thiên kiến độ dài của LLM-Judge không phải là yếu tố ảnh hưởng kết quả này.
 
 \textbf{Diễn giải khoa học.} Bản tóm tắt dung hợp vượt qua từng mô hình đề xuất riêng lẻ với ý nghĩa thống kê rõ rệt. Khoảng cách này lớn nhất khi đối đầu với mô hình yếu nhất (GPT-4o-mini, $98\%$) và thu hẹp nhất khi gặp mô hình mạnh nhất (Gemini 2.5 Flash, $70\%$). Hiện tượng này hoàn toàn khớp với đặc tính kỹ thuật được công bố trong nghiên cứu MoA gốc \cite{Wang2024}: cơ chế dung hợp tạo ra chênh lệch lớn nhất khi các mô hình đề xuất có năng lực hạn chế hơn, và sự hiện diện của một mô hình đề xuất mạnh sẽ thu hẹp nhưng không thể xóa bỏ khoảng cách năng lực này.
 
@@ -173,7 +173,7 @@ Bảng~\ref{tab:axisB3} báo cáo số liệu thống kê về tỷ lệ chấp 
   \end{tabularx}
 \end{table}
 
-Trên toàn bộ cơ sở dữ liệu gồm $923$ mệnh đề được đánh giá, tỷ lệ chấp thuận tổng hợp đạt $94,4\%$. tỷ lệ chấp thuận thấp nhất ghi nhận ở mô hình GPT-4o đơn lẻ ($89,9\%$). Kết quả này củng cố quan sát thực tế rằng khi hoạt động độc lập không có bước ``kiểm duyệt biên tập'' (editorial check) mà pipeline MoA cung cấp một cách gián tiếp, GPT-4o có xu hướng vận hành ở chế độ sáng tạo hơn và đôi khi đưa vào những dữ kiện không được văn bản gốc hỗ trợ trực tiếp.
+Trên toàn bộ cơ sở dữ liệu gồm $923$ mệnh đề được đánh giá, tỷ lệ chấp thuận tổng hợp đạt $94,4\%$. Tỷ lệ chấp thuận thấp nhất ghi nhận ở mô hình GPT-4o đơn lẻ ($89,9\%$). Kết quả này củng cố quan sát thực tế rằng khi hoạt động độc lập không có bước ``kiểm duyệt biên tập'' (editorial check) mà pipeline MoA cung cấp một cách gián tiếp, GPT-4o có xu hướng vận hành ở chế độ sáng tạo hơn và đôi khi đưa vào những dữ kiện không được văn bản gốc hỗ trợ trực tiếp.
 
 \section{Kết quả Trục C --- Đánh giá của con người}
 
