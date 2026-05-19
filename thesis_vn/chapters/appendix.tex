@@ -25,26 +25,26 @@ Phụ lục này tái hiện một lượt chạy dung hợp MoA điển hình t
 
 \section*{Phụ lục B: Minh họa kiểm chứng thông tin}
 
-Phụ lục này minh họa quy trình kiểm chứng thông tin trên một bài viết phức tạp hơn, nơi các mô hình đề xuất thường xuyên ảo tưởng hoặc nhầm lẫn giữa các mốc chi tiết lịch sử.
+Phụ lục này minh họa quy trình kiểm chứng thông tin trên một bài viết phức tạp hơn, nơi các mô hình đề xuất thường xuyên ảo giác thông tin hoặc nhầm lẫn giữa các mốc chi tiết lịch sử.
 
 \textbf{Nguồn: ``Thủ tướng Phạm Minh Chính thăm chính thức Trung Quốc''}
 
 \begin{itemize}
-  \item \textbf{Tuyên bố 1} --- ``Thủ tướng Phạm Minh Chính thăm Trung Quốc từ ngày 25 đến ngày 28/6/2023.''
+  \item \textbf{Mệnh đề 1} --- ``Thủ tướng Phạm Minh Chính thăm Trung Quốc từ ngày 25 đến ngày 28/6/2023.''
         \\Kết quả Tavily: Lịch trình chính thức đăng tải trên \textit{chinhphu.vn}. Phán quyết: \texttt{entailed} (chấp thuận), điểm số tin cậy $98$.
-  \item \textbf{Tuyên bố 2} --- ``Trong khuôn khổ chuyến thăm, Thủ tướng đã hội kiến Tổng bí thư, Chủ tịch nước Tập Cận Bình.''
+  \item \textbf{Mệnh đề 2} --- ``Trong khuôn khổ chuyến thăm, Thủ tướng đã hội kiến Tổng bí thư, Chủ tịch nước Tập Cận Bình.''
         \\Kết quả Tavily: Báo cáo tin tức từ \textit{Thông tấn xã Việt Nam}, báo \textit{Nhân Dân}. Phán quyết: \texttt{entailed} (chấp thuận), điểm số tin cậy $95$.
-  \item \textbf{Tuyên bố 3} --- ``Đây là chuyến thăm đầu tiên của một lãnh đạo cấp cao Việt Nam tới Trung Quốc sau 10 năm.''
+  \item \textbf{Mệnh đề 3} --- ``Đây là chuyến thăm đầu tiên của một lãnh đạo cấp cao Việt Nam tới Trung Quốc sau 10 năm.''
         \\Kiểm chứng từ Tavily: Tổng bí thư Nguyễn Phú Trọng đã thăm Trung Quốc vào tháng 10/2022. Phán quyết: \texttt{contradicted} (mâu thuẫn), điểm số tin cậy $10$.
-  \item \textbf{Tuyên bố 4} --- ``Hai bên đã ký kết Bản ghi nhớ về hợp tác phát triển hạ tầng đường sắt.''
+  \item \textbf{Mệnh đề 4} --- ``Hai bên đã ký kết Bản ghi nhớ về hợp tác phát triển hạ tầng đường sắt.''
         \\Kết quả Tavily: Thông cáo báo chí chung trên cổng thông tin \textit{baochinhphu.vn}. Phán quyết: \texttt{entailed} (chấp thuận), điểm số tin cậy $90$.
 \end{itemize}
 
-\noindent \textbf{Kết quả tổng hợp:} Hệ thống đã phát hiện và dán nhãn thành công Tuyên bố~3 là mâu thuẫn dữ kiện thực tế. Mặc dù các phần còn lại của bản tóm tắt đều hoàn toàn chính xác, điểm số tin cậy tổng hợp vẫn bị kéo xuống mức $64\%$, kích hoạt cảnh báo \textit{Độ tin cậy thấp} (Low Confidence). Việc này ngăn chặn hiệu quả sự lan truyền của tuyên bố sai lệch về ``khoảng cách 10 năm''.
+\noindent \textbf{Kết quả tổng hợp:} Hệ thống đã phát hiện và dán nhãn thành công Mệnh đề~3 là mâu thuẫn dữ kiện thực tế. Mặc dù các phần còn lại của bản tóm tắt đều hoàn toàn chính xác, điểm số tin cậy tổng hợp vẫn bị kéo xuống mức $64\%$, kích hoạt cảnh báo \textit{Độ tin cậy thấp} (Low Confidence). Việc này ngăn chặn hiệu quả sự lan truyền của tuyên bố sai lệch về ``khoảng cách 10 năm''.
 
 \section*{Phụ lục C: Thử nghiệm gợi ý đối với mô hình tổng hợp}
 
-Ba biến thể gợi ý đối với mô hình tổng hợp được thảo luận trong Mục~3.4.5 và Mục~4.2.2 được tái hiện chi tiết dưới đây. Quá trình phát triển gợi ý phản ánh rõ rệt sự dịch chuyển từ việc chắp vá bản thảo thô sơ sang dung hợp biên tập có neo ngữ cảnh gốc sâu sắc.
+Ba biến thể gợi ý đối với mô hình tổng hợp được thảo luận trong Mục~3.4.5 và Mục~4.2.2 được tái hiện chi tiết dưới đây. Quá trình phát triển gợi ý phản ánh rõ rệt sự dịch chuyển từ việc chắp vá bản thảo thô sơ sang dung hợp biên tập có neo ngữ cảnh gốc.
 
 \begin{tcolorbox}[title=Biến thể cơ sở (Chỉ chắp vá bản thảo), colback=gray!5!white, colframe=gray!75!black, breakable, fontupper=\small\ttfamily]
 Bạn là một biên tập viên báo chí Việt Nam. Dưới đây là n bản tóm tắt cho cùng một bài báo. Hãy tổng hợp thành một bản tóm tắt cuối cùng, trung lập, văn phong báo chí.
@@ -60,14 +60,14 @@ KHÔNG được thêm thông tin không có trong bài báo gốc dưới đây:
 \textit{Tác động: Thay đổi hoàn toàn hành vi từ chắp vá bản thảo sang dung hợp sâu sắc. Điểm ROUGE-1 so với bài gốc giảm từ 0.34 xuống 0.24, thể hiện mật độ trừu tượng hóa (abstractive density) cao hơn.}
 \end{tcolorbox}
 
-\begin{tcolorbox}[title=Biến thể v2: Neo nguồn mềm dẻo (Phiên bản thực tế), colback=green!5!white, colframe=green!75!black, breakable, fontupper=\small\ttfamily]
+\begin{tcolorbox}[title=Biến thể v2: Neo nguồn linh hoạt (Phiên bản hiện sử dụng), colback=green!5!white, colframe=green!75!black, breakable, fontupper=\small\ttfamily]
 [Nội dung gợi ý cơ sở...]\\
 Bài báo gốc được cung cấp dưới đây để tham khảo:\\
 <article>\\
 \{\{source\_text\}\}\\
 </article>
 \tcblower
-\textit{Lưu ý: Cụm từ "cô đọng" (condense) đã được loại bỏ trong lượt commit cuối cùng \texttt{afac46e} để ngăn mô hình tạo ra các kết quả quá ngắn ngủi như các bản thảo thô. Thay đổi này giúp cải thiện mạch văn ngữ nghĩa và phong cách báo chí của bản tóm tắt cuối cùng.}
+\textit{Lưu ý: Cụm từ "cô đọng" (condense) đã được loại bỏ trong cập nhật cuối cùng để ngăn mô hình tạo ra các kết quả quá ngắn ngủi như các bản thảo thô. Thay đổi này giúp cải thiện mạch văn ngữ nghĩa và phong cách báo chí của bản tóm tắt cuối cùng.}
 \end{tcolorbox}
 
-\textbf{Phát hiện (tái khẳng định).} Sự \textit{xuất hiện} đơn thuần của văn bản gốc trong ngữ cảnh của mô hình tổng hợp giúp thay đổi hoàn toàn hành vi của mô hình từ chắp vá bản thảo sang dung hợp biên tập. Các quy tắc chi tiết (\texttt{v1} nghiêm ngặt so với \texttt{v2} mềm dẻo) không làm biến động mạnh các hệ số định lượng, nhưng việc loại bỏ các ràng buộc văn phong như từ ``cô đọng'' lại là yếu tố quyết định để đạt được phong cách báo chí chuẩn mực, sang trọng.
+\textbf{Phát hiện (tái khẳng định).} Sự \textit{xuất hiện} đơn thuần của văn bản gốc trong ngữ cảnh của mô hình tổng hợp giúp thay đổi hoàn toàn hành vi của mô hình từ chắp vá bản thảo sang dung hợp biên tập. Các quy tắc chi tiết (\texttt{v1} nghiêm ngặt so với \texttt{v2} linh hoạt) không làm biến động mạnh các hệ số định lượng, nhưng việc loại bỏ các ràng buộc văn phong như từ ``cô đọng'' lại là yếu tố quyết định để đạt được phong cách báo chí chuẩn mực, sang trọng.

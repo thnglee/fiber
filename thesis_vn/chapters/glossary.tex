@@ -42,8 +42,8 @@
   Tác nhân đề xuất (Proposer)    & LLM ở tầng thứ nhất trong pipeline MoA, có nhiệm vụ tạo ra một bản thảo tóm tắt ứng viên \\ \hline
   Tác nhân tổng hợp (Aggregator)  & LLM ở tầng thứ hai trong pipeline MoA, có nhiệm vụ dung hợp các bản thảo thành đầu ra cuối cùng \\ \hline
   Kết nối phần dư (Residual connection) & Việc đưa trực tiếp bài viết nguồn vào ngữ cảnh của tác nhân tổng hợp để quá trình dung hợp luôn neo vào nội dung gốc, không bị ảo tưởng \\ \hline
-  Đánh giá rubric   & Hình thức LLM-giám khảo chấm điểm tóm tắt trên nhiều tiêu chí có tên cụ thể theo thang số \\ \hline
-  Đánh giá từng cặp (Pairwise) & Hình thức LLM-giám khảo so sánh hai bản tóm tắt A và B, chọn ra bản thắng cuộc \\ \hline
+  Đánh giá rubric   & Hình thức LLM-Judge chấm điểm tóm tắt trên nhiều tiêu chí có tên cụ thể theo thang số \\ \hline
+  Đánh giá từng cặp (Pairwise) & Hình thức LLM-Judge so sánh hai bản tóm tắt A và B, chọn ra bản thắng cuộc \\ \hline
   Hệ số Fleiss' $\kappa$ & Chỉ số đồng thuận giữa các người đánh giá dùng cho dữ liệu phân loại từ $\geq 2$ người đánh giá \\ \hline
   Kiểm định dấu (Sign test)        & Kiểm định phi tham số cho kết quả nhị phân theo từng cặp, sử dụng để kiểm tra tỷ lệ thắng từng cặp \\ \hline
   Phân nhóm theo độ dài (Length bucketing) & Phân tầng các phán quyết theo cặp dựa trên tỷ lệ độ dài đầu ra để kiểm soát thiên kiến độ dài \\ \hline
