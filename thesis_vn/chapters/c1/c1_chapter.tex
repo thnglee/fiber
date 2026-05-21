@@ -1,5 +1,5 @@
 % !TEX root = ../../thesis.tex
-\chapter{Tổng quan}
+\chapter{Giới thiệu bài toán}
 
 Chương này giới thiệu hai bài toán mà khóa luận giải quyết ---
 tóm tắt tin tức tự động và kiểm chứng tin tức --- kỹ thuật
@@ -55,25 +55,10 @@ Tiếng Việt đặt ra ba thách thức cho việc đánh giá chất lượng
         lại ở Chương~4.
 \end{itemize}
 
-\section{Bài toán kiểm chứng tin tức}
-
-Người đọc thường xuyên gặp phải các tiêu đề giật gân, trích
-dẫn phiến diện và thông tin sai lệch lan truyền trên mạng xã hội và
-các tổng hợp tin tức. Kiểm chứng thủ công không đủ khả năng đáp ứng
-so với quy mô thông tin hiện tại; một công cụ hỗ trợ được tích hợp ngay trong trình duyệt, có khả năng
-gắn cờ các mệnh đề không có căn cứ, ngày càng trở nên có giá trị.
-
-Pipeline kiểm chứng tin tức khoá luận này xây dựng gồm ba bước: 
-\begin{itemize}
-  \item {Phát hiện mệnh đề:} Trích xuất các
-        mệnh đề nhỏ đáng kiểm chứng từ tài liệu.
-  \item {Truy xuất bằng chứng:} Với mỗi
-        mệnh đề, truy xuất các đoạn văn từ kho ngữ liệu (hoặc web mở)
-        có thể hỗ trợ hoặc bác bỏ mệnh đề đó.
-  \item {Phán quyết:} Phân loại mỗi mệnh đề là được xác nhận,
-        bị bác bỏ hoặc không đề cập dựa trên bằng chứng, và tổng hợp các phán quyết
-        cấp mệnh đề thành điểm tin cậy cấp tài liệu.
-\end{itemize}
+Bên cạnh nhu cầu đọc thông tin nhanh, người đọc ngày nay cũng ngày một nâng cao nhận thức về tính xác thực của thông tin.
+Các tiêu đề giật gân, trích dẫn phiến diện và thông tin sai lệch lan truyền trên mạng xã hội và các tổng hợp tin tức ngày càng tinh vi và khó phân biệt.
+Kiểm chứng thủ công không đủ khả năng đáp ứng so với quy mô thông tin hiện tại; một công cụ hỗ trợ được tích hợp ngay trong trình duyệt, có khả năng
+gắn cờ các mệnh đề không có căn cứ, ngày càng trở nên có giá trị và ngày càng trở nên quan trọng hơn khi được gắn liền với bài toán tóm tắt tin tức.
 
 Tìm kiếm web mở đã trở thành nguồn bằng chứng tốt nhất được lựa chọn cho bài toán kiểm chứng, vì không có cơ sở tri thức nào có thể theo kịp tin tức
 mới hàng ngày. Xác minh tăng cường tìm kiếm kết hợp một API tìm kiếm web

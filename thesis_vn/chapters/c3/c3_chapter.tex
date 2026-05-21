@@ -267,7 +267,7 @@ Quyết định xây dựng cấu trúc đánh giá ba trục xuất phát từ 
   \label{fig:evaluation_framework}
 \end{figure}
 
-\subsection{Trục A --- Khả năng giữ lại nội dung (Content Retention)}
+\subsection{Trục A --- Khả năng giữ lại nội dung}
 
 Các số liệu thuộc Trục~A được tính toán tự động ngay sau khi mỗi bản tóm tắt được tạo ra. 
 Chỉ số ROUGE-1/2/L và BLEU được xử lý trực tiếp bằng các thư viện JavaScript \texttt{rouge} và \texttt{sacrebleu}. 
@@ -308,7 +308,7 @@ Hai quy trình xử lý bậc cao hơn được vận hành riêng cho đầu ra
   \label{fig:axis_b_calc}
 \end{figure}
 
-\subsection{Trục C --- Đánh giá bởi con người (Human Validation)}
+\subsection{Trục C --- Đánh giá bởi con người}
 
 Trục~C sử dụng chính giao diện web của hệ thống để tổ chức các tác vụ xếp hạng mù dành cho người đánh giá.
 
@@ -499,7 +499,7 @@ Trang cài đặt cấu hình hệ thống (Hình~\ref{fig:settings}) cung cấp
   \label{fig:settings}
 \end{figure}
 
-\section{Tóm tắt chương}
+\section{Tổng kết chương}
 
 Chương này đã trình bày toàn diện về thiết kế kiến trúc và giải pháp triển khai thực tế của hệ thống Fiber xoay quanh ba trụ cột cốt lõi: 
 hệ thống sản phẩm thực tế hoạt động ổn định (gồm tiện ích mở rộng trình duyệt kết hợp backend Next.js và microservice tính toán BERTScore), 
