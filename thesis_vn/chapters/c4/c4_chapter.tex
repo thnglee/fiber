@@ -7,7 +7,26 @@ Chương này kiểm chứng thực nghiệm hệ thống Fiber đã được x�
 
 \subsection{Tập dữ liệu}
 
-Quá trình đánh giá sử dụng $154$ bài báo tiếng Việt được thu thập từ trang tin trực tuyến \textit{tienphong.vn}, được cân bằng với tỷ lệ xấp xỉ $30$ bài mỗi chủ đề trên năm nhóm nội dung bao gồm: \textit{thời sự}, \textit{pháp luật}, \textit{kinh tế}, \textit{giáo dục} và \textit{văn hóa}. Thiết kế cân bằng chủ đề này giúp kiểm soát các hiệu ứng phong cách viết đặc thù theo từng thể loại báo chí, đồng thời hỗ trợ hiệu quả cho phần phân tích tương tác theo nhóm chủ đề trình bày trong Mục~4.4.3.
+Quá trình đánh giá hiệu năng của các mô hình được thực hiện trên tập dữ liệu gồm $154$ bài báo tiếng Việt, được thu thập trực tiếp từ báo điện tử \textit{tienphong.vn}. Để đảm bảo tính toàn diện và khách quan, tập dữ liệu được thiết kế cân bằng cấu trúc theo chủ đề với tỷ lệ phân bổ xấp xỉ $30$ bài mỗi nhóm, trải dài trên năm danh mục nội dung cốt lõi bao gồm: \textit{Thời sự}, \textit{Pháp luật}, \textit{Kinh tế}, \textit{Giáo dục} và \textit{Văn hóa}. 
+
+Việc thiết kế một tập dữ liệu cân bằng theo phân vùng chủ đề (được chi tiết hóa trong Bảng~\ref{tab:dataset_distribution}) đóng vai trò quan trọng trong việc kiểm soát các biến nhiễu do phong cách viết đặc thù, thuật ngữ chuyên ngành hoặc độ dài trung bình của từng thể loại báo chí. Đồng thời, cấu trúc này thiết lập cơ sở dữ liệu nền tảng phục vụ cho các phân tích sâu về sự tương tác và biến thiên hiệu năng của mô hình theo từng nhóm chủ đề được trình bày chi tiết tại Mục~4.4.3.
+
+\begin{table}[htbp]
+\centering
+\caption{Phân bố số lượng bài báo trong tập dữ liệu thực nghiệm theo danh mục}
+\label{tab:dataset_distribution}
+% Đổi từ tabular sang tabularx, set width = \textwidth và dùng cột X
+\begin{tabularx}{\textwidth}{l c X}
+\hline
+Chủ đề & Số lượng bài báo & Đặc trưng nội dung \\ \hline
+Thời sự         & 31                        & Tin tức chính trị, xã hội, sự kiện nóng. \\
+Pháp luật       & 31                        & Văn bản pháp quy, án lệ, an ninh trật tự. \\
+Kinh tế         & 30                        & Tài chính, thị trường, kinh doanh vĩ mô. \\
+Giáo dục        & 31                        & Tuyển sinh, chính sách giáo dục, học đường. \\
+Văn hóa         & 31                        & Nghệ thuật, đời sống, giá trị truyền thống. \\ \hline
+Tổng cộng & 154        &  \\ \hline
+\end{tabularx}
+\end{table}
 
 \subsection{Các mô hình so sánh}
 

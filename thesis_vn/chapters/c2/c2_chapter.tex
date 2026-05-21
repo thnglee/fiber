@@ -36,8 +36,28 @@ Hệ thống của khoá luận hiện tại đang sử dụng các mô hình sa
   \item \textbf{PhoBERT-base} (VinAI) --- bộ mã hóa ngữ cảnh cho BERTScore.
 \end{itemize}
 
-Bên cạnh các mô hình chính, các mô hình khác được tinh chỉnh suy luận như OpenAI \texttt{o4-mini} đòi hỏi cơ chế xử lý đặc thù: các tham số temperature, top-$p$ và penalty không được hỗ trợ, và giao thức streaming khác với các mô hình chat-completion thông thường. Tầng dịch vụ trong Chương~3 sẽ trừu tượng hóa các khác biệt này để tất cả 14 mô hình được hỗ trợ có thể được chọn hoán đổi cho nhau trong quá trình thực thi.
+Tất cả mô hình trên khi gọi qua giao diện API đều được thiết lập ở các thông số cấu hình mặc định của nhà cung cấp. Chi tiết các thông số mặc định cụ thể cho từng mô hình được tổng hợp trong Bảng~\ref{tab:model_parameters}.
 
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.3} % Tăng khoảng cách chiều dọc giữa các hàng cho thoáng mắt
+\caption{Thông số cấu hình mặc định của các mô hình được sử dụng}
+\label{tab:model_parameters}
+% Sử dụng tabularx với chiều rộng bằng đúng chiều rộng văn bản (\textwidth)
+% Cột 1 căn trái (l), Cột 2 dùng kiểu (X) để tự động co giãn và xuống dòng
+\begin{tabularx}{\textwidth}{l X}
+\hline
+\textbf{Mô hình} & \textbf{Thông số cấu hình mặc định} \\ \hline
+GPT-4o & Temperature = 1.0, Top-$p$ = 1.0, Frequency Penalty = 0.0, Presence Penalty = 0.0 \\
+GPT-4o-mini & Temperature = 1.0, Top-$p$ = 1.0, Frequency Penalty = 0.0, Presence Penalty = 0.0 \\
+Claude Haiku 4.5 & Temperature = 1.0, Top-$p$ = 1.0 \\
+Gemini 2.5 Flash & Temperature = 1.0, Top-$p$ = 0.95 \\
+ViT5-large & Chiến lược giải mã mặc định (Greedy decoding) \\
+PhoBERT-base & Không áp dụng (N/A --- Trích xuất embedding làm vector đặc trưng) \\ \hline
+\end{tabularx}
+\end{table}
+
+Bên cạnh các mô hình chính, các mô hình khác được tinh chỉnh suy luận như OpenAI \texttt{o1-mini} đòi hỏi cơ chế xử lý đặc thù: các tham số temperature, top-$p$ và penalty không được hỗ trợ, và giao thức streaming khác với các mô hình chat-completion thông thường. Tầng dịch vụ trong Chương~3 sẽ trừu tượng hóa các khác biệt này để tất cả 14 mô hình được hỗ trợ có thể được chọn hoán đổi cho nhau trong quá trình thực thi.
 
 \section{Cơ sở đánh giá chất lượng tóm tắt}
 
