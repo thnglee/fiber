@@ -8,26 +8,25 @@ Tin tức trực tuyến tiếng Việt đã trở thành phương tiện truy�
 chủ yếu, với hàng chục triệu bài báo được đăng tải mỗi năm trên các tờ báo lớn như
 \textit{tuoitre.vn}, \textit{thanhnien.vn}, \textit{tienphong.vn},
 \textit{vietnamnet.vn} và nhiều tờ khác. Khối lượng thông tin khổng lồ này tạo ra hai
-nhu cầu song song cho người đọc. Nhu cầu đầu tiên là \textbf{nén thông tin}: một bản tóm
+nhu cầu song song cho người đọc. Nhu cầu đầu tiên là nén thông tin: một bản tóm
 tắt súc tích, đáng tin cậy giúp người đọc có thể nắm bắt nội dung bài báo dài chỉ trong
-vài giây. Nhu cầu thứ hai là \textbf{xác thực thông tin}: kiểm tra xem các tuyên bố chính
+vài giây. Nhu cầu thứ hai là xác thực thông tin: kiểm tra xem các tuyên bố chính
 trong bài báo có được các nguồn uy tín khác xác nhận hay không, đặc biệt trong bối cảnh
 tin giả, tiêu đề giật gân và các bài viết chỉ phản ánh một phần sự thật lan truyền song
 song cùng các bài báo chính xác.
 
-Hiện nay, các hệ thống tóm tắt tiếng Việt xây dựng dựa trên một Mô hình ngôn ngữ lớn
-(LLM) đơn lẻ vẫn cho ra kết quả không ổn định --- đôi khi quá dài, đôi khi quá sát từ
+Hiện nay, các hệ thống tóm tắt tiếng Việt xây dựng dựa trên một Mô hình ngôn ngữ lớn đơn lẻ vẫn cho ra kết quả không ổn định --- đôi khi quá dài, đôi khi quá sát từ
 ngữ gốc, thậm chí đôi khi bịa đặt thông tin. Một hướng nghiên cứu gần đây,
-\textbf{Mixture-of-Agents} (MoA) của Wang et al.\ \cite{Wang2024}, lập luận rằng
+Mixture-of-Agents (MoA) của Wang et al.\ \cite{Wang2024}, lập luận rằng
 nhiều LLM có thể được kết hợp trong một kiến trúc phân cấp tác nhân gồm nhiều tác nhân đề xuất và tổng hợp
 để tạo ra kết quả vượt trội so với bất kỳ mô hình đơn lẻ nào trên các thang đánh giá.
 Tuy nhiên, liệu phương pháp này có thể áp dụng với bài toán tóm tắt tiếng Việt
-\textit{có neo ngữ cảnh gốc} --- nơi hệ thống phải trung thực với bài báo nguồn thay
+có neo ngữ cảnh gốc --- nơi hệ thống phải trung thực với bài báo nguồn thay
 vì trả lời tự do --- hay không, vẫn là câu hỏi chưa được giải đáp trong các nghiên
 cứu xử lý ngôn ngữ tự nhiên tiếng Việt.
 
 Một vấn đề sâu hơn thúc đẩy khóa luận này: các hệ số đo lường phổ biến nhất trong
-nghiên cứu tóm tắt tiếng Việt --- ROUGE \cite{Lin2004}, BLEU và BERTScore
+nghiên cứu tóm tắt tiếng Việt --- ROUGE \cite{Lin2004}, BLEU \cite{papineni2002bleu} và BERTScore
 \cite{Zhang2020} được tính toán dựa vào đối chiếu so với bài báo gốc --- đo độ trùng lặp, không đo chất lượng.
 Các thang điểm này đánh giá cao các bản tóm tắt tái sử dụng cụm từ từ bài gốc và chấm điểm thấp các bản tóm tắt
 diễn giải lại hoặc rút gọn mạnh. Một tác nhân tổng hợp trong pipeline MoA nếu được triển
@@ -39,8 +38,7 @@ một phương pháp luận đánh giá không có thiên kiến cấu trúc b�
 
 \section*{Ý nghĩa khoa học và thực tiễn}
 
-\textbf{Ý nghĩa khoa học.}
-Khóa luận đóng góp một \textit{khung đánh giá ba trục} kết hợp: (i)~các hệ số overlap
+Khóa luận đóng góp ý nghĩa khoa học bằng việc phát triển một \textit{khung đánh giá ba trục} kết hợp: (i)~các hệ số overlap
 nội dung so với bài gốc, (ii)~đánh giá chất lượng bởi LLM và xếp hạng theo
 cặp, và (iii)~xếp hạng mù bởi con người với chỉ số đồng thuận giữa các người đánh giá.
 Khóa luận sử dụng khung đó để chỉ ra, bằng chứng thực nghiệm trên dữ liệu tiếng
@@ -48,8 +46,7 @@ Việt, một hạn chế cấu trúc của các hệ số overlap đối với 
 hợp. Hạn chế này đã được đề cập gián tiếp trong các nghiên cứu tiếng Anh
 \cite{Wang2024,Zheng2023} nhưng chưa được nghiên cứu tường minh cho tiếng Việt.
 
-\textbf{Ý nghĩa thực tiễn.}
-Khóa luận cung cấp một sản phẩm tiện ích trình duyệt hoàn chỉnh có tên \textbf{Fiber}, mà bất
+Đối với khía cạnh thực tiễn, khóa luận cung cấp một sản phẩm tiện ích trình duyệt hoàn chỉnh có tên Fiber, mà bất
 kỳ người đọc báo Việt Nam nào cũng có thể cài đặt trên trình duyệt dựa trên Chromium.
 Fiber nhúng một thanh sidebar tự động xuất hiện khi người đọc báo truy cập bảy tên miền báo chí tiếng Việt lớn, tóm tắt bài
 báo theo thời gian thực bằng một LLM do người dùng chọn (hoặc pipeline MoA dung hợp),
@@ -59,7 +56,9 @@ Plasmo, và một dịch vụ BERTScore Python --- đều được phát hành n
 
 \section*{Mục tiêu nghiên cứu}
 
-\begin{enumerate}
+Khóa luận này hướng tới ba mục tiêu song song, bao trùm cả chiều rộng của hệ thống (từ giao diện đến hạ tầng) và chiều sâu học thuật (từ thiết kế pipeline đến đánh giá hệ số):
+
+\begin{itemize}
   \item Thiết kế và xây dựng hệ thống tiện ích mở rộng trình duyệt đầu-cuối hoàn
         chỉnh, có khả năng tóm tắt và kiểm chứng bài báo tiếng Việt theo thời gian
         thực, hỗ trợ nhiều nhà cung cấp LLM (OpenAI, Anthropic, Google) và nhiều cơ chế
@@ -72,28 +71,28 @@ Plasmo, và một dịch vụ BERTScore Python --- đều được phát hành n
         con người với chỉ số đồng thuận (Trục~C) --- đồng thời sử dụng khung đó
         để so sánh dung hợp MoA với các mô hình đơn lẻ cơ sở trên tập dữ liệu
         tiếng Việt cân bằng chủ đề.
-\end{enumerate}
+\end{itemize}
 
 \section*{Đối tượng và phạm vi nghiên cứu}
 
-\textbf{Đối tượng.} Các bài báo tiếng Việt được đăng trên
+Khoá luận tiến hành khảo sát và nghiên cứu trên đối tượng là các bài báo tiếng Việt được đăng trên
 \textit{tuoitre.vn}, \textit{thanhnien.vn}, \textit{tienphong.vn},
 \textit{vietnamnet.vn}, \textit{laodong.vn}, \textit{vtv.vn} và
 \textit{nld.com.vn}. Thực nghiệm đánh giá trong Chương~4 sử dụng 154 bài báo
 từ \textit{tienphong.vn}, được cân bằng theo năm chủ đề: thời sự, pháp luật,
 kinh tế, giáo dục và văn hóa.
 
-\textbf{Phạm vi.}
+Phạm vi nghiên cứu của khoá luận: 
 \begin{itemize}
-  \item \textit{Mô hình.} Ba LLM thương mại trên đám mây (GPT-4o-mini, Claude
+  \item Mô hình sử dụng: Ba LLM thương mại trên đám mây (GPT-4o-mini, Claude
         Haiku 4.5, Gemini 2.5 Flash) làm tác nhân đề xuất; GPT-4o làm tác nhân
         tổng hợp; lựa chọn bản thảo tốt nhất làm mô hình đơn lẻ cơ sở mạnh nhất.
         Các mô hình đặc thù tiếng Việt (ViT5 \cite{Nguyen2022} và
         PhoBERT \cite{Nguyen2020}) được sử dụng cho phân loại định tuyến và
         đánh giá ngữ nghĩa dựa trên embedding.  
-  \item \textit{Đánh giá.} Hệ thống được đánh giá trên một miền dữ liệu duy nhất (\textit{tienphong.vn}) với một lần chạy cho mỗi bài báo. Nghiên cứu con
+  \item Dữ liệu dùng cho đánh giá: Hệ thống được đánh giá trên một miền dữ liệu duy nhất (\textit{tienphong.vn}) với một lần chạy cho mỗi bài báo. Nghiên cứu con
         người mang tính bao quát với $n = 17$ người đánh giá và $48$ tác vụ, đóng vai trò bổ sung cho Trục~A và Trục~B.
-  \item \textit{Kiểm chứng thông tin.} Xác minh tăng cường tìm kiếm qua API tìm
+  \item Phương pháp kiểm chứng thông tin: Xác minh tăng cường tìm kiếm qua API tìm
         kiếm web Tavily. Kiểm chứng thông tin có cấu trúc sâu hơn (đồ thị tri thức hoặc phân
         loại quan điểm) nằm ngoài phạm vi của khóa luận này.
 \end{itemize}
@@ -114,26 +113,26 @@ Dubois et al.\ \cite{Dubois2024}.
 
 \section*{Bố cục khóa luận}
 
-Khoá luận được tổ chức như sau.
+Khoá luận được tổ chức như sau:
 
-\textbf{Chương 1 --- Tổng quan.} Giới thiệu bài toán tóm tắt và kiểm chứng tin tức,
+\textbf{Chương 1 --- Tổng quan:} Giới thiệu bài toán tóm tắt và kiểm chứng tin tức,
 kỹ thuật Mixture-of-Agents, và các công trình liên quan trong nghiên cứu tiếng Việt
 cũng như quốc tế, từ đó xác định khoảng trống mà khoá luận sẽ khai thác.
 
-\textbf{Chương 2 --- Cơ sở lý thuyết.} Trình bày các kiến trúc LLM được sử dụng
+\textbf{Chương 2 --- Cơ sở lý thuyết:} Trình bày các kiến trúc LLM được sử dụng
 trong hệ thống, ba dòng hệ số đánh giá (overlap, LLM-Judge, xếp hạng con người),
 phương pháp luận tính xác thực, và các công nghệ để xây dựng tiện ích mở rộng trình
 duyệt cùng các dịch vụ backend.
 
-\textbf{Chương 3 --- Thiết kế và xây dựng hệ thống.} Trình bày phân tích yêu cầu,
+\textbf{Chương 3 --- Thiết kế và xây dựng hệ thống:} Trình bày phân tích yêu cầu,
 kiến trúc ba dịch vụ, lớp trừu tượng hóa LLM đa nhà cung cấp, pipeline MoA (đóng
 góp kỹ thuật), khung đánh giá ba trục (đóng góp phương pháp luận), lược đồ cơ sở
 dữ liệu, và giao diện người dùng.
 
-\textbf{Chương 4 --- Thực nghiệm và đánh giá.} Báo cáo kết quả theo ba trục trên
+\textbf{Chương 4 --- Thực nghiệm và đánh giá:} Báo cáo kết quả theo ba trục trên
 tập dữ liệu 154 bài báo, bao gồm kết quả từng cặp nổi bật nhất, phân tích theo chủ đề, diễn giải nghiên cứu
 con người, tam giác hóa đa trục và nêu lên các hạn chế của phương pháp luận.
 
-\textbf{Kết luận} tóm tắt các đóng góp, hạn chế và hướng phát triển tương lai;
+\textbf{Chương 5 --- Kết luận:} tóm tắt các đóng góp, hạn chế và hướng phát triển tương lai;
 ba phụ lục trình bày ví dụ minh họa, thử nghiệm câu lệnh của tác nhân tổng hợp và
 pipeline kiểm chứng thông tin.
