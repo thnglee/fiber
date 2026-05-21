@@ -1,15 +1,15 @@
 % !TEX root = ../../thesis.tex
 \chapter{Giới thiệu bài toán}
 
-Chương này giới thiệu hai bài toán mà khóa luận giải quyết ---
-tóm tắt tin tức tự động và kiểm chứng tin tức --- kỹ thuật
-Mixture-of-Agents (MoA) hỗ trợ đóng góp kỹ thuật, và khảo sát
-các công trình liên quan trong nghiên cứu tiếng Việt cũng như quốc
-tế. Chương kết thúc bằng phát biểu về khoảng trống mà khóa luận khai thác.
+Chương này đặt nền móng cho toàn bộ khóa luận bằng việc giới thiệu bài toán trọng tâm --- tóm tắt văn bản tự động đi kèm với kiểm chứng tin tức tiếng Việt
+ --- cùng với kỹ thuật Mixture-of-Agents (MoA) được khóa luận lựa chọn làm phương pháp tiếp cận chính. 
+ Trước tiên, Mục~1.1 trình bày định nghĩa bài toán tóm tắt văn bản và các thách thức đặc thù khi áp dụng cho tiếng Việt; 
+ Mục~1.2 giới thiệu pipeline MoA với thiết kế phân tầng đa tác nhân; 
+ và Mục~1.3 khảo sát các công trình liên quan trong nghiên cứu tiếng Việt lẫn quốc tế, 
+ từ đó xác định ba khoảng trống nghiên cứu mà khóa luận nhắm tới khai thác.
 
 \section{Bài toán tóm tắt văn bản tự động}
 
-\textbf{Định nghĩa.}
 Tóm tắt văn bản tự động là bài toán tạo ra một phiên bản ngắn hơn
 của văn bản nguồn mà vẫn bảo toàn thông tin thiết yếu. Cho một tài
 liệu đầu vào $D$, bộ tóm tắt $f$ tạo ra bản tóm tắt $S = f(D)$
@@ -33,7 +33,7 @@ Các hệ thống tóm tắt thường được phân loại theo hai trục:
         một bài báo.
 \end{itemize}
 
-Tiếng Việt đặt ra ba thách thức cho việc đánh giá chất lượng tóm tắt:
+Tiếng Việt đặt ra ba thách thức cho việc đánh giá chất lượng kết quả tóm tắt:
 \begin{itemize}
   \item {Phân đoạn từ:} Tiếng Việt được viết
         với khoảng trắng giữa các âm tiết, không phải giữa các từ; một từ
@@ -144,11 +144,4 @@ ba khoảng trống nghiên cứu đó.
 
 \section{Tổng kết chương}
 
-Chương này đã đặt ra bài toán tóm tắt và kiểm chứng tin tức tiếng Việt
-như hai nhu cầu song song mà khóa luận giải quyết, giới thiệu
-Mixture-of-Agents như kỹ thuật mà khóa luận áp dụng, khảo sát các
-công trình liên quan trong nghiên cứu tiếng Việt và quốc tế, và xác
-định khoảng trống: chưa có hệ thống tiếng Việt nào triển khai pipeline
-MoA, triển khai qua tiện ích trình duyệt, và khung đánh giá ba
-trục về mặt phương pháp luận. Chương~2 phát triển nền tảng lý thuyết
-mà hệ thống trong Chương~3 được xây dựng dựa trên đó.
+Chương này đã thiết lập bức tranh toàn cảnh cho khóa luận thông qua ba nội dung chính. Thứ nhất, bài toán tóm tắt văn bản tự động được trình bày với các đặc thù của tiếng Việt bao gồm phân đoạn từ đa âm tiết, dấu phụ thanh điệu và sự khan hiếm corpus đánh giá có chú thích bởi con người. Thứ hai, kỹ thuật Mixture-of-Agents được giới thiệu với thiết kế phân tầng, trong đó tầng tác nhân đề xuất tạo ra các bản thảo độc lập và tầng tác nhân tổng hợp dung hợp chúng thành bản tóm tắt chất lượng cao hơn --- một kết quả đã được chứng minh trên các bộ đánh giá quốc tế nhưng chưa được kiểm chứng cho tiếng Việt. Thứ ba, qua khảo sát các công trình liên quan, chương đã xác định ba khoảng trống nghiên cứu: chưa có công trình nào áp dụng MoA cho tiếng Việt, kết hợp tóm tắt với kiểm chứng thông tin trong một tiện ích trình duyệt, hay đối chiếu tường minh ba phương pháp đánh giá trong một khuôn khổ thống nhất cho bài toán tóm tắt tiếng Việt. Các nền tảng lý thuyết cần thiết để xây dựng hệ thống lấp đầy những khoảng trống này sẽ được trình bày chi tiết trong Chương~2.

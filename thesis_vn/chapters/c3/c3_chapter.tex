@@ -1,12 +1,7 @@
 % !TEX root = ../../thesis.tex
 \chapter{Thiết kế và xây dựng hệ thống}
 
-Chương này trình bày chi tiết thiết kế và triển khai thực nghiệm của hệ thống Fiber, 
-một tiện ích trình duyệt hỗ trợ tóm tắt tự động và kiểm chứng tin tức 
-tiếng Việt. Sau phần phân tích các yêu cầu hệ thống (Mục~3.1), Mục~3.2 giới thiệu về kiến trúc 
-tổng quan gồm ba dịch vụ; các Mục~3.3 đến 3.5 mô tả chi tiết các module tóm tắt và 
-kiểm chứng thông tin; Mục~3.6 trình bày chi tiết khung đánh giá ba trục — đóng góp chính về mặt phương pháp luận của khóa luận; Mục~3.7 mô tả thiết kế lược đồ cơ sở 
-dữ liệu; và Mục~3.8 hướng dẫn chi tiết về giao diện người dùng của hệ thống.
+Chương này hiện thực hóa các nền tảng lý thuyết đã được trình bày trong Chương~2 thành một hệ thống phần mềm hoàn chỉnh mang tên Fiber --- một tiện ích trình duyệt hỗ trợ tóm tắt tự động và kiểm chứng tin tức tiếng Việt. Nội dung chương được tổ chức theo trình tự từ phân tích yêu cầu đến triển khai: Mục~3.1 phân tích các yêu cầu chức năng và phi chức năng; Mục~3.2 giới thiệu kiến trúc tổng quan gồm ba dịch vụ; Mục~3.3 trình bày module tóm tắt văn bản với lớp trừu tượng hóa đa nhà cung cấp LLM và cơ chế định tuyến dựa trên độ phức tạp; Mục~3.4 mô tả pipeline dung hợp đa tác nhân MoA --- đóng góp kỹ thuật cốt lõi của khóa luận; Mục~3.5 trình bày module kiểm chứng tin tức; Mục~3.6 chi tiết khung đánh giá ba trục --- đóng góp chính về mặt phương pháp luận; Mục~3.7 mô tả thiết kế lược đồ cơ sở dữ liệu; và Mục~3.8 giới thiệu giao diện người dùng của hệ thống.
 
 \section{Phân tích yêu cầu hệ thống}
 
@@ -120,7 +115,7 @@ Quy trình tóm tắt từ đầu đến cuối gồm năm giai đoạn chính:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth,height=0.8\textheight,keepaspectratio]{figures/summarization_flow.png}
+  \includegraphics[width=\linewidth,height=0.95\textheight,keepaspectratio]{figures/summarization_flow.png}
   \caption{Nguyên lý hoạt động của dịch vụ tóm tắt văn bản.}
   \label{fig:summarization_flow}
 \end{figure}
@@ -262,7 +257,7 @@ Quyết định xây dựng cấu trúc đánh giá ba trục xuất phát từ 
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.97\linewidth]{figures/3-axis_framework.png}
+  \includegraphics[width=1\linewidth]{figures/3-axis_framework.png}
   \caption{Khung đánh giá ba trục được sử dụng để định vị đa chiều chất lượng hệ thống.}
   \label{fig:evaluation_framework}
 \end{figure}
@@ -276,7 +271,7 @@ Cả bốn chỉ số đánh giá chất lượng này đều được tính to�
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{figures/A_calculation.png}
+  \includegraphics[width=1.03\linewidth]{figures/A_calculation.png}
   \caption{Sơ đồ luồng tính toán các chỉ số thuộc Trục A (Khả năng giữ lại nội dung).}
   \label{fig:axis_a_calc}
 \end{figure}
@@ -501,9 +496,4 @@ Trang cài đặt cấu hình hệ thống (Hình~\ref{fig:settings}) cung cấp
 
 \section{Tổng kết chương}
 
-Chương này đã trình bày toàn diện về thiết kế kiến trúc và giải pháp triển khai thực tế của hệ thống Fiber xoay quanh ba trụ cột cốt lõi: 
-hệ thống sản phẩm thực tế hoạt động ổn định (gồm tiện ích mở rộng trình duyệt kết hợp backend Next.js và microservice tính toán BERTScore), 
-pipeline dung hợp kết quả đa tác nhân MoA, và khung đánh giá chất lượng ba trục độc lập. 
-Cấu trúc pipeline MoA áp dụng mô hình thiết kế của nghiên cứu gốc \cite{Wang2024} kết hợp với sự thích ứng miền bắt buộc là bổ sung kết nối phần dư bài viết gốc để đảm bảo thông tin tóm tắt luôn chính xác và trung thực. 
-Đồng thời, sự tích hợp hài hòa của khung đánh giá ba trục giúp người thực hiện nghiên cứu đo lường chất lượng hệ thống thông qua ba lăng kính độc lập và chuyên biệt, 
-đảm bảo rằng bất kỳ kết luận khoa học nào được cả ba trục cùng đồng thuận ủng hộ đều đạt độ tin cậy thực chứng tối đa và không bị ảnh hưởng bởi thiên kiến của bất kỳ một công cụ đo lường đơn lẻ nào.
+Chương này đã trình bày toàn bộ quá trình thiết kế và xây dựng hệ thống Fiber, bao phủ từ phân tích yêu cầu đến giao diện người dùng cuối cùng. Về mặt kiến trúc, hệ thống được tổ chức thành ba dịch vụ phối hợp chặt chẽ: tiện ích trình duyệt Plasmo chịu trách nhiệm trích xuất nội dung và hiển thị, backend Next.js~14 đóng vai trò điều phối trung tâm với xác thực dữ liệu bằng Zod, và microservice BERTScore dựa trên PhoBERT để tính toán tương đồng ngữ nghĩa. Về mặt kỹ thuật, pipeline MoA hai lớp với ba tác nhân đề xuất đa nhà cung cấp và một tác nhân tổng hợp GPT-4o đã được triển khai trên cơ sở nghiên cứu gốc của Wang et al.\ \cite{Wang2024}, kết hợp với cải tiến quan trọng là nhúng trực tiếp bài viết gốc vào ngữ cảnh tổng hợp thông qua kết nối phần dư --- biến tác nhân tổng hợp từ chế độ chắp vá bản thảo sang chế độ tổng hợp biên tập thực sự. Về mặt phương pháp luận, khung đánh giá ba trục tích hợp đồng thời các hệ số overlap tự động (Trục~A), đánh giá chất lượng bằng LLM-Judge (Trục~B) và xếp hạng mù bởi con người (Trục~C), đảm bảo rằng mọi kết luận khoa học đều được kiểm chứng từ ba góc nhìn độc lập. Toàn bộ thiết kế này sẽ được kiểm chứng thực nghiệm trên tập dữ liệu 154 bài báo tiếng Việt trong Chương~4.

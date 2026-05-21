@@ -1,7 +1,10 @@
 % !TEX root = ../../thesis.tex
 \chapter{Cơ sở lý thuyết}
 
-Chương này trình bày nền tảng lý thuyết mà hệ thống trong Chương~3 được xây dựng: kiến trúc các LLM được sử dụng, ba trục đánh giá, phương pháp luận tính xác thực, ngăn xếp trích xuất nội dung và framework tiện ích mở rộng trình duyệt. Mỗi mục gắn lý thuyết với một lựa chọn cụ thể trong hệ thống.
+Chương này xây dựng nền tảng lý thuyết cho toàn bộ hệ thống được triển khai trong Chương~3 và các thực nghiệm đánh giá trong Chương~4. Mục~2.1 trình bày kiến trúc Transformer cùng ba dòng mô hình ngôn ngữ lớn
+và liệt kê cụ thể các mô hình được sử dụng trong hệ thống. 
+Mục~2.2 là phần trọng tâm lý thuyết của chương, trình bày chi tiết ba trục đánh giá chất lượng tóm tắt.
+ Mỗi khái niệm lý thuyết được gắn trực tiếp với một lựa chọn thiết kế cụ thể trong hệ thống.
 
 \section{Các mô hình ngôn ngữ lớn}
 
@@ -150,4 +153,4 @@ Lưu ý quan trọng nhất của khóa luận này, được phát biểu lại
 
 \section{Tổng kết chương}
 
-Chương này đã trình bày các kiến trúc LLM, ba trục đánh giá (overlap, LLM-Judge, con người), phương pháp luận tính xác thực, ngăn xếp trích xuất nội dung và framework tiện ích mở rộng trình duyệt mà hệ thống trong Chương~3 được xây dựng dựa trên. Luận điểm lý thuyết then chốt của chương là các hệ số overlap được tính so với bài báo gốc đo khả năng giữ lại nội dung, không đo chất lượng tóm tắt; luận điểm này (được phát biểu chính thức ở Mục~2.2.5) chính là động lực cho việc bổ sung Trục~B và Trục~C vào khung đánh giá.
+Chương này đã cung cấp toàn bộ nền tảng lý thuyết cần thiết để hiểu và đánh giá hệ thống Fiber. Về mặt mô hình, chương đã trình bày kiến trúc Transformer và ba dòng LLM, trong đó các mô hình decoder-only (GPT-4o, Claude Haiku~4.5, Gemini~2.5~Flash) đóng vai trò tác nhân đề xuất và tổng hợp, còn PhoBERT (encoder-only) và ViT5 (encoder-decoder) phục vụ lần lượt cho tính toán BERTScore và phương án dự phòng định tuyến. Về mặt đánh giá, chương đã xây dựng hệ thống lý thuyết cho ba trục đo lường: Trục~A với các hệ số overlap (ROUGE, BLEU, BERTScore), Trục~B với phương pháp luận LLM-Judge (rubric theo FLASK, chấm điểm theo MT-Bench, so sánh cặp theo AlpacaEval, và đánh giá tính xác thực ở cấp mệnh đề), cùng Trục~C với xếp hạng mù và hệ số Fleiss'~$\kappa$. Luận điểm lý thuyết then chốt nhất của chương --- các hệ số overlap được tính so với bài báo gốc đo khả năng giữ lại nội dung chứ không đo chất lượng tóm tắt --- chính là cơ sở lý luận cho việc thiết kế khung đánh giá đa trục thay vì phụ thuộc vào một trục duy nhất. Chương~3 sẽ trình bày cách các lý thuyết này được hiện thực hóa trong thiết kế và xây dựng hệ thống.

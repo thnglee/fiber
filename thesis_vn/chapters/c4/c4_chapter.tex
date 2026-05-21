@@ -1,7 +1,7 @@
 % !TEX root = ../../thesis.tex
 \chapter{Thực nghiệm và đánh giá}
 
-Chương này trình bày kết quả đánh giá thực nghiệm hệ thống được mô tả trong Chương~3. Mục~4.1 trình bày chi tiết về thiết lập thực nghiệm; các Mục~4.2--4.4 báo cáo kết quả tương ứng theo ba trục đánh giá; Mục~4.5 đối chiếu chéo các kết quả này; Mục~4.6 thảo luận về các hạn chế phương pháp luận; và Mục~4.7 tổng kết các phát hiện chính thu được.
+Chương này kiểm chứng thực nghiệm hệ thống Fiber đã được xây dựng trong Chương~3 thông qua khung đánh giá ba trục trên tập dữ liệu gồm 154 bài báo tiếng Việt cân bằng theo năm nhóm chủ đề. Mục~4.1 trình bày thiết lập thực nghiệm bao gồm tập dữ liệu, các mô hình so sánh và hệ đo lường; Mục~4.2 báo cáo kết quả Trục~A về khả năng giữ lại nội dung; Mục~4.3 trình bày kết quả Trục~B về chất lượng và mức độ ưu tiên, bao gồm phép so sánh mang tính quyết định giữa bản dung hợp MoA và GPT-4o đơn lẻ; Mục~4.4 phân tích kết quả Trục~C từ khảo sát 17 người đánh giá độc lập; Mục~4.5 thực hiện phân tích đa trục để đối chiếu và tam giác hóa các kết quả; và Mục~4.6 thảo luận về các hạn chế phương pháp luận.
 
 \section{Thiết lập thực nghiệm}
 
@@ -247,9 +247,9 @@ Biên độ vượt trội của phương pháp dung hợp biến động rất 
 
 Khoảng chênh lệch này có thể được giải thích bằng các giả thuyết thu thập được sau quá trình phỏng vấn người đánh giá: 
 \begin{itemize}
-  \item \textit{Thiên kiến ủng hộ độ dài và tính toàn diện.} LLM-Judge luôn cộng điểm cho Độ bao phủ (Coverage) một cách nhất quán; bản tóm tắt dung hợp dài hơn và bao hàm nhiều thông tin hơn bản GPT-4o đơn lẻ, nên LLM-Judge dễ dàng phán quyết. Con người, khi đối diện với các chủ đề hành chính khô khan, lại phản ứng ngược lại.
-  \item \textit{Tương tác theo nhóm chủ đề.} LLM-Judge không có nhận thức về sở thích và hành vi đọc; con người thì có (Mục~4.4.3).
-  \item \textit{Hiệu ứng phân cực phán quyết.} Các LLM-Judge khi so sánh thường nhạy cảm với các khác biệt nhỏ và có xu hướng phóng đại khoảng cách này \cite{Zheng2023}; trong khi con người thực tế đánh giá một cách dè dặt và có xu hướng nghiêng về kết quả hòa nhiều hơn.
+  \item Thiên kiến ủng hộ độ dài và tính toàn diện: LLM-Judge luôn cộng điểm cho Độ bao phủ (Coverage) một cách nhất quán; bản tóm tắt dung hợp dài hơn và bao hàm nhiều thông tin hơn bản GPT-4o đơn lẻ, nên LLM-Judge dễ dàng phán quyết. Con người, khi đối diện với các chủ đề hành chính khô khan, lại phản ứng ngược lại.
+  \item Tương tác theo nhóm chủ đề: LLM-Judge không có nhận thức về sở thích và hành vi đọc; con người thì có (Mục~4.4.3).
+  \item Hiệu ứng phân cực phán quyết:  Các LLM-Judge khi so sánh thường nhạy cảm với các khác biệt nhỏ và có xu hướng phóng đại khoảng cách này \cite{Zheng2023}; trong khi con người thực tế đánh giá một cách dè dặt và có xu hướng nghiêng về kết quả hòa nhiều hơn.
 \end{itemize}
 
 Việc chỉ sử dụng một trục đánh giá duy nhất là không đủ để báo cáo đầy đủ về hiệu năng của phương pháp MoA. Kết quả từ cả ba trục cần được kết hợp chặt chẽ để bổ trợ lẫn nhau; nếu chỉ chạy riêng Trục B, khóa luận sẽ vội vã kết luận tỷ lệ thắng áp đảo lên tới $77\%$ trong khi thực tế kết quả ghi nhận từ con người (Trục C) chỉ dừng lại ở mức $41\%$.
@@ -269,4 +269,8 @@ Thứ hai, nghiên cứu cần kiểm soát hiện tượng mệt mỏi nhận t
 
 \section{Tổng kết chương}
 
-Chương này báo cáo kết quả đánh giá thực nghiệm toàn diện hệ thống trên $154$ bài báo tiếng Việt được cân bằng về mặt chủ đề. Kết quả dung hợp MoA vượt trội hơn mô hình cơ sở đơn lẻ mạnh nhất trên mọi khía cạnh đánh giá: ROUGE-1 ($+0{,}062$), BERTScore ($+0{,}051$), điểm Tổng thể Rubric ($+0{,}08$), tỷ lệ thắng đấu cặp so với bản thảo tốt nhất do LLM đánh giá ($68,9\%$), và kết quả đánh giá của con người ($40,9\%$ đa số tương đối). Sự đồng thuận về mặt chiều hướng trên cả ba góc nhìn độc lập cho phép đưa ra kết luận chắc chắn rằng dung hợp đa tác nhân là giải pháp kỹ thuật ưu việt giúp tạo ra các bản tóm tắt chất lượng cao. Bên cạnh đó, khoảng cách chênh lệch giữa Trục B.2a và Trục C, cùng hiện tượng đảo ngược hành vi đọc của con người trên các chủ đề hành chính khô khan, chính là những phát hiện phương pháp luận có giá trị mà khung đánh giá ba trục mang lại. Chương 5 sẽ khái quát lại các đóng góp khoa học chính, tái khẳng định các hạn chế và định hình các hướng nghiên cứu tiềm năng trong tương lai.
+Chương này đã hoàn thành việc kiểm chứng thực nghiệm toàn diện hệ thống trên 154 bài báo tiếng Việt cân bằng theo năm nhóm chủ đề, và thu được hai
+nhóm kết quả chính. Nhóm thứ nhất là sự đồng thuận về chiều hướng: cả ba trục đánh giá đều thống nhất rằng phương pháp dung hợp MoA tạo ra bản tóm tắt chất lượng cao hơn bất kỳ mô hình đơn lẻ nào, với ROUGE-1 dẫn $+0{,}062$, BERTScore dẫn $+0{,}051$, điểm Tổng thể Rubric dẫn $+0{,}08$, tỷ lệ thắng đấu cặp LLM-Judge đạt $68{,}9\%$, và tỷ lệ ưu tiên của con người đạt $40{,}9\%$ đa số tương đối.
+ Đặc biệt, trong phép so sánh có kiểm soát mô hình (dung hợp MoA đối đầu GPT-4o đơn lẻ, cùng là đầu ra của GPT-4o), bản dung hợp thắng $37/48$ lần ($p = 0{,}0002$), chứng minh rằng hiệu quả đến từ chính quá trình dung hợp chứ không phải từ sự chênh lệch năng lực mô hình. 
+ Nhóm thứ hai là các phát hiện phương pháp luận: khoảng cách 28 điểm phần trăm giữa tỷ lệ thắng của LLM-Judge ($68{,}9\%$) và tỷ lệ ưu tiên của con người ($40{,}9\%$) cho thấy LLM-Judge phóng đại biên độ vượt trội; đồng thời, hiện tượng đảo ngược sở thích theo nhóm chủ đề --- con người ưa thích bản tóm tắt ngắn nhất cho các bài hành chính khô khan dù LLM-Judge luôn thưởng cho độ bao phủ --- khẳng định rằng không một trục đánh giá đơn lẻ nào đủ để phản ánh đầy đủ chất lượng tóm tắt. 
+ Chương~5 sẽ tổng hợp các đóng góp khoa học, tái khẳng định các hạn chế và đề xuất các hướng phát triển tương lai.
