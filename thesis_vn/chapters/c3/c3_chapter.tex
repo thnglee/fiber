@@ -241,7 +241,7 @@ Quy trình xử lý tuân theo một logic tìm kiếm và xác thực hệ th�
 \begin{itemize}
   \item Phân đoạn văn bản tóm tắt (hoặc bất kỳ đoạn văn bản tự do nào do người dùng nhập vào) được gửi tới công cụ Tavily dưới dạng một truy vấn tìm kiếm trực tuyến.
   \item Hệ thống Tavily trả về sáu kết quả tìm kiếm chất lượng cao nhất, mỗi kết quả là một bộ ba thông tin gồm \texttt{(tiêu đề bài báo, đường dẫn URL, đoạn văn bản trích dẫn)}.
-  \item Các đoạn trích dẫn này, kết hợp cùng văn bản mệnh đề ban đầu của người dùng, được chuyển đến mô hình GPT-4o-mini. Mô hình phân tích và trả về một cấu trúc dữ liệu JSON gồm các trường thông tin: \texttt{trust\_score} (điểm độ tin cậy từ $0$--$100$), \texttt{verified} (biến logic xác định tuyên bố đúng hay sai), và \texttt{sources} (danh sách các đường dẫn nguồn minh chứng).
+  \item Các đoạn trích dẫn này, kết hợp cùng văn bản mệnh đề ban đầu của người dùng, được chuyển đến mô hình GPT-4o-mini. Mô hình phân tích và trả về một cấu trúc dữ liệu JSON gồm các trường thông tin: \texttt{trust\_score} (điểm độ tin cậy từ $0$--$100$), \texttt{verified} (biến logic xác định mệnh đề đúng hay sai), và \texttt{sources} (danh sách các đường dẫn nguồn minh chứng).
   \item Tiện ích mở rộng tiếp nhận dữ liệu này và hiển thị trực quan trong khung hội thoại kiểm chứng ngay phía dưới bản tóm tắt.
 \end{itemize}
 
@@ -253,7 +253,7 @@ Quy trình xử lý tuân theo một logic tìm kiếm và xác thực hệ th�
 \end{figure}
 
 Việc lựa chọn mô hình GPT-4o-mini cho bước đưa ra phán quyết cuối cùng là một quyết định kỹ thuật có tính toán thực tế: 
-mô hình này có chi phí vận hành rẻ hơn mười lần so với GPT-4o trong khi không ghi nhận bất kỳ sự giảm sút nào về mặt chất lượng phán quyết trên tập kiểm tra thử nghiệm gồm 50 tuyên bố thực tế.
+mô hình này có chi phí vận hành rẻ hơn mười lần so với GPT-4o trong khi không ghi nhận bất kỳ sự giảm sút nào về mặt chất lượng phán quyết trên tập kiểm tra thử nghiệm gồm 50 mệnh đề thực tế.
 
 \section{Khung đánh giá ba trục}
 
@@ -375,7 +375,7 @@ Nhóm bảng này chịu trách nhiệm theo dõi toàn bộ vòng đời của 
 \texttt{bert\_score} & float8 & Trục A: Điểm số tương đồng ngữ nghĩa BERTScore. \\
 \texttt{latency} & int4 & Tổng thời gian xử lý yêu cầu (ms). \\
 \texttt{judge\_rubric} & jsonb & Trục B: Kết quả đánh giá Rubric đa chiều dưới dạng JSON. \\
-\texttt{factuality\_ratio} & numeric & Trục B: Tỷ lệ các tuyên bố được kéo theo logic từ nguồn. \\ \hline
+\texttt{factuality\_ratio} & numeric & Trục B: Tỷ lệ các mệnh đề được chấp thuận logic từ nguồn. \\ \hline
 \textit{routing\_decisions} & & \\
 \texttt{article\_tokens} & int4 & Số lượng token ước tính của văn bản đầu vào. \\
 \texttt{complexity} & text & Mức độ phức tạp được phân loại (Thấp/Trung bình/Cao). \\
