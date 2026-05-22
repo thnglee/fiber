@@ -7,24 +7,28 @@ Chương này hiện thực hóa các nền tảng lý thuyết đã được tr
 
 \subsection{Yêu cầu chức năng}
 
-\begin{enumerate}
-  \item Tóm tắt văn bản: Nhận đầu vào là một đường dẫn (URL) tin tức tiếng Việt, 
+Hệ thống được thiết kế với bảy yêu cầu chức năng chính: 
+
+\begin{itemize}
+  \item Tóm tắt văn bản: Nhận đầu vào là một đường dẫn tin tức tiếng Việt, 
         trả về một bản tóm tắt tóm lược $S$ sao cho $|S| \leq 0{,}5 \cdot |D|$ (độ dài bản tóm tắt không quá một nửa độ dài văn bản gốc).
   \item Truyền dữ liệu dạng luồng (Streaming): Truyền bản tóm tắt theo từng token
         qua kênh SSE (Server-Sent-Events) để đạt thời gian phản hồi dưới ba giây đối với token đầu tiên, tối ưu hóa trải nghiệm người dùng.
   \item Kiểm chứng thông tin: Theo yêu cầu của người dùng, phân tách bản tóm tắt thành các 
         mệnh đề nhỏ, truy xuất các minh chứng trên web cho từng mệnh đề, và hiển thị điểm độ tin cậy cùng danh sách nguồn tham chiếu tương ứng.
-  \item Chuyển đổi đa mô hình: Cho phép người dùng lựa chọn giữa các mô hình ngôn ngữ lớn (LLM) 
+  \item Chuyển đổi đa mô hình: Cho phép người dùng lựa chọn giữa các mô hình ngôn ngữ lớn 
         được hỗ trợ tại thời điểm chạy; đồng thời lưu giữ lựa chọn cấu hình này qua các phiên làm việc.
   \item Hệ đo lường đánh giá: Sau mỗi lượt tóm tắt, tự động tính toán các chỉ số 
         ROUGE-1/2/L, BLEU, BERTScore, tỷ lệ nén, các điểm số LLM-Judge, so sánh và ghi nhận kết quả vào cơ sở dữ liệu.
   \item Dung hợp đa tác nhân: Cung cấp chế độ định tuyến dung hợp, 
         chạy song song ba tác nhân đề xuất và kết hợp kết quả thông qua một tác nhân tổng hợp.
   \item Quản trị đánh giá người dùng: Cho phép xây dựng các 
-        tác vụ xếp hạng ẩn danh $K$ chiều (giấu danh tính mô hình) và theo dõi các số liệu thống kê tổng hợp thuộc Trục~C.
-\end{enumerate}
+        tác vụ xếp hạng ẩn danh $K$ chiều với danh tính các mô hình bị ẩn và theo dõi các số liệu thống kê tổng hợp thuộc Trục~C.
+\end{itemize}
 
 \subsection{Yêu cầu phi chức năng}
+
+Hệ thống có khả năng đáp ứng bốn yêu cầu phi chức năng quan trọng: 
 
 \begin{itemize}
   \item Độ trễ: Thời gian phản hồi token đầu tiên dưới 3 giây đối với 
@@ -41,16 +45,16 @@ Chương này hiện thực hóa các nền tảng lý thuyết đã được tr
 
 \section{Kiến trúc tổng quan hệ thống}
 
-Kiến trúc của hệ thống Fiber bao gồm ba dịch vụ chính hoạt động phối hợp chặt chẽ (Hình~\ref{fig:architecture}). 
+Kiến trúc của hệ thống Fiber bao gồm ba dịch vụ chính hoạt động phối hợp chặt chẽ (Hình~\ref{fig:architecture_updated}). 
 Tiện ích trình duyệt giao tiếp với backend Next.js thông qua các giao thức REST và SSE; 
 backend chịu trách nhiệm tương tác với các nhà cung cấp LLM và microservice BERTScore; 
 toàn bộ trạng thái dữ liệu được quản lý bởi cơ sở dữ liệu PostgreSQL trên nền tảng Supabase.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{figures/architecture.png}
+  \includegraphics[width=1\linewidth]{figures/architecture_updated.png}
   \caption{Kiến trúc hệ thống ba dịch vụ của Fiber.}
-  \label{fig:architecture}
+  \label{fig:architecture_updated}
 \end{figure}
 
 \subsection{Tiện ích mở rộng trình duyệt}
@@ -115,7 +119,7 @@ Quy trình tóm tắt từ đầu đến cuối gồm năm giai đoạn chính:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth,height=0.95\textheight,keepaspectratio]{figures/summarization_flow.png}
+  \includegraphics[width=\linewidth,height=0.95\textheight,keepaspectratio]{figures/sum_updated.png}
   \caption{Nguyên lý hoạt động của dịch vụ tóm tắt văn bản.}
   \label{fig:summarization_flow}
 \end{figure}
@@ -171,7 +175,7 @@ và danh sách các bản thảo sơ bộ $\{d_1, d_2, d_3\}$ để dung hợp v
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{figures/moa_pipeline.png}
+  \includegraphics[width=1\linewidth]{figures/moa_updated.png}
   \caption{Kiến trúc pipeline hai lớp MoA tích hợp kết nối phần dư.}
   \label{fig:moa}
 \end{figure}
@@ -242,7 +246,7 @@ Quy trình xử lý tuân theo một logic tìm kiếm và xác thực hệ th�
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\linewidth, height=0.8\textheight, keepaspectratio]{figures/fact_check_flow.png}
+  \includegraphics[width=0.8\linewidth, height=0.8\textheight, keepaspectratio]{figures/factcheck-updated.png}
   \caption{Nguyên lý hoạt động của dịch vụ kiểm chứng thông tin được tăng cường tìm kiếm.}
   \label{fig:fact_check_flow}
 \end{figure}
@@ -257,7 +261,7 @@ Quyết định xây dựng cấu trúc đánh giá ba trục xuất phát từ 
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{figures/3-axis_framework.png}
+  \includegraphics[width=1\linewidth]{figures/3axis_updated.png}
   \caption{Khung đánh giá ba trục được sử dụng để định vị đa chiều chất lượng hệ thống.}
   \label{fig:evaluation_framework}
 \end{figure}
@@ -271,7 +275,7 @@ Cả bốn chỉ số đánh giá chất lượng này đều được tính to�
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1.03\linewidth]{figures/A_calculation.png}
+  \includegraphics[width=1.03\linewidth]{figures/Acal_updated.png}
   \caption{Sơ đồ luồng tính toán các chỉ số thuộc Trục A (Khả năng giữ lại nội dung).}
   \label{fig:axis_a_calc}
 \end{figure}
@@ -298,7 +302,7 @@ Hai quy trình xử lý bậc cao hơn được vận hành riêng cho đầu ra
 
 \begin{figure}[H]
   \centering
-  \includegraphics[height=0.8\textheight,keepaspectratio]{figures/B_calculation.png}
+  \includegraphics[height=0.9\textheight,keepaspectratio]{figures/Bcal_updated.png}
   \caption{Sơ đồ luồng xử lý đánh giá bằng LLM-Judge thuộc Trục B (Chất lượng và Mức độ ưu tiên).}
   \label{fig:axis_b_calc}
 \end{figure}
@@ -316,8 +320,8 @@ Trục~C sử dụng chính giao diện web của hệ thống để tổ chức
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{figures/C_calculation.png}
-  \caption{Sơ đồ luồng xử lý và tổng hợp số liệu thống kê thuộc Trục C (Đánh giá con người).}
+  \includegraphics[width=\linewidth]{figures/Ccal_updated.png}
+  \caption{Sơ đồ luồng xử lý và tổng hợp số liệu thống kê thuộc Trục C (Đánh giá của con người).}
   \label{fig:axis_c_calc}
 \end{figure}
 
