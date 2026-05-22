@@ -95,7 +95,7 @@ Văn bản đầu vào được cắt ngắn còn tối đa 256 token trước k
 
 \section{Module tóm tắt văn bản}
 
-Module tóm tắt văn bản được thiết kế độc lập với mô hình (model-agnostic) và hoạt động bền vững trước nhiều độ dài đầu vào khác nhau. 
+Module tóm tắt văn bản được thiết kế độc lập với mô hình và hoạt động ổn định trước nhiều độ dài đầu vào khác nhau. 
 Quy trình tóm tắt tuân theo một luồng công việc hệ thống từ khâu trích xuất nội dung cho đến bước đánh giá.
 
 \subsection{Quy trình tóm tắt văn bản}
@@ -127,12 +127,12 @@ Quy trình tóm tắt từ đầu đến cuối gồm năm giai đoạn chính:
 \subsection{Trừu tượng hóa đa nhà cung cấp LLM}
 
 Hệ thống hỗ trợ mười bốn mô hình ngôn ngữ lớn khác nhau thuộc ba nhà cung cấp LLM 
-(\texttt{openai}, \texttt{@google/}\allowbreak\texttt{generative-}\allowbreak\texttt{ai}, \texttt{@anthropic-}\allowbreak\texttt{ai/}\allowbreak\texttt{sdk}). 
+(OpenAI, Google, Anthropic). 
 Module \texttt{llm.}\allowbreak\texttt{service.}\allowbreak\texttt{ts} cung cấp một hàm \texttt{summarize} duy nhất chịu trách nhiệm điều phối các yêu cầu đến từng nhà cung cấp và xử lý các đặc thù kỹ thuật riêng biệt của từng API:
 
 \begin{itemize}
   \item Các mô hình suy luận sâu (\texttt{o4-mini}) bỏ qua các tham số temperature, top-$p$, và frequency-penalty.
-  \item Các mô hình của Anthropic giới hạn nhiệt độ trong khoảng $[0, 1]$ và không hỗ trợ cấu hình hạt giống ngẫu nhiên (seed).
+  \item Các mô hình của Anthropic giới hạn temperature trong khoảng $[0, 1]$ và không hỗ trợ cấu hình hạt giống ngẫu nhiên (seed).
   \item Các mô hình Gemini dùng cấu hình (\texttt{response}\allowbreak\texttt{MimeType:}\allowbreak{} \texttt{"application/}\allowbreak\texttt{json"}) để bắt buộc trả về cấu trúc dữ liệu JSON định hình sẵn.
 \end{itemize}
 
@@ -257,7 +257,7 @@ mô hình này có chi phí vận hành rẻ hơn mười lần so với GPT-4o 
 \section{Khung đánh giá ba trục}
 
 Mục này mô tả đóng góp về mặt phương pháp luận chính của khóa luận: một khung đánh giá tích hợp đồng thời ba khía cạnh độc lập bao gồm các số liệu đo lường khả năng giữ lại nội dung (Trục~A), đánh giá chất lượng bằng LLM-Judge (Trục~B) và xếp hạng của con người (Trục~C). 
-Quyết định xây dựng cấu trúc đánh giá ba trục xuất phát từ các phân tích tại Mục~2.2.5: bất kỳ một trục đơn lẻ nào cũng tự bản thân nó mang những thiên kiến cấu trúc nội tại; chỉ khi kết hợp cả ba trục lại với nhau mới tạo ra một phương pháp định vị đa chiều đáng tin cậy để đo lường chất lượng hệ thống.
+Quyết định xây dựng cấu trúc đánh giá ba trục xuất phát từ sau quan sát và phân tích: bất kỳ một trục đơn lẻ nào cũng tự bản thân nó mang những thiên kiến cấu trúc nội tại; chỉ khi kết hợp cả ba trục lại với nhau mới tạo ra một phương pháp định vị đa chiều đáng tin cậy để đo lường chất lượng hệ thống.
 
 \begin{figure}[H]
   \centering
@@ -348,13 +348,13 @@ Quy trình thực nghiệm này được triển khai bằng cách sử dụng c
 \section{Thiết kế cơ sở dữ liệu}
 
 Cơ sở dữ liệu PostgreSQL trên nền tảng Supabase được triển khai thông qua 25 migration. 
-Lược đồ cơ sở dữ liệu (schema) được phân chia mạch lạc thành ba nhóm chức năng chính: các số liệu đo lường chất lượng trên mỗi lượt tóm tắt, dữ liệu đặc thù phục vụ cấu trúc MoA, và hồ sơ lưu trữ các tác vụ đánh giá bởi con người. 
+Lược đồ cơ sở dữ liệu được phân chia mạch lạc thành ba nhóm chức năng chính: các số liệu đo lường chất lượng trên mỗi lượt tóm tắt, dữ liệu đặc thù phục vụ cấu trúc MoA, và hồ sơ lưu trữ các tác vụ đánh giá bởi con người. 
 Các mối liên kết logic giữa ba nhóm chức năng này được minh họa chi tiết thông qua sơ đồ Thực thể - Quan hệ (ER) trong Hình~\ref{fig:database_schema}.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{figures/database_schema.png}
-  \caption{Lược đồ cơ sở dữ liệu Fiber (Supabase PostgreSQL) mô tả các bảng chính và mối quan hệ giữa chúng.}
+  \caption{Lược đồ cơ sở dữ liệu Fiber mô tả các bảng chính và mối quan hệ giữa chúng.}
   \label{fig:database_schema}
 \end{figure}
 
@@ -364,7 +364,7 @@ Nhóm bảng này chịu trách nhiệm theo dõi toàn bộ vòng đời của 
 
 \begin{table}[H]
 \centering
-\caption{Lược đồ cho các bảng \texttt{evaluation\_metrics} và \texttt{routing\_decisions}.}
+\caption{Lược đồ cho các bảng chi số đo lường và định tuyến.}
 \begin{tabularx}{\linewidth}{llX}
 \hline
 \textbf{Bảng / Cột} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả chi tiết} \\ \hline
@@ -481,14 +481,14 @@ Kết quả thu được sau đó sẽ được hệ thống tự động tổng
   \label{fig:human_eval}
 \end{figure}
 
-\subsection{Trang thiết lập cấu hình (\texttt{/settings})}
+\subsection{Trang thiết lập cấu hình}
 
 Trang cài đặt cấu hình hệ thống (Hình~\ref{fig:settings}) cung cấp ba thẻ tùy chỉnh chuyên biệt:
 
 \begin{itemize}
   \item Định tuyến: Tùy chọn thay đổi chế độ định tuyến (\texttt{auto} / \texttt{forced} / \texttt{fusion}) và trình chọn mô hình bắt buộc tương ứng.
   \item LLM-Judge: Thiết lập chế độ chạy (\texttt{metrics\_only} - chỉ tính toán Trục A, \texttt{judge\_only} - chỉ gọi LLM-Judge Trục B, hoặc \texttt{both} - chạy cả hai), chọn mô hình LLM-Judge mặc định, phong cách chấm điểm (Rubric hoặc điểm tổng hợp Absolute), và nút chuyển đổi bật tắt chế độ kiểm chứng xác thực.
-  \item Khóa nhà cung cấp: Hiển thị danh sách trạng thái cấu hình của các khóa API từ các nhà cung cấp dịch vụ LLM khác nhau ở chế độ chỉ đọc (read-only); toàn bộ nội dung của các khóa này được bảo mật an toàn phía máy chủ và không bao giờ được gửi về phía trình duyệt máy khách.
+  \item Khóa nhà cung cấp: Hiển thị danh sách trạng thái cấu hình của các khóa API từ các nhà cung cấp dịch vụ LLM khác nhau ở chế độ chỉ đọc; toàn bộ nội dung của các khóa này được bảo mật an toàn phía máy chủ và không bao giờ được gửi về phía trình duyệt máy khách.
 \end{itemize}
 
 \begin{figure}[H]

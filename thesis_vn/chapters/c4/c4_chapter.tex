@@ -50,8 +50,6 @@ Năm mô hình xử lý tóm tắt văn bản được đưa vào đánh giá v�
 
 \section{Kết quả Trục A --- Khả năng giữ lại nội dung}
 
-\subsection{Các số liệu tổng quan}
-
 Kết quả thực nghiệm đo được của trục A được biểu thị trong bảng~\ref{tab:axisA} cho thấy báo cáo các hệ số overlap từ vựng được tính trung bình trên 154 lượt chạy dung hợp và các lượt chạy mô hình đơn lẻ tương đương làm cơ sở đối chiếu.
 
 \begin{table}[H]
@@ -75,7 +73,7 @@ Kết quả thực nghiệm đo được của trục A được biểu thị tr
 
 Mô hình kết hợp MoA FUSION chiến thắng trên tất cả các hệ số đo lường mức độ giữ lại nội dung --- đạt điểm ROUGE-1 $0,4240$ so với $0,3621$ của GPT-4o đơn lẻ, và BERTScore $0,6759$ so với $0,6246$. Điều này \textit{trái ngược} với những dự đoán từ nghiên cứu thử nghiệm ban đầu của khóa luận (khi đó khoá luận giả định rằng kết quả dung hợp MoA sẽ có điểm overlap thấp hơn do cơ chế tổng hợp kiểu biên tập sẽ diễn giải lại thông tin một cách mạnh mẽ hơn).
 
-Dự đoán trong giai đoạn thử nghiệm ban đầu được đưa ra dựa trên một câu lệnh tổng hợp nguồn nghiêm ngặt (được thử nghiệm trước 08-05-2026). Dưới tác động của câu lệnh ràng buộc nghiêm ngặt đó, mô hình tổng hợp đã thu gọn các bản thảo thành một đoạn văn biên tập rất ngắn, trực tiếp kéo điểm overlap đi xuống. Sau khi tối ưu hóa câu lệnh tổng hợp (như đã trình bày trong Mục~3.4.5), mô hình tổng hợp giờ đây vừa giữ lại được khung lập luận trung thực với bài gốc, vừa diễn giải các dữ kiện chính bằng các cụm từ rất sát với nguồn, khiến điểm overlap \textit{tăng vượt trội} hơn bất kỳ bản thảo đơn lẻ nào.
+Dự đoán trong giai đoạn thử nghiệm ban đầu được đưa ra dựa trên một câu lệnh tổng hợp nguồn nghiêm ngặt (được thử nghiệm trước 08-05-2026). Dưới tác động của câu lệnh ràng buộc nghiêm ngặt đó, mô hình tổng hợp đã thu gọn các bản thảo thành một đoạn văn biên tập rất ngắn, trực tiếp kéo điểm overlap đi xuống. Sau khi tối ưu hóa câu lệnh tổng hợp, mô hình tổng hợp giờ đây vừa giữ lại được khung lập luận trung thực với bài gốc, vừa diễn giải các dữ kiện chính bằng các cụm từ rất sát với nguồn, khiến điểm overlap tăng vượt trội hơn bất kỳ bản thảo đơn lẻ nào.
 
 Kết quả sau khi tối ưu hóa câu lệnh mang ý nghĩa thực tiễn quan trọng: ngay cả trên Trục A, phương pháp dung hợp vẫn cho thấy hiệu quả tương đương hoặc vượt trội so với mô hình đơn lẻ mạnh nhất. Hệ đo lường trùng lặp so với bài gốc không còn là một điểm yếu; trái lại, nó trở thành trục thứ ba đồng thuận chặt chẽ với Trục B và Trục C, giúp củng cố vững chắc hơn luận điểm khoa học ủng hộ phương pháp dung hợp đa tác nhân.
 
@@ -123,7 +121,7 @@ Mô hình kết hợp MoA FUSION vượt trội hơn mọi mô hình cơ sở �
 
 Trong số $153$ phán quyết phân định rõ ràng, bản tóm tắt dung hợp giành chiến thắng $93$ lần, bản thảo đơn lẻ tốt nhất thắng $42$ lần, và có $18$ trường hợp hòa. Nếu loại trừ các trường hợp hòa, bản tóm tắt dung hợp được ưa thích hơn bản thảo tốt nhất trong gần $69\%$ các lượt so sánh trực tiếp (chiếm $60,8\%$ tổng số lượt so sánh). Mẫu thử nghiệm quy mô lớn này xác nhận rằng việc cung cấp nhiều bản thảo làm ngữ cảnh cho mô hình tổng hợp giúp tạo ra bản tóm tắt chất lượng vượt trội hơn hẳn so với việc chỉ sử dụng một mô hình đề xuất đơn lẻ.
 
-\subsection{Kết quả dung hợp so với Từng mô hình đề xuất}
+\subsection{Kết quả dung hợp so với từng mô hình đề xuất}
 
 Nhằm đối chiếu trực tiếp với kết quả nghiên cứu của Wang et al.\ \cite{Wang2024} (Hình 4a), Bảng~\ref{tab:axisB2b} báo cáo tỷ lệ chiến thắng của phương pháp dung hợp khi đối đầu với từng mô hình đề xuất riêng lẻ.
 
@@ -189,7 +187,7 @@ Trên toàn bộ cơ sở dữ liệu gồm $923$ mệnh đề được đánh g
 
 \section{Kết quả Trục C --- Đánh giá của con người}
 
-\subsection{Thiết lập}
+\subsection{Thiết lập khảo sát}
 
 Một khảo sát đã được triển khai với sự tham gia của $17$ người đánh giá độc lập, bao phủ toàn bộ $48$ tác vụ thực nghiệm, thu về tổng cộng $192$ kết quả xếp hạng mù $K = 3$. Mỗi tác vụ hiển thị đồng thời ba ứng viên tóm tắt --- bản dung hợp MoA, bản GPT-4o đơn lẻ, và bản thảo đề xuất GPT-4o-mini --- dưới các nhãn ngẫu nhiên \textit{Bản A}, \textit{Bản B}, \textit{Bản C} nhằm ẩn hoàn toàn danh tính của mô hình.
 
@@ -237,7 +235,7 @@ LLM-Judge hoàn toàn không có khả năng nhận biết mức độ hấp d�
 
 \subsection{Độ đồng thuận giữa các người đánh giá}
 
-Tính trung bình trên $48$ tác vụ, số lượng người đánh giá đồng thuận lớn nhất về vị trí hạng nhất (\#1) đạt $2{,}69$ trên $4$ người ($\approx 67\%$). Có 8 tác vụ đạt sự đồng thuận tuyệt đối (4/4), $17$ tác vụ ghi nhận sự đồng thuận của 3 trên 4 người, $23$ tác vụ bị chia rẽ nửa này nửa kia (2 vs. 2), và hoàn toàn không có tác vụ nào có ý kiến bị phân mảnh hoàn toàn. Kết quả này tương ứng với hệ số Fleiss' $\kappa$ ước tính nằm trong khoảng \textit{đồng thuận vừa phải} ($\approx 0{,}30$--$0{,}40$); mức độ đồng thuận thấp nhất ở nhóm chủ đề HÀNH CHÍNH (trung bình chỉ $2{,}48$ người đồng ý với nhau) và cao nhất ở nhóm GIẢI TRÍ ($2{,}92$ người). Chỉ số này phản ánh chính xác hành vi của độc giả trong thực tế --- họ chia sẻ một số sở thích chung cốt lõi, nhưng cũng có những bất đồng sâu sắc khi đánh giá các nội dung hành chính khô khan.
+Tính trung bình trên $48$ tác vụ, số lượng người đánh giá đồng thuận lớn nhất về vị trí hạng nhất (\#1) đạt $2{,}69$ trên $4$ người ($\approx 67\%$). Có 8 tác vụ đạt sự đồng thuận tuyệt đối (4/4), $17$ tác vụ ghi nhận sự đồng thuận của 3 trên 4 người, $23$ tác vụ bị chia rẽ nửa này nửa kia (2 vs. 2), và hoàn toàn không có tác vụ nào có ý kiến bị phân mảnh hoàn toàn. Kết quả này tương ứng với hệ số Fleiss' $\kappa$ ước tính nằm trong khoảng đồng thuận vừa phải ($\approx 0{,}30$--$0{,}40$); mức độ đồng thuận thấp nhất ở nhóm chủ đề HÀNH CHÍNH (trung bình chỉ $2{,}48$ người đồng ý với nhau) và cao nhất ở nhóm GIẢI TRÍ ($2{,}92$ người). Chỉ số này phản ánh chính xác hành vi của độc giả trong thực tế --- họ chia sẻ một số sở thích chung cốt lõi, nhưng cũng có những bất đồng sâu sắc khi đánh giá các nội dung hành chính khô khan.
 
 \section{Phân tích đa trục}
 
@@ -278,12 +276,12 @@ Việc chỉ sử dụng một trục đánh giá duy nhất là không đủ đ
 Sau quá trình thực nghiệm và đánh giá toàn diện, có một số hạn chế phương pháp luận có thể ghi nhận như sau: 
 
 \begin{itemize}
-    \item Kiến trúc đơn giản hoá: Cấu hình MoA được triển khai thực tế trong hệ thống này là cấu hình \textit{tối thiểu} mà nghiên cứu gốc xem xét: chỉ gồm một tầng và ba mô hình đề xuất. Bảng~3 và 4 trong công trình của Wang et al.\ \cite{Wang2024} chỉ ra rằng hiệu năng của hệ thống tăng đơn điệu theo độ sâu của tầng tác nhân ($\ell \in \{1, 2, 3\}$) và số lượng mô hình đề xuất trong mỗi tầng ($n \in \{3, 4, 5, 6\}$). Thiết kế hiện tại được lựa chọn để tối ưu hóa chi phí và kiểm soát độ trễ thời gian thực; việc nâng cấp chiều sâu và chiều rộng của mạng lưới tác nhân là những hướng phát triển tiềm năng cho các công trình tương lai.
+    \item Kiến trúc đơn giản hoá: Cấu hình MoA được triển khai thực tế trong hệ thống này là cấu hình tối thiểu mà nghiên cứu gốc xem xét: chỉ gồm hai tầng gồm ba mô hình đề xuất kết hợp một mô hình tổng hợp. Bảng~3 và 4 trong công trình của Wang et al.\ \cite{Wang2024} chỉ ra rằng hiệu năng của hệ thống tăng đơn điệu theo độ sâu của tầng tác nhân ($\ell \in \{1, 2, 3\}$) và số lượng mô hình đề xuất trong mỗi tầng ($n \in \{3, 4, 5, 6\}$). Thiết kế hiện tại được lựa chọn để tối ưu hóa chi phí và kiểm soát độ trễ thời gian thực; việc nâng cấp chiều sâu và chiều rộng của mạng lưới tác nhân là những hướng phát triển tiềm năng cho các công trình tương lai.
     \item Quy mô nghiên cứu con người và động lực của người đánh giá:
 Nghiên cứu con người hiện tại có sự tham gia của $17$ người đánh giá độc lập, cung cấp một cơ sở định tính rất giá trị. Tuy nhiên, việc phụ thuộc vào nhóm người đánh giá thực tế này cũng đặt ra một số thách thức đặc thù. Thứ nhất là vấn đề sở thích chủ đề cá nhân; khi đối mặt với các bài báo, những người đánh giá ngẫu nhiên có thể thể hiện mức độ tập trung nhận thức rất khác nhau tùy thuộc vào mức độ quan tâm của họ đối với nội dung bài viết. Sự thiên lệch về hứng thú này có thể đưa thêm các yếu tố nhiễu vào số liệu thống kê sở thích chung.
 Thứ hai, nghiên cứu cần kiểm soát hiện tượng mệt mỏi nhận thức và sự suy giảm năng lượng của người đánh giá theo thời gian. Khi các phiên đánh giá kéo dài, tài nguyên chú ý của người tham gia tự động giảm đi, dẫn đến sự thiếu nhất quán trong việc xếp hạng hoặc xu hướng đưa ra các phán quyết an toàn (như chọn hòa) ở các tác vụ cuối cùng. Mặc dù mẫu dữ liệu hiện tại đủ lớn để khẳng định các xu hướng chính, các nghiên cứu tiếp theo sẽ đạt chất lượng cao hơn nếu thực hiện trong môi trường kiểm soát chặt chẽ hơn để giảm thiểu các biến động hành vi này và đảm bảo tính đồng đều trong đánh giá trên toàn bộ tập dữ liệu.
 
-\item Hệ số overlap tính trực tiếp với văn bản nguồn: Các hệ số ROUGE / BLEU / BERTScore được tính toán so với bài viết gốc, không phải so với bản tóm tắt chuẩn do con người viết, vì hiện tại chưa có bộ dữ liệu benchmark tóm tắt tiếng Việt nào được chú thích bởi con người ở quy mô mà dự án này yêu cầu. Đây là thực tế chung trong các nghiên cứu NLP học thuật tại Việt Nam và đã được khoá luận này thừa nhận trong Mục~2.2.5 như một \textit{hạn chế về mặt phương pháp luận} của Trục A. Việc đối chiếu đa trục thực hiện trong Mục~4.5 là chốt chặn thực nghiệm quan trọng nhằm tránh việc diễn giải quá đà các điểm số overlap này.
+\item Hệ số overlap tính trực tiếp với văn bản nguồn: Các hệ số ROUGE / BLEU / BERTScore được tính toán so với bài viết gốc, không phải so với bản tóm tắt chuẩn do con người viết, vì hiện tại chưa có bộ dữ liệu benchmark tóm tắt tiếng Việt nào được chú thích bởi con người ở quy mô mà dự án này yêu cầu. Đây là thực tế chung trong các nghiên cứu NLP học thuật tại Việt Nam và đã được khoá luận này thừa nhận như một hạn chế về mặt phương pháp luận của Trục A. Việc đối chiếu đa trục thực hiện trong Mục~4.5 là chốt chặn thực nghiệm quan trọng nhằm tránh việc diễn giải quá đà các điểm số overlap này.
 \end{itemize}
 
 \section{Tổng kết chương}

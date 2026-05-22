@@ -38,11 +38,11 @@ một phương pháp luận đánh giá không có thiên kiến cấu trúc b�
 
 \section*{Ý nghĩa khoa học và thực tiễn}
 
-Khóa luận đóng góp ý nghĩa khoa học bằng việc phát triển một \textit{khung đánh giá ba trục} kết hợp: (i)~các hệ số overlap
+Khóa luận đóng góp ý nghĩa khoa học bằng việc phát triển một \textit{khung đánh giá ba trục} kết hợp: (i)~các hệ số độ phủ
 nội dung so với bài gốc, (ii)~đánh giá chất lượng bởi LLM và xếp hạng theo
 cặp, và (iii)~xếp hạng mù bởi con người với chỉ số đồng thuận giữa các người đánh giá.
 Khóa luận sử dụng khung đó để chỉ ra, bằng chứng thực nghiệm trên dữ liệu tiếng
-Việt, một hạn chế cấu trúc của các hệ số overlap đối với bài toán tóm tắt kiểu tổng
+Việt, một hạn chế cấu trúc của các hệ số độ phủ đối với bài toán tóm tắt kiểu tổng
 hợp. Hạn chế này đã được đề cập gián tiếp trong các nghiên cứu tiếng Anh
 \cite{Wang2024,Zheng2023} nhưng chưa được nghiên cứu tường minh cho tiếng Việt.
 
@@ -75,26 +75,16 @@ Khóa luận này hướng tới ba mục tiêu song song, bao trùm cả chiề
 
 \section*{Đối tượng và phạm vi nghiên cứu}
 
-Khoá luận tiến hành khảo sát và nghiên cứu trên đối tượng là các bài báo tiếng Việt được đăng trên
-\textit{tuoitre.vn}, \textit{thanhnien.vn}, \textit{tienphong.vn},
-\textit{vietnamnet.vn}, \textit{laodong.vn}, \textit{vtv.vn} và
-\textit{nld.com.vn}. Thực nghiệm đánh giá trong Chương~4 sử dụng 154 bài báo
-từ \textit{tienphong.vn}, được cân bằng theo năm chủ đề: thời sự, pháp luật,
-kinh tế, giáo dục và văn hóa.
-
-Phạm vi nghiên cứu của khoá luận: 
+Đối tượng nghiên cứu của khoá luận tập trung vào:
 \begin{itemize}
-  \item Mô hình sử dụng: Ba LLM thương mại trên đám mây (GPT-4o-mini, Claude
-        Haiku 4.5, Gemini 2.5 Flash) làm tác nhân đề xuất; GPT-4o làm tác nhân
-        tổng hợp; lựa chọn bản thảo tốt nhất làm mô hình đơn lẻ cơ sở mạnh nhất.
-        Các mô hình đặc thù tiếng Việt (ViT5 \cite{Nguyen2022} và
-        PhoBERT \cite{Nguyen2020}) được sử dụng cho phân loại định tuyến và
-        đánh giá ngữ nghĩa dựa trên embedding.  
-  \item Dữ liệu dùng cho đánh giá: Hệ thống được đánh giá trên một miền dữ liệu duy nhất (\textit{tienphong.vn}) với một lần chạy cho mỗi bài báo. Nghiên cứu con
-        người mang tính bao quát với $n = 17$ người đánh giá và $48$ tác vụ, đóng vai trò bổ sung cho Trục~A và Trục~B.
-  \item Phương pháp kiểm chứng thông tin: Xác minh tăng cường tìm kiếm qua API tìm
-        kiếm web Tavily. Kiểm chứng thông tin có cấu trúc sâu hơn (đồ thị tri thức hoặc phân
-        loại quan điểm) nằm ngoài phạm vi của khóa luận này.
+  \item Bài toán tóm tắt tự động văn bản (Text Summarization), cụ thể là xử lý và tổng hợp tin tức báo chí tiếng Việt.
+  \item Kiến trúc hệ thống đa tác nhân (Multi-Agent System) ứng dụng các mô hình ngôn ngữ lớn (LLM) thương mại và các mô hình ngôn ngữ đặc thù cho tiếng Việt trong việc phân loại, định tuyến và đánh giá ngữ nghĩa văn bản.
+\end{itemize}
+
+Phạm vi nghiên cứu của khoá luận được giới hạn trong các biên giới cụ thể sau:
+\begin{itemize}
+  \item Phạm vi dữ liệu: Thực nghiệm đánh giá hệ thống được giới hạn trên tập dữ liệu gồm 154 bài báo tiếng Việt được thu thập từ trang tin điện tử \textit{tienphong.vn}, phân bổ cân bằng theo 5 chủ đề: thời sự, pháp luật, kinh tế, giáo dục và văn hóa. Các nguồn báo khác bao gồm \textit{tuoitre.vn}, \textit{thanhnien.vn}, \textit{vietnamnet.vn}, \textit{laodong.vn}, \textit{vtv.vn} và \textit{nld.com.vn} chỉ được sử dụng trong giai đoạn khảo sát, phân tích dữ liệu ban đầu.
+  \item Phạm vi công nghệ và giới hạn kỹ thuật: Đề tài giới hạn ở việc khai thác, phối hợp năng lực của các LLM thương mại trên đám mây làm tác nhân đề xuất (GPT-4o-mini, Claude Haiku 4.5, Gemini 2.5 Flash) và tác nhân tổng hợp (GPT-4o), kết hợp các mô hình tiếng Việt có sẵn (ViT5 \cite{Nguyen2022}, PhoBERT \cite{Nguyen2020}) để định tuyến và đánh giá. Khoá luận không thực hiện huấn luyện lại hoặc tinh chỉnh sâu các mô hình nền tảng từ đầu.
 \end{itemize}
 
 \section*{Phương pháp nghiên cứu}
@@ -120,7 +110,7 @@ kỹ thuật Mixture-of-Agents, và các công trình liên quan trong nghiên c
 cũng như quốc tế, từ đó xác định khoảng trống mà khoá luận sẽ khai thác.
 
 \textbf{Chương 2 --- Cơ sở lý thuyết:} Trình bày các kiến trúc LLM được sử dụng
-trong hệ thống, ba dòng hệ số đánh giá (overlap, LLM-Judge, xếp hạng con người),
+trong hệ thống, ba dòng hệ số đánh giá (độ phủ, LLM-Judge, xếp hạng con người),
 phương pháp luận tính xác thực, và các công nghệ để xây dựng tiện ích mở rộng trình
 duyệt cùng các dịch vụ backend.
 
